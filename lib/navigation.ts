@@ -4,8 +4,6 @@ import {
   HiOutlinePencilSquare,
   HiOutlineBolt,
 } from "react-icons/hi2"
-import { IoCreateOutline } from "react-icons/io5"
-import { VscExtensions } from "react-icons/vsc"
 
 export interface INavigationItem {
   name: string
@@ -37,3 +35,9 @@ export const navigationItems: INavigationItem[] = [
     icon: HiOutlineCog8Tooth,
   },
 ]
+
+export const getActiveNavigationItem = (
+  pathname: string,
+): INavigationItem | undefined => {
+  return navigationItems.find((item) => item.href === pathname)
+}

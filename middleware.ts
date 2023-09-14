@@ -26,5 +26,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: "/((?!api|_next/static|_next/image|images|[a-z].js).*)",
+  matcher: "/((?!api|_next/static|_next/image|images).*)",
 }
