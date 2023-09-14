@@ -19,7 +19,9 @@ export default function NavigationItem({ item }: Props) {
         className={classNames({
           "flex flex-row gap-2 rounded-md p-2 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
             true,
-          "bg-kwil-dark text-slate-100 drop-shadow-md": pathname === item.href,
+          "bg-kwil-dark text-slate-100 drop-shadow-md": pathname.startsWith(
+            item.href,
+          ),
         })}
       >
         <item.icon className="h-6 w-6" />

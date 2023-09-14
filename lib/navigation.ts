@@ -8,7 +8,7 @@ import {
 export interface INavigationItem {
   name: string
   href: string
-  icon: React.ComponentType<{ className: string }>
+  icon: React.ComponentType<{ className?: string }>
   iconClassName?: string
 }
 
@@ -36,8 +36,13 @@ export const navigationItems: INavigationItem[] = [
   },
 ]
 
-export const getActiveNavigationItem = (
-  pathname: string,
-): INavigationItem | undefined => {
-  return navigationItems.find((item) => item.href === pathname)
+export const getActivePageName = (pathname: string): string | undefined => {
+  const activePageName = navigationItems.find((item) =>
+    pathname.startsWith(item.href),
+  )?.name
+
+  if (!activePageName)
+    throw new Error(`No active page name found for pathname: ${pathname}`)
+
+  return activePageName
 }

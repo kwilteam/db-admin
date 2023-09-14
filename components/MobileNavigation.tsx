@@ -1,8 +1,8 @@
 "use client"
 
-import { getActiveNavigationItem, navigationItems } from "@/lib/navigation"
+import { getActivePageName, navigationItems } from "@/lib/navigation"
 import NavigationItem from "./NavigationItem"
-import { Dialog, Transition } from "@headlessui/react"
+import { Dialog, Menu, Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import Image from "next/image"
@@ -13,7 +13,7 @@ export default function MobileNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  const activePage = getActiveNavigationItem(pathname)
+  const activePageName = getActivePageName(pathname)
 
   return (
     <>
@@ -28,7 +28,7 @@ export default function MobileNavigation() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+            <Dialog.Overlay className="fixed inset-0 bg-black/50 lg:hidden" />
           </Transition.Child>
 
           <Transition.Child
@@ -40,7 +40,7 @@ export default function MobileNavigation() {
             leaveFrom="opacity-100 translate-x-0"
             leaveTo="opacity-0 -translate-x-full"
           >
-            <nav className="fixed inset-y-0 left-0 flex w-5/6 flex-col bg-kwil">
+            <nav className="fixed inset-y-0 left-0 flex w-5/6 flex-col bg-kwil lg:hidden">
               <Image
                 src="/images/kwil-white-horizontal.svg"
                 alt="Kwil Logo"
@@ -73,10 +73,8 @@ export default function MobileNavigation() {
         <button className="lg:hidden" onClick={() => setIsMenuOpen(true)}>
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
-        <div className="text-lg text-slate-100">{activePage?.name}</div>
-        <div>
-          <UserInfo userName="Martin Creedy" />
-        </div>
+        <div className="text-lg text-slate-100">{activePageName}</div>
+        <UserInfo userName="Martin Creedy" />
       </div>
     </>
   )

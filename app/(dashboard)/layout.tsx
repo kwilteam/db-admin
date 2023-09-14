@@ -3,7 +3,6 @@ import Navigation from "@/components/Navigation"
 import UserInfo from "@/components/UserInfo"
 import Image from "next/image"
 import React from "react"
-import { HiOutlineBars3 } from "react-icons/hi2"
 
 interface Props {
   children: React.ReactNode
