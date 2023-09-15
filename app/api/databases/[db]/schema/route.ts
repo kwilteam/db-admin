@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { ISchema } from "@/util/kwil-types"
+import { Types as KwilTypes } from "kwil"
 import schemaData from "./example_schema.json" // TODO: Temp whilst developing UI
 
 interface IResponse {
-  data: ISchema | undefined
+  data: KwilTypes.Database<string> | undefined
   status?: number
 }
 

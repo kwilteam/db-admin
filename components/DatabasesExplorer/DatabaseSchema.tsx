@@ -1,4 +1,4 @@
-import { DatabaseDictionary } from "@/util/kwil-types"
+import { DatabaseDictionary } from "@/util/types"
 import { IDisplayToggle } from "."
 import { DatabaseTables } from "./DatabaseTables"
 import { DatabaseActions } from "./DatabaseActions"

@@ -1,5 +1,6 @@
 "use client"
-import { DatabaseDictionary, Database } from "@/util/kwil-types"
+import { DatabaseDictionary } from "@/util/types"
+import { Types as KwilTypes } from "kwil"
 import { Fragment, useState } from "react"
 import { getDatabaseSchema } from "@/util/api"
 import { DatabaseItem } from "./DatabaseItem"
@@ -30,7 +31,7 @@ export default function DatabasesExplorer({ databases }: Props) {
       setDisplay(database, "tables", false)
       setDisplay(database, "actions", false)
     } else {
-      const schema: Database<string> | undefined =
+      const schema: KwilTypes.Database<string> | undefined =
         await getDatabaseSchema(database)
       if (!schema) return
 

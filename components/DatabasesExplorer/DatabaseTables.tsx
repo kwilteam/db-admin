@@ -1,4 +1,5 @@
-import { DatabaseDictionary, Table } from "@/util/kwil-types"
+import { DatabaseDictionary } from "@/util/types"
+import { Types as KwilTypes } from "kwil"
 import { IDisplayToggle } from "."
 import classNames from "classnames"
 import {
@@ -58,7 +59,7 @@ export const DatabaseTables = ({
       <div className="mb-1">
         {displayToggle[database]?.tables &&
           databaseSchemas[database]?.tables?.map(
-            (table: Table<string>, index: number) => (
+            (table: KwilTypes.Table<string>, index: number) => (
               <DatabaseTableLink
                 key={index}
                 database={database}
@@ -76,7 +77,7 @@ const DatabaseTableLink = ({
   table,
 }: {
   database: string
-  table: Table<string>
+  table: KwilTypes.Table<string>
 }) => {
   return (
     <div key={`${database}-${table.name}`} className="ml-5 text-sm">

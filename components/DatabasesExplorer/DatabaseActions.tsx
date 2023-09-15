@@ -1,4 +1,5 @@
-import { ActionSchema, DatabaseDictionary, Table } from "@/util/kwil-types"
+import { DatabaseDictionary } from "@/util/types"
+import { Types as KwilTypes } from "kwil"
 import { IDisplayToggle } from "."
 import classNames from "classnames"
 import {
@@ -57,7 +58,7 @@ export const DatabaseActions = ({
       </div>
       {displayToggle[database]?.actions &&
         databaseSchemas[database]?.actions?.map(
-          (action: ActionSchema, index: number) => (
+          (action: KwilTypes.ActionSchema, index: number) => (
             <DatabaseActionLink
               key={index}
               database={database}
@@ -74,7 +75,7 @@ const DatabaseActionLink = ({
   action,
 }: {
   database: string
-  action: ActionSchema
+  action: KwilTypes.ActionSchema
 }) => {
   return (
     <div key={`${database}-${action.name}`} className="ml-5 text-sm">
