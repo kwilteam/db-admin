@@ -1,4 +1,4 @@
-import { DatabaseDictionary, Database } from "./types"
+import { DatabaseDictionary, Database } from "./kwil-types"
 
 export const getDatabases = async (): Promise<
   DatabaseDictionary | undefined

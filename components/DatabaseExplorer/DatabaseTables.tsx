@@ -1,16 +1,16 @@
-import { DatabaseDictionary } from "@/util/types"
+import { DatabaseDictionary } from "@/util/kwil-types"
 import { Types as KwilTypes } from "kwil"
 import { IDisplayToggle } from "."
 import classNames from "classnames"
 import {
-  ActionIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   HashtagIcon,
+  TableIcon,
 } from "@/util/icons"
 import Link from "next/link"
 
-export const DatabaseActions = ({
+export const DatabaseTables = ({
   database,
   displayToggle,
   databaseSchemas,
@@ -31,56 +31,61 @@ export const DatabaseActions = ({
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
             true,
           "text-slate-500 hover:text-slate-900":
-            !displayToggle[database]?.actions,
-          "text-slate-900": displayToggle[database]?.actions,
+            !displayToggle[database]?.tables,
+          "text-slate-900": displayToggle[database]?.tables,
         })}
-        onClick={() => toggleDisplay(database, "actions")}
+        onClick={() => toggleDisplay(database, "tables")}
       >
         <ChevronDownIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: !displayToggle[database]?.actions,
+            hidden: !displayToggle[database]?.tables,
           })}
         />
         <ChevronRightIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: displayToggle[database]?.actions,
+            hidden: displayToggle[database]?.tables,
           })}
         />
-        <ActionIcon
+        <TableIcon
           className={classNames({
             "h-4 w-4": true,
-            "text-kwil-light": displayToggle[database]?.actions,
+            "text-kwil-light": displayToggle[database]?.tables,
           })}
         />
-        Actions
+        Tables
       </div>
-      {displayToggle[database]?.actions &&
-        databaseSchemas[database]?.actions?.map(
-          (action: KwilTypes.ActionSchema, index: number) => (
-            <DatabaseActionLink
-              key={index}
-              database={database}
-              action={action}
-            />
-          ),
-        )}
+      <div className="mb-1">
+        {displayToggle[database]?.tables &&
+          databaseSchemas[database]?.tables?.map(
+            (table: KwilTypes.Table<string>, index: number) => (
+              <DatabaseTableLink
+                key={index}
+                database={database}
+                table={table}
+              />
+            ),
+          )}
+      </div>
     </>
   )
 }
 
-const DatabaseActionLink = ({
+const DatabaseTableLink = ({
   database,
-  action,
+  table,
 }: {
   database: string
-  action: KwilTypes.ActionSchema
+  table: KwilTypes.Table<string>
 }) => {
   return (
-    <div key={`${database}-${action.name}`} className="ml-5 text-sm">
+    <div
+      key={`${database}-${table.name}`}
+      className="ml-10 overflow-hidden text-sm"
+    >
       <Link
-        href={`/databases/${database}/action/${action.name}`}
+        href={`/databases/${database}/table/${table.name}`}
         className={classNames({
           "flex select-none flex-row items-center gap-1 hover:text-slate-900":
             true,
@@ -88,7 +93,7 @@ const DatabaseActionLink = ({
         })}
       >
         <HashtagIcon className="h-3 w-3" />
-        {action.name}
+        <span className="max-w-[80%]">{table.name}</span>
       </Link>
     </div>
   )

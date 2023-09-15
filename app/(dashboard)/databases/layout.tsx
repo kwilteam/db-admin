@@ -1,4 +1,4 @@
-import DatabasesExplorer from "@/components/DatabasesExplorer"
+import DatabasesExplorer from "@/components/DatabaseExplorer"
 import { getDatabases } from "@/util/api"
 
 export default async function DatabasesLayout({

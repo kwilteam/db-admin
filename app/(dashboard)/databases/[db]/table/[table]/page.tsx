@@ -1,4 +1,4 @@
-import { DatabaseIcon } from "@/util/icons"
+import { ChevronRightIcon, DatabaseIcon, TableIcon } from "@/util/icons"
 
 interface IProps {
   params: {
@@ -10,14 +10,16 @@ interface IProps {
 // TODO: Verify that the table exists on the database before rendering form
 export default async function DatabaseTablePage({ params }: IProps) {
   const { db, table } = params
-  console.log(db, table)
+
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row items-center gap-2 bg-slate-100 p-2">
+      <div className="flex select-none flex-row items-center gap-2 bg-slate-100 p-2">
         <DatabaseIcon className="h-4 w-4" />
-        {db}
+        <span>{db}</span>
+        <ChevronRightIcon className="h-5 w-5" />
+        <TableIcon className="h-4 w-4" />
+        <span>{table}</span>
       </div>
-      <div>{table}</div>
     </div>
   )
 }

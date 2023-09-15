@@ -1,5 +1,5 @@
 "use client"
-import { DatabaseDictionary } from "@/util/types"
+import { DatabaseDictionary } from "@/util/kwil-types"
 import { Types as KwilTypes } from "kwil"
 import { Fragment, useState } from "react"
 import { getDatabaseSchema } from "@/util/api"
@@ -72,7 +72,10 @@ export default function DatabasesExplorer({ databases }: Props) {
   }
 
   return (
-    <div className="max-h-screen min-h-screen w-full overflow-scroll bg-slate-50/30 ">
+    <div
+      className="max-h-screen min-h-screen w-full overflow-scroll bg-slate-50/30"
+      id="database-explorer"
+    >
       <ul className="flex flex-col">
         {Object.keys(databaseSchemas).map((database, index) => (
           <Fragment key={index}>

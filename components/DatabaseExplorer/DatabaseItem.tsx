@@ -13,6 +13,7 @@ export const DatabaseItem = ({
 }) => {
   return (
     <li
+      id={`${database}-item`}
       key={database}
       className={classNames({
         "text-md flex cursor-pointer select-none flex-row items-center gap-1 p-2 pb-1":

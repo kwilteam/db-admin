@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { DatabaseDictionary } from "@/util/types"
+import { DatabaseDictionary } from "@/util/kwil-types"
 
 interface IResponse {
   data: DatabaseDictionary | undefined
