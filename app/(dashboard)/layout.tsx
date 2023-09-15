@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: Props) {
           <Image
             src="/images/kwil-white-horizontal.svg"
             alt="Kwil Logo"
-            className="mx-auto mb-16 mt-6 h-auto"
+            className="mx-auto mb-12 mt-6 h-auto"
             width={140}
             height={80}
             priority

@@ -1,13 +1,15 @@
 "use client"
 
-import { getActivePageName, navigationItems } from "@/lib/navigation"
+import { getActivePageName, navigationItems } from "@/util/navigation"
 import NavigationItem from "./NavigationItem"
-import { Dialog, Menu, Transition } from "@headlessui/react"
+import { Dialog, Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import Image from "next/image"
 import UserInfo from "./UserInfo"
 import { usePathname } from "next/navigation"
+import DatabasesExplorer from "./DatabasesExplorer"
+import { DatabaseIcon } from "@/util/icons"
 
 export default function MobileNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -44,7 +46,7 @@ export default function MobileNavigation() {
               <Image
                 src="/images/kwil-white-horizontal.svg"
                 alt="Kwil Logo"
-                className="mx-auto mb-16 mt-6 h-auto"
+                className="mx-auto mb-8 mt-6 h-auto"
                 width={140}
                 height={80}
                 priority
@@ -55,15 +57,32 @@ export default function MobileNavigation() {
               >
                 <HiOutlineXMark className="h-6 w-6 text-slate-100" />
               </button>
-              <ul
-                role="list"
-                className="mx-4 flex flex-col gap-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {navigationItems.map((item) => (
-                  <NavigationItem key={item.name} item={item} />
-                ))}
-              </ul>
+              {activePageName && activePageName !== "Databases" && (
+                <ul
+                  role="list"
+                  className="mx-4 flex flex-col gap-1"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {navigationItems.map((item) => (
+                    <NavigationItem key={item.name} item={item} />
+                  ))}
+                </ul>
+              )}
+              {activePageName && activePageName === "Databases" && (
+                <>
+                  <button>Back to other menu items</button>
+                  <div className="mx-4 flex flex-row gap-2 rounded-md p-2 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md">
+                    <DatabaseIcon className="h-6 w-6" />
+
+                    <div>Databases</div>
+                  </div>
+                  <div onClick={() => setIsMenuOpen(false)}>
+                    {/* <DatabasesExplorer
+                      databases={["info", "users", "comments"]}
+                    /> */}
+                  </div>
+                </>
+              )}
             </nav>
           </Transition.Child>
         </Dialog>

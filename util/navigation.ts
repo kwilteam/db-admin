@@ -1,9 +1,4 @@
-import {
-  HiOutlineCircleStack,
-  HiOutlineCog8Tooth,
-  HiOutlinePencilSquare,
-  HiOutlineBolt,
-} from "react-icons/hi2"
+import { DatabaseIcon, SettingsIcon, CreateIcon, ExtensionsIcon } from "./icons"
 
 export interface INavigationItem {
   name: string
@@ -16,23 +11,22 @@ export const navigationItems: INavigationItem[] = [
   {
     name: "Databases",
     href: "/databases",
-    icon: HiOutlineCircleStack,
+    icon: DatabaseIcon,
   },
   {
     name: "Create",
     href: "/create",
-    icon: HiOutlinePencilSquare,
+    icon: CreateIcon,
   },
   {
     name: "Extensions",
     href: "/extensions",
-    icon: HiOutlineBolt,
-    // iconClassName: "h-5 w-5",
+    icon: ExtensionsIcon,
   },
   {
     name: "Settings",
     href: "/settings",
-    icon: HiOutlineCog8Tooth,
+    icon: SettingsIcon,
   },
 ]
 

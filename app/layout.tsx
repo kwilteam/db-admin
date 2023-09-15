@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import "./globals.css"
 import type { Metadata } from "next"
 import { Manrope } from "next/font/google"
@@ -19,7 +20,14 @@ export default function RootLayout({
         <link rel="icon" href="/images/favicon.png" />
       </head>
 
-      <body className={manrope.className}>{children}</body>
+      <body
+        className={classNames({
+          [manrope.className]: true,
+          "text-slate-700": true,
+        })}
+      >
+        {children}
+      </body>
     </html>
   )
 }

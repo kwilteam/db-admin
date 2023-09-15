@@ -3,8 +3,8 @@
 import { Menu, Transition } from "@headlessui/react"
 import Link from "next/link"
 import React, { Fragment } from "react"
-import { CiLogout } from "react-icons/ci"
-import { HiOutlineUserCircle } from "react-icons/hi2"
+import { ProfileIcon, SignOutIcon } from "@/util/icons"
+import classNames from "classnames"
 
 interface Props {
   userName: string
@@ -19,7 +19,7 @@ export default function UserInfo({ userName }: Props) {
   return (
     <Menu as="div">
       <Menu.Button className="flex select-none flex-row gap-3 lg:w-full lg:border-t lg:border-kwil-dark/40 lg:p-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-300 text-sm uppercase text-slate-700">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-300 text-sm uppercase">
           {initials}
         </div>
         <div className="hidden items-center justify-center text-sm leading-10 text-slate-100 lg:flex">
@@ -42,9 +42,11 @@ export default function UserInfo({ userName }: Props) {
                 {({ active }) => (
                   <Link href={option.href}>
                     <button
-                      className={`${
-                        active ? "bg-gray-100 text-gray-900" : "text-gray-700"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      className={classNames({
+                        "group flex w-full items-center rounded-md px-2 py-2 text-sm":
+                          true,
+                        "bg-gray-100 ": active,
+                      })}
                     >
                       <option.icon className="mr-2 h-6 w-6" />
                       {option.name}
@@ -70,11 +72,11 @@ const userOptions: IUserOption[] = [
   {
     name: "Profile",
     href: "/settings/profile",
-    icon: HiOutlineUserCircle,
+    icon: ProfileIcon,
   },
   {
     name: "Sign out",
-    href: "/api/auth/signout",
-    icon: CiLogout,
+    href: "/api/sign-out",
+    icon: SignOutIcon,
   },
 ]

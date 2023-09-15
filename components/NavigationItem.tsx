@@ -1,5 +1,5 @@
 "use client"
-import type { INavigationItem } from "@/lib/navigation"
+import type { INavigationItem } from "@/util/navigation"
 import classNames from "classnames"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
