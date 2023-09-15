@@ -167,32 +167,28 @@ const DatabaseSchema = ({
     databaseSchemas[database] &&
     displayToggle[database]?.schema && (
       <div key={`${database}-schema`} className="ml-7 flex flex-1 flex-col">
-        <DatabaseDetails
+        <DatabaseTables
           database={database}
           displayToggle={displayToggle}
           databaseSchemas={databaseSchemas}
           toggleDisplay={toggleDisplay}
-          type="tables"
         />
-        <DatabaseDetails
+        <DatabaseActions
           database={database}
           displayToggle={displayToggle}
           databaseSchemas={databaseSchemas}
           toggleDisplay={toggleDisplay}
-          type="actions"
         />
       </div>
     )
   )
 }
 
-// DatabaseDetails Component
-const DatabaseDetails = ({
+const DatabaseTables = ({
   database,
   displayToggle,
   databaseSchemas,
   toggleDisplay,
-  type,
 }: {
   database: string
   displayToggle: IDisplayToggle
@@ -201,7 +197,6 @@ const DatabaseDetails = ({
     database: string,
     display: keyof IDisplayToggle[string],
   ) => void
-  type: "tables" | "actions"
 }) => {
   return (
     <>
@@ -210,35 +205,39 @@ const DatabaseDetails = ({
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
             true,
           "text-slate-500 hover:text-slate-900":
-            !displayToggle[database]?.[type],
-          "text-slate-900": displayToggle[database]?.[type],
+            !displayToggle[database]?.tables,
+          "text-slate-900": displayToggle[database]?.tables,
         })}
-        onClick={() => toggleDisplay(database, type)}
+        onClick={() => toggleDisplay(database, "tables")}
       >
         <ChevronDownIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: !displayToggle[database]?.[type],
+            hidden: !displayToggle[database]?.tables,
           })}
         />
         <ChevronRightIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: displayToggle[database]?.[type],
+            hidden: displayToggle[database]?.tables,
           })}
         />
-        {type === "tables" ? <TableIcon /> : <ActionIcon />}
-        {type.charAt(0).toUpperCase() + type.slice(1)}
+        <TableIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": displayToggle[database]?.tables,
+          })}
+        />
+        Tables
       </div>
       <div className="mb-1">
-        {displayToggle[database]?.[type] &&
-          databaseSchemas[database]?.[type]?.map(
-            (item: Table<string> | ActionSchema, index: number) => (
-              <DatabaseLink
+        {displayToggle[database]?.tables &&
+          databaseSchemas[database]?.tables?.map(
+            (table: Table<string>, index: number) => (
+              <DatabaseTableLink
                 key={index}
                 database={database}
-                item={item}
-                type={type}
+                table={table}
               />
             ),
           )}
@@ -247,20 +246,17 @@ const DatabaseDetails = ({
   )
 }
 
-// DatabaseLink Component
-const DatabaseLink = ({
+const DatabaseTableLink = ({
   database,
-  item,
-  type,
+  table,
 }: {
   database: string
-  item: Table<string> | ActionSchema
-  type: "tables" | "actions"
+  table: Table<string>
 }) => {
   return (
-    <div key={`${database}-${item.name}`} className="ml-5 text-sm">
+    <div key={`${database}-${table.name}`} className="ml-5 text-sm">
       <Link
-        href={`/databases/${database}/${type}/${item.name}`}
+        href={`/databases/${database}/table/${table.name}`}
         className={classNames({
           "flex select-none flex-row items-center gap-1 hover:text-slate-900":
             true,
@@ -268,7 +264,91 @@ const DatabaseLink = ({
         })}
       >
         <HashtagIcon className="h-3 w-3" />
-        {item.name}
+        {table.name}
+      </Link>
+    </div>
+  )
+}
+
+const DatabaseActions = ({
+  database,
+  displayToggle,
+  databaseSchemas,
+  toggleDisplay,
+}: {
+  database: string
+  displayToggle: IDisplayToggle
+  databaseSchemas: DatabaseDictionary
+  toggleDisplay: (
+    database: string,
+    display: keyof IDisplayToggle[string],
+  ) => void
+}) => {
+  return (
+    <>
+      <div
+        className={classNames({
+          "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
+            true,
+          "text-slate-500 hover:text-slate-900":
+            !displayToggle[database]?.actions,
+          "text-slate-900": displayToggle[database]?.actions,
+        })}
+        onClick={() => toggleDisplay(database, "actions")}
+      >
+        <ChevronDownIcon
+          className={classNames({
+            "h-4 w-4": true,
+            hidden: !displayToggle[database]?.actions,
+          })}
+        />
+        <ChevronRightIcon
+          className={classNames({
+            "h-4 w-4": true,
+            hidden: displayToggle[database]?.actions,
+          })}
+        />
+        <ActionIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": displayToggle[database]?.actions,
+          })}
+        />
+        Actions
+      </div>
+      {displayToggle[database]?.actions &&
+        databaseSchemas[database]?.actions?.map(
+          (action: ActionSchema, index: number) => (
+            <DatabaseActionLink
+              key={index}
+              database={database}
+              action={action}
+            />
+          ),
+        )}
+    </>
+  )
+}
+
+const DatabaseActionLink = ({
+  database,
+  action,
+}: {
+  database: string
+  action: ActionSchema
+}) => {
+  return (
+    <div key={`${database}-${action.name}`} className="ml-5 text-sm">
+      <Link
+        href={`/databases/${database}/action/${action.name}`}
+        className={classNames({
+          "flex select-none flex-row items-center gap-1 hover:text-slate-900":
+            true,
+          "text-slate-500 hover:text-slate-900": true,
+        })}
+      >
+        <HashtagIcon className="h-3 w-3" />
+        {action.name}
       </Link>
     </div>
   )
