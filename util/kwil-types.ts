@@ -1,12 +1,12 @@
-export interface IDatabase {
-  [key: string]: ISchema | null
+export interface DatabaseDictionary {
+  [key: string]: Database<string> | null
 }
 
-export interface ISchema {
-  name: string
-  tables: Table<string>[]
-  actions: ActionSchema[]
-}
+// export interface ISchema {
+//   name: string
+//   tables: Table<string>[]
+//   actions: ActionSchema[]
+// }
 
 // NOTE: This is a copy of the Kwil Schema types with the readonly properties removed
 // type ValueType = string | number | null
@@ -29,13 +29,13 @@ declare enum IndexType {
   BTREE = "BTREE",
   UNIQUE_BTREE = "UNIQUE_BTREE",
 }
-interface Database<T> {
+export interface Database<T> {
   get name(): string
   get owner(): string
-  get tables(): Table<T>
-  get actions(): ActionSchema
+  get tables(): Table<T>[] // NOTE: Had to convert this to array to get it to work
+  get actions(): ActionSchema[] // NOTE: Had to convert this to array to get it to work
 }
-interface Table<T> {
+export interface Table<T> {
   get name(): string
   get columns(): Column<T>[] // NOTE: Had to convert this to array to get it to work
   get indexes(): Index
@@ -54,7 +54,7 @@ interface Index {
   get columns(): string
   get type(): IndexType
 }
-interface ActionSchema {
+export interface ActionSchema {
   get name(): string
   get public(): boolean
   get inputs(): string[] // NOTE: Had to convert this to array to get it to work

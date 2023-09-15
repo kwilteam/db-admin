@@ -1,6 +1,8 @@
-import { IDatabase, ISchema } from "./kwil-types"
+import { DatabaseDictionary, Database } from "./kwil-types"
 
-export const getDatabases = async (): Promise<IDatabase | undefined> => {
+export const getDatabases = async (): Promise<
+  DatabaseDictionary | undefined
+> => {
   const res = await apiRequest("/api/databases")
 
   if (res.status !== 200) {
@@ -15,7 +17,7 @@ export const getDatabases = async (): Promise<IDatabase | undefined> => {
 
 export const getDatabaseSchema = async (
   db: string,
-): Promise<ISchema | undefined> => {
+): Promise<Database<string> | undefined> => {
   const res = await apiRequest(`/api/databases/${db}/schema`)
 
   if (res.status !== 200) {
