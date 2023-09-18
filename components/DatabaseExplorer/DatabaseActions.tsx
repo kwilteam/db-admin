@@ -1,6 +1,5 @@
-import { DatabaseDictionary } from "@/util/kwil-types"
-import { Types as KwilTypes } from "kwil"
-import { IDisplayToggle } from "."
+import { KwilTypes } from "@/util/database-types"
+
 import classNames from "classnames"
 import {
   ActionIcon,
@@ -9,21 +8,17 @@ import {
   HashtagIcon,
 } from "@/util/icons"
 import Link from "next/link"
+import { useAppSelector, useAppDispatch } from "@/store/hooks"
+import {
+  setDatabaseVisibility,
+  selectDatabaseSchemas,
+  selectDatabaseVisibility,
+} from "@/store/database"
 
-export const DatabaseActions = ({
-  database,
-  displayToggle,
-  databaseSchemas,
-  toggleDisplay,
-}: {
-  database: string
-  displayToggle: IDisplayToggle
-  databaseSchemas: DatabaseDictionary
-  toggleDisplay: (
-    database: string,
-    display: keyof IDisplayToggle[string],
-  ) => void
-}) => {
+export const DatabaseActions = ({ database }: { database: string }) => {
+  const dispatch = useAppDispatch()
+  const databaseSchemas = useAppSelector(selectDatabaseSchemas)
+  const databaseVisibility = useAppSelector(selectDatabaseVisibility)
   return (
     <>
       <div
@@ -31,32 +26,40 @@ export const DatabaseActions = ({
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
             true,
           "text-slate-500 hover:text-slate-900":
-            !displayToggle[database]?.actions,
-          "text-slate-900": displayToggle[database]?.actions,
+            !databaseVisibility[database]?.actions,
+          "text-slate-900": databaseVisibility[database]?.actions,
         })}
-        onClick={() => toggleDisplay(database, "actions")}
+        onClick={() =>
+          dispatch(
+            setDatabaseVisibility({
+              database,
+              key: "actions",
+            }),
+          )
+        }
       >
         <ChevronDownIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: !displayToggle[database]?.actions,
+            hidden: !databaseVisibility[database]?.actions,
           })}
         />
         <ChevronRightIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: displayToggle[database]?.actions,
+            hidden: databaseVisibility[database]?.actions,
           })}
         />
         <ActionIcon
           className={classNames({
             "h-4 w-4": true,
-            "text-kwil-light": displayToggle[database]?.actions,
+            "text-kwil-light": databaseVisibility[database]?.actions,
           })}
         />
         Actions
       </div>
-      {displayToggle[database]?.actions &&
+      {databaseVisibility[database]?.actions &&
+        databaseSchemas &&
         databaseSchemas[database]?.actions?.map(
           (action: KwilTypes.ActionSchema, index: number) => (
             <DatabaseActionLink

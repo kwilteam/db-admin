@@ -1,6 +1,7 @@
 import MobileNavigation from "@/components/MobileNavigation"
 import Navigation from "@/components/Navigation"
 import UserInfo from "@/components/UserInfo"
+import { ReduxProvider } from "@/store/Provider"
 import Image from "next/image"
 import React from "react"
 
@@ -10,7 +11,7 @@ interface Props {
 
 export default function DashboardLayout({ children }: Props) {
   return (
-    <>
+    <ReduxProvider>
       <MobileNavigation />
 
       <div className="flex min-h-screen">
@@ -31,6 +32,6 @@ export default function DashboardLayout({ children }: Props) {
         </div>
         <div className="flex flex-1 flex-col lg:pl-72">{children}</div>
       </div>
-    </>
+    </ReduxProvider>
   )
 }

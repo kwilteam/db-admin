@@ -1,6 +1,4 @@
-import { DatabaseDictionary } from "@/util/kwil-types"
-import { Types as KwilTypes } from "kwil"
-import { IDisplayToggle } from "."
+import { KwilTypes } from "@/util/database-types"
 import classNames from "classnames"
 import {
   ChevronDownIcon,
@@ -9,21 +7,21 @@ import {
   TableIcon,
 } from "@/util/icons"
 import Link from "next/link"
+import { useAppSelector, useAppDispatch } from "@/store/hooks"
+import {
+  setDatabaseVisibility,
+  selectDatabaseSchemas,
+  selectDatabaseVisibility,
+} from "@/store/database"
 
-export const DatabaseTables = ({
-  database,
-  displayToggle,
-  databaseSchemas,
-  toggleDisplay,
-}: {
-  database: string
-  displayToggle: IDisplayToggle
-  databaseSchemas: DatabaseDictionary
-  toggleDisplay: (
-    database: string,
-    display: keyof IDisplayToggle[string],
-  ) => void
-}) => {
+export const DatabaseTables = ({ database }: { database: string }) => {
+  const dispatch = useAppDispatch()
+  const databaseSchemas = useAppSelector(selectDatabaseSchemas)
+  const databaseVisibility = useAppSelector(selectDatabaseVisibility)
+
+  console.log("databaseSchemas", databaseSchemas)
+  console.log("databaseVisibility", databaseVisibility)
+
   return (
     <>
       <div
@@ -31,33 +29,41 @@ export const DatabaseTables = ({
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
             true,
           "text-slate-500 hover:text-slate-900":
-            !displayToggle[database]?.tables,
-          "text-slate-900": displayToggle[database]?.tables,
+            !databaseVisibility[database]?.tables,
+          "text-slate-900": databaseVisibility[database]?.tables,
         })}
-        onClick={() => toggleDisplay(database, "tables")}
+        onClick={() =>
+          dispatch(
+            setDatabaseVisibility({
+              database,
+              key: "tables",
+            }),
+          )
+        }
       >
         <ChevronDownIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: !displayToggle[database]?.tables,
+            hidden: !databaseVisibility[database]?.tables,
           })}
         />
         <ChevronRightIcon
           className={classNames({
             "h-4 w-4": true,
-            hidden: displayToggle[database]?.tables,
+            hidden: databaseVisibility[database]?.tables,
           })}
         />
         <TableIcon
           className={classNames({
             "h-4 w-4": true,
-            "text-kwil-light": displayToggle[database]?.tables,
+            "text-kwil-light": databaseVisibility[database]?.tables,
           })}
         />
         Tables
       </div>
       <div className="mb-1">
-        {displayToggle[database]?.tables &&
+        {databaseVisibility[database]?.tables &&
+          databaseSchemas &&
           databaseSchemas[database]?.tables?.map(
             (table: KwilTypes.Table<string>, index: number) => (
               <DatabaseTableLink

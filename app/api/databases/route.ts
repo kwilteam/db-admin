@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
-import { DatabaseDictionary } from "@/util/kwil-types"
+import { DatabaseSchemaDict } from "@/util/database-types"
 
 interface IResponse {
-  data: DatabaseDictionary | undefined
+  data: DatabaseSchemaDict | undefined
   status?: number
 }
 
@@ -24,7 +24,7 @@ export const GET = async (): Promise<NextResponse<IResponse>> => {
   } as IResponse)
 }
 
-const getDatabases = async (): Promise<DatabaseDictionary> => {
+const getDatabases = async (): Promise<DatabaseSchemaDict> => {
   // TODO: Return list of databases from the Kwil Provider
   return {
     posts: null,

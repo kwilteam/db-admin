@@ -1,75 +1,13 @@
 "use client"
-import { DatabaseDictionary } from "@/util/kwil-types"
-import { Types as KwilTypes } from "kwil"
-import { Fragment, useState } from "react"
-import { getDatabaseSchema } from "@/util/api"
+import { Fragment } from "react"
 import { DatabaseItem } from "./DatabaseItem"
 import { DatabaseSchema } from "./DatabaseSchema"
-
-interface Props {
-  databases: DatabaseDictionary
-}
-
-export interface IDisplayToggle {
-  [key: string]: {
-    schema: boolean
-    tables: boolean
-    actions: boolean
-  }
-}
+import useDatabaseSchemas from "@/hooks/useDatabaseSchemas"
+import Loading from "../Loading"
 
 // DatabasesExplorer Component
-export default function DatabasesExplorer({ databases }: Props) {
-  // We will fetch a DB schema when the user clicks a database, so we need to be able to update the state
-  const [databaseSchemas, setDatabaseSchema] =
-    useState<DatabaseDictionary>(databases)
-  const [displayToggle, setDisplayToggle] = useState<IDisplayToggle>({})
-
-  const getSchema = async (database: string) => {
-    if (databaseSchemas[database]) {
-      toggleDisplay(database, "schema")
-      setDisplay(database, "tables", false)
-      setDisplay(database, "actions", false)
-    } else {
-      const schema: KwilTypes.Database<string> | undefined =
-        await getDatabaseSchema(database)
-      if (!schema) return
-
-      setDatabaseSchema((prevState: DatabaseDictionary) => ({
-        ...prevState,
-        [database]: { ...prevState[database], ...schema },
-      }))
-
-      toggleDisplay(database, "schema")
-    }
-  }
-
-  const toggleDisplay = (
-    database: string,
-    display: keyof IDisplayToggle[string],
-  ) => {
-    setDisplayToggle((prevState: IDisplayToggle) => ({
-      ...prevState,
-      [database]: {
-        ...prevState[database],
-        [display]: !prevState[database]?.[display],
-      },
-    }))
-  }
-
-  const setDisplay = (
-    database: string,
-    display: keyof IDisplayToggle[string],
-    displayValue: boolean,
-  ) => {
-    setDisplayToggle((prevState: IDisplayToggle) => ({
-      ...prevState,
-      [database]: {
-        ...prevState[database],
-        [display]: displayValue,
-      },
-    }))
-  }
+export default function DatabasesExplorer() {
+  const { databaseSchemas, databaseCount } = useDatabaseSchemas()
 
   return (
     <div
@@ -77,21 +15,26 @@ export default function DatabasesExplorer({ databases }: Props) {
       id="database-explorer"
     >
       <ul className="flex flex-col">
-        {Object.keys(databaseSchemas).map((database, index) => (
-          <Fragment key={index}>
-            <DatabaseItem
-              database={database}
-              displayToggle={displayToggle}
-              getSchema={getSchema}
-            />
-            <DatabaseSchema
-              database={database}
-              displayToggle={displayToggle}
-              databaseSchemas={databaseSchemas}
-              toggleDisplay={toggleDisplay}
-            />
-          </Fragment>
-        ))}
+        {databaseSchemas &&
+          Object.keys(databaseSchemas).map((database, index) => (
+            <Fragment key={index}>
+              <DatabaseItem database={database} />
+              <DatabaseSchema database={database} />
+            </Fragment>
+          ))}
+        {databaseCount === 0 && (
+          <div className="flex h-full flex-col items-center justify-center">
+            <p className="text-2xl font-bold text-gray-500">
+              No databases found
+            </p>
+            <p className="text-gray-400">Add a database to get started</p>
+          </div>
+        )}
+        {databaseCount === undefined && (
+          <div className="mt-4 flex justify-center">
+            <Loading />
+          </div>
+        )}
       </ul>
     </div>
   )

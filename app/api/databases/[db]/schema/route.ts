@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { Types as KwilTypes } from "kwil"
+import { KwilTypes } from "@/util/database-types"
 import schemaData from "./example_schema.json" // TODO: Temp whilst developing UI
 
 interface IResponse {

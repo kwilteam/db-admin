@@ -1,7 +1,7 @@
-import { DatabaseDictionary, Database } from "./kwil-types"
+import { IDatabaseSchemaDict, KwilTypes } from "./database-types"
 
 export const getDatabases = async (): Promise<
-  DatabaseDictionary | undefined
+  IDatabaseSchemaDict | undefined
 > => {
   const res = await apiRequest("/api/databases")
 
@@ -17,7 +17,7 @@ export const getDatabases = async (): Promise<
 
 export const getDatabaseSchema = async (
   db: string,
-): Promise<Database<string> | undefined> => {
+): Promise<KwilTypes.Database<string> | undefined> => {
   const res = await apiRequest(`/api/databases/${db}/schema`)
 
   if (res.status !== 200) {
