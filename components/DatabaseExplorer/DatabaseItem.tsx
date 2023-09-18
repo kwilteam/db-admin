@@ -1,63 +1,28 @@
 import classNames from "classnames"
-
 import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/util/icons"
-import { KwilTypes } from "@/util/database-types"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
-  setDatabaseSchema,
-  setDatabaseVisibility,
-  selectDatabaseSchemas,
   selectDatabaseVisibility,
+  setDatabaseVisibility,
 } from "@/store/database"
-import { getDatabaseSchema } from "@/util/api"
+import useGetSchema from "@/hooks/useGetSchema"
 
 export const DatabaseItem = ({ database }: { database: string }) => {
+  const { getSchema } = useGetSchema()
   const dispatch = useAppDispatch()
-  const databaseSchemas = useAppSelector(selectDatabaseSchemas)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 
-  const getSchema = async (database: string) => {
-    console.log(databaseSchemas)
-    if (databaseSchemas && databaseSchemas[database]) {
+  const getSchemaOrHide = (database: string) => {
+    if (databaseVisibility[database]?.isVisible) {
       dispatch(
         setDatabaseVisibility({
           database,
           key: "isVisible",
-        }),
-      ) // Toggles the visibility of the database
-      dispatch(
-        setDatabaseVisibility({
-          database,
-          key: "tables",
-          isVisible: false,
-        }),
-      )
-      dispatch(
-        setDatabaseVisibility({
-          database,
-          key: "actions",
           isVisible: false,
         }),
       )
     } else {
-      const schema: KwilTypes.Database<string> | undefined =
-        await getDatabaseSchema(database)
-      if (!schema) return
-
-      dispatch(
-        setDatabaseSchema({
-          database,
-          schema,
-        }),
-      )
-
-      dispatch(
-        setDatabaseVisibility({
-          database,
-          key: "isVisible",
-          isVisible: true,
-        }),
-      )
+      getSchema(database)
     }
   }
 
@@ -72,7 +37,7 @@ export const DatabaseItem = ({ database }: { database: string }) => {
           !databaseVisibility[database]?.isVisible,
         "text-slate-900": databaseVisibility[database]?.isVisible,
       })}
-      onClick={() => getSchema(database)}
+      onClick={() => getSchemaOrHide(database)}
     >
       <ChevronDownIcon
         className={classNames({

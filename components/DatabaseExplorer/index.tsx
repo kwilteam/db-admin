@@ -1,13 +1,31 @@
 "use client"
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { DatabaseItem } from "./DatabaseItem"
 import { DatabaseSchema } from "./DatabaseSchema"
 import useDatabaseSchemas from "@/hooks/useDatabaseSchemas"
 import Loading from "../Loading"
+import { useParams, usePathname } from "next/navigation"
+import { useAppDispatch } from "@/store/hooks"
+import { setDatabaseVisibility } from "@/store/database"
+import useGetSchema from "@/hooks/useGetSchema"
+
+interface IParams {
+  db?: string
+}
 
 // DatabasesExplorer Component
 export default function DatabasesExplorer() {
   const { databaseSchemas, databaseCount } = useDatabaseSchemas()
+  const { getSchema } = useGetSchema()
+  const params: IParams = useParams()
+
+  const { db } = params
+
+  useEffect(() => {
+    if (db) {
+      getSchema(db)
+    }
+  }, [db])
 
   return (
     <div
