@@ -1,17 +1,17 @@
 import {
-  IDatabaseSchemaDict,
+  IDatabaseStructureDict,
   IDatabaseVisibilityDict,
   KwilTypes,
 } from "@/util/database-types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface DatabaseState {
-  databaseSchemaDict: IDatabaseSchemaDict | undefined
+  databaseStructureDict: IDatabaseStructureDict | undefined
   databaseVisibilityDict: IDatabaseVisibilityDict
 }
 
 const initialState: DatabaseState = {
-  databaseSchemaDict: undefined,
+  databaseStructureDict: undefined,
   databaseVisibilityDict: {},
 }
 
@@ -21,22 +21,23 @@ export const databaseSlice = createSlice({
   reducers: {
     setDatabases: (
       state: DatabaseState,
-      action: PayloadAction<IDatabaseSchemaDict>,
+      action: PayloadAction<IDatabaseStructureDict>,
     ) => {
-      state.databaseSchemaDict = action.payload
+      state.databaseStructureDict = action.payload
     },
 
-    setDatabaseSchema: (
+    setDatabaseObject: (
       state: DatabaseState,
       action: PayloadAction<{
         database: string
-        schema: KwilTypes.Database<string>
+        structure: KwilTypes.Database<string>
       }>,
     ) => {
-      console.log("setDatabaseSchema", action.payload)
-      if (!state.databaseSchemaDict) state.databaseSchemaDict = {}
+      console.log("setDatabaseObject", action.payload)
+      if (!state.databaseStructureDict) state.databaseStructureDict = {}
 
-      state.databaseSchemaDict[action.payload.database] = action.payload.schema
+      state.databaseStructureDict[action.payload.database] =
+        action.payload.structure
     },
     setDatabaseVisibility: (
       state: DatabaseState,
@@ -56,11 +57,11 @@ export const databaseSlice = createSlice({
   },
 })
 
-export const { setDatabases, setDatabaseSchema, setDatabaseVisibility } =
+export const { setDatabases, setDatabaseObject, setDatabaseVisibility } =
   databaseSlice.actions
 
-export const selectDatabaseSchemas = (state: { database: DatabaseState }) =>
-  state.database.databaseSchemaDict
+export const selectDatabaseStructures = (state: { database: DatabaseState }) =>
+  state.database.databaseStructureDict
 
 export const selectDatabaseVisibility = (state: { database: DatabaseState }) =>
   state.database.databaseVisibilityDict

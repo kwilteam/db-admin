@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { KwilTypes } from "@/util/database-types"
-import schemaData from "./example_schema.json" // TODO: Temp whilst developing UI
+import databaseStructure from "./example_db_structure.json" // TODO: Temp whilst developing UI
 
 interface IResponse {
   data: KwilTypes.Database<string> | undefined
@@ -21,12 +21,11 @@ export const GET = async (
   // In the short term, return the same response irrespective of the name argument
   const { db } = params
 
-  console.log("Get Schema for DB:", db)
-  const schema = schemaData
+  console.log("Get Object for DB:", db)
 
-  // TODO: Return schema for database from the Kwil Provider
+  // TODO: Return object for database from the Kwil Provider
 
-  if (!schema) {
+  if (!databaseStructure) {
     return NextResponse.json({
       data: undefined,
       status: 404,
@@ -34,7 +33,7 @@ export const GET = async (
   }
 
   return NextResponse.json({
-    data: schema,
+    data: databaseStructure,
     status: 200,
   } as unknown as IResponse)
 }

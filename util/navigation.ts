@@ -29,14 +29,3 @@ export const navigationItems: INavigationItem[] = [
     icon: SettingsIcon,
   },
 ]
-
-export const getActivePageName = (pathname: string): string | undefined => {
-  const activePageName = navigationItems.find((item) =>
-    pathname.startsWith(item.href),
-  )?.name
-
-  if (!activePageName)
-    throw new Error(`No active page name found for pathname: ${pathname}`)
-
-  return activePageName
-}

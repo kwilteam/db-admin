@@ -1,7 +1,7 @@
-import { IDatabaseSchemaDict, KwilTypes } from "./database-types"
+import { IDatabaseStructureDict, KwilTypes } from "./database-types"
 
 export const getDatabases = async (): Promise<
-  IDatabaseSchemaDict | undefined
+  IDatabaseStructureDict | undefined
 > => {
   const res = await apiRequest("/api/databases")
 
@@ -15,18 +15,18 @@ export const getDatabases = async (): Promise<
   return json.data
 }
 
-export const getDatabaseSchema = async (
+export const getDatabaseObject = async (
   db: string,
 ): Promise<KwilTypes.Database<string> | undefined> => {
-  const res = await apiRequest(`/api/databases/${db}/schema`)
+  const res = await apiRequest(`/api/databases/${db}/structure`)
 
   if (res.status !== 200) {
-    throw new Error("Failed to fetch database schema")
+    throw new Error("Failed to fetch database object")
   }
 
   const json = await res.json()
 
-  console.log("Get Database Schema Client:", json)
+  console.log("Get Database Object Client:", json)
   return json.data
 }
 

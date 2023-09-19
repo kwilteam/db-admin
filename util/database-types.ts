@@ -3,8 +3,8 @@ import { Types as KwilTypes } from "kwil"
 // Types from the Kwil library
 export type { KwilTypes }
 
-// Dictionary of database names to their schema
-export interface IDatabaseSchemaDict {
+// Dictionary of database names to their object
+export interface IDatabaseStructureDict {
   [key: string]: KwilTypes.Database<string> | null
 }
 

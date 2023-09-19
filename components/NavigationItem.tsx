@@ -17,7 +17,7 @@ export default function NavigationItem({ item }: Props) {
       <Link
         href={item.href}
         className={classNames({
-          "flex flex-row gap-2 rounded-md p-2 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
+          "flex flex-row gap-2 rounded-md p-4 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
             true,
           "bg-kwil-dark text-slate-100 drop-shadow-md": pathname.startsWith(
             item.href,

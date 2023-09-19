@@ -1,21 +1,20 @@
 "use client"
 
-import { getActivePageName, navigationItems } from "@/util/navigation"
+import { navigationItems } from "@/util/navigation"
 import NavigationItem from "./NavigationItem"
 import { Dialog, Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import Image from "next/image"
 import UserInfo from "./UserInfo"
-import { usePathname } from "next/navigation"
 import DatabasesExplorer from "./DatabaseExplorer"
-import { DatabaseIcon } from "@/util/icons"
+import { ChevronDownIcon, ChevronLeftIcon, DatabaseIcon } from "@/util/icons"
+import useActivePageName from "@/hooks/useActivePageName"
 
 export default function MobileNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const pathname = usePathname()
-
-  const activePageName = getActivePageName(pathname)
+  const [menuContext, setMenuContext] = useState("")
+  const activePageName = useActivePageName()
 
   return (
     <>
@@ -42,13 +41,13 @@ export default function MobileNavigation() {
             leaveFrom="opacity-100 translate-x-0"
             leaveTo="opacity-0 -translate-x-full"
           >
-            <nav className="fixed inset-y-0 left-0 flex w-5/6 flex-col bg-kwil lg:hidden">
+            <nav className="fixed inset-y-0 left-0 flex w-5/6 max-w-[83.33%] flex-col bg-kwil lg:hidden">
               <Image
                 src="/images/kwil-white-horizontal.svg"
                 alt="Kwil Logo"
-                className="mx-auto mb-8 mt-6 h-auto"
-                width={140}
-                height={80}
+                className="mx-auto mb-10 mt-6 h-auto"
+                width={120}
+                height={33}
                 priority
               />
               <button
@@ -57,7 +56,7 @@ export default function MobileNavigation() {
               >
                 <HiOutlineXMark className="h-6 w-6 text-slate-100" />
               </button>
-              {activePageName && activePageName !== "Databases" && (
+              {(menuContext === "Root" || activePageName !== "Databases") && (
                 <ul
                   role="list"
                   className="mx-4 flex flex-col gap-1"
@@ -68,20 +67,27 @@ export default function MobileNavigation() {
                   ))}
                 </ul>
               )}
-              {activePageName && activePageName === "Databases" && (
-                <>
-                  <button>Back to other menu items</button>
-                  <div className="mx-4 flex flex-row gap-2 rounded-md p-2 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md">
-                    <DatabaseIcon className="h-6 w-6" />
-
-                    <div>Databases</div>
+              {activePageName === "Databases" && menuContext !== "Root" && (
+                <Fragment>
+                  <button
+                    className="-mt-2 mb-1 ml-2 flex items-center justify-start text-sm text-white"
+                    onClick={() => setMenuContext("Root")}
+                  >
+                    <ChevronLeftIcon className="mr-1 h-4 w-4" />
+                    <span>Back</span>
+                  </button>
+                  <ul>
+                    <li>
+                      <div className="mx-2 my-2 flex flex-row gap-2 rounded-md bg-kwil-dark p-2 text-sm leading-6 text-white drop-shadow-md hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md">
+                        <DatabaseIcon className="h-6 w-6" />
+                        <div>Databases</div>
+                      </div>
+                    </li>
+                  </ul>
+                  <div className="mx-2 mb-2 h-screen overflow-scroll rounded-md bg-white p-1">
+                    <DatabasesExplorer setIsMenuOpen={setIsMenuOpen} />
                   </div>
-                  <div onClick={() => setIsMenuOpen(false)}>
-                    {/* <DatabasesExplorer
-                      databases={["info", "users", "comments"]}
-                    /> */}
-                  </div>
-                </>
+                </Fragment>
               )}
             </nav>
           </Transition.Child>

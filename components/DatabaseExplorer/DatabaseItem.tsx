@@ -1,63 +1,153 @@
+import { KwilTypes } from "@/util/database-types"
 import classNames from "classnames"
-import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/util/icons"
+import {
+  ActionIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  HashtagIcon,
+  TableIcon,
+} from "@/util/icons"
+import Link from "next/link"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
-  selectDatabaseVisibility,
   setDatabaseVisibility,
+  selectDatabaseStructures,
+  selectDatabaseVisibility,
 } from "@/store/database"
-import useGetSchema from "@/hooks/useGetSchema"
+import useDatabaseParams from "@/hooks/useDatabaseParams"
+import { Dispatch, SetStateAction } from "react"
 
-export const DatabaseItem = ({ database }: { database: string }) => {
-  const { getSchema } = useGetSchema()
+interface IItemTypes {
+  [key: string]: "tables" | "actions"
+}
+
+const DatabaseItem = ({
+  database,
+  itemType,
+  setIsMenuOpen = () => {},
+}: {
+  database: string
+  itemType: IItemTypes[string]
+  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
+}) => {
   const dispatch = useAppDispatch()
+  const databaseStructures = useAppSelector(selectDatabaseStructures)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 
-  const getSchemaOrHide = (database: string) => {
-    if (databaseVisibility[database]?.isVisible) {
-      dispatch(
-        setDatabaseVisibility({
-          database,
-          key: "isVisible",
-          isVisible: false,
-        }),
-      )
-    } else {
-      getSchema(database)
-    }
-  }
+  const visible = databaseVisibility[database]?.[itemType]
+  const databaseStructureItems =
+    databaseStructures && databaseStructures[database]?.[itemType]
 
   return (
-    <li
-      id={`${database}-item`}
-      key={database}
-      className={classNames({
-        "text-md flex cursor-pointer select-none flex-row items-center gap-1 p-2 pb-1":
-          true,
-        "text-slate-500 hover:text-slate-900":
-          !databaseVisibility[database]?.isVisible,
-        "text-slate-900": databaseVisibility[database]?.isVisible,
-      })}
-      onClick={() => getSchemaOrHide(database)}
-    >
-      <ChevronDownIcon
+    <>
+      <div
         className={classNames({
-          "h-4 w-4": true,
-          hidden: !databaseVisibility[database]?.isVisible,
+          "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
+            true,
+          "text-slate-500 hover:text-slate-900": !visible,
+          "text-slate-900": visible,
         })}
-      />
-      <ChevronRightIcon
-        className={classNames({
-          "h-4 w-4": true,
-          hidden: databaseVisibility[database]?.isVisible,
-        })}
-      />
-      <DatabaseIcon
-        className={classNames({
-          "h-4 w-4": true,
-          "text-amber-500": databaseVisibility[database]?.isVisible,
-        })}
-      />
-      {database}
-    </li>
+        onClick={() =>
+          dispatch(
+            setDatabaseVisibility({
+              database,
+              key: itemType,
+            }),
+          )
+        }
+      >
+        <ChevronDownIcon
+          className={classNames({
+            "h-4 w-4": true,
+            hidden: !visible,
+          })}
+        />
+        <ChevronRightIcon
+          className={classNames({
+            "h-4 w-4": true,
+            hidden: visible,
+          })}
+        />
+        {itemType === "tables" && (
+          <TableIcon
+            className={classNames({
+              "h-4 w-4": true,
+              "text-kwil-light": visible,
+            })}
+          />
+        )}
+        {itemType === "actions" && (
+          <ActionIcon
+            className={classNames({
+              "h-4 w-4": true,
+              "text-kwil-light": visible,
+            })}
+          />
+        )}
+        <span className="capitalize">{itemType}</span>
+      </div>
+      <div className="mb-1">
+        {visible &&
+          databaseStructureItems &&
+          databaseStructureItems.map(
+            (
+              objectItem: KwilTypes.Table<string> | KwilTypes.ActionSchema,
+              index: number,
+            ) => (
+              <DatabaseItemLink
+                key={index}
+                database={database}
+                itemName={objectItem.name}
+                itemType={itemType}
+                setIsMenuOpen={setIsMenuOpen}
+              />
+            ),
+          )}
+      </div>
+    </>
   )
 }
+
+const DatabaseItemLink = ({
+  database,
+  itemName,
+  itemType,
+  setIsMenuOpen = () => {},
+}: {
+  database: string
+  itemName: string
+  itemType: IItemTypes[string]
+  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
+}) => {
+  const singularItemType = itemType.slice(0, -1)
+  const { db, table: activeTable, action: activeAction } = useDatabaseParams()
+
+  const active =
+    (db === database && itemType === "tables" && activeTable === itemName) ||
+    (db === database && itemType === "actions" && activeAction === itemName)
+
+  return (
+    <div
+      key={`${database}-${itemType}-${itemName}`}
+      className="ml-10 overflow-hidden text-sm"
+    >
+      <Link
+        href={`/databases/${database}/${singularItemType}/${itemName}`}
+        className={classNames({
+          "flex select-none flex-row items-center gap-1 hover:text-slate-900":
+            true,
+          "text-slate-500 ": !active,
+          "font-semibold text-slate-900": active,
+        })}
+        onClick={() => {
+          setIsMenuOpen(false)
+        }}
+      >
+        <HashtagIcon className="h-3 w-3" />
+        <span className="max-w-[80%]">{itemName}</span>
+      </Link>
+    </div>
+  )
+}
+
+export default DatabaseItem

@@ -1,17 +1,17 @@
-import { selectDatabaseSchemas, setDatabases } from "@/store/database"
+import { selectDatabaseStructures, setDatabases } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { getDatabases } from "@/util/api"
 import { useEffect, useState } from "react"
 
-export default function useDatabaseSchemas() {
+export default function useDatabaseStructures() {
   const dispatch = useAppDispatch()
-  const databaseSchemas = useAppSelector(selectDatabaseSchemas)
+  const databaseStructures = useAppSelector(selectDatabaseStructures)
   const [databaseCount, setDatabaseCount] = useState<number | undefined>()
 
   useEffect(() => {
     const fetchDatabases = async () => {
-      if (databaseSchemas) {
-        setDatabaseCount(Object.keys(databaseSchemas).length)
+      if (databaseStructures) {
+        setDatabaseCount(Object.keys(databaseStructures).length)
         return
       }
 
@@ -27,7 +27,7 @@ export default function useDatabaseSchemas() {
       dispatch(setDatabases(_databases))
     }
     fetchDatabases()
-  }, [databaseCount, dispatch, databaseSchemas])
+  }, [databaseCount, dispatch, databaseStructures])
 
-  return { databaseSchemas, databaseCount }
+  return { databaseStructures, databaseCount }
 }

@@ -1,43 +1,41 @@
 "use client"
-import { Fragment, useEffect } from "react"
-import { DatabaseItem } from "./DatabaseItem"
-import { DatabaseSchema } from "./DatabaseSchema"
-import useDatabaseSchemas from "@/hooks/useDatabaseSchemas"
+import { Dispatch, Fragment, SetStateAction, useEffect } from "react"
+import DatabaseName from "./DatabaseName"
+import DatabaseStructure from "./DatabaseStructure"
+import useDatabaseStructures from "@/hooks/useDatabaseStructures"
 import Loading from "../Loading"
-import { useParams, usePathname } from "next/navigation"
-import { useAppDispatch } from "@/store/hooks"
-import { setDatabaseVisibility } from "@/store/database"
-import useGetSchema from "@/hooks/useGetSchema"
-
-interface IParams {
-  db?: string
-}
+import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
+import useDatabaseParams from "@/hooks/useDatabaseParams"
 
 // DatabasesExplorer Component
-export default function DatabasesExplorer() {
-  const { databaseSchemas, databaseCount } = useDatabaseSchemas()
-  const { getSchema } = useGetSchema()
-  const params: IParams = useParams()
-
-  const { db } = params
+export default function DatabasesExplorer({
+  setIsMenuOpen = () => {},
+}: {
+  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
+}) {
+  const { databaseStructures, databaseCount } = useDatabaseStructures()
+  const { getDbStructure } = useGetDbStructure()
+  const { db, table, action } = useDatabaseParams()
 
   useEffect(() => {
     if (db) {
-      getSchema(db)
+      const show = table ? "tables" : action ? "actions" : undefined
+      getDbStructure(db, show)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [db])
 
   return (
-    <div
-      className="max-h-screen min-h-screen w-full overflow-scroll bg-slate-50/30"
-      id="database-explorer"
-    >
+    <div className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll">
       <ul className="flex flex-col">
-        {databaseSchemas &&
-          Object.keys(databaseSchemas).map((database, index) => (
+        {databaseStructures &&
+          Object.keys(databaseStructures).map((database, index) => (
             <Fragment key={index}>
-              <DatabaseItem database={database} />
-              <DatabaseSchema database={database} />
+              <DatabaseName database={database} />
+              <DatabaseStructure
+                database={database}
+                setIsMenuOpen={setIsMenuOpen}
+              />
             </Fragment>
           ))}
         {databaseCount === 0 && (
