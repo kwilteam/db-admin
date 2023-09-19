@@ -5,11 +5,11 @@ import { ReduxProvider } from "@/store/Provider"
 import Image from "next/image"
 import React from "react"
 
-interface Props {
+interface IProps {
   children: React.ReactNode
 }
 
-export default function DashboardLayout({ children }: Props) {
+export default function DashboardLayout({ children }: IProps) {
   return (
     <ReduxProvider>
       <MobileNavigation />

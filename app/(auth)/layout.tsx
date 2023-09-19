@@ -1,10 +1,10 @@
 import Image from "next/image"
 
-interface Props {
+interface IProps {
   children: React.ReactNode
 }
 
-export default function SigninLayout({ children }: Props) {
+export default function SigninLayout({ children }: IProps) {
   return (
     <>
       <div className="bg-kwil text-center">

@@ -5,11 +5,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
 
-interface Props {
+interface IProps {
   item: INavigationItem
 }
 
-export default function NavigationItem({ item }: Props) {
+export default function NavigationItem({ item }: IProps) {
   const pathname = usePathname()
 
   return (

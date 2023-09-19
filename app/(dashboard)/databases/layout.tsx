@@ -2,7 +2,7 @@ import DatabasesExplorer from "@/components/DatabaseExplorer"
 
 export default function DatabasesLayout({
   children,
-}: React.PropsWithChildren<{}>) {
+}: React.IPropsWithChildren<{}>) {
   return (
     <div className="flex min-h-screen flex-row">
       <div className="hidden border-r border-slate-100 lg:flex lg:w-72">

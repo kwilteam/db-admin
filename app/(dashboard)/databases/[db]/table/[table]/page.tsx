@@ -1,4 +1,4 @@
-import { ChevronRightIcon, DatabaseIcon, TableIcon } from "@/util/icons"
+import DataTable from "@/components/DataTableExplorer"
 
 interface IProps {
   params: {
@@ -11,15 +11,5 @@ interface IProps {
 export default async function DatabaseTablePage({ params }: IProps) {
   const { db, table } = params
 
-  return (
-    <div className="flex flex-col">
-      <div className="flex select-none flex-row items-center gap-2 bg-slate-50 p-2">
-        <DatabaseIcon className="h-4 w-4" />
-        <span>{db}</span>
-        <ChevronRightIcon className="h-5 w-5" />
-        <TableIcon className="h-4 w-4" />
-        <span>{table}</span>
-      </div>
-    </div>
-  )
+  return <DataTable database={db} type="table" name={table} />
 }

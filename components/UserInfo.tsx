@@ -6,11 +6,11 @@ import React, { Fragment } from "react"
 import { ProfileIcon, SignOutIcon } from "@/util/icons"
 import classNames from "classnames"
 
-interface Props {
+interface IProps {
   userName: string
 }
 
-export default function UserInfo({ userName }: Props) {
+export default function UserInfo({ userName }: IProps) {
   const initials = userName
     .split(" ")
     .map((name) => name[0])
