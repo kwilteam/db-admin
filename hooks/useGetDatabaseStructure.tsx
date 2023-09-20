@@ -1,6 +1,6 @@
 import { setDatabaseObject, setDatabaseVisibility } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
-import { getDatabaseObject } from "@/util/api"
+import { getDatabaseStructure } from "@/util/api"
 import { KwilTypes } from "@/util/database-types"
 
 export default function useGetDbStructure() {
@@ -11,7 +11,7 @@ export default function useGetDbStructure() {
     show?: "tables" | "actions",
   ) => {
     const dbStructure: KwilTypes.Database<string> | undefined =
-      await getDatabaseObject(database)
+      await getDatabaseStructure(database)
     if (!dbStructure) return
 
     dispatch(

@@ -7,8 +7,7 @@ import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
 
-// DatabasesExplorer Component
-export default function DatabasesExplorer({
+export default function DatabasesTree({
   setIsMenuOpen = () => {},
 }: {
   setIsMenuOpen?: Dispatch<SetStateAction<boolean>>

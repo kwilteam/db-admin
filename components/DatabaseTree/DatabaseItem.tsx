@@ -4,7 +4,6 @@ import {
   ActionIcon,
   ChevronDownIcon,
   ChevronRightIcon,
-  HashtagIcon,
   TableIcon,
 } from "@/util/icons"
 import Link from "next/link"
@@ -143,7 +142,7 @@ const DatabaseItemLink = ({
           setIsMenuOpen(false)
         }}
       >
-        <HashtagIcon className="h-3 w-3" />
+        <ChevronRightIcon className="h-3 w-3" />
         <span className="max-w-[80%]">{itemName}</span>
       </Link>
     </div>

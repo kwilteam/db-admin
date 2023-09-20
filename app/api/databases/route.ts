@@ -1,37 +1,39 @@
 import { NextResponse } from "next/server"
 import { IDatabaseStructureDict } from "@/util/database-types"
+import { fetchKwilDatabases } from "@/util/kwil-provider"
+import { IApiResponse } from "@/util/api"
 
-interface IResponse {
-  data: IDatabaseStructureDict | undefined
-  status?: number
-}
-
-export const GET = async (): Promise<NextResponse<IResponse>> => {
+export const GET = async (): Promise<
+  NextResponse<IApiResponse<IDatabaseStructureDict>>
+> => {
   const databases = await getDatabases()
 
   if (!databases) {
     return NextResponse.json({
-      data: undefined,
       status: 404,
-    } as IResponse)
+      data: undefined,
+    } as IApiResponse<IDatabaseStructureDict>)
   }
 
   console.log("Get Databases API:", databases)
 
   return NextResponse.json({
-    data: databases,
     status: 200,
-  } as IResponse)
+    data: databases,
+  } as IApiResponse<IDatabaseStructureDict>)
 }
 
-const getDatabases = async (): Promise<IDatabaseStructureDict> => {
-  // TODO: Return list of databases from the Kwil Provider
-  return {
-    posts: null,
-    users: null,
-    comments: null,
-    more: null,
-    another: null,
-    again: null,
+const getDatabases = async (): Promise<IDatabaseStructureDict | undefined> => {
+  const res = await fetchKwilDatabases()
+
+  if (res?.databases) {
+    const databases = res.databases
+    const databaseStructureDict: IDatabaseStructureDict = {}
+
+    for (const database of databases) {
+      databaseStructureDict[database] = null
+    }
+
+    return databaseStructureDict
   }
 }

@@ -1,15 +1,18 @@
-"use client"
-
-import { people } from "./testData"
+import Alert from "@/components/Alert"
 
 interface IProps {
-  database: string
-  type: "table" | "action"
-  name: string
+  data: Object[] | undefined
+}
+interface IDataItem {
+  [key: string]: string
 }
 
-export default function ManualDataTable({ database, type, name }: IProps) {
-  const columns = Object.keys(people[0])
+export default function DataTable({ data }: IProps) {
+  if (data === undefined || data?.length === 0) {
+    return <Alert text="Table is empty." type="info" />
+  }
+
+  const columns = Object.keys(data[0])
 
   return (
     <div className="overflow-scroll border border-slate-200">
@@ -22,20 +25,20 @@ export default function ManualDataTable({ database, type, name }: IProps) {
                 scope="col"
                 className="p-2 text-left text-sm font-semibold text-slate-900"
               >
-                {column.charAt(0).toUpperCase() + column.slice(1)}
+                {column}
               </th>
             ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200 bg-white">
-          {people.map((person) => (
-            <tr className="divide-x divide-slate-200" key={person.email}>
+          {data.map((dataItem: Object, index: number) => (
+            <tr className="divide-x divide-slate-200" key={index}>
               {columns.map((column) => (
                 <td
                   key={column}
                   className="whitespace-nowrap p-2 text-sm text-slate-500"
                 >
-                  {person[column as any]}
+                  {(dataItem as IDataItem)[column] as string}
                 </td>
               ))}
             </tr>

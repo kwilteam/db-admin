@@ -1,5 +1,10 @@
 import { IDatabaseStructureDict, KwilTypes } from "./database-types"
 
+export interface IApiResponse<T> {
+  status?: number
+  data: T | undefined
+}
+
 export const getDatabases = async (): Promise<
   IDatabaseStructureDict | undefined
 > => {
@@ -9,24 +14,37 @@ export const getDatabases = async (): Promise<
     throw new Error("Failed to fetch databases")
   }
 
-  const json = await res.json()
+  const json = (await res.json()) as IApiResponse<IDatabaseStructureDict>
 
-  console.log("Get Databases Client:", json)
   return json.data
 }
 
-export const getDatabaseObject = async (
+export const getDatabaseStructure = async (
   db: string,
 ): Promise<KwilTypes.Database<string> | undefined> => {
   const res = await apiRequest(`/api/databases/${db}/structure`)
 
   if (res.status !== 200) {
-    throw new Error("Failed to fetch database object")
+    throw new Error("Failed to fetch database structure")
   }
 
-  const json = await res.json()
+  const json = (await res.json()) as IApiResponse<KwilTypes.Database<string>>
 
-  console.log("Get Database Object Client:", json)
+  return json.data
+}
+
+// TODO: Will need to include pagination, sorting, and filtering
+export const getTableData = async (
+  db: string,
+  table: string,
+): Promise<Object[] | undefined> => {
+  const res = await apiRequest(`/api/databases/${db}/table/${table}`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch table data")
+  }
+
+  const json = (await res.json()) as IApiResponse<Object[]>
   return json.data
 }
 

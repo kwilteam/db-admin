@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server"
 import { KwilTypes } from "@/util/database-types"
-import databaseStructure from "./example_db_structure.json" // TODO: Temp whilst developing UI
-
-interface IResponse {
-  data: KwilTypes.Database<string> | undefined
-  status?: number
-}
+import { getKwilDatabaseStructure } from "@/util/kwil-provider"
+import { Kwil } from "kwil/dist/client/kwil"
+import { IApiResponse } from "@/util/api"
 
 interface INextRequest {
   request: Request
@@ -17,9 +14,11 @@ interface INextRequest {
 export const GET = async (
   request: Request,
   { params }: INextRequest,
-): Promise<NextResponse<IResponse>> => {
+): Promise<NextResponse<IApiResponse<KwilTypes.Database<string>>>> => {
   // In the short term, return the same response irrespective of the name argument
   const { db } = params
+
+  const databaseStructure = await getKwilDatabaseStructure(db)
 
   console.log("Get Object for DB:", db)
 
@@ -27,13 +26,13 @@ export const GET = async (
 
   if (!databaseStructure) {
     return NextResponse.json({
-      data: undefined,
       status: 404,
-    } as IResponse)
+      data: undefined,
+    } as IApiResponse<KwilTypes.Database<string>>)
   }
 
   return NextResponse.json({
-    data: databaseStructure,
     status: 200,
-  } as unknown as IResponse)
+    data: databaseStructure,
+  } as unknown as IApiResponse<KwilTypes.Database<string>>)
 }
