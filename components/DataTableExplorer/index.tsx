@@ -1,6 +1,7 @@
 import DataTable from "./ManualDataTable"
 import Title from "./Title"
 import Pagination from "./Pagination"
+import Filters from "./Filters"
 
 interface IProps {
   database: string
@@ -10,13 +11,15 @@ interface IProps {
 
 export default function DataTableExplorer({ database, type, name }: IProps) {
   return (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex max-h-screen flex-grow flex-col bg-white">
       <Title database={database} type={type} name={name} />
-      {/* <div className="w-full p-2">Filter options</div> */}
-      <div className="bg-w flex-1  px-2">
+      {/* <Filters /> */}
+      <div className="flex-1 overflow-scroll bg-slate-50 p-2">
         <DataTable database={database} type={type} name={name}></DataTable>
       </div>
-      <Pagination />
+      <div className="flex">
+        <Pagination />
+      </div>
     </div>
   )
 }

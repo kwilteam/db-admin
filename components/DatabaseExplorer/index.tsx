@@ -40,10 +40,10 @@ export default function DatabasesExplorer({
           ))}
         {databaseCount === 0 && (
           <div className="flex h-full flex-col items-center justify-center">
-            <p className="text-2xl font-bold text-gray-500">
+            <p className="text-2xl font-bold text-slate-500">
               No databases found
             </p>
-            <p className="text-gray-400">Add a database to get started</p>
+            <p className="text-slate-400">Add a database to get started</p>
           </div>
         )}
         {databaseCount === undefined && (

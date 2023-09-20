@@ -7,13 +7,10 @@ import { Fragment, useState } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import Image from "next/image"
 import UserInfo from "./UserInfo"
-import DatabasesExplorer from "./DatabaseExplorer"
-import { ChevronDownIcon, ChevronLeftIcon, DatabaseIcon } from "@/util/icons"
 import useActivePageName from "@/hooks/useActivePageName"
 
 export default function MobileNavigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [menuContext, setMenuContext] = useState("")
   const activePageName = useActivePageName()
 
   return (
@@ -56,39 +53,16 @@ export default function MobileNavigation() {
               >
                 <HiOutlineXMark className="h-6 w-6 text-slate-100" />
               </button>
-              {(menuContext === "Root" || activePageName !== "Databases") && (
-                <ul
-                  role="list"
-                  className="mx-4 flex flex-col gap-1"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {navigationItems.map((item) => (
-                    <NavigationItem key={item.name} item={item} />
-                  ))}
-                </ul>
-              )}
-              {activePageName === "Databases" && menuContext !== "Root" && (
-                <Fragment>
-                  <button
-                    className="-mt-2 mb-1 ml-2 flex items-center justify-start text-sm text-white"
-                    onClick={() => setMenuContext("Root")}
-                  >
-                    <ChevronLeftIcon className="mr-1 h-4 w-4" />
-                    <span>Back</span>
-                  </button>
-                  <ul>
-                    <li>
-                      <div className="mx-2 my-2 flex flex-row gap-2 rounded-md bg-kwil-dark p-2 text-sm leading-6 text-white drop-shadow-md hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md">
-                        <DatabaseIcon className="h-6 w-6" />
-                        <div>Databases</div>
-                      </div>
-                    </li>
-                  </ul>
-                  <div className="mx-2 mb-2 h-screen overflow-scroll rounded-md bg-white p-1">
-                    <DatabasesExplorer setIsMenuOpen={setIsMenuOpen} />
-                  </div>
-                </Fragment>
-              )}
+
+              <ul
+                role="list"
+                className="mx-4 flex flex-col gap-1"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {navigationItems.map((item) => (
+                  <NavigationItem key={item.name} item={item} />
+                ))}
+              </ul>
             </nav>
           </Transition.Child>
         </Dialog>

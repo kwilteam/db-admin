@@ -8,10 +8,10 @@ import {
   HiOutlineTableCells,
   HiOutlineChevronDown,
   HiOutlineChevronRight,
-  HiOutlineChevronDoubleRight,
   HiOutlineChevronLeft,
-  HiOutlineChevronDoubleLeft,
   HiOutlineHashtag,
+  HiOutlineListBullet,
+  HiOutlineFunnel,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 
@@ -25,9 +25,9 @@ export {
   HiOutlineUserCircle as ProfileIcon,
   HiOutlineChevronDown as ChevronDownIcon,
   HiOutlineChevronRight as ChevronRightIcon,
-  HiOutlineChevronDoubleRight as ChevronDoubleRightIcon,
   HiOutlineChevronLeft as ChevronLeftIcon,
-  HiOutlineChevronDoubleLeft as ChevronDoubleLeftIcon,
   HiOutlineHashtag as HashtagIcon,
+  HiOutlineListBullet as SortIcon,
+  HiOutlineFunnel as FilterIcon,
   CiLogout as SignOutIcon,
 }

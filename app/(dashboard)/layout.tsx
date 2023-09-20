@@ -30,7 +30,9 @@ export default function DashboardLayout({ children }: IProps) {
             <UserInfo userName="Martin Creedy" />
           </div>
         </div>
-        <div className="flex flex-1 flex-col lg:pl-72">{children}</div>
+        <div className="flex flex-1 flex-col lg:overflow-hidden lg:pl-72">
+          {children}
+        </div>
       </div>
     </ReduxProvider>
   )
