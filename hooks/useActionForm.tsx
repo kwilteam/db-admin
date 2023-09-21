@@ -2,14 +2,10 @@ import { ActionSchema } from "kwil/dist/core/database"
 import { useCallback, useEffect, useState } from "react"
 
 interface IUseActionFormProps {
-  database: string
   action: ActionSchema | undefined
 }
 
-export default function useActionForm({
-  database,
-  action,
-}: IUseActionFormProps) {
+export default function useActionForm({ action }: IUseActionFormProps) {
   const [isDirty, setIsDirty] = useState(false)
   const [errors, setErrors] = useState<Record<string, boolean>>({})
   const inputs = action?.inputs
@@ -24,10 +20,15 @@ export default function useActionForm({
     setErrors(initialErrors)
   }, [inputs])
 
+  interface IValidateFormProps {
+    formValues: Record<string, string>
+    form: HTMLFormElement
+  }
+
   const validateForm = useCallback(
     (
       event: React.FormEvent<HTMLFormElement>,
-    ): Record<string, string> | undefined => {
+    ): IValidateFormProps | undefined => {
       const form = event.currentTarget
       setIsDirty(true)
 
@@ -37,12 +38,9 @@ export default function useActionForm({
       const formData = new FormData(form)
       const formValues: Record<string, string> = {}
 
-      inputs.forEach((input) => {
-        formValues[input] = formData.get(input) as string
-      })
-
       // Validate inputs
       inputs.map((input) => {
+        formValues[input] = formData.get(input) as string
         validateInput(input, formValues[input])
       })
 
@@ -51,8 +49,7 @@ export default function useActionForm({
         return
       }
 
-      // If no errors, execute action
-      return formValues
+      return { formValues, form }
     },
     [inputs, errors],
   )
@@ -69,5 +66,28 @@ export default function useActionForm({
     }
   }
 
-  return { inputs, errors, isDirty, validateInput, validateForm }
+  const resetForm = useCallback(
+    (form: HTMLFormElement) => {
+      setIsDirty(false)
+
+      const initialErrors: Record<string, boolean> = {}
+      inputs?.forEach((input) => {
+        initialErrors[input] = true
+      })
+      console.log("Resetting errors", initialErrors)
+      setErrors(initialErrors)
+
+      form.reset()
+    },
+    [inputs],
+  )
+
+  return {
+    inputs,
+    errors,
+    isDirty,
+    validateInput,
+    validateForm,
+    resetForm,
+  }
 }

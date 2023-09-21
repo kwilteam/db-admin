@@ -1,4 +1,4 @@
-import { getTableData } from "@/utils/kwil-provider"
+import { getTableData } from "@/utils/kwil/table"
 import { NextResponse } from "next/server"
 import { IApiResponse } from "@/utils/api"
 
@@ -24,8 +24,6 @@ export const GET = async (
       data: "Error fetching table data",
     } as IApiResponse<string>)
   }
-
-  console.log("Get Table data API:", result)
 
   return NextResponse.json({
     status: 200,

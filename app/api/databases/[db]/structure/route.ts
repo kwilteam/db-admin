@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { KwilTypes } from "@/utils/database-types"
-import { getKwilDatabaseStructure } from "@/utils/kwil-provider"
+import { getDatabaseStructure } from "@/utils/kwil/database"
 import { Kwil } from "kwil/dist/client/kwil"
 import { IApiResponse } from "@/utils/api"
 
@@ -17,7 +17,7 @@ export const GET = async (
 ): Promise<NextResponse<IApiResponse<KwilTypes.Database<string> | string>>> => {
   const { db } = params
 
-  const result = await getKwilDatabaseStructure(db)
+  const result = await getDatabaseStructure(db)
 
   console.log("Get Object for DB:", db)
 

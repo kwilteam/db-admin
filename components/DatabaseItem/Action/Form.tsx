@@ -1,31 +1,39 @@
+"use client"
+
+import { useState } from "react"
 import classNames from "classnames"
 import { KwilTypes } from "@/utils/database-types"
+import useActionForm from "@/hooks/useActionForm"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
-import useActionForm from "@/hooks/useActionForm"
+import Loading from "@/components/Loading"
 
 interface IActionFormProps {
-  database: string
   action: KwilTypes.ActionSchema | undefined
-  executeAction: (formValues: Record<string, string>) => void
+  executeAction: (formValues: Record<string, string>) => Promise<void>
 }
 
 export default function ActionForm({
-  database,
   action,
   executeAction,
 }: IActionFormProps) {
-  const { inputs, errors, isDirty, validateInput, validateForm } =
+  const [isExecuting, setIsExecuting] = useState(false)
+  const { inputs, errors, isDirty, validateInput, validateForm, resetForm } =
     useActionForm({
-      database,
       action,
     })
 
-  const triggerAction = (event: React.FormEvent<HTMLFormElement>) => {
-    const formValues = validateForm(event)
-    if (formValues) {
-      executeAction(formValues)
+  const triggerAction = async (event: React.FormEvent<HTMLFormElement>) => {
+    setIsExecuting(true)
+    const isValid = validateForm(event)
+
+    if (isValid) {
+      const { formValues, form } = isValid
+      await executeAction(formValues)
+      resetForm(form)
     }
+
+    setIsExecuting(false)
   }
 
   return (
@@ -63,7 +71,8 @@ export default function ActionForm({
         )}
 
         <div className="m-2">
-          <Button context="primary">Execute Action</Button>
+          {!isExecuting && <Button context="primary">Execute Action</Button>}
+          {isExecuting && <Loading className="p-2" />}
         </div>
       </form>
     </div>

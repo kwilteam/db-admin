@@ -4,11 +4,11 @@ import { useState } from "react"
 import { executeAction as executeActionApi } from "@/utils/api"
 import { useAppSelector } from "@/store/hooks"
 import { selectAction } from "@/store/database"
+import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
-import DataTable from "@/components/DataView/DataTable"
+import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
 import ActionStatements from "./Statements"
-import Alert from "@/components/Alert"
 
 interface IActionProps {
   database: string
@@ -25,12 +25,7 @@ export default function Action({ database, actionName }: IActionProps) {
     selectAction(state, database, actionName),
   )
 
-  if (!action)
-    return (
-      <div className="flex justify-center pt-4">
-        <Loading />
-      </div>
-    )
+  if (!action) return <Loading className="flex justify-center pt-4" />
 
   const executeAction = async (formValues: Record<string, string>) => {
     const result = await executeActionApi(database, actionName, formValues)
@@ -39,7 +34,7 @@ export default function Action({ database, actionName }: IActionProps) {
       setActionError(true)
       setTimeout(() => {
         setActionError(undefined)
-      }, 5000)
+      }, 3500)
       return
     }
 
@@ -48,7 +43,7 @@ export default function Action({ database, actionName }: IActionProps) {
 
     setTimeout(() => {
       setActionSuccess(undefined)
-    }, 5000)
+    }, 3500)
   }
 
   const statements = action?.statements
@@ -56,11 +51,7 @@ export default function Action({ database, actionName }: IActionProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row gap-6 rounded-md bg-slate-100/60  p-2">
-        <ActionForm
-          database={database}
-          action={action}
-          executeAction={executeAction}
-        />
+        <ActionForm action={action} executeAction={executeAction} />
         <ActionStatements statements={statements} />
       </div>
       <div className="mt-2">

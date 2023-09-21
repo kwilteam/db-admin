@@ -46,9 +46,7 @@ export default function DatabasesTree({
           </div>
         )}
         {databaseCount === undefined && (
-          <div className="mt-4 flex justify-center">
-            <Loading />
-          </div>
+          <Loading className="mt-4 flex justify-center" />
         )}
       </ul>
     </div>

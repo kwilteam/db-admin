@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server"
 import { IDatabaseStructureDict } from "@/utils/database-types"
-import { getKwilDatabases } from "@/utils/kwil-provider"
+import { getDatabases } from "@/utils/kwil/database"
 import { IApiResponse } from "@/utils/api"
 
 export const GET = async (): Promise<
   NextResponse<IApiResponse<IDatabaseStructureDict | string>>
 > => {
-  const result = await getKwilDatabases()
+  const result = await getDatabases()
 
   if (result?.status !== 200 || !result?.data) {
     return NextResponse.json({
@@ -15,7 +15,7 @@ export const GET = async (): Promise<
     } as IApiResponse<string>)
   }
 
-  const databases = await getDatabases(result.data)
+  const databases = await databasesToDict(result.data)
 
   return NextResponse.json({
     status: 200,
@@ -23,7 +23,7 @@ export const GET = async (): Promise<
   } as IApiResponse<IDatabaseStructureDict>)
 }
 
-const getDatabases = async (
+const databasesToDict = async (
   databases: string[],
 ): Promise<IDatabaseStructureDict> => {
   const databaseStructureDict: IDatabaseStructureDict = {}

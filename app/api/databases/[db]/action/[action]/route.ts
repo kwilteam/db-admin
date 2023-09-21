@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { executeAction } from "@/utils/kwil-provider"
+import { executeAction } from "@/utils/kwil/action"
 import { IApiResponse } from "@/utils/api"
 import { KwilTypes } from "@/utils/database-types"
 
