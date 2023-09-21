@@ -1,6 +1,6 @@
 "use client"
 
-import { navigationItems } from "@/util/navigation"
+import { navigationItems } from "@/utils/navigation"
 import NavigationItem from "./NavigationItem"
 
 export default function Navigation() {

@@ -1,4 +1,4 @@
-import DataTable from "@/components/DataExplorer"
+import DataTable from "@/components/DataView"
 
 interface IProps {
   params: {

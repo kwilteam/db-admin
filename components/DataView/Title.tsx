@@ -3,7 +3,7 @@ import {
   DatabaseIcon,
   TableIcon,
   ActionIcon,
-} from "@/util/icons"
+} from "@/utils/icons"
 import React from "react"
 
 interface IProps {

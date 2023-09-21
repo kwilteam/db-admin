@@ -1,4 +1,4 @@
-import { navigationItems } from "@/util/navigation"
+import { navigationItems } from "@/utils/navigation"
 import { usePathname } from "next/navigation"
 
 const useActivePageName = (): string | undefined => {

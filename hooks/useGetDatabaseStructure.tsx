@@ -1,7 +1,7 @@
 import { setDatabaseObject, setDatabaseVisibility } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
-import { getDatabaseStructure } from "@/util/api"
-import { KwilTypes } from "@/util/database-types"
+import { getDatabaseStructure } from "@/utils/api"
+import { KwilTypes } from "@/utils/database-types"
 
 export default function useGetDbStructure() {
   const dispatch = useAppDispatch()

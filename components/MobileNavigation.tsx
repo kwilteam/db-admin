@@ -1,6 +1,6 @@
 "use client"
 
-import { navigationItems } from "@/util/navigation"
+import { navigationItems } from "@/utils/navigation"
 import NavigationItem from "./NavigationItem"
 import { Dialog, Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"

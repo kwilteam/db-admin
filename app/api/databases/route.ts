@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server"
-import { IDatabaseStructureDict } from "@/util/database-types"
-import { fetchKwilDatabases } from "@/util/kwil-provider"
-import { IApiResponse } from "@/util/api"
+import { IDatabaseStructureDict } from "@/utils/database-types"
+import { getKwilDatabases } from "@/utils/kwil-provider"
+import { IApiResponse } from "@/utils/api"
 
 export const GET = async (): Promise<
-  NextResponse<IApiResponse<IDatabaseStructureDict>>
+  NextResponse<IApiResponse<IDatabaseStructureDict | string>>
 > => {
-  const databases = await getDatabases()
+  const result = await getKwilDatabases()
 
-  if (!databases) {
+  if (result?.status !== 200 || !result?.data) {
     return NextResponse.json({
-      status: 404,
-      data: undefined,
-    } as IApiResponse<IDatabaseStructureDict>)
+      status: result?.status ?? 400,
+      data: "Error fetching databases",
+    } as IApiResponse<string>)
   }
 
-  console.log("Get Databases API:", databases)
+  const databases = await getDatabases(result.data)
 
   return NextResponse.json({
     status: 200,
@@ -23,17 +23,14 @@ export const GET = async (): Promise<
   } as IApiResponse<IDatabaseStructureDict>)
 }
 
-const getDatabases = async (): Promise<IDatabaseStructureDict | undefined> => {
-  const res = await fetchKwilDatabases()
+const getDatabases = async (
+  databases: string[],
+): Promise<IDatabaseStructureDict> => {
+  const databaseStructureDict: IDatabaseStructureDict = {}
 
-  if (res?.databases) {
-    const databases = res.databases
-    const databaseStructureDict: IDatabaseStructureDict = {}
-
-    for (const database of databases) {
-      databaseStructureDict[database] = null
-    }
-
-    return databaseStructureDict
+  for (const database of databases) {
+    databaseStructureDict[database] = null
   }
+
+  return databaseStructureDict
 }

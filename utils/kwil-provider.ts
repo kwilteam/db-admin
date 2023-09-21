@@ -1,35 +1,35 @@
 import { Wallet } from "ethers"
 import { KwilTypes } from "./database-types"
 import { NodeKwil } from "kwil"
-import { GenericResponse } from "kwil/dist/core/resreq"
 
-type IKwilDatabasesResponse = {
-  databases: string[]
-}
-
-export const fetchKwilDatabases = async (): Promise<
-  IKwilDatabasesResponse | undefined
+export const getKwilDatabases = async (): Promise<
+  KwilTypes.GenericResponse<string[]> | undefined
 > => {
-  const providerAddress = await getProviderAddress()
+  try {
+    const kwil = getKwilInstance()
+    const providerAddress = await getProviderAddress()
+    const result = await kwil.listDatabases(providerAddress)
 
-  return fetchKwil<IKwilDatabasesResponse>(
-    `/api/v1/${providerAddress}/databases`,
-  )
+    return result
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const getKwilDatabaseStructure = async (
   database: string,
-): Promise<KwilTypes.Database<string> | undefined> => {
-  const kwil = getKwilInstance()
-  const dbId = await getDatabaseId(database)
-
+): Promise<
+  KwilTypes.GenericResponse<KwilTypes.Database<string>> | undefined
+> => {
   try {
+    const kwil = getKwilInstance()
+    const dbId = await getDatabaseId(database)
     const result = await kwil.getSchema(dbId)
 
     if (result.status !== 200)
       throw new Error("Failed to fetch database structure")
 
-    return result.data
+    return result
   } catch (error) {
     console.error(error)
   }
@@ -38,27 +38,25 @@ export const getKwilDatabaseStructure = async (
 export const getTableData = async (
   database: string,
   table: string,
-): Promise<Object[] | undefined> => {
-  const kwil = getKwilInstance()
-  const dbId = await getDatabaseId(database)
-
-  const query = buildQuery(table)
-
+): Promise<KwilTypes.GenericResponse<Object[]> | undefined> => {
   try {
+    const kwil = getKwilInstance()
+    const dbId = await getDatabaseId(database)
+
+    const query = buildQuery(table)
+
     const result = await kwil.selectQuery(dbId, query)
 
     if (result.status !== 200) throw new Error("Failed to fetch table data")
 
-    return result.data
+    return result
   } catch (error) {
     console.error(error)
   }
 }
 
 const getKwilInstance = (): NodeKwil => {
-  // Connect to NodeKwil provider using the provider URL
-  // Connect to NodeKwil provider using the provider URL
-  const kwilProviderUrl = getEnvironmentVariable("DEV_KWIL_PROVIDER_URL")
+  const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
 
   return new NodeKwil({
     kwilProvider: kwilProviderUrl,
@@ -83,30 +81,12 @@ const buildQuery = (table: string): string => {
   return `SELECT * FROM ${table}`
 }
 
-const fetchKwil = async <T>(url: string): Promise<T | undefined> => {
-  const kwilProviderUrl = getEnvironmentVariable("DEV_KWIL_PROVIDER_URL")
-
-  try {
-    const response = await fetch(`${kwilProviderUrl}${url}`)
-
-    if (!response.ok) throw new Error("Kwil Provider call failed")
-
-    const data = (await response.json()) as T
-
-    console.log("Kwil Provider Response:", data)
-
-    return data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 const getProviderAddress = async (): Promise<string> => {
-  const env = getEnvironmentVariable("ENV")
+  const env = getEnvVar("ENV")
   let adminPrivateKey = undefined
 
   if (env === "development") {
-    adminPrivateKey = getEnvironmentVariable("DEV_KWIL_ADMIN_PK")
+    adminPrivateKey = getEnvVar("DEV_KWIL_ADMIN_PK")
   } else if (env === "production") {
     // TODO Private key must be generated using the Mnemonic which is stored securely on the server
     adminPrivateKey = "FROM MNEMONIC"
@@ -118,7 +98,7 @@ const getProviderAddress = async (): Promise<string> => {
   return await signer.getAddress()
 }
 
-const getEnvironmentVariable = (key: string): string => {
+const getEnvVar = (key: string): string => {
   const value = process.env[key]
   if (!value) {
     throw new Error(`${key} not set`)

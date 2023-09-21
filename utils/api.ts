@@ -2,7 +2,7 @@ import { IDatabaseStructureDict, KwilTypes } from "./database-types"
 
 export interface IApiResponse<T> {
   status?: number
-  data: T | undefined
+  data: T
 }
 
 export const getDatabases = async (): Promise<

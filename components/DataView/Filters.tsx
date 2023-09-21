@@ -1,4 +1,4 @@
-import { FilterIcon, SortIcon } from "@/util/icons"
+import { FilterIcon, SortIcon } from "@/utils/icons"
 
 export default function Filters() {
   return (

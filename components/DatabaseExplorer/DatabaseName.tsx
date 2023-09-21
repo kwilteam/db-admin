@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/util/icons"
+import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/utils/icons"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   selectDatabaseVisibility,

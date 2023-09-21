@@ -2,7 +2,7 @@ import {
   IDatabaseStructureDict,
   IDatabaseVisibilityDict,
   KwilTypes,
-} from "@/util/database-types"
+} from "@/utils/database-types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface DatabaseState {
@@ -33,7 +33,6 @@ export const databaseSlice = createSlice({
         structure: KwilTypes.Database<string>
       }>,
     ) => {
-      console.log("setDatabaseObject", action.payload)
       if (!state.databaseStructureDict) state.databaseStructureDict = {}
 
       state.databaseStructureDict[action.payload.database] =
@@ -65,5 +64,17 @@ export const selectDatabaseStructures = (state: { database: DatabaseState }) =>
 
 export const selectDatabaseVisibility = (state: { database: DatabaseState }) =>
   state.database.databaseVisibilityDict
+
+export const selectAction = (
+  state: { database: DatabaseState },
+  database: string,
+  actionName: string,
+) => {
+  const actions = state.database.databaseStructureDict?.[database]?.actions
+
+  if (!actions) return undefined
+
+  return actions.find((action) => action.name === actionName)
+}
 
 export default databaseSlice.reducer

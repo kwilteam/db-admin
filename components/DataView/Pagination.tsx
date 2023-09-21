@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@/util/icons"
+import { ChevronLeftIcon, ChevronRightIcon } from "@/utils/icons"
 
 export default function Pagination() {
   return (

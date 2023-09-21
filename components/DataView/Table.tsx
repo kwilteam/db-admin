@@ -7,7 +7,7 @@ interface IDataItem {
   [key: string]: string
 }
 
-export default function DataTable({ data }: IProps) {
+export default function Table({ data }: IProps) {
   if (data === undefined || data?.length === 0) {
     return <Alert text="Table is empty." type="info" />
   }

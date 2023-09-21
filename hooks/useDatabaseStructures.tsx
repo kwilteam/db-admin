@@ -1,6 +1,6 @@
 import { selectDatabaseStructures, setDatabases } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { getDatabases } from "@/util/api"
+import { getDatabases } from "@/utils/api"
 import { useEffect, useState } from "react"
 
 export default function useDatabaseStructures() {

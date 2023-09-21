@@ -1,6 +1,6 @@
-import { getTableData } from "@/util/kwil-provider"
+import { getTableData } from "@/utils/kwil-provider"
 import { NextResponse } from "next/server"
-import { IApiResponse } from "@/util/api"
+import { IApiResponse } from "@/utils/api"
 
 interface INextRequest {
   request: Request
@@ -13,24 +13,22 @@ interface INextRequest {
 export const GET = async (
   request: Request,
   { params }: INextRequest,
-): Promise<NextResponse<IApiResponse<Object[]>>> => {
+): Promise<NextResponse<IApiResponse<Object[] | string>>> => {
   const { db, table } = params
 
   const result = await getTableData(db, table)
 
-  console.log(result, db, table)
-
-  if (!result) {
+  if (result?.status !== 200 || !result?.data) {
     return NextResponse.json({
       status: 404,
-      data: undefined,
-    } as IApiResponse<Object[]>)
+      data: "Error fetching table data",
+    } as IApiResponse<string>)
   }
 
   console.log("Get Table data API:", result)
 
   return NextResponse.json({
     status: 200,
-    data: result,
+    data: result.data,
   } as IApiResponse<Object[]>)
 }

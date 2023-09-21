@@ -3,7 +3,7 @@
 import { Menu, Transition } from "@headlessui/react"
 import Link from "next/link"
 import React, { Fragment } from "react"
-import { ProfileIcon, SignOutIcon } from "@/util/icons"
+import { ProfileIcon, SignOutIcon } from "@/utils/icons"
 import classNames from "classnames"
 
 interface IProps {

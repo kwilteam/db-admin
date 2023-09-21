@@ -1,11 +1,11 @@
-import { KwilTypes } from "@/util/database-types"
+import { KwilTypes } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   TableIcon,
-} from "@/util/icons"
+} from "@/utils/icons"
 import Link from "next/link"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
