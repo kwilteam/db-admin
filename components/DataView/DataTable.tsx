@@ -2,14 +2,18 @@ import Alert from "@/components/Alert"
 
 interface IProps {
   data: Object[] | undefined
+  action?: boolean
 }
 interface IDataItem {
   [key: string]: string
 }
 
-export default function Table({ data }: IProps) {
+export default function DataTable({ data, action = false }: IProps) {
   if (data === undefined || data?.length === 0) {
-    return <Alert text="Table is empty." type="info" />
+    {
+      !action && <Alert text="No data found" type="info" />
+    }
+    return
   }
 
   const columns = Object.keys(data[0])

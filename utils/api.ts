@@ -1,4 +1,4 @@
-import { IDatabaseStructureDict, KwilTypes } from "./database-types"
+import { IDatabaseStructureDict, KwilTypes, TxReceipt } from "./database-types"
 
 export interface IApiResponse<T> {
   status?: number
@@ -48,6 +48,29 @@ export const getTableData = async (
   return json.data
 }
 
+export const executeAction = async (
+  db: string,
+  action: string,
+  inputs: Record<string, string>,
+): Promise<Object[] | undefined> => {
+  const res = await apiRequest(
+    `/api/databases/${db}/action/${action}`,
+    "POST",
+    {
+      inputs,
+    },
+  )
+
+  if (res.status !== 200) {
+    throw new Error("Failed to execute action")
+  }
+
+  const json = (await res.json()) as IApiResponse<TxReceipt>
+
+  // return undefined
+  return json.data.body
+}
+
 const createUrl = (path: string): string => {
   const url = new URL(path, process.env.NEXT_PUBLIC_APP_URL)
   return url.toString()
@@ -56,10 +79,12 @@ const createUrl = (path: string): string => {
 const apiRequest = async (
   path: string,
   method: string = "GET",
+  body?: Record<string, unknown>,
 ): Promise<Response> => {
   const url = createUrl(path)
   const response = await fetch(
     new Request(url, {
+      body: JSON.stringify(body),
       method,
       cache: "no-store", // Make sure we're not getting a cached response
     }),

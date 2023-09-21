@@ -23,7 +23,7 @@ export const GET = async (
 
   if (result?.status !== 200 || !result?.data) {
     return NextResponse.json({
-      status: 404,
+      status: result?.status ?? 400,
       data: "Error fetching database structure",
     } as IApiResponse<string>)
   }

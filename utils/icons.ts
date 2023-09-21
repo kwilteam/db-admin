@@ -13,6 +13,8 @@ import {
   HiOutlineFunnel,
   HiOutlineInformationCircle,
   HiOutlineExclamationCircle,
+  HiOutlineCheckCircle,
+  HiOutlineExclamationTriangle,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 
@@ -31,5 +33,7 @@ export {
   HiOutlineFunnel as FilterIcon,
   HiOutlineInformationCircle as InfoIcon,
   HiOutlineExclamationCircle as ErrorIcon,
+  HiOutlineCheckCircle as SuccessIcon,
+  HiOutlineExclamationTriangle as WarningIcon,
   CiLogout as SignOutIcon,
 }

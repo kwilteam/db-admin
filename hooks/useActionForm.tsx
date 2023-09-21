@@ -1,5 +1,5 @@
 import { ActionSchema } from "kwil/dist/core/database"
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface IUseActionFormProps {
   database: string
@@ -69,14 +69,5 @@ export default function useActionForm({
     }
   }
 
-  const executeAction = (event: React.FormEvent<HTMLFormElement>) => {
-    const formValues = validateForm(event)
-    if (!formValues) return
-
-    // Post formValues to API
-
-    console.log("Executing action", formValues)
-  }
-
-  return { inputs, errors, isDirty, validateInput, executeAction }
+  return { inputs, errors, isDirty, validateInput, validateForm }
 }
