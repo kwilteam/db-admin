@@ -1,6 +1,7 @@
-import { getTableData } from "@/utils/kwil/table"
+import { getTableData, getTableTotalCount } from "@/utils/kwil/table"
 import { NextResponse } from "next/server"
-import { IApiResponse } from "@/utils/api"
+import { IApiResponse, ITableResponse } from "@/utils/api"
+import { ITableQueryParams } from "@/utils/database-types"
 
 interface INextRequest {
   request: Request
@@ -10,23 +11,40 @@ interface INextRequest {
   }
 }
 
-export const GET = async (
+interface ICount {
+  count: number
+}
+
+interface RequestBody {
+  queryParams: ITableQueryParams
+}
+
+export const POST = async (
   request: Request,
   { params }: INextRequest,
-): Promise<NextResponse<IApiResponse<Object[] | string>>> => {
+): Promise<NextResponse<IApiResponse<ITableResponse | string>>> => {
   const { db, table } = params
+  const { queryParams } = (await request.json()) as RequestBody
 
-  const result = await getTableData(db, table)
+  console.log("POST", db, table, queryParams)
 
-  if (result?.status !== 200 || !result?.data) {
+  const dataResult = await getTableData(db, table, queryParams)
+  const countResult = await getTableTotalCount(db, table)
+
+  if (dataResult?.status !== 200 || countResult?.status !== 200) {
     return NextResponse.json({
-      status: result?.status ?? 400,
+      status: dataResult?.status ?? 400,
       data: "Error fetching table data",
     } as IApiResponse<string>)
   }
 
+  const countData = countResult.data?.[0] as ICount
+
   return NextResponse.json({
     status: 200,
-    data: result.data,
-  } as IApiResponse<Object[]>)
+    data: {
+      tableData: dataResult.data,
+      totalCount: countData.count,
+    },
+  } as IApiResponse<ITableResponse>)
 }

@@ -1,8 +1,18 @@
-import { IDatabaseStructureDict, KwilTypes, TxReceipt } from "./database-types"
+import {
+  IDatabaseStructureDict,
+  ITableQueryParams,
+  KwilTypes,
+  TxReceipt,
+} from "./database-types"
 
 export interface IApiResponse<T> {
   status?: number
   data: T
+}
+
+export interface ITableResponse {
+  tableData: Object[]
+  totalCount: number
 }
 
 export const getDatabases = async (): Promise<
@@ -37,14 +47,17 @@ export const getDatabaseStructure = async (
 export const getTableData = async (
   db: string,
   table: string,
-): Promise<Object[] | undefined> => {
-  const res = await apiRequest(`/api/databases/${db}/table/${table}`)
+  queryParams: ITableQueryParams | undefined,
+): Promise<ITableResponse | undefined> => {
+  const res = await apiRequest(`/api/databases/${db}/table/${table}`, "POST", {
+    queryParams,
+  })
 
   if (res.status !== 200) {
     throw new Error("Failed to fetch table data")
   }
 
-  const json = (await res.json()) as IApiResponse<Object[]>
+  const json = (await res.json()) as IApiResponse<ITableResponse>
   return json.data
 }
 

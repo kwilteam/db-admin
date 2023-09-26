@@ -1,17 +1,25 @@
 import Alert from "@/components/Alert"
+import Loading from "@/components/Loading"
 
 interface IProps {
   data: Object[] | undefined
-  action?: boolean
+  type: "table" | "action"
+  isLoading?: boolean
 }
 interface IDataItem {
   [key: string]: string
 }
 
-export default function DataTable({ data, action = false }: IProps) {
-  if (data === undefined || data?.length === 0) {
+export default function DataTable({ data, type, isLoading }: IProps) {
+  if (isLoading) {
+    return (
+      <Loading className="flex h-screen justify-center bg-slate-50 pt-10" />
+    )
+  }
+
+  if ((!isLoading && data?.length === 0) || !data) {
     {
-      !action && <Alert text="No data found" type="info" />
+      type === "table" && <Alert text="No data found" type="info" />
     }
     return
   }

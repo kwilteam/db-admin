@@ -1,18 +1,25 @@
 import {
   IDatabaseStructureDict,
   IDatabaseVisibilityDict,
+  ITableQueryParamsDict,
+  ITableQueryParams,
+  ITablePagination,
+  ITableFilters,
+  ITableSort,
   KwilTypes,
 } from "@/utils/database-types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface DatabaseState {
-  databaseStructureDict: IDatabaseStructureDict | undefined
-  databaseVisibilityDict: IDatabaseVisibilityDict
+  structureDict: IDatabaseStructureDict | undefined
+  visibilityDict: IDatabaseVisibilityDict
+  tableQueryParamsDict: ITableQueryParamsDict
 }
 
 const initialState: DatabaseState = {
-  databaseStructureDict: undefined,
-  databaseVisibilityDict: {},
+  structureDict: undefined,
+  visibilityDict: {},
+  tableQueryParamsDict: {},
 }
 
 export const databaseSlice = createSlice({
@@ -23,7 +30,7 @@ export const databaseSlice = createSlice({
       state: DatabaseState,
       action: PayloadAction<IDatabaseStructureDict>,
     ) => {
-      state.databaseStructureDict = action.payload
+      state.structureDict = action.payload
     },
 
     setDatabaseObject: (
@@ -33,11 +40,11 @@ export const databaseSlice = createSlice({
         structure: KwilTypes.Database<string>
       }>,
     ) => {
-      if (!state.databaseStructureDict) state.databaseStructureDict = {}
+      if (!state.structureDict) state.structureDict = {}
 
-      state.databaseStructureDict[action.payload.database] =
-        action.payload.structure
+      state.structureDict[action.payload.database] = action.payload.structure
     },
+
     setDatabaseVisibility: (
       state: DatabaseState,
       action: PayloadAction<{
@@ -47,34 +54,112 @@ export const databaseSlice = createSlice({
       }>,
     ) => {
       const { database, key, isVisible } = action.payload
-      const currentVisibility = state.databaseVisibilityDict[database]?.[key]
-      state.databaseVisibilityDict[database] = {
-        ...state.databaseVisibilityDict[database],
+      const currentVisibility = state.visibilityDict[database]?.[key]
+
+      state.visibilityDict[database] = {
+        ...state.visibilityDict[database],
         [key]: isVisible !== undefined ? isVisible : !currentVisibility,
+      }
+    },
+
+    setTablePagination: (
+      state: DatabaseState,
+      action: PayloadAction<{
+        database: string
+        table: string
+        pagination: ITablePagination
+      }>,
+    ) => {
+      const { database, table, pagination } = action.payload
+
+      state.tableQueryParamsDict[database] = {
+        ...state.tableQueryParamsDict[database],
+        [table]: {
+          ...state.tableQueryParamsDict[database]?.[table],
+          pagination,
+        },
+      }
+    },
+
+    setTableFilters: (
+      state: DatabaseState,
+      action: PayloadAction<{
+        database: string
+        table: string
+
+        filters: ITableFilters
+      }>,
+    ) => {
+      const { database, table, filters } = action.payload
+
+      state.tableQueryParamsDict[database] = {
+        ...state.tableQueryParamsDict[database],
+        [table]: {
+          ...state.tableQueryParamsDict[database]?.[table],
+          filters,
+        },
+      }
+    },
+
+    setTableSort: (
+      state: DatabaseState,
+      action: PayloadAction<{
+        database: string
+        table: string
+
+        sort: ITableSort
+      }>,
+    ) => {
+      const { database, table, sort } = action.payload
+
+      state.tableQueryParamsDict[database] = {
+        ...state.tableQueryParamsDict[database],
+        [table]: {
+          ...state.tableQueryParamsDict[database]?.[table],
+          sort,
+        },
       }
     },
   },
 })
 
-export const { setDatabases, setDatabaseObject, setDatabaseVisibility } =
-  databaseSlice.actions
+export const {
+  setDatabases,
+  setDatabaseObject,
+  setDatabaseVisibility,
+  setTablePagination,
+  setTableFilters,
+  setTableSort,
+} = databaseSlice.actions
 
 export const selectDatabaseStructures = (state: { database: DatabaseState }) =>
-  state.database.databaseStructureDict
+  state.database.structureDict
 
 export const selectDatabaseVisibility = (state: { database: DatabaseState }) =>
-  state.database.databaseVisibilityDict
+  state.database.visibilityDict
 
 export const selectAction = (
   state: { database: DatabaseState },
   database: string,
   actionName: string,
 ) => {
-  const actions = state.database.databaseStructureDict?.[database]?.actions
+  const actions = state.database.structureDict?.[database]?.actions
 
   if (!actions) return undefined
 
   return actions.find((action) => action.name === actionName)
+}
+
+export const selectTableQueryParams = (
+  state: { database: DatabaseState },
+  database: string,
+  table: string,
+): ITableQueryParams | undefined => {
+  const tableQueryParams =
+    state.database.tableQueryParamsDict?.[database]?.[table]
+  if (!tableQueryParams) return undefined
+
+  return tableQueryParams
 }
 
 export default databaseSlice.reducer

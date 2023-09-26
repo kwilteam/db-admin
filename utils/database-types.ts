@@ -27,3 +27,28 @@ interface IDatabaseVisibility {
 export interface IDatabaseVisibilityDict {
   [key: string]: IDatabaseVisibility
 }
+
+export interface ITableQueryParams {
+  pagination: ITablePagination
+  filters: ITableFilters
+  sort: ITableSort
+}
+
+export interface ITableQueryParamsDict {
+  [database: string]: {
+    [table: string]: ITableQueryParams
+  }
+}
+
+export interface ITablePagination {
+  currentPage: number
+  perPage: number
+}
+
+export interface ITableFilters {
+  [key: string]: string
+}
+
+export interface ITableSort {
+  [key: string]: "asc" | "desc"
+}
