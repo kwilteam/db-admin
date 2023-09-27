@@ -2,6 +2,7 @@ import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
 
 interface IProps {
+  columns: string[] | undefined
   data: Object[] | undefined
   type: "table" | "action"
   isLoading?: boolean
@@ -10,7 +11,7 @@ interface IDataItem {
   [key: string]: string
 }
 
-export default function DataTable({ data, type, isLoading }: IProps) {
+export default function DataTable({ columns, data, type, isLoading }: IProps) {
   if (isLoading) {
     return (
       <Loading className="flex h-screen justify-center bg-slate-50 pt-10" />
@@ -24,13 +25,15 @@ export default function DataTable({ data, type, isLoading }: IProps) {
     return
   }
 
-  const columns = Object.keys(data[0])
+  if (!columns) {
+    return
+  }
 
   return (
-    <div className="overflow-scroll border border-slate-200">
+    <div className="m-2 overflow-scroll border border-slate-200">
       <table className="divide-y divide-slate-200 lg:min-w-full">
         <thead className="bg-slate-50">
-          <tr className="divide-x divide-slate-200">
+          <tr className=" divide-x divide-slate-200">
             {columns.map((column: string) => (
               <th
                 key={column}

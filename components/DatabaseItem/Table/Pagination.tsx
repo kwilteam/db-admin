@@ -4,18 +4,19 @@ import { selectTableQueryParams, setTablePagination } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ITablePagination } from "@/utils/database-types"
 import { ChevronLeftIcon, ChevronRightIcon } from "@/utils/icons"
-import { useState } from "react"
 
 interface IPaginationProps {
-  totalCount: number | undefined
   database: string
   table: string
+  totalCount: number | undefined
+  isLoading: boolean
 }
 
 export default function Pagination({
-  totalCount,
   database,
   table,
+  totalCount,
+  isLoading,
 }: IPaginationProps) {
   const tableQueryParams = useAppSelector((state) =>
     selectTableQueryParams(state, database, table),
@@ -37,6 +38,8 @@ export default function Pagination({
       }),
     )
   }
+
+  if (isLoading) return null
 
   return (
     <div className="flex w-full gap-2 border-t border-slate-200 bg-slate-50/50 bg-white p-3 text-center text-sm">
