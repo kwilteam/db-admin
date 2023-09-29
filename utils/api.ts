@@ -84,6 +84,23 @@ export const executeAction = async (
   return json.data.body
 }
 
+export const deployDatabase = async (
+  dbDefinition: string | undefined,
+): Promise<IApiResponse<TxReceipt | string> | undefined> => {
+  console.log("Deploying database", dbDefinition)
+  if (!dbDefinition) {
+    throw new Error("No database definition provided")
+  }
+
+  const res = await apiRequest(`/api/databases/deploy`, "POST", {
+    dbDefinition,
+  })
+
+  const json = (await res.json()) as IApiResponse<TxReceipt | string>
+
+  return json
+}
+
 const createUrl = (path: string): string => {
   const url = new URL(path, process.env.NEXT_PUBLIC_APP_URL)
   return url.toString()

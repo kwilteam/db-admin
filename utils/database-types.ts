@@ -1,7 +1,7 @@
 import { Types as KwilTypes } from "kwil"
 
-// Having to include this here as the definition for body seems incorrect.
-// body returns a Nillable<string> for some reason, but it should be Object[] or Record<string, string>
+// Having to include this here as the original definition for body throws errors.
+// In initial definition the body returns a Nillable<string>, but for the actions I run I am receiving Object[]
 export interface TxReceipt {
   get txHash(): string
   get fee(): string

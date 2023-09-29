@@ -15,13 +15,14 @@ import {
   HiOutlineExclamationCircle,
   HiOutlineCheckCircle,
   HiOutlineExclamationTriangle,
+  HiOutlineDocumentText,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
   HiOutlineCog8Tooth as SettingsIcon,
-  HiOutlinePencilSquare as CreateIcon,
+  HiOutlinePencilSquare as IdeIcon,
   HiOutlineBolt as ExtensionsIcon,
   HiOutlineCodeBracket as ActionIcon,
   HiOutlineTableCells as TableIcon,
@@ -35,5 +36,6 @@ export {
   HiOutlineExclamationCircle as ErrorIcon,
   HiOutlineCheckCircle as SuccessIcon,
   HiOutlineExclamationTriangle as WarningIcon,
+  HiOutlineDocumentText as FileIcon,
   CiLogout as SignOutIcon,
 }

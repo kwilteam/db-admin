@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { KwilTypes } from "@/utils/database-types"
 import { getDatabaseStructure } from "@/utils/kwil/database"
-import { Kwil } from "kwil/dist/client/kwil"
 import { IApiResponse } from "@/utils/api"
 
 interface INextRequest {

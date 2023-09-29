@@ -1,4 +1,4 @@
-import { DatabaseIcon, SettingsIcon, CreateIcon, ExtensionsIcon } from "./icons"
+import { DatabaseIcon, SettingsIcon, IdeIcon, ExtensionsIcon } from "./icons"
 
 export interface INavigationItem {
   name: string
@@ -14,9 +14,9 @@ export const navigationItems: INavigationItem[] = [
     icon: DatabaseIcon,
   },
   {
-    name: "Create",
-    href: "/create",
-    icon: CreateIcon,
+    name: "IDE",
+    href: "/ide",
+    icon: IdeIcon,
   },
   {
     name: "Extensions",
