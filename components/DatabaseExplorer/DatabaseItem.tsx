@@ -102,6 +102,12 @@ const DatabaseItem = ({
               />
             ),
           )}
+
+        {visible &&
+          databaseStructureItems &&
+          databaseStructureItems?.length == 0 && (
+            <div className="ml-10 text-xs">No {itemType} found</div>
+          )}
       </div>
     </>
   )
@@ -128,7 +134,7 @@ const DatabaseItemLink = ({
   return (
     <div
       key={`${database}-${itemType}-${itemName}`}
-      className="ml-10 overflow-hidden text-sm"
+      className="ml-6 overflow-hidden text-sm"
     >
       <Link
         href={`/databases/${database}/${singularItemType}/${itemName}`}

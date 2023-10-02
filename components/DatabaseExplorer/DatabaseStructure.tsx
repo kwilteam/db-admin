@@ -14,7 +14,7 @@ const DatabaseStructure = ({
 
   return (
     databaseVisibility[database]?.isVisible && (
-      <div key={`${database}-structure`} className="ml-7 flex flex-1 flex-col">
+      <div key={`${database}-structure`} className="ml-8 flex flex-1 flex-col">
         <DatabaseItem
           database={database}
           itemType="tables"

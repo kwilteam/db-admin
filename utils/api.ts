@@ -15,6 +15,10 @@ export interface ITableResponse {
   totalCount: number
 }
 
+export interface ISchemaContentResponse {
+  schemaContent: string
+}
+
 export const getDatabases = async (): Promise<
   IDatabaseStructureDict | undefined
 > => {
@@ -99,6 +103,18 @@ export const deployDatabase = async (
   const json = (await res.json()) as IApiResponse<TxReceipt | string>
 
   return json
+}
+
+export const getSchemaContent = async (schemaName: string): Promise<string> => {
+  const res = await apiRequest(`/api/schema/${schemaName}`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch schema")
+  }
+
+  const json = (await res.json()) as IApiResponse<ISchemaContentResponse>
+
+  return json.data.schemaContent
 }
 
 const createUrl = (path: string): string => {

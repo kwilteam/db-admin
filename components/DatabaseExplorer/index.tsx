@@ -26,7 +26,7 @@ export default function DatabasesTree({
 
   return (
     <div className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll">
-      <ul className="flex flex-col">
+      <ul className="mt-2 flex flex-col">
         {databaseStructures &&
           Object.keys(databaseStructures).map((database, index) => (
             <Fragment key={index}>

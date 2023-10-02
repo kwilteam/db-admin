@@ -11,7 +11,7 @@ export default function Alert({ text, type, ...props }: IAlertProps) {
     <div
       {...props}
       className={classNames({
-        "flex items-center rounded-md p-3 text-sm": true,
+        "flex select-none items-center rounded-md p-3 text-sm": true,
         "bg-red-200/50 text-red-700": type === "error",
         "bg-blue-200/50 text-blue-700": type === "info",
         "bg-green-200/50 text-green-700": type === "success",

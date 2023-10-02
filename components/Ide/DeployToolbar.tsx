@@ -2,6 +2,7 @@ import { IDeployOutcome } from "@/hooks/useIde"
 import React from "react"
 import Loading from "../Loading"
 import Alert from "../Alert"
+import Button from "../Button"
 
 interface IDeployProps {
   save: () => void
@@ -16,16 +17,12 @@ export default function DeployToolbar({
 }: IDeployProps) {
   return (
     <>
-      <button
-        className="cursor-pointer rounded-md border border-slate-200 bg-slate-50 px-3 py-1 text-sm text-kwil hover:bg-kwil hover:text-slate-100"
-        disabled={isLoading}
-        onClick={() => save()}
-      >
+      <Button context="primary" disabled={isLoading} onClick={() => save()}>
         Deploy
-      </button>
-      {isLoading && <Loading className="p-1" />}
+      </Button>
+      {isLoading && <Loading className="ml-2 flex items-center" />}
       {outcome?.status && outcome.message && (
-        <Alert type={outcome.status} text={outcome.message} className="py-1" />
+        <Alert type={outcome.status} text={outcome.message} />
       )}
     </>
   )

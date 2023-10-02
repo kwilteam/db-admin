@@ -33,7 +33,7 @@ const DatabaseName = ({ database }: { database: string }) => {
       id={`${database}-item`}
       key={database}
       className={classNames({
-        "text-md flex cursor-pointer select-none flex-row items-center gap-1 p-2 pb-1":
+        "ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
           true,
         "text-slate-500 hover:text-slate-900": !isVisible,
         "text-slate-900": isVisible,
