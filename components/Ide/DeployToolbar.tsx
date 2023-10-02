@@ -20,7 +20,7 @@ export default function DeployToolbar({
       <Button context="primary" disabled={isLoading} onClick={() => save()}>
         Deploy
       </Button>
-      {isLoading && <Loading className="ml-2 flex items-center" />}
+      {isLoading && <Loading className="ml-2 mt-2 flex" />}
       {outcome?.status && outcome.message && (
         <Alert type={outcome.status} text={outcome.message} />
       )}

@@ -26,10 +26,12 @@ export default function DatabaseTablePage({ params }: IProps) {
     <div className="flex max-h-screen min-h-screen flex-col bg-white">
       <Title database={database} type="table" name={table} />
 
-      <div className="justify-left flex w-full gap-2 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
-        <Filters columns={columns} />
-        <Sorting columns={columns} />
-      </div>
+      {columns && (
+        <div className="justify-left flex w-full gap-2 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
+          <Filters columns={columns} />
+          <Sorting columns={columns} />
+        </div>
+      )}
 
       <div className="flex-1 overflow-scroll bg-slate-50 lg:min-h-full">
         <DataTable
@@ -39,14 +41,17 @@ export default function DatabaseTablePage({ params }: IProps) {
           isLoading={isLoading}
         />
       </div>
-      <div className="flex">
-        <Pagination
-          database={database}
-          table={table}
-          totalCount={totalCount}
-          isLoading={isLoading}
-        />
-      </div>
+
+      {columns && (
+        <div className="flex">
+          <Pagination
+            database={database}
+            table={table}
+            totalCount={totalCount}
+            isLoading={isLoading}
+          />
+        </div>
+      )}
     </div>
   )
 }

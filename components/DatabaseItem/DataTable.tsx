@@ -18,12 +18,11 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
     )
   }
 
-  if ((!isLoading && data?.length === 0) || !data) {
-    {
-      type === "table" && <Alert text="No data found" type="info" />
-    }
-    return
+  if (type === "table" && !isLoading && !columns) {
+    return <Alert text="No data found" type="info" className="m-2 w-1/2" />
   }
+
+  console.log(isLoading, data, columns)
 
   if (!columns) {
     return
@@ -46,18 +45,19 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200 bg-white">
-          {data.map((dataItem: Object, index: number) => (
-            <tr className="divide-x divide-slate-200" key={index}>
-              {columns.map((column) => (
-                <td
-                  key={column}
-                  className="whitespace-nowrap p-2 text-sm text-slate-500"
-                >
-                  {(dataItem as IDataItem)[column] as string}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {data &&
+            data.map((dataItem: Object, index: number) => (
+              <tr className="divide-x divide-slate-200" key={index}>
+                {columns.map((column) => (
+                  <td
+                    key={column}
+                    className="whitespace-nowrap p-2 text-sm text-slate-500"
+                  >
+                    {(dataItem as IDataItem)[column] as string}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -20,7 +20,7 @@ export default function Ide() {
   const { handleEditorDidMount, save, isLoading, outcome, language, theme } =
     useIde()
 
-  const saveSchema = (value: string) => {
+  const saveSchema = (value: string | undefined) => {
     console.log("Save Schema", value)
   }
 
@@ -47,7 +47,7 @@ export default function Ide() {
               />
             )}
         </div>
-        <div className="m-1 ml-2 flex h-10 flex-row gap-2">
+        <div className="m-1 ml-2 mt-2 flex h-12 flex-row gap-2">
           {openedSchemas && openedSchemas.length > 0 && (
             <DeployToolbar
               save={save}
