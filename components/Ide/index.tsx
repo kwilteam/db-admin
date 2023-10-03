@@ -18,8 +18,6 @@ export default function Ide() {
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
 
-  console.log("rendering ide", schemaContentDict)
-
   const {
     handleEditorDidMount,
     save,

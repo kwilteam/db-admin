@@ -2,14 +2,14 @@ import { getSchemaContent, getSavedSchemas } from "@/utils/api"
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
 interface IdeState {
-  savedSchemas: string[]
+  savedSchemas: string[] | undefined
   openSchemas: string[]
   activeSchema: string
   schemaContentDict: { [schema: string]: string }
 }
 
 const initialState: IdeState = {
-  savedSchemas: [],
+  savedSchemas: undefined,
   openSchemas: [],
   activeSchema: "",
   schemaContentDict: {},
@@ -70,6 +70,7 @@ export const ideSlice = createSlice({
 
       if (
         !state.openSchemas.includes(schemaName) &&
+        state.savedSchemas &&
         !state.savedSchemas.includes(schemaName)
       ) {
         state.openSchemas.push(schemaName)
@@ -88,7 +89,7 @@ export const ideSlice = createSlice({
         )
       }
 
-      if (state.savedSchemas.includes(schemaName)) {
+      if (state.savedSchemas && state.savedSchemas.includes(schemaName)) {
         state.savedSchemas = state.savedSchemas.filter(
           (schema) => schema !== schemaName,
         )
@@ -109,7 +110,8 @@ export const ideSlice = createSlice({
     }),
       builder.addCase(loadSavedSchemas.fulfilled, (state, action) => {
         const { savedSchemas } = action.payload
-        if (state.savedSchemas.length || !savedSchemas) return
+        if ((state.savedSchemas && state.savedSchemas.length) || !savedSchemas)
+          return
 
         state.savedSchemas = savedSchemas
       })
