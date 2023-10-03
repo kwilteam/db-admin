@@ -8,18 +8,26 @@ import {
   ITableSort,
   KwilTypes,
 } from "@/utils/database-types"
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+
+export interface IDatabaseActiveContext {
+  database: string
+  type: "table" | "action"
+  name: string
+}
 
 interface DatabaseState {
   structureDict: IDatabaseStructureDict | undefined
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
+  activeContext: IDatabaseActiveContext | undefined
 }
 
 const initialState: DatabaseState = {
   structureDict: undefined,
   visibilityDict: {},
   tableQueryParamsDict: {},
+  activeContext: undefined,
 }
 
 export const databaseSlice = createSlice({
@@ -60,6 +68,13 @@ export const databaseSlice = createSlice({
         ...state.visibilityDict[database],
         [key]: isVisible !== undefined ? isVisible : !currentVisibility,
       }
+    },
+
+    setDatabaseActiveContext: (
+      state: DatabaseState,
+      action: PayloadAction<IDatabaseActiveContext>,
+    ) => {
+      state.activeContext = action.payload
     },
 
     setTablePagination: (
@@ -127,6 +142,7 @@ export const {
   setDatabases,
   setDatabaseObject,
   setDatabaseVisibility,
+  setDatabaseActiveContext,
   setTablePagination,
   setTableFilters,
   setTableSort,
@@ -137,6 +153,16 @@ export const selectDatabaseStructures = (state: { database: DatabaseState }) =>
 
 export const selectDatabaseVisibility = (state: { database: DatabaseState }) =>
   state.database.visibilityDict
+
+export const selectDatabaseActiveContext = (state: {
+  database: DatabaseState
+}) => {
+  const activeContext = state.database.activeContext
+
+  if (!activeContext) return false
+
+  return activeContext
+}
 
 export const selectAction = (
   state: { database: DatabaseState },

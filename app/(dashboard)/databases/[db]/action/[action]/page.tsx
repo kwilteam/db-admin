@@ -1,5 +1,9 @@
+"use client"
+
 import Action from "@/components/DatabaseItem/Action"
 import Title from "@/components/DatabaseItem/Header"
+import { setDatabaseActiveContext } from "@/store/database"
+import { useAppDispatch } from "@/store/hooks"
 interface IProps {
   params: {
     db: string
@@ -8,9 +12,11 @@ interface IProps {
 }
 
 // TODO: Verify that the table exists on the database before rendering form
-export default async function DatabaseActionPage({ params }: IProps) {
+export default function DatabaseActionPage({ params }: IProps) {
   const { db: database, action: name } = params
   const type = "action"
+  const dispatch = useAppDispatch()
+  dispatch(setDatabaseActiveContext({ database, type, name }))
 
   return (
     <div className="flex max-h-screen min-h-screen flex-col bg-white">
