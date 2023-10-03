@@ -5,19 +5,19 @@ import Alert from "../Alert"
 import Button from "../Button"
 
 interface IDeployProps {
-  save: () => void
+  deploy: () => void
   isLoading: boolean
   outcome: IDeployOutcome | undefined
 }
 
 export default function DeployToolbar({
-  save,
+  deploy,
   isLoading,
   outcome,
 }: IDeployProps) {
   return (
     <>
-      <Button context="primary" disabled={isLoading} onClick={() => save()}>
+      <Button context="primary" disabled={isLoading} onClick={() => deploy()}>
         Deploy
       </Button>
       {isLoading && <Loading className="ml-2 mt-2 flex" />}

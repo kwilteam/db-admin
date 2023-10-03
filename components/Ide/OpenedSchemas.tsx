@@ -2,13 +2,13 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   closeSchema,
   selectActiveSchema,
-  selectSchemas,
+  selectOpenSchemas,
   setActiveSchema,
 } from "@/store/ide"
 import classNames from "classnames"
 
 export default function OpenedSchemas() {
-  const openedSchemas = useAppSelector(selectSchemas)
+  const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const dispatch = useAppDispatch()
 

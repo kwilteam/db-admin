@@ -20,3 +20,14 @@ export async function getSchema(name: string) {
   const schema = await fs.promises.readFile(filePath, "utf-8")
   return schema
 }
+
+export async function saveSchema(name: string, content: string) {
+  const dir = path.join(process.cwd(), `schemas`)
+  const filePath = path.join(dir, `${name}.kf`)
+
+  if (!fs.existsSync(dir)) {
+    await fs.promises.mkdir(dir)
+  }
+
+  await fs.promises.writeFile(filePath, content, "utf-8")
+}

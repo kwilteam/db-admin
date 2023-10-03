@@ -1,11 +1,13 @@
 "use client"
-import { Dispatch, Fragment, SetStateAction, useEffect } from "react"
+import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react"
 import DatabaseName from "./DatabaseName"
 import DatabaseStructure from "./DatabaseStructure"
 import useDatabaseStructures from "@/hooks/useDatabaseStructures"
 import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
+import { selectDatabaseStructures } from "@/store/database"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
 export default function DatabasesTree({
   setIsMenuOpen = () => {},
@@ -39,10 +41,12 @@ export default function DatabasesTree({
           ))}
         {databaseCount === 0 && (
           <div className="flex h-full flex-col items-center justify-center">
-            <p className="text-2xl font-bold text-slate-500">
+            <p className="text-md font-bold text-slate-500">
               No databases found
             </p>
-            <p className="text-slate-400">Add a database to get started</p>
+            <p className="text-sm text-slate-400">
+              Add a database to get started
+            </p>
           </div>
         )}
         {databaseCount === undefined && (

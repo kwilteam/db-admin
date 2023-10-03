@@ -16,6 +16,7 @@ import {
   HiOutlineCheckCircle,
   HiOutlineExclamationTriangle,
   HiOutlineDocumentText,
+  HiOutlineDocumentPlus,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 
@@ -37,5 +38,6 @@ export {
   HiOutlineCheckCircle as SuccessIcon,
   HiOutlineExclamationTriangle as WarningIcon,
   HiOutlineDocumentText as FileIcon,
+  HiOutlineDocumentPlus as FileCreateIcon,
   CiLogout as SignOutIcon,
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { IApiResponse, ISchemaContentResponse } from "@/utils/api"
-import { getSchema } from "@/utils/files"
+import { getSchema, saveSchema } from "@/utils/schemas"
 
 interface INextRequest {
   request: Request
@@ -24,6 +24,25 @@ export const GET = async (request: Request, { params }: INextRequest) => {
     return NextResponse.json({
       status: 404,
       data: "Schema not found",
+    } as IApiResponse<string>)
+  }
+}
+
+export const POST = async (request: Request, { params }: INextRequest) => {
+  const { schema: name } = params
+
+  const { content } = await request.json()
+  try {
+    await saveSchema(name, content)
+
+    return NextResponse.json({
+      status: 200,
+      data: "Schema saved",
+    } as IApiResponse<string>)
+  } catch (e) {
+    return NextResponse.json({
+      status: 400,
+      data: "Could not save schema",
     } as IApiResponse<string>)
   }
 }

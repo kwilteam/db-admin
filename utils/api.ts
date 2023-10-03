@@ -19,6 +19,10 @@ export interface ISchemaContentResponse {
   schemaContent: string
 }
 
+export interface ISavedSchemasResponse {
+  savedSchemas: string[]
+}
+
 export const getDatabases = async (): Promise<
   IDatabaseStructureDict | undefined
 > => {
@@ -105,6 +109,18 @@ export const deployDatabase = async (
   return json
 }
 
+export const getSavedSchemas = async (): Promise<string[]> => {
+  const res = await apiRequest(`/api/schema/saved`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to fetch schemas")
+  }
+
+  const json = (await res.json()) as IApiResponse<ISavedSchemasResponse>
+
+  return json.data.savedSchemas
+}
+
 export const getSchemaContent = async (schemaName: string): Promise<string> => {
   const res = await apiRequest(`/api/schema/${schemaName}`)
 
@@ -115,6 +131,19 @@ export const getSchemaContent = async (schemaName: string): Promise<string> => {
   const json = (await res.json()) as IApiResponse<ISchemaContentResponse>
 
   return json.data.schemaContent
+}
+
+export const saveSchemaContent = async (
+  name: string,
+  content: string,
+): Promise<void> => {
+  const res = await apiRequest(`/api/schema/${name}`, "POST", {
+    content,
+  })
+
+  if (res.status !== 200) {
+    throw new Error("Failed to save schema")
+  }
 }
 
 const createUrl = (path: string): string => {

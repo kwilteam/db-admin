@@ -1,11 +1,8 @@
 import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { kfLanguage, customTheme } from "@/lib/kfLanguage"
-import { deployDatabase } from "@/utils/api"
+import { deployDatabase, saveSchemaContent } from "@/utils/api"
 import { Monaco } from "@monaco-editor/react"
-
-// https://www.npmjs.com/package/@monaco-editor/react#multi-model-editor
-
 export interface IDeployOutcome {
   status: "error" | "success" | undefined
   message: string | undefined
@@ -13,7 +10,8 @@ export interface IDeployOutcome {
 
 export default function useIde() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
-  const [isLoading, setIsLoading] = useState(false)
+  const [isDeploying, setIsDeploying] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [outcome, setOutcome] = useState<IDeployOutcome | undefined>()
   const language = "kuneiformLang"
   const theme = "kuneiformTheme"
@@ -42,10 +40,10 @@ export default function useIde() {
     monacoInstance.editor.setTheme("kuneiformTheme")
   }
 
-  const save = async () => {
+  const deploy = async () => {
     if (!editorRef.current) return
 
-    setIsLoading(true)
+    setIsDeploying(true)
     setOutcome(undefined)
     const code = editorRef.current.getValue()
     try {
@@ -69,8 +67,41 @@ export default function useIde() {
     } catch (e) {
       console.error(e)
     }
-    setIsLoading(false)
+    setIsDeploying(false)
   }
 
-  return { handleEditorDidMount, save, isLoading, outcome, language, theme }
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout | null = null
+    return (...args: any[]) => {
+      if (timeoutId) clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => func(...args), delay)
+    }
+  }
+
+  const save = useRef(
+    debounce(async (name: string, content: string) => {
+      try {
+        if (!content) return
+
+        setIsSaving(true)
+
+        await saveSchemaContent(name, content)
+
+        setTimeout(() => setIsSaving(false), 500)
+      } catch (error) {
+        console.error("Auto-save failed", error)
+      }
+    }, 1000),
+  ).current
+
+  return {
+    handleEditorDidMount,
+    save,
+    deploy,
+    isDeploying,
+    isSaving,
+    outcome,
+    language,
+    theme,
+  }
 }

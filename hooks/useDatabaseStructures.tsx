@@ -16,7 +16,6 @@ export default function useDatabaseStructures() {
       }
 
       const _databases = await getDatabases()
-
       if (!_databases) {
         setDatabaseCount(0)
         return

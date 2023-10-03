@@ -8,7 +8,7 @@ import {
   ITableSort,
   KwilTypes,
 } from "@/utils/database-types"
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 interface DatabaseState {
   structureDict: IDatabaseStructureDict | undefined

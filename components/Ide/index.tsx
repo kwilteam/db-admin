@@ -9,20 +9,27 @@ import { useAppSelector } from "@/store/hooks"
 import {
   selectActiveSchema,
   selectSchemaContentDict,
-  selectSchemas,
+  selectOpenSchemas,
 } from "@/store/ide"
+import classNames from "classnames"
 
 export default function Ide() {
-  const openedSchemas = useAppSelector(selectSchemas)
+  const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
 
-  const { handleEditorDidMount, save, isLoading, outcome, language, theme } =
-    useIde()
+  console.log("rendering ide", schemaContentDict)
 
-  const saveSchema = (value: string | undefined) => {
-    console.log("Save Schema", value)
-  }
+  const {
+    handleEditorDidMount,
+    save,
+    deploy,
+    isDeploying,
+    isSaving,
+    outcome,
+    language,
+    theme,
+  } = useIde()
 
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-row">
@@ -30,28 +37,33 @@ export default function Ide() {
         <div className="h-10">
           <OpenedSchemas />
         </div>
-        <div className="flex w-full flex-1">
+        <div
+          className={classNames({
+            "flex w-full flex-1": true,
+            "bg-slate-50": openedSchemas && openedSchemas.length > 0, // Ensures no flash of white when first schema opened
+          })}
+        >
           {openedSchemas &&
             openedSchemas.length > 0 &&
-            schemaContentDict[activeSchema] && (
+            Object.hasOwn(schemaContentDict, activeSchema) && (
               <Editor
                 defaultLanguage={language}
                 path={activeSchema}
-                defaultValue={schemaContentDict[activeSchema] ?? undefined}
+                defaultValue={schemaContentDict[activeSchema] ?? ""}
                 theme={theme}
                 language={language}
                 loading={<Loading />}
                 className="m flex-1 rounded-md border-slate-200"
                 onMount={handleEditorDidMount}
-                onChange={(value) => saveSchema(value)}
+                onChange={(value) => save(activeSchema, value)}
               />
             )}
         </div>
         <div className="m-1 ml-2 mt-2 flex h-12 flex-row gap-2">
           {openedSchemas && openedSchemas.length > 0 && (
             <DeployToolbar
-              save={save}
-              isLoading={isLoading}
+              deploy={deploy}
+              isLoading={isDeploying || isSaving}
               outcome={outcome}
             />
           )}
