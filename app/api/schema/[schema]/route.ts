@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { IApiResponse, ISchemaContentResponse } from "@/utils/api"
-import { getSchema, saveSchema } from "@/utils/schemas"
+import { getSchema, saveSchema, deleteSchema } from "@/utils/schemas"
 
 interface INextRequest {
   request: Request
@@ -38,6 +38,24 @@ export const POST = async (request: Request, { params }: INextRequest) => {
     return NextResponse.json({
       status: 200,
       data: "Schema saved",
+    } as IApiResponse<string>)
+  } catch (e) {
+    return NextResponse.json({
+      status: 400,
+      data: "Could not save schema",
+    } as IApiResponse<string>)
+  }
+}
+
+export const DELETE = async (request: Request, { params }: INextRequest) => {
+  const { schema: name } = params
+
+  try {
+    await deleteSchema(name)
+
+    return NextResponse.json({
+      status: 200,
+      data: "Schema deleted",
     } as IApiResponse<string>)
   } catch (e) {
     return NextResponse.json({

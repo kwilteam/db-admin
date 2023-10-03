@@ -34,4 +34,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+/.whisper/*
 /schema/saved/*.kf

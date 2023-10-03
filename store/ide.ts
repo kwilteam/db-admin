@@ -78,6 +78,26 @@ export const ideSlice = createSlice({
         state.activeSchema = schemaName
       }
     },
+
+    removeSchema: (state, action: PayloadAction<string>) => {
+      const schemaName = action.payload
+
+      if (state.openSchemas.includes(schemaName)) {
+        state.openSchemas = state.openSchemas.filter(
+          (schema) => schema !== schemaName,
+        )
+      }
+
+      if (state.savedSchemas.includes(schemaName)) {
+        state.savedSchemas = state.savedSchemas.filter(
+          (schema) => schema !== schemaName,
+        )
+      }
+
+      if (state.activeSchema === schemaName) {
+        state.activeSchema = state.openSchemas[0]
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -96,8 +116,13 @@ export const ideSlice = createSlice({
   },
 })
 
-export const { openSchema, closeSchema, setActiveSchema, addNewSchema } =
-  ideSlice.actions
+export const {
+  openSchema,
+  closeSchema,
+  setActiveSchema,
+  addNewSchema,
+  removeSchema,
+} = ideSlice.actions
 
 export const selectSavedSchemas = (state: { ide: IdeState }) =>
   state.ide.savedSchemas

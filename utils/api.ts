@@ -146,6 +146,16 @@ export const saveSchemaContent = async (
   }
 }
 
+export const deleteSchema = async (name: string): Promise<boolean> => {
+  const res = await apiRequest(`/api/schema/${name}`, "DELETE")
+
+  if (res.status !== 200) {
+    throw new Error("Failed to delete schema")
+  }
+
+  return true
+}
+
 const createUrl = (path: string): string => {
   const url = new URL(path, process.env.NEXT_PUBLIC_APP_URL)
   return url.toString()

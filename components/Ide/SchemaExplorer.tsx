@@ -6,16 +6,17 @@ import {
   openSchema,
   selectSavedSchemas,
   loadSavedSchemas,
+  removeSchema,
 } from "@/store/ide"
-import { FileCreateIcon, FileIcon } from "@/utils/icons"
+import { FileCreateIcon, FileIcon, XIcon } from "@/utils/icons"
 import useCreateNewSchema from "@/hooks/useCreateNewSchema"
 import classNames from "classnames"
 import { useEffect, useState } from "react"
+import { deleteSchema } from "@/utils/api"
 
 export default function SchemaExplorer() {
   const dispatch = useAppDispatch()
   const savedSchemas = useAppSelector(selectSavedSchemas)
-  // const [isLoadingSchemas, setIsLoadingSchemas] = useState(false)
 
   useEffect(() => {
     dispatch(loadSavedSchemas())
@@ -36,6 +37,25 @@ export default function SchemaExplorer() {
     dispatch(openSchema(schema))
   }
 
+  const triggerDeleteSchema = async (
+    e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    schema: string,
+  ) => {
+    e.stopPropagation() // To prevent triggering openSchema
+
+    const c = confirm(`Are you sure you want to delete ${schema}.kf?`)
+
+    if (c) {
+      console.log("delete schema", schema)
+      // API call to delete schema
+      const deleted = await deleteSchema(schema)
+
+      if (deleted) {
+        dispatch(removeSchema(schema))
+      }
+    }
+  }
+
   return (
     <div className="w-full bg-white">
       <div className="flex h-10 items-center bg-slate-50 pl-2 text-sm">
@@ -51,15 +71,21 @@ export default function SchemaExplorer() {
             savedSchemas.map((schema) => (
               <li
                 key={schema}
-                className="ml-1 flex cursor-pointer select-none items-center rounded-md p-2 text-xs hover:bg-slate-50"
+                className="group flex h-10 cursor-pointer select-none items-center gap-1 p-2 text-xs hover:bg-slate-50"
                 onClick={() => triggerOpenSchema(schema)}
               >
-                <FileIcon className="mr-1 h-4 w-4" />
-                {schema}.kf
+                <FileIcon className="h-4 w-4" />
+                <span className="w-full">{schema}.kf</span>
+                <span
+                  className="invisible ml-auto p-2 text-slate-400 hover:text-slate-700 group-hover:visible"
+                  onClick={(e) => triggerDeleteSchema(e, schema)}
+                >
+                  x
+                </span>
               </li>
             ))}
           {isCreatingNewSchema && (
-            <li className="ml-1 flex cursor-pointer select-none flex-row items-center gap-1 rounded-md p-0 px-2 text-xs hover:bg-slate-50">
+            <li className="flex h-10 cursor-pointer select-none flex-row items-center gap-1 p-2 px-2 text-xs hover:bg-slate-50">
               <FileIcon className="h-4 w-4" />
               <input
                 ref={newSchemaInputRef}

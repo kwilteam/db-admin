@@ -31,3 +31,13 @@ export async function saveSchema(name: string, content: string) {
 
   await fs.promises.writeFile(filePath, content, "utf-8")
 }
+
+export async function deleteSchema(name: string) {
+  const filePath = path.join(process.cwd(), `schemas`, `${name}.kf`)
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Schema ${name} not found`)
+  }
+
+  await fs.promises.unlink(filePath)
+}
