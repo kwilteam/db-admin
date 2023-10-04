@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { selectTableQueryParams, setTableFilters } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ITableFilter } from "@/utils/database-types"
@@ -10,7 +10,7 @@ interface IUseFiltersProps {
   operators: string[]
 }
 
-export default function useFilters({
+export default function useTableFilters({
   database,
   table,
   columns,
@@ -59,6 +59,12 @@ export default function useFilters({
     setTempFilters(newFilters)
   }
 
+  const filterBtnText = useMemo(() => {
+    if (!activeFilters || activeFilters.length === 0) return "Filter"
+    if (activeFilters.length === 1) return "1 filter rule"
+    return `${activeFilters.length} filter rules`
+  }, [activeFilters])
+
   return {
     tempFilters,
     activeFilters,
@@ -67,5 +73,6 @@ export default function useFilters({
     applyFilters,
     removeFilter,
     setFilterValue,
+    filterBtnText,
   }
 }

@@ -67,11 +67,17 @@ const buildQuery = (table: string, queryParams: ITableQueryParams): string => {
     }
   }
 
-  // if (queryParams?.sort) {
-  //   const { sortBy, sortDirection } = queryParams.sort
+  if (queryParams?.sort) {
+    const sort = queryParams.sort
 
-  //   query += ` ORDER BY ${sortBy} ${sortDirection}`
-  // }
+    sort.forEach((sortItem, index) => {
+      if (index === 0) {
+        query += ` ORDER BY ${sortItem.column} ${sortItem.direction}`
+      } else {
+        query += `, ${sortItem.column} ${sortItem.direction}`
+      }
+    })
+  }
 
   if (queryParams?.pagination) {
     const { currentPage, perPage } = queryParams.pagination

@@ -4,7 +4,7 @@ import { Fragment } from "react"
 import Button from "@/components/Button"
 import classNames from "classnames"
 import { ITableFilter } from "@/utils/database-types"
-import useFilters from "@/hooks/useFilters"
+import useTableFilters from "@/hooks/useTableFilters"
 
 interface IFiltersProps {
   database: string
@@ -23,7 +23,8 @@ export default function Filters({ database, table, columns }: IFiltersProps) {
     applyFilters,
     removeFilter,
     setFilterValue,
-  } = useFilters({
+    filterBtnText,
+  } = useTableFilters({
     database,
     table,
     columns,
@@ -49,11 +50,7 @@ export default function Filters({ database, table, columns }: IFiltersProps) {
                 }}
               >
                 <FilterIcon className="mr-1 h-5 w-4" />
-                {activeFilters && activeFilters.length > 0
-                  ? `${activeFilters.length} filter${
-                      activeFilters.length > 1 ? "s" : ""
-                    }`
-                  : "Filter"}
+                {filterBtnText}
               </Popover.Button>
               <Transition
                 as={Fragment}
@@ -85,7 +82,7 @@ export default function Filters({ database, table, columns }: IFiltersProps) {
                         </div>
                       ))}
                   </div>
-                  <div className="flex flex-row justify-between border-t border-slate-200 p-1 font-semibold">
+                  <div className="flex flex-row justify-between border-t border-slate-200 p-2 font-semibold">
                     <Button onClick={() => addFilter()}>
                       <PlusIcon className="mr-1 h-3 w-3" /> Add filter
                     </Button>

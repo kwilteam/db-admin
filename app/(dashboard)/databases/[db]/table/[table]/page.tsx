@@ -37,7 +37,7 @@ export default function DatabaseTablePage({ params }: IProps) {
       {columns && (
         <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
           <Filters database={database} table={table} columns={columns} />
-          <Sorting columns={columns} />
+          <Sorting database={database} table={table} columns={columns} />
         </div>
       )}
 
