@@ -57,6 +57,7 @@ export default function useTableSort({ database, table }: IUseTableSortProps) {
   }, [activeSort])
 
   return {
+    setTempSort,
     tempSort,
     activeSort,
     copyActiveSort,

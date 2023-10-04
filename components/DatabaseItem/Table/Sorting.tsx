@@ -75,10 +75,9 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
                   <div className="flex flex-col justify-between gap-1 p-1 text-sm">
                     {tempSort.length > 0 &&
                       tempSort.map((sort, index) => (
-                        <div key={index}>
+                        <div key={sort.column}>
                           <Sort
                             index={index}
-                            columns={columns}
                             tempSort={tempSort}
                             removeSort={removeSort}
                             setSortValue={setSortValue}
@@ -132,22 +131,15 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
 
 interface ISortProps {
   index: number
-  columns: string[]
   tempSort: ITableSort[]
   removeSort: (index: number) => void
   setSortValue: (index: number, key: keyof ITableSort, newValue: string) => void
 }
 
-function Sort({
-  index,
-  columns,
-  tempSort,
-  removeSort,
-  setSortValue,
-}: ISortProps) {
+function Sort({ index, tempSort, removeSort, setSortValue }: ISortProps) {
   return (
     <div className="flex flex-row gap-2 p-1">
-      <div className="flex flex-col justify-center text-xs">
+      <div className="flex w-1/2 flex-col items-start justify-center text-xs">
         {tempSort[index].column}
       </div>
 
@@ -176,7 +168,7 @@ function Sort({
         </Switch>
       </Switch.Group>
       <div
-        className="flex cursor-pointer items-center p-1 text-xs text-slate-500 hover:text-slate-700"
+        className="flex flex-1 cursor-pointer items-center justify-center p-1 text-xs text-slate-500 hover:text-slate-700"
         onClick={() => removeSort(index)}
       >
         x
