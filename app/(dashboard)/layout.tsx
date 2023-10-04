@@ -16,22 +16,6 @@ export default function DashboardLayout({ children }: IProps) {
       <MobileNavigation />
 
       <div className="flex min-h-screen">
-        {/* <div className="hidden bg-kwil lg:fixed lg:flex lg:min-h-screen lg:w-72 lg:flex-col">
-          <Image
-            src="/images/kwil-white-horizontal.svg"
-            alt="Kwil Logo"
-            className="mx-auto mb-12 mt-6 h-auto"
-            width={140}
-            height={80}
-            priority
-          />
-          <div className="flex flex-grow flex-col justify-between">
-            <Navigation />
-
-            <UserInfo userName="Martin Creedy" />
-          </div>
-        </div> */}
-
         <div className="hidden bg-kwil lg:fixed lg:flex lg:min-h-screen lg:w-16 lg:flex-col">
           <Link href="/databases">
             <Image

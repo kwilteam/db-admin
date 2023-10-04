@@ -44,7 +44,7 @@ export default function SchemaExplorer() {
               <SchemaItem key={schema} schema={schema} />
             ))}
           {isCreatingNewSchema && (
-            <li className="flex h-10 cursor-pointer select-none flex-row items-center gap-1 p-2 pl-4 pr-2 text-xs hover:bg-slate-50">
+            <li className="flex h-10 cursor-pointer select-none flex-row items-center p-2 pl-3 pr-2 text-xs hover:bg-slate-50">
               <FileIcon className="h-4 w-4" />
               <input
                 ref={newSchemaInputRef}
