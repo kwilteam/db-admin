@@ -57,7 +57,7 @@ export default function Ide() {
               />
             )}
         </div>
-        <div className="m-1 ml-2 mt-2 flex h-12 flex-row gap-2">
+        <div className="m-1 ml-2 mt-2 flex h-8 flex-row gap-2">
           {openedSchemas && openedSchemas.length > 0 && (
             <DeployToolbar
               deploy={deploy}

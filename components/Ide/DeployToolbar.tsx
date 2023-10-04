@@ -17,14 +17,14 @@ export default function DeployToolbar({
   outcome,
 }: IDeployProps) {
   return (
-    <>
+    <div className="flex items-center gap-3">
       <Button context="secondary" disabled={isLoading} onClick={() => deploy()}>
         <DeployIcon className="mr-1" /> Deploy
       </Button>
-      {isLoading && <Loading className="ml-2 mt-2 flex" />}
+      {isLoading && <Loading className="flex" />}
       {outcome?.status && outcome.message && (
         <Alert type={outcome.status} text={outcome.message} />
       )}
-    </>
+    </div>
   )
 }

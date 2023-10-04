@@ -157,7 +157,12 @@ export const deleteSchema = async (name: string): Promise<boolean> => {
 }
 
 const createUrl = (path: string): string => {
-  const url = new URL(path, process.env.NEXT_PUBLIC_APP_URL)
+  if (!window)
+    throw new Error(
+      "This method cannot be called on the server. No window object found.",
+    )
+
+  const url = new URL(path, window.location.origin)
   return url.toString()
 }
 
