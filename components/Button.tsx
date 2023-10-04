@@ -3,21 +3,26 @@ import classNames from "classnames"
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
   context?: "primary" | "secondary"
+  size?: "sm" | "md" | "lg"
 }
 
 export default function Button({
   children,
   context = "secondary",
+  size = "sm",
   ...props
 }: IButtonProps) {
   return (
     <button
       {...props}
       className={classNames({
-        "flex h-10 cursor-pointer items-center rounded-md p-2 text-sm": true,
+        "flex cursor-pointer select-none items-center rounded-md": true,
         "bg-kwil/30 text-kwil-dark hover:bg-kwil/40": context === "primary",
-        "bg-slate-200/50 text-slate-500 hover:bg-slate-200/80":
+        "border border-slate-200 bg-white text-slate-500 hover:bg-slate-200/50":
           context === "secondary",
+        "h-6 p-2 text-xs": size === "sm",
+        "h-8 p-2 text-sm": size === "md",
+        "h-10 p-3": size === "lg",
         [props.className as string]: props.className !== undefined,
       })}
     >

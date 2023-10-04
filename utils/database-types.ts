@@ -30,8 +30,8 @@ export interface IDatabaseVisibilityDict {
 
 export interface ITableQueryParams {
   pagination: ITablePagination
-  filters: ITableFilters
-  sort: ITableSort
+  filters: ITableFilter[]
+  sort: ITableSort[]
 }
 
 export interface ITableQueryParamsDict {
@@ -45,10 +45,13 @@ export interface ITablePagination {
   perPage: number
 }
 
-export interface ITableFilters {
-  [key: string]: string
+export interface ITableFilter {
+  column: string
+  operator: string
+  value: string
 }
 
 export interface ITableSort {
-  [key: string]: "asc" | "desc"
+  column: string
+  direction: "asc" | "desc"
 }

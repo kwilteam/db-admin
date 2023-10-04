@@ -18,11 +18,9 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
     )
   }
 
-  if (type === "table" && !isLoading && !columns) {
-    return <Alert text="No data found" type="info" className="m-2 w-1/2" />
+  if (type === "table" && !isLoading && !data?.length) {
+    return <Alert text="No data found" type="info" className="m-2" />
   }
-
-  console.log(isLoading, data, columns)
 
   if (!columns) {
     return

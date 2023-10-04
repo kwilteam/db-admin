@@ -8,6 +8,7 @@ import Sorting from "@/components/DatabaseItem/Table/Sorting"
 import useDataTable from "@/hooks/useDataTable"
 import { useAppDispatch } from "@/store/hooks"
 import { setDatabaseActiveContext } from "@/store/database"
+import { useEffect } from "react"
 
 interface IProps {
   params: {
@@ -16,11 +17,13 @@ interface IProps {
   }
 }
 
-// TODO: Verify that the table exists on the database before rendering form
 export default function DatabaseTablePage({ params }: IProps) {
   const { db: database, table } = params
   const dispatch = useAppDispatch()
-  dispatch(setDatabaseActiveContext({ database, type: "table", name: table }))
+
+  useEffect(() => {
+    dispatch(setDatabaseActiveContext({ database, type: "table", name: table }))
+  }, [database, table, dispatch])
 
   const { tableData, totalCount, columns, isLoading } = useDataTable({
     database,
@@ -32,8 +35,8 @@ export default function DatabaseTablePage({ params }: IProps) {
       <Title database={database} type="table" name={table} />
 
       {columns && (
-        <div className="justify-left flex w-full gap-2 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
-          <Filters columns={columns} />
+        <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
+          <Filters database={database} table={table} columns={columns} />
           <Sorting columns={columns} />
         </div>
       )}

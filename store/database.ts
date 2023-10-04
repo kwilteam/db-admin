@@ -4,7 +4,7 @@ import {
   ITableQueryParamsDict,
   ITableQueryParams,
   ITablePagination,
-  ITableFilters,
+  ITableFilter,
   ITableSort,
   KwilTypes,
 } from "@/utils/database-types"
@@ -102,7 +102,7 @@ export const databaseSlice = createSlice({
         database: string
         table: string
 
-        filters: ITableFilters
+        filters: ITableFilter[]
       }>,
     ) => {
       const { database, table, filters } = action.payload
@@ -122,7 +122,7 @@ export const databaseSlice = createSlice({
         database: string
         table: string
 
-        sort: ITableSort
+        sort: ITableSort[]
       }>,
     ) => {
       const { database, table, sort } = action.payload

@@ -18,6 +18,7 @@ import {
   HiOutlineDocumentText,
   HiOutlineDocumentPlus,
   HiOutlineRocketLaunch,
+  HiOutlinePlus,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 
@@ -41,5 +42,6 @@ export {
   HiOutlineDocumentText as FileIcon,
   HiOutlineDocumentPlus as FileCreateIcon,
   HiOutlineRocketLaunch as DeployIcon,
+  HiOutlinePlus as PlusIcon,
   CiLogout as SignOutIcon,
 }

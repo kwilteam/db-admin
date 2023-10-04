@@ -43,28 +43,35 @@ export const getTableTotalCount = async (
 }
 
 const buildQuery = (table: string, queryParams: ITableQueryParams): string => {
-  // Will receive the pagination, sortyBy, filterBy, etc. from the frontend
+  // Will receive the pagination, sortBy, filterBy, etc. from the frontend
   let query = `SELECT * FROM ${table}`
 
   if (queryParams?.filters) {
-    const filters = Object.entries(queryParams.filters)
+    const { filters } = queryParams
+    const hasValidFilters = filters.filter(
+      (filter) => filter.column && filter.operator && filter.value,
+    )
 
-    if (filters.length > 0) {
+    if (hasValidFilters.length > 0) {
       query += " WHERE"
 
-      filters.forEach(([key, value], index) => {
-        query += ` ${key} = '${value}'`
+      hasValidFilters.forEach((filter, index) => {
+        if (filter.operator === "is") {
+          query += ` ${filter.column} IS ${filter.value}`
+        } else {
+          query += ` ${filter.column} ${filter.operator} '${filter.value}'`
+        }
 
-        if (index < filters.length - 1) query += " AND"
+        if (index < hasValidFilters.length - 1) query += " AND"
       })
     }
   }
 
-  if (queryParams?.sort) {
-    const { sortBy, sortDirection } = queryParams.sort
+  // if (queryParams?.sort) {
+  //   const { sortBy, sortDirection } = queryParams.sort
 
-    query += ` ORDER BY ${sortBy} ${sortDirection}`
-  }
+  //   query += ` ORDER BY ${sortBy} ${sortDirection}`
+  // }
 
   if (queryParams?.pagination) {
     const { currentPage, perPage } = queryParams.pagination
@@ -74,7 +81,7 @@ const buildQuery = (table: string, queryParams: ITableQueryParams): string => {
     query += ` LIMIT 0, 50`
   }
 
-  console.log(query)
+  console.log("Query", query)
 
   return query
 }
