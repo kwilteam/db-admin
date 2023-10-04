@@ -14,11 +14,11 @@ export default function NavigationItem({ item }: IProps) {
   const pathname = usePathname()
 
   return (
-    <li key={item.href}>
+    <li key={item.href} className="group relative">
       <Link
         href={item.href}
         className={classNames({
-          "flex flex-row gap-2 rounded-md p-4 text-sm leading-6 text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
+          "flex h-12 w-12 flex-row items-center justify-center gap-3 rounded-full p-1 text-sm text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
             true,
           "bg-kwil-dark text-slate-100 drop-shadow-md": pathname.startsWith(
             item.href,
@@ -26,8 +26,16 @@ export default function NavigationItem({ item }: IProps) {
         })}
       >
         <item.icon className="h-6 w-6" />
-
-        <div>{item.name}</div>
+        <span
+          className={classNames({
+            "absolute left-[52px] top-2 hidden w-auto rounded-lg bg-black/75 p-2 text-xs text-white":
+              true,
+            "lg:hidden": pathname.startsWith(item.href),
+            "group-hover:block": !pathname.startsWith(item.href),
+          })}
+        >
+          {item.name}
+        </span>
       </Link>
     </li>
   )
