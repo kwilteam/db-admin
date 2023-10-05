@@ -12,6 +12,7 @@ import {
   selectOpenSchemas,
 } from "@/store/ide"
 import classNames from "classnames"
+import Alert from "../Alert"
 
 export default function Ide() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
@@ -30,43 +31,49 @@ export default function Ide() {
   } = useIde()
 
   return (
-    <div className="flex max-h-screen min-h-screen w-full flex-row">
-      <div className="flex w-full flex-col">
-        <div className="lg:h-10">
-          <OpenedSchemas />
-        </div>
-        <div
-          className={classNames({
-            "flex w-full flex-1": true,
-            "bg-slate-50": openedSchemas && openedSchemas.length > 0, // Ensures no flash of white when first schema opened
-          })}
-        >
-          {openedSchemas &&
-            openedSchemas.length > 0 &&
-            Object.hasOwn(schemaContentDict, activeSchema) && (
-              <Editor
-                defaultLanguage={language}
-                path={activeSchema}
-                defaultValue={schemaContentDict[activeSchema] ?? ""}
-                theme={theme}
-                language={language}
-                loading={<Loading />}
-                className="m flex-1 rounded-md border-slate-200"
-                onMount={handleEditorDidMount}
-                onChange={(value) => save(activeSchema, value)}
-              />
-            )}
-        </div>
-        <div className="m-1 ml-2 mt-2 flex h-8 flex-row gap-2">
-          {openedSchemas && openedSchemas.length > 0 && (
-            <DeployToolbar
-              deploy={deploy}
-              isLoading={isDeploying || isSaving}
-              outcome={outcome}
+    <div className="flex max-h-screen min-h-screen w-full flex-col">
+      <div className="flex w-full flex-col lg:h-10">
+        <OpenedSchemas />
+      </div>
+      {/* Mobile alert */}
+      {outcome?.status && outcome.message && (
+        <Alert
+          type={outcome.status}
+          text={outcome.message}
+          className="absolute top-32 z-30 block h-auto w-full lg:hidden"
+        />
+      )}
+      <div
+        className={classNames({
+          "flex h-full w-full flex-1": true,
+          "bg-slate-50": openedSchemas && openedSchemas.length > 0, // Ensures no flash of white when first schema opened
+        })}
+      >
+        {openedSchemas &&
+          openedSchemas.length > 0 &&
+          Object.hasOwn(schemaContentDict, activeSchema) && (
+            <Editor
+              defaultLanguage={language}
+              path={activeSchema}
+              defaultValue={schemaContentDict[activeSchema] ?? ""}
+              theme={theme}
+              language={language}
+              loading={<Loading />}
+              className="min-h-screen rounded-md border-slate-200 bg-black"
+              onMount={handleEditorDidMount}
+              onChange={(value) => save(activeSchema, value)}
             />
           )}
-        </div>
       </div>
+      {openedSchemas && openedSchemas.length > 0 && (
+        <div className="fixed bottom-0 z-20 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
+          <DeployToolbar
+            deploy={deploy}
+            isLoading={isDeploying || isSaving}
+            outcome={outcome}
+          />
+        </div>
+      )}
     </div>
   )
 }

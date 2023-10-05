@@ -48,7 +48,7 @@ export default function MobileNavigation() {
             leaveFrom="opacity-100 translate-x-0"
             leaveTo="opacity-0 -translate-x-full"
           >
-            <div className="fixed inset-y-0 flex">
+            <div className="fixed inset-y-0 z-30 flex">
               <div className="fixed inset-y-0 left-0 flex w-16 flex-col bg-kwil lg:hidden">
                 <Main />
               </div>
