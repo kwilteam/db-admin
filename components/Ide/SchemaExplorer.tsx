@@ -30,7 +30,7 @@ export default function SchemaExplorer() {
   return (
     <div className="w-full bg-white">
       <div className="flex h-10 items-center bg-slate-50 pl-2 text-sm">
-        Schemas{" "}
+        Schemas
         <FileCreateIcon
           className="m-auto mr-2 h-5 w-5 cursor-pointer"
           onClick={() => setIsCreatingNewSchema(true)}
