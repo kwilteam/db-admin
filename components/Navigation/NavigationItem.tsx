@@ -15,6 +15,7 @@ export default function NavigationItem({ item }: IProps) {
   return (
     <li key={item.href} className="group relative">
       <Link
+        test-id={`nav-item-${item.name}`}
         href={item.href}
         className={classNames({
           "flex h-12 w-12 flex-row items-center justify-center gap-3 rounded-full p-1 text-sm text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":

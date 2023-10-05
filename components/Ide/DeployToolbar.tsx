@@ -24,9 +24,10 @@ export default function DeployToolbar({
       {isLoading && <Loading />}
       {outcome?.status && outcome.message && (
         <Alert
+          test-id="deploy-outcome"
           type={outcome.status}
           text={outcome.message}
-          className="hidden lg:block"
+          className="hidden lg:flex"
         />
       )}
     </div>
