@@ -1,14 +1,14 @@
 import { getSchemaContent, getSavedSchemas } from "@/utils/api"
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
-interface IdeState {
+interface IIdeState {
   savedSchemas: string[] | undefined
   openSchemas: string[]
   activeSchema: string
   schemaContentDict: { [schema: string]: string }
 }
 
-const initialState: IdeState = {
+const initialState: IIdeState = {
   savedSchemas: undefined,
   openSchemas: [],
   activeSchema: "",
@@ -126,16 +126,16 @@ export const {
   removeSchema,
 } = ideSlice.actions
 
-export const selectSavedSchemas = (state: { ide: IdeState }) =>
+export const selectSavedSchemas = (state: { ide: IIdeState }) =>
   state.ide.savedSchemas
 
-export const selectOpenSchemas = (state: { ide: IdeState }) =>
+export const selectOpenSchemas = (state: { ide: IIdeState }) =>
   state.ide.openSchemas
 
-export const selectActiveSchema = (state: { ide: IdeState }) =>
+export const selectActiveSchema = (state: { ide: IIdeState }) =>
   state.ide.activeSchema
 
-export const selectSchemaContentDict = (state: { ide: IdeState }) => {
+export const selectSchemaContentDict = (state: { ide: IIdeState }) => {
   return state.ide.schemaContentDict
 }
 

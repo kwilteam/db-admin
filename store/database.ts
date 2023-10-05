@@ -16,14 +16,14 @@ export interface IDatabaseActiveContext {
   name: string
 }
 
-interface DatabaseState {
+interface IDatabaseState {
   structureDict: IDatabaseStructureDict | undefined
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
   activeContext: IDatabaseActiveContext | undefined
 }
 
-const initialState: DatabaseState = {
+const initialState: IDatabaseState = {
   structureDict: undefined,
   visibilityDict: {},
   tableQueryParamsDict: {},

@@ -14,7 +14,7 @@ import {
   selectDatabaseVisibility,
 } from "@/store/database"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
-import { Dispatch, SetStateAction } from "react"
+import { setIsMenuOpen } from "@/store/global"
 
 interface IItemTypes {
   [key: string]: "tables" | "actions"
@@ -23,11 +23,9 @@ interface IItemTypes {
 const DatabaseItem = ({
   database,
   itemType,
-  setIsMenuOpen = () => {},
 }: {
   database: string
   itemType: IItemTypes[string]
-  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
 }) => {
   const dispatch = useAppDispatch()
   const databaseStructures = useAppSelector(selectDatabaseStructures)
@@ -98,7 +96,6 @@ const DatabaseItem = ({
                 database={database}
                 itemName={objectItem.name}
                 itemType={itemType}
-                setIsMenuOpen={setIsMenuOpen}
               />
             ),
           )}
@@ -117,13 +114,12 @@ const DatabaseItemLink = ({
   database,
   itemName,
   itemType,
-  setIsMenuOpen = () => {},
 }: {
   database: string
   itemName: string
   itemType: IItemTypes[string]
-  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
 }) => {
+  const dispatch = useAppDispatch()
   const singularItemType = itemType.slice(0, -1)
   const { db, table: activeTable, action: activeAction } = useDatabaseParams()
 
@@ -145,7 +141,7 @@ const DatabaseItemLink = ({
           "font-semibold text-slate-900": active,
         })}
         onClick={() => {
-          setIsMenuOpen(false)
+          dispatch(setIsMenuOpen(false))
         }}
       >
         <ChevronRightIcon className="h-3 w-3" />

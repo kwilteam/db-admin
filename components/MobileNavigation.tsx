@@ -8,15 +8,18 @@ import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import Image from "next/image"
 import UserInfo from "./UserInfo"
 import useActivePageName from "@/hooks/useActivePageName"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { selectIsMenuOpen, setIsMenuOpen } from "@/store/global"
 
 export default function MobileNavigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const dispatch = useAppDispatch()
+  const isMenuOpen = useAppSelector(selectIsMenuOpen)
   const activePageName = useActivePageName()
 
   return (
     <>
       <Transition as={Fragment} show={isMenuOpen}>
-        <Dialog onClose={() => setIsMenuOpen(false)}>
+        <Dialog onClose={() => dispatch(setIsMenuOpen(false))}>
           <Transition.Child
             as={Fragment}
             enter="transition ease-out duration-150"
@@ -49,7 +52,7 @@ export default function MobileNavigation() {
               />
               <button
                 className="absolute right-2 top-2 p-2"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => dispatch(setIsMenuOpen(false))}
               >
                 <HiOutlineXMark className="h-6 w-6 text-slate-100" />
               </button>
@@ -57,7 +60,7 @@ export default function MobileNavigation() {
               <ul
                 role="list"
                 className="mx-4 flex flex-col gap-1"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => dispatch(setIsMenuOpen(false))}
               >
                 {navigationItems.map((item) => (
                   <NavigationItem key={item.name} item={item} />
@@ -69,7 +72,10 @@ export default function MobileNavigation() {
       </Transition>
 
       <div className="flex flex-row items-center justify-between bg-kwil p-3 lg:hidden">
-        <button className="lg:hidden" onClick={() => setIsMenuOpen(true)}>
+        <button
+          className="lg:hidden"
+          onClick={() => dispatch(setIsMenuOpen(true))}
+        >
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
         <div className="text-lg text-slate-100">{activePageName}</div>

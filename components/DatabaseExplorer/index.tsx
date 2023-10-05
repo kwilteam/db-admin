@@ -1,19 +1,13 @@
 "use client"
-import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react"
+import { Fragment, useEffect } from "react"
 import DatabaseName from "./DatabaseName"
 import DatabaseStructure from "./DatabaseStructure"
 import useDatabaseStructures from "@/hooks/useDatabaseStructures"
 import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
-import { selectDatabaseStructures } from "@/store/database"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
-export default function DatabasesTree({
-  setIsMenuOpen = () => {},
-}: {
-  setIsMenuOpen?: Dispatch<SetStateAction<boolean>>
-}) {
+export default function DatabasesTree() {
   const { databaseStructures, databaseCount } = useDatabaseStructures()
   const { getDbStructure } = useGetDbStructure()
   const { db, table, action } = useDatabaseParams()
@@ -33,10 +27,7 @@ export default function DatabasesTree({
           Object.keys(databaseStructures).map((database, index) => (
             <Fragment key={index}>
               <DatabaseName database={database} />
-              <DatabaseStructure
-                database={database}
-                setIsMenuOpen={setIsMenuOpen}
-              />
+              <DatabaseStructure database={database} />
             </Fragment>
           ))}
         {databaseCount === 0 && (
