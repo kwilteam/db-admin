@@ -32,7 +32,7 @@ export default function Ide() {
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-row">
       <div className="flex w-full flex-col">
-        <div className="h-10">
+        <div className="lg:h-10">
           <OpenedSchemas />
         </div>
         <div

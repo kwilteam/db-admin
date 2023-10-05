@@ -1,4 +1,5 @@
 import useDeleteSchema from "@/hooks/useDeleteSchema"
+import { setIsMenuOpen } from "@/store/global"
 import { useAppDispatch } from "@/store/hooks"
 import { loadSchema, openSchema } from "@/store/ide"
 import { FileIcon } from "@/utils/icons"
@@ -20,7 +21,10 @@ export default function SchemaItem({ schema }: ISchemaItemProps) {
     <li
       key={schema}
       className="group flex h-10 cursor-pointer select-none items-center gap-1 p-2 pl-3 pr-2 text-xs hover:bg-slate-50"
-      onClick={() => triggerOpenSchema(schema)}
+      onClick={() => {
+        triggerOpenSchema(schema)
+        dispatch(setIsMenuOpen(false))
+      }}
     >
       <FileIcon className="h-4 w-4" />
       <span className="w-full">{schema}.kf</span>

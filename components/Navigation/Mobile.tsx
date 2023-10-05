@@ -1,20 +1,27 @@
 "use client"
 
-import { navigationItems } from "@/utils/navigation"
-import NavigationItem from "./NavigationItem"
 import { Dialog, Transition } from "@headlessui/react"
-import { Fragment, useState } from "react"
+import { Fragment } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
-import Image from "next/image"
-import UserInfo from "./UserInfo"
+import UserInfo from "../UserInfo"
 import useActivePageName from "@/hooks/useActivePageName"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectIsMenuOpen, setIsMenuOpen } from "@/store/global"
+import Main from "./Main"
+import SchemaExplorer from "../Ide/SchemaExplorer"
+import { usePathname } from "next/navigation"
+import DatabaseExplorer from "../DatabaseExplorer"
+import classNames from "classnames"
 
 export default function MobileNavigation() {
   const dispatch = useAppDispatch()
   const isMenuOpen = useAppSelector(selectIsMenuOpen)
   const activePageName = useActivePageName()
+  const pathname = usePathname()
+
+  const secondaryNavShown =
+    pathname.startsWith("/databases") || pathname.startsWith("/ide")
+  // || pathname.startsWith("/settings")
 
   return (
     <>
@@ -41,32 +48,33 @@ export default function MobileNavigation() {
             leaveFrom="opacity-100 translate-x-0"
             leaveTo="opacity-0 -translate-x-full"
           >
-            <nav className="fixed inset-y-0 left-0 flex w-5/6 max-w-[83.33%] flex-col bg-kwil lg:hidden">
-              <Image
-                src="/images/kwil-white-horizontal.svg"
-                alt="Kwil Logo"
-                className="mx-auto mb-10 mt-6 h-auto"
-                width={120}
-                height={33}
-                priority
-              />
-              <button
-                className="absolute right-2 top-2 p-2"
+            <div className="fixed inset-y-0 flex">
+              <div className="fixed inset-y-0 left-0 flex w-16 flex-col bg-kwil lg:hidden">
+                <Main />
+              </div>
+              <div
+                className={classNames({
+                  "flex min-h-screen w-80 border-r border-slate-100 pl-16 lg:hidden":
+                    true,
+                  hidden: !secondaryNavShown,
+                })}
+              >
+                {pathname.startsWith("/databases") && <DatabaseExplorer />}
+                {pathname.startsWith("/ide") && <SchemaExplorer />}
+                {/* {pathname.startsWith("/settings") && <>Settings side bar</>} */}
+              </div>
+              <div
+                className="h-10 lg:hidden"
                 onClick={() => dispatch(setIsMenuOpen(false))}
               >
-                <HiOutlineXMark className="h-6 w-6 text-slate-100" />
-              </button>
-
-              <ul
-                role="list"
-                className="mx-4 flex flex-col gap-1"
-                onClick={() => dispatch(setIsMenuOpen(false))}
-              >
-                {navigationItems.map((item) => (
-                  <NavigationItem key={item.name} item={item} />
-                ))}
-              </ul>
-            </nav>
+                <HiOutlineXMark
+                  className={classNames({
+                    "m-2 h-8 w-8 p-1 text-slate-50": true,
+                    "ml-16": !secondaryNavShown,
+                  })}
+                />
+              </div>
+            </div>
           </Transition.Child>
         </Dialog>
       </Transition>
@@ -78,8 +86,8 @@ export default function MobileNavigation() {
         >
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
-        <div className="text-lg text-slate-100">{activePageName}</div>
-        <UserInfo userName="Martin Creedy" />
+        <div className="text-slate-100">{activePageName}</div>
+        <UserInfo />
       </div>
     </>
   )

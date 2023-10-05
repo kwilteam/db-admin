@@ -1,10 +1,6 @@
-import MobileNavigation from "@/components/MobileNavigation"
-import Navigation from "@/components/Navigation"
-import UserInfo from "@/components/UserInfo"
 import { ReduxProvider } from "@/store/Provider"
-import Image from "next/image"
-import Link from "next/link"
-import React from "react"
+import MobileNavigation from "@/components/Navigation/Mobile"
+import DesktopNavigation from "@/components/Navigation/Desktop"
 
 interface IProps {
   children: React.ReactNode
@@ -16,23 +12,7 @@ export default function DashboardLayout({ children }: IProps) {
       <MobileNavigation />
 
       <div className="flex min-h-screen">
-        <div className="hidden bg-kwil lg:fixed lg:flex lg:min-h-screen lg:w-16 lg:flex-col">
-          <Link href="/databases">
-            <Image
-              src="/images/kwil-white.png"
-              alt="Kwil Logo"
-              className="mx-auto my-1 h-auto cursor-pointer p-3"
-              width={80}
-              height={80}
-              priority
-            />
-          </Link>
-          <div className="flex flex-grow flex-col items-center justify-between">
-            <Navigation />
-
-            <UserInfo userName="Martin Creedy" />
-          </div>
-        </div>
+        <DesktopNavigation />
 
         <div className="flex flex-1 flex-col lg:overflow-hidden lg:pl-16">
           {children}

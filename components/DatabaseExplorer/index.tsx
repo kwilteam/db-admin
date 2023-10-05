@@ -7,7 +7,7 @@ import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
 
-export default function DatabasesTree() {
+export default function DatabasesExplorer() {
   const { databaseStructures, databaseCount } = useDatabaseStructures()
   const { getDbStructure } = useGetDbStructure()
   const { db, table, action } = useDatabaseParams()
