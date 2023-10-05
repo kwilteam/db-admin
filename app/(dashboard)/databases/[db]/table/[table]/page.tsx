@@ -1,14 +1,14 @@
 "use client"
 
-import DataTable from "@/components/DatabaseItem/DataTable"
-import Pagination from "@/components/DatabaseItem/Table/Pagination"
-import Title from "@/components/DatabaseItem/Header"
-import Filters from "@/components/DatabaseItem/Table/Filters"
-import Sorting from "@/components/DatabaseItem/Table/Sorting"
-import useDataTable from "@/hooks/useDataTable"
+import { useEffect, useState } from "react"
 import { useAppDispatch } from "@/store/hooks"
 import { setDatabaseActiveContext } from "@/store/database"
-import { useEffect } from "react"
+import useDataTable from "@/hooks/useDataTable"
+import DataTable from "@/components/DatabaseItem/DataTable"
+import Pagination from "@/components/DatabaseItem/Table/Pagination"
+import Header from "@/components/DatabaseItem/Header"
+import Filters from "@/components/DatabaseItem/Table/Filters"
+import Sorting from "@/components/DatabaseItem/Table/Sorting"
 
 interface IProps {
   params: {
@@ -31,8 +31,8 @@ export default function DatabaseTablePage({ params }: IProps) {
   })
 
   return (
-    <div className="flex max-h-screen min-h-screen flex-col bg-white">
-      <Title database={database} type="table" name={table} />
+    <div className="flex flex-col bg-white lg:max-h-screen lg:min-h-screen">
+      <Header database={database} type="table" name={table} />
 
       {columns && (
         <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">

@@ -27,7 +27,7 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
   }
 
   return (
-    <div className="m-2 overflow-scroll border border-slate-200">
+    <div className="m-1 overflow-scroll border border-slate-200 lg:m-2">
       <table className="divide-y divide-slate-200 lg:min-w-full">
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">

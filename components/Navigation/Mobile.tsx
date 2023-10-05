@@ -79,7 +79,7 @@ export default function MobileNavigation() {
         </Dialog>
       </Transition>
 
-      <div className="flex flex-row items-center justify-between bg-kwil p-3 lg:hidden">
+      <div className="flex flex-row items-center justify-between bg-kwil p-1 lg:hidden">
         <button
           className="lg:hidden"
           onClick={() => dispatch(setIsMenuOpen(true))}

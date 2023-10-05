@@ -12,15 +12,15 @@ interface IProps {
   name: string
 }
 
-export default function Title({ database, type, name }: IProps) {
+export default function Header({ database, type, name }: IProps) {
   return (
-    <div className="flex select-none flex-row items-center gap-2 border-b border-slate-200 bg-slate-50 p-2">
+    <div className="max-w-screen lg:text-md flex select-none flex-row items-center gap-2 border-b border-slate-200 bg-slate-50 p-2 text-sm">
       <DatabaseIcon className="h-4 w-4" />
       <span>{database}</span>
       <ChevronRightIcon className="h-4 w-4" />
       {type === "table" && <TableIcon className="h-4 w-4" />}
       {type === "action" && <ActionIcon className="h-4 w-4" />}
-      <span>{name}</span>
+      <div className="overflow-none">{name}</div>
     </div>
   )
 }

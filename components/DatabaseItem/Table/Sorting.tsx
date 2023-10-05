@@ -65,7 +65,7 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Popover.Panel className="absolute -ml-3 mt-5 flex w-80 origin-top-right flex-col rounded-md bg-white ring-1 ring-slate-200 ring-opacity-60 focus:outline-none">
+                <Popover.Panel className="absolute -ml-32 mt-5 flex w-80 origin-top-right flex-col rounded-md bg-white ring-1 ring-slate-200 ring-opacity-60 focus:outline-none lg:-ml-3">
                   {tempSort.length === 0 && (
                     <div className="flex justify-start p-3 text-sm">
                       No sort has been applied yet.
