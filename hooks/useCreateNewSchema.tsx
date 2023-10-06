@@ -52,7 +52,7 @@ export default function useCreateNewSchema() {
   }
 
   const schemaExists = (newSchemaName: string) => {
-    if (savedSchemas.includes(newSchemaName)) {
+    if (savedSchemas && savedSchemas.includes(newSchemaName)) {
       return true
     }
 

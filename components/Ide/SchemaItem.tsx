@@ -20,6 +20,7 @@ export default function SchemaItem({ schema }: ISchemaItemProps) {
   return (
     <li
       key={schema}
+      test-id={`schema-item-${schema}`}
       className="group flex h-10 cursor-pointer select-none items-center gap-1 p-2 pl-3 pr-2 text-xs hover:bg-slate-50"
       onClick={() => {
         triggerOpenSchema(schema)
@@ -31,6 +32,7 @@ export default function SchemaItem({ schema }: ISchemaItemProps) {
       <span
         className="invisible ml-auto p-2 text-slate-400 hover:text-slate-700 group-hover:visible"
         onClick={(e) => triggerDeleteSchema(e, schema)}
+        test-id={`schema-item-${schema}-delete`}
       >
         x
       </span>

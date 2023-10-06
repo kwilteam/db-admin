@@ -54,7 +54,7 @@ export default function MobileNavigation() {
               </div>
               <div
                 className={classNames({
-                  "flex min-h-screen w-80 border-r border-slate-100 pl-16 lg:hidden":
+                  "flex min-h-screen w-80 overflow-scroll border-r border-slate-100 bg-white pl-16 lg:hidden":
                     true,
                   hidden: !secondaryNavShown,
                 })}

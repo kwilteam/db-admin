@@ -35,4 +35,4 @@ yarn-error.log*
 next-env.d.ts
 
 /.whisper/*
-/schema/saved/*.kf
+tests/screenshots/*
