@@ -21,7 +21,10 @@ export default function DatabasesExplorer() {
   }, [db])
 
   return (
-    <div className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll">
+    <div
+      test-id="database-explorer"
+      className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll"
+    >
       <ul className="mt-2 flex flex-col">
         {databaseStructures &&
           Object.keys(databaseStructures).map((database, index) => (

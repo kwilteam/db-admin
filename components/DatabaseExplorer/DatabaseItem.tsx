@@ -38,6 +38,7 @@ const DatabaseItem = ({
   return (
     <>
       <div
+        test-id={`database-item-${database}-${itemType}`}
         className={classNames({
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
             true,
@@ -129,6 +130,7 @@ const DatabaseItemLink = ({
 
   return (
     <div
+      test-id={`database-item-${database}-${itemType}-${itemName}`}
       key={`${database}-${itemType}-${itemName}`}
       className="ml-6 overflow-hidden text-sm"
     >

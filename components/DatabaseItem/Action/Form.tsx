@@ -52,6 +52,7 @@ export default function ActionForm({
                   {input}
                 </label>
                 <input
+                  test-id={`action-input-${input}`}
                   name={input}
                   className={classNames({
                     "m-1 flex-1 rounded-md border bg-white p-2": true,
@@ -71,7 +72,11 @@ export default function ActionForm({
         )}
 
         <div className="m-2">
-          {!isExecuting && <Button context="primary">Execute Action</Button>}
+          {!isExecuting && (
+            <Button test-id="execute-action" context="primary">
+              Execute Action
+            </Button>
+          )}
           {isExecuting && <Loading className="p-2" />}
         </div>
       </form>

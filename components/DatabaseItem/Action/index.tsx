@@ -21,6 +21,7 @@ export default function Action({ database, actionName }: IActionProps) {
   const [actionSuccess, setActionSuccess] = useState<boolean | undefined>(
     undefined,
   )
+  const [columns, setColumns] = useState<string[] | undefined>(undefined)
   const action = useAppSelector((state) =>
     selectAction(state, database, actionName),
   )
@@ -48,6 +49,10 @@ export default function Action({ database, actionName }: IActionProps) {
 
   const statements = action?.statements
 
+  if (data && data.length > 0) {
+    setColumns(Object.keys(data[0]))
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-row gap-6 rounded-md bg-slate-100/60  p-2">
@@ -61,7 +66,7 @@ export default function Action({ database, actionName }: IActionProps) {
         )}
       </div>
       <div className="mt-2">
-        {data && <DataTable data={data} action={true} />}
+        {data && <DataTable data={data} type="action" columns={columns} />}
       </div>
     </div>
   )

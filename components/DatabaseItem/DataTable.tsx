@@ -2,7 +2,7 @@ import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
 
 interface IProps {
-  columns: string[] | undefined
+  columns?: string[] | undefined
   data: Object[] | undefined
   type: "table" | "action"
   isLoading?: boolean
@@ -27,7 +27,10 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
   }
 
   return (
-    <div className="m-1 overflow-scroll border border-slate-200 lg:m-2">
+    <div
+      test-id="data-table"
+      className="m-1 overflow-scroll border border-slate-200 lg:m-2"
+    >
       <table className="divide-y divide-slate-200 lg:min-w-full">
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">

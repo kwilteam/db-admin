@@ -9,6 +9,7 @@ interface IAlertProps extends React.HTMLAttributes<HTMLDivElement> {
 export default function Alert({ text, type, ...props }: IAlertProps) {
   return (
     <div
+      test-id={`alert-${type}`}
       {...props}
       className={classNames({
         "flex h-8 select-none items-center rounded-md p-3 text-xs lg:text-sm":

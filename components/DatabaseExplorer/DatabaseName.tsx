@@ -30,7 +30,8 @@ const DatabaseName = ({ database }: { database: string }) => {
 
   return (
     <li
-      id={`${database}-item`}
+      test-id={`database-item-${database}`}
+      // id={`${database}-item`}
       key={database}
       className={classNames({
         "ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
