@@ -20,7 +20,7 @@ export default function Header({ database, type, name }: IProps) {
       <ChevronRightIcon className="h-4 w-4" />
       {type === "table" && <TableIcon className="h-4 w-4" />}
       {type === "action" && <ActionIcon className="h-4 w-4" />}
-      <div className="overflow-none">{name}</div>
+      <div className="max-h-10 overflow-clip">{name}</div>
     </div>
   )
 }

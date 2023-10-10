@@ -19,7 +19,7 @@ export default function DatabaseActionPage({ params }: IProps) {
   dispatch(setDatabaseActiveContext({ database, type, name }))
 
   return (
-    <div className="flex max-h-screen min-h-screen flex-col bg-white">
+    <div className="max-h-mobile min-h-mobile flex flex-col bg-white lg:min-h-screen">
       <Title database={database} type={type} name={name} />
 
       <div className="flex-1 overflow-scroll bg-slate-50 p-2 lg:min-h-full">

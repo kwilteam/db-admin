@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useAppDispatch } from "@/store/hooks"
 import { setDatabaseActiveContext } from "@/store/database"
 import useDataTable from "@/hooks/useDataTable"
@@ -31,7 +31,7 @@ export default function DatabaseTablePage({ params }: IProps) {
   })
 
   return (
-    <div className="flex flex-col bg-white lg:max-h-screen lg:min-h-screen">
+    <div className="max-h-mobile min-h-mobile flex flex-col bg-white lg:min-h-screen">
       <Header database={database} type="table" name={table} />
 
       {columns && (
@@ -41,7 +41,7 @@ export default function DatabaseTablePage({ params }: IProps) {
         </div>
       )}
 
-      <div className="flex-1 overflow-scroll bg-slate-50 lg:min-h-full">
+      <div className="flex-1 overflow-scroll bg-slate-50">
         <DataTable
           columns={columns}
           data={tableData}

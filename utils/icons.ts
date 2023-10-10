@@ -47,5 +47,6 @@ export {
   HiOutlinePlus as PlusIcon,
   HiOutlineChevronUpDown as ChevronUpDownIcon,
   HiOutlineCheck as CheckIcon,
+  HiOutlineUserCircle as AccountsIcon,
   CiLogout as SignOutIcon,
 }

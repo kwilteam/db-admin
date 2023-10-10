@@ -4,7 +4,6 @@ export interface INavigationItem {
   name: string
   href: string
   icon: React.ComponentType<{ className?: string }>
-  iconClassName?: string
 }
 
 export const navigationItems: INavigationItem[] = [

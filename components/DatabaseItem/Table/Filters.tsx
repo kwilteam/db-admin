@@ -61,7 +61,7 @@ export default function Filters({ database, table, columns }: IFiltersProps) {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Popover.Panel className="absolute -ml-3 mt-5 flex w-80 origin-top-right flex-col rounded-md bg-white ring-1 ring-slate-200 ring-opacity-60 focus:outline-none">
+                <Popover.Panel className="absolute -left-1 mt-5 flex w-80 origin-top-right flex-col rounded-md bg-white ring-1 ring-slate-200 ring-opacity-60 focus:outline-none">
                   {tempFilters.length === 0 && (
                     <div className="flex justify-start p-3 text-sm">
                       No filters have been applied yet.

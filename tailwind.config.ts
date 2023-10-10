@@ -18,6 +18,15 @@ const config: Config = {
         kwil: "#418E9D",
         "kwil-dark": "#316b75",
       },
+      height: {
+        mobile: "calc(100vh - 56px)",
+      },
+      minHeight: {
+        mobile: "calc(100vh - 56px)",
+      },
+      maxHeight: {
+        mobile: "calc(100vh - 56px)",
+      },
     },
   },
   plugins: [],

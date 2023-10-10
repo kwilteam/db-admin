@@ -31,7 +31,7 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
       test-id="data-table"
       className="m-1 overflow-scroll border border-slate-200 lg:m-2"
     >
-      <table className="divide-y divide-slate-200 lg:min-w-full">
+      <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">
             {columns.map((column: string) => (
