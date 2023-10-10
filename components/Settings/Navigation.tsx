@@ -12,11 +12,11 @@ interface ISettingsItem {
 }
 
 const settingsItems: ISettingsItem[] = [
-  //   {
-  //     name: "General",
-  //     href: "/settings/general",
-  //     icon: SettingsIcon,
-  //   },
+  {
+    name: "General",
+    href: "/settings/general",
+    icon: SettingsIcon,
+  },
   {
     name: "Accounts",
     href: "/settings/accounts",
@@ -28,7 +28,7 @@ export default function SettingsNavigation() {
   const pathname = usePathname()
 
   return (
-    <ul className="list-none text-sm">
+    <ul className="w-full list-none text-sm">
       {settingsItems.map((item) => (
         <Link key={item.name} href={item.href}>
           <li

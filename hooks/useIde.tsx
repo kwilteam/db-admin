@@ -49,24 +49,28 @@ export default function useIde() {
     try {
       const result = await deployDatabase(code)
 
-      if (result && result.status === 400) {
-        setOutcome({
-          status: "error",
-          message: result.data as string,
-        })
-      } else if (result && result.status === 200) {
+      if (result && result.outcome === "success") {
         setOutcome({
           status: "success",
           message: "Database deployed successfully!",
         })
+      } else if (result && result.outcome === "error") {
+        setOutcome({
+          status: "error",
+          message: result.data as string,
+        })
       }
-
-      setTimeout(() => setOutcome(undefined), 5000)
 
       console.log(result, "result")
     } catch (e) {
       console.error(e)
+      setOutcome({
+        status: "error",
+        message: "Something went wrong!",
+      })
     }
+
+    setTimeout(() => setOutcome(undefined), 5000)
     setIsDeploying(false)
   }
 

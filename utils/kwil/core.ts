@@ -1,6 +1,5 @@
 import { Wallet } from "ethers"
-import { KwilTypes, TxReceipt } from "@/utils/database-types"
-import { NodeKwil, Utils } from "kwil"
+import { NodeKwil, Utils } from "@kwilteam/kwil-js"
 
 export const getKwilInstance = (): NodeKwil => {
   const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
@@ -38,6 +37,14 @@ export const getSigner = (): Wallet => {
   }
 
   return new Wallet(adminPrivateKey)
+}
+
+export const getPublicKey = async (): Promise<string> => {
+  const signer = getSigner()
+
+  const publicKey = await Utils.recoverSecp256k1PubKey(signer)
+
+  return publicKey
 }
 
 const getEnvVar = (key: string): string => {

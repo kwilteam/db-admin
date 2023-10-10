@@ -1,0 +1,13 @@
+database greeting;
+
+table messages {
+  id text maxlen(21) primary notnull,
+  message text notnull maxlen(100),
+  wallet text notnull,
+  #wallet_index index(wallet)
+}
+
+action insert_message ($id, $message) public {
+  INSERT INTO messages
+  VALUES ($id, $message, @caller);
+}

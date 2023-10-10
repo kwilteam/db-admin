@@ -12,6 +12,7 @@ import SchemaExplorer from "../Ide/SchemaExplorer"
 import { usePathname } from "next/navigation"
 import DatabaseExplorer from "../DatabaseExplorer"
 import classNames from "classnames"
+import SettingsNavigation from "../Settings/Navigation"
 
 export default function MobileNavigation() {
   const dispatch = useAppDispatch()
@@ -20,8 +21,9 @@ export default function MobileNavigation() {
   const pathname = usePathname()
 
   const secondaryNavShown =
-    pathname.startsWith("/databases") || pathname.startsWith("/ide")
-  // || pathname.startsWith("/settings")
+    pathname.startsWith("/databases") ||
+    pathname.startsWith("/ide") ||
+    pathname.startsWith("/settings")
 
   return (
     <>
@@ -61,7 +63,7 @@ export default function MobileNavigation() {
               >
                 {pathname.startsWith("/databases") && <DatabaseExplorer />}
                 {pathname.startsWith("/ide") && <SchemaExplorer />}
-                {/* {pathname.startsWith("/settings") && <>Settings side bar</>} */}
+                {pathname.startsWith("/settings") && <SettingsNavigation />}
               </div>
               <div
                 className="h-10 lg:hidden"

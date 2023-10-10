@@ -6,7 +6,7 @@ import {
 } from "./database-types"
 
 export interface IApiResponse<T> {
-  status?: number
+  outcome?: "success" | "error"
   data: T
 }
 
@@ -39,14 +39,14 @@ export const getDatabases = async (): Promise<
 
 export const getDatabaseStructure = async (
   db: string,
-): Promise<KwilTypes.Database<string> | undefined> => {
+): Promise<KwilTypes.Database | undefined> => {
   const res = await apiRequest(`/api/databases/${db}/structure`)
 
   if (res.status !== 200) {
     throw new Error("Failed to fetch database structure")
   }
 
-  const json = (await res.json()) as IApiResponse<KwilTypes.Database<string>>
+  const json = (await res.json()) as IApiResponse<KwilTypes.Database>
 
   return json.data
 }
@@ -136,7 +136,7 @@ export const getSchemaContent = async (schemaName: string): Promise<string> => {
 export const saveSchemaContent = async (
   name: string,
   content: string,
-): Promise<void> => {
+): Promise<boolean> => {
   const res = await apiRequest(`/api/schema/${name}`, "POST", {
     content,
   })
@@ -144,6 +144,8 @@ export const saveSchemaContent = async (
   if (res.status !== 200) {
     throw new Error("Failed to save schema")
   }
+
+  return true
 }
 
 export const deleteSchema = async (name: string): Promise<boolean> => {

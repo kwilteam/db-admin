@@ -1,5 +1,5 @@
 import { KwilTypes } from "@/utils/database-types"
-import { getDatabaseId, getKwilInstance, getSigner } from "./core"
+import { getDatabaseId, getKwilInstance, getPublicKey, getSigner } from "./core"
 import { KuneiformObject, NodeParser } from "kuneiform-parser"
 
 interface IKwilServerError {
@@ -25,9 +25,7 @@ export const getDatabases = async (): Promise<
 
 export const getDatabaseStructure = async (
   database: string,
-): Promise<
-  KwilTypes.GenericResponse<KwilTypes.Database<string>> | undefined
-> => {
+): Promise<KwilTypes.GenericResponse<KwilTypes.Database> | undefined> => {
   try {
     const kwil = getKwilInstance()
     const dbId = await getDatabaseId(database)
@@ -50,6 +48,7 @@ export const deployDatabase = async (
   try {
     const kwil = getKwilInstance()
     const signer = getSigner()
+    const publicKey = await getPublicKey()
 
     // 1. Convert string to object using
     const parser = await NodeParser.load()
@@ -66,7 +65,12 @@ export const deployDatabase = async (
     console.log("Deploying database", kfObject)
 
     // 2. Deploy database
-    const tx = await kwil.dbBuilder().payload(kfObject).signer(signer).buildTx()
+    const tx = await kwil
+      .dbBuilder()
+      .payload(kfObject)
+      .publicKey(publicKey)
+      .signer(signer)
+      .buildTx()
 
     // broadcast transaction
     const result = await kwil.broadcast(tx)

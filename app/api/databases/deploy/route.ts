@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server"
-import { executeAction } from "@/utils/kwil/action"
 import { IApiResponse } from "@/utils/api"
 import { TxReceipt } from "@/utils/database-types"
 import { deployDatabase } from "@/utils/kwil/database"
@@ -18,6 +17,7 @@ export const POST = async (
   if ("code" in result) {
     return NextResponse.json(
       {
+        outcome: "error",
         data: result.message,
       } as IApiResponse<string>,
       {
@@ -27,6 +27,7 @@ export const POST = async (
   } else if (result?.status !== 200 || !result?.data) {
     return NextResponse.json(
       {
+        outcome: "error",
         data: "Error deploying database",
       } as IApiResponse<string>,
       {
@@ -37,6 +38,7 @@ export const POST = async (
 
   return NextResponse.json(
     {
+      outcome: "success",
       data: result.data,
     } as IApiResponse<TxReceipt>,
     {
