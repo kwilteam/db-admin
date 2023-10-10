@@ -10,7 +10,7 @@ import Loading from "@/components/Loading"
 
 interface IActionFormProps {
   action: KwilTypes.ActionSchema | undefined
-  executeAction: (formValues: Record<string, string>) => Promise<void>
+  executeAction: (formValues: Record<string, string>) => Promise<boolean>
 }
 
 export default function ActionForm({
@@ -29,8 +29,11 @@ export default function ActionForm({
 
     if (isValid) {
       const { formValues, form } = isValid
-      await executeAction(formValues)
-      resetForm(form)
+      const success = await executeAction(formValues)
+      // Only clear the form if the action was successful
+      if (success) {
+        resetForm(form)
+      }
     }
 
     setIsExecuting(false)

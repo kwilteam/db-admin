@@ -21,16 +21,24 @@ export const GET = async (
   console.log("Get Object for DB:", db)
 
   if (result?.status !== 200 || !result?.data) {
-    return NextResponse.json({
-      status: result?.status ?? 400,
-      data: "Error fetching database structure",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Error fetching database structure",
+      } as IApiResponse<string>,
+      {
+        status: result?.status ?? 400,
+      },
+    )
   }
 
   const databaseStructure = result.data
 
-  return NextResponse.json({
-    status: 200,
-    data: databaseStructure,
-  } as unknown as IApiResponse<KwilTypes.Database<string>>)
+  return NextResponse.json(
+    {
+      data: databaseStructure,
+    } as unknown as IApiResponse<KwilTypes.Database<string>>,
+    {
+      status: 200,
+    },
+  )
 }

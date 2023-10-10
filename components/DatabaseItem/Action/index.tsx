@@ -36,7 +36,7 @@ export default function Action({ database, actionName }: IActionProps) {
       setTimeout(() => {
         setActionError(undefined)
       }, 3500)
-      return
+      return false
     }
 
     setActionSuccess(true)
@@ -45,6 +45,8 @@ export default function Action({ database, actionName }: IActionProps) {
     setTimeout(() => {
       setActionSuccess(undefined)
     }, 3500)
+
+    return true
   }
 
   const statements = action?.statements
@@ -55,9 +57,9 @@ export default function Action({ database, actionName }: IActionProps) {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row gap-6 rounded-md bg-slate-100/60  p-2">
-        <ActionForm action={action} executeAction={executeAction} />
+      <div className="flex flex-col gap-2 rounded-md bg-slate-100/60 p-2 md:flex-row  md:gap-6">
         <ActionStatements statements={statements} />
+        <ActionForm action={action} executeAction={executeAction} />
       </div>
       <div className="mt-2">
         {actionError && <Alert text="Error executing action." type="error" />}

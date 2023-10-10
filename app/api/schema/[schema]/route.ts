@@ -14,17 +14,25 @@ export const GET = async (request: Request, { params }: INextRequest) => {
 
   try {
     const schemaContent = await getSchema(schema)
-    return NextResponse.json({
-      status: 200,
-      data: {
-        schemaContent,
+    return NextResponse.json(
+      {
+        data: {
+          schemaContent,
+        },
+      } as IApiResponse<ISchemaContentResponse>,
+      {
+        status: 200,
       },
-    } as IApiResponse<ISchemaContentResponse>)
+    )
   } catch (e) {
-    return NextResponse.json({
-      status: 404,
-      data: "Schema not found",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Schema not found",
+      } as IApiResponse<string>,
+      {
+        status: 404,
+      },
+    )
   }
 }
 
@@ -35,15 +43,23 @@ export const POST = async (request: Request, { params }: INextRequest) => {
   try {
     await saveSchema(name, content)
 
-    return NextResponse.json({
-      status: 200,
-      data: "Schema saved",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Schema saved",
+      } as IApiResponse<string>,
+      {
+        status: 200,
+      },
+    )
   } catch (e) {
-    return NextResponse.json({
-      status: 400,
-      data: "Could not save schema",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Could not save schema",
+      } as IApiResponse<string>,
+      {
+        status: 400,
+      },
+    )
   }
 }
 
@@ -53,14 +69,22 @@ export const DELETE = async (request: Request, { params }: INextRequest) => {
   try {
     await deleteSchema(name)
 
-    return NextResponse.json({
-      status: 200,
-      data: "Schema deleted",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Schema deleted",
+      } as IApiResponse<string>,
+      {
+        status: 200,
+      },
+    )
   } catch (e) {
-    return NextResponse.json({
-      status: 400,
-      data: "Could not save schema",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Could not save schema",
+      } as IApiResponse<string>,
+      {
+        status: 400,
+      },
+    )
   }
 }

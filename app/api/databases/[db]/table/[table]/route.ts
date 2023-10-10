@@ -32,19 +32,27 @@ export const POST = async (
   const countResult = await getTableTotalCount(db, table)
 
   if (dataResult?.status !== 200 || countResult?.status !== 200) {
-    return NextResponse.json({
-      status: dataResult?.status ?? 400,
-      data: "Error fetching table data",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Error fetching table data",
+      } as IApiResponse<string>,
+      {
+        status: dataResult?.status ?? 400,
+      },
+    )
   }
 
   const countData = countResult.data?.[0] as ICount
 
-  return NextResponse.json({
-    status: 200,
-    data: {
-      tableData: dataResult.data,
-      totalCount: countData.count,
+  return NextResponse.json(
+    {
+      data: {
+        tableData: dataResult.data,
+        totalCount: countData.count,
+      },
+    } as IApiResponse<ITableResponse>,
+    {
+      status: 200,
     },
-  } as IApiResponse<ITableResponse>)
+  )
 }

@@ -9,18 +9,26 @@ export const GET = async (): Promise<
   const result = await getDatabases()
 
   if (result?.status !== 200 || !result?.data) {
-    return NextResponse.json({
-      status: result?.status ?? 400,
-      data: "Error fetching databases",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Error fetching databases",
+      } as IApiResponse<string>,
+      {
+        status: result?.status ?? 400,
+      },
+    )
   }
 
   const databases = await databasesToDict(result.data)
 
-  return NextResponse.json({
-    status: 200,
-    data: databases,
-  } as IApiResponse<IDatabaseStructureDict>)
+  return NextResponse.json(
+    {
+      data: databases,
+    } as IApiResponse<IDatabaseStructureDict>,
+    {
+      status: 200,
+    },
+  )
 }
 
 const databasesToDict = async (

@@ -15,15 +15,21 @@ export default function useDatabaseStructures() {
         return
       }
 
-      const _databases = await getDatabases()
-      if (!_databases) {
-        setDatabaseCount(0)
-        return
+      try {
+        const _databases = await getDatabases()
+        if (!_databases) {
+          setDatabaseCount(0)
+          return
+        }
+
+        console.log("databases", _databases)
+
+        setDatabaseCount(Object.keys(_databases).length)
+
+        dispatch(setDatabases(_databases))
+      } catch (error) {
+        console.error(error)
       }
-
-      setDatabaseCount(Object.keys(_databases).length)
-
-      dispatch(setDatabases(_databases))
     }
     fetchDatabases()
   }, [databaseCount, dispatch, databaseStructures])

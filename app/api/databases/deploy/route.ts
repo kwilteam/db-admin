@@ -16,19 +16,31 @@ export const POST = async (
   const result = await deployDatabase(dbDefinition)
 
   if ("code" in result) {
-    return NextResponse.json({
-      status: 400,
-      data: result.message,
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: result.message,
+      } as IApiResponse<string>,
+      {
+        status: 400,
+      },
+    )
   } else if (result?.status !== 200 || !result?.data) {
-    return NextResponse.json({
-      status: result?.status ?? 400,
-      data: "Error deploying database",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Error deploying database",
+      } as IApiResponse<string>,
+      {
+        status: result?.status ?? 400,
+      },
+    )
   }
 
-  return NextResponse.json({
-    status: 200,
-    data: result.data,
-  } as IApiResponse<TxReceipt>)
+  return NextResponse.json(
+    {
+      data: result.data,
+    } as IApiResponse<TxReceipt>,
+    {
+      status: 200,
+    },
+  )
 }

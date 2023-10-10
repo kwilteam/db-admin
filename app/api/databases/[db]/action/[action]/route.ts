@@ -25,14 +25,22 @@ export const POST = async (
   const result = await executeAction(db, action, inputs)
 
   if (result?.status !== 200 || !result?.data) {
-    return NextResponse.json({
-      status: result?.status ?? 400,
-      data: "Error executing action",
-    } as IApiResponse<string>)
+    return NextResponse.json(
+      {
+        data: "Error executing action",
+      } as IApiResponse<string>,
+      {
+        status: result?.status ?? 400,
+      },
+    )
   }
 
-  return NextResponse.json({
-    status: 200,
-    data: result.data,
-  } as IApiResponse<TxReceipt>)
+  return NextResponse.json(
+    {
+      data: result.data,
+    } as IApiResponse<TxReceipt>,
+    {
+      status: 200,
+    },
+  )
 }
