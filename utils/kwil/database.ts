@@ -1,21 +1,21 @@
 import { KwilTypes } from "@/utils/database-types"
-import { getDatabaseId, getKwilInstance, getPublicKey, getSigner } from "./core"
+import {
+  broadcastTx,
+  getDatabaseId,
+  getKwilInstance,
+  getPublicKey,
+  getSigner,
+} from "./core"
 import { KuneiformObject, NodeParser } from "kuneiform-parser"
-
-interface IKwilServerError {
-  code: number
-  message: string
-  details: string[]
-}
+import { ITxResponse } from "../api"
 
 export const getDatabases = async (): Promise<
   KwilTypes.GenericResponse<string[]> | undefined
 > => {
   try {
     const kwil = getKwilInstance()
-    const signer = getSigner()
-    const providerAddress = await signer.getAddress()
-    const result = await kwil.listDatabases(providerAddress)
+    const publicKey = await getPublicKey()
+    const result = await kwil.listDatabases(publicKey)
 
     return result
   } catch (error) {
@@ -42,9 +42,7 @@ export const getDatabaseStructure = async (
 
 export const deployDatabase = async (
   dbDefinition: string,
-): Promise<
-  KwilTypes.GenericResponse<KwilTypes.TxReceipt> | IKwilServerError
-> => {
+): Promise<ITxResponse> => {
   try {
     const kwil = getKwilInstance()
     const signer = getSigner()
@@ -55,14 +53,16 @@ export const deployDatabase = async (
 
     const kuneiformSchema = await parser.parse(dbDefinition)
 
-    if (!kuneiformSchema.json)
-      throw new Error("Failed to parse database definition")
+    if (!kuneiformSchema.json) {
+      // TODO: Instead the error should be thrown in the parser
+
+      throw new Error(
+        // @ts-ignore
+        kuneiformSchema.error || "Failed to parse database definition",
+      )
+    }
 
     const kfObject: KuneiformObject = JSON.parse(kuneiformSchema.json)
-
-    kfObject.owner = await signer.getAddress()
-
-    console.log("Deploying database", kfObject)
 
     // 2. Deploy database
     const tx = await kwil
@@ -72,20 +72,9 @@ export const deployDatabase = async (
       .signer(signer)
       .buildTx()
 
-    // broadcast transaction
-    const result = await kwil.broadcast(tx)
-
-    console.log("Deployed database", result)
-
-    if (result.status !== 200) throw new Error("Failed to deploy database")
-
-    return result
+    return await broadcastTx(kwil, tx)
   } catch (error) {
-    console.log(error)
-
-    const errorMsg = error as Error
-    const jsonError = JSON.parse(errorMsg.message)
-
-    return jsonError as IKwilServerError
+    console.error(error)
+    throw error
   }
 }

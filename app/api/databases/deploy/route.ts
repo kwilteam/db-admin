@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { IApiResponse } from "@/utils/api"
-import { TxReceipt } from "@/utils/database-types"
 import { deployDatabase } from "@/utils/kwil/database"
+import { KwilTypes } from "@/utils/database-types"
 
 interface IDeployProps {
   dbDefinition: string
@@ -9,40 +9,38 @@ interface IDeployProps {
 
 export const POST = async (
   request: Request,
-): Promise<NextResponse<IApiResponse<TxReceipt | string>>> => {
+): Promise<NextResponse<IApiResponse<KwilTypes.TxReceipt | string>>> => {
   const { dbDefinition } = (await request.json()) as IDeployProps
 
-  const result = await deployDatabase(dbDefinition)
+  try {
+    const txResponse = await deployDatabase(dbDefinition)
 
-  if ("code" in result) {
+    if (txResponse instanceof Error) {
+      throw txResponse
+    } else {
+      return NextResponse.json(
+        {
+          outcome: txResponse.outcome,
+          data: txResponse.message,
+        } as IApiResponse<string>,
+        {
+          status: 200,
+        },
+      )
+    }
+  } catch (error) {
+    console.error(error)
+    const errorMessage =
+      error instanceof Error ? error.message : "An unknown error occurred"
+
     return NextResponse.json(
       {
         outcome: "error",
-        data: result.message,
+        data: errorMessage,
       } as IApiResponse<string>,
       {
         status: 400,
       },
     )
-  } else if (result?.status !== 200 || !result?.data) {
-    return NextResponse.json(
-      {
-        outcome: "error",
-        data: "Error deploying database",
-      } as IApiResponse<string>,
-      {
-        status: result?.status ?? 400,
-      },
-    )
   }
-
-  return NextResponse.json(
-    {
-      outcome: "success",
-      data: result.data,
-    } as IApiResponse<TxReceipt>,
-    {
-      status: 200,
-    },
-  )
 }

@@ -1,4 +1,4 @@
-database greeting;
+database greeting_7;
 
 table messages {
   id text maxlen(21) primary notnull,
@@ -7,7 +7,7 @@ table messages {
   #wallet_index index(wallet)
 }
 
-action insert_message ($id, $message) public {
+action insert_message ($id, $message) owner {
   INSERT INTO messages
-  VALUES ($id, $message, @caller);
+  VALUES ($id, $message, address(@caller));
 }

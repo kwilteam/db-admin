@@ -1,0 +1,16 @@
+database martin_test_6;
+
+table messages {
+    id int primary notnull,
+    message text notnull,
+    account text notnull
+}
+
+action insert_message ($id, $message) public {
+  INSERT INTO messages
+  VALUES ($id, $message, 'test');
+}
+
+action get_messages () public view {
+  SELECT * FROM messages;
+}

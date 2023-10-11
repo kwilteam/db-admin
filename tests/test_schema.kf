@@ -9,6 +9,6 @@ table messages {
 
 action insert_message ($id, $message) public {
   INSERT INTO messages
-  VALUES ($id, $message, @caller);
+  VALUES ($id, $message, address(@caller));
 }
 

@@ -1,15 +1,24 @@
-import { KwilTypes } from "@/utils/database-types"
-import { getDatabaseId, getKwilInstance, getSigner } from "./core"
+import { ITxResponse } from "../api"
+import {
+  broadcastTx,
+  getDatabaseId,
+  getKwilInstance,
+  getPublicKey,
+  getSigner,
+} from "./core"
 import { Utils } from "@kwilteam/kwil-js"
 
 export const executeAction = async (
   database: string,
   action: string,
   inputs: Record<string, string>,
-): Promise<KwilTypes.GenericResponse<KwilTypes.TxReceipt> | undefined> => {
+): Promise<Object[] | ITxResponse> => {
   try {
     const kwil = getKwilInstance()
     const dbId = await getDatabaseId(database)
+    const schema = await kwil.getSchema(dbId)
+    const actionSchema = schema.data?.actions?.find((a) => a.name === action)
+    if (!actionSchema) throw new Error("Action not found")
 
     const actionInputs = new Utils.ActionInput()
 
@@ -17,22 +26,31 @@ export const executeAction = async (
       actionInputs.put(key, value as string)
     }
 
-    const signer = getSigner()
+    console.log(actionInputs, "actionInputs")
 
-    const tx = await kwil
+    const signer = getSigner()
+    const publicKey = await getPublicKey()
+
+    const actionBuilder = kwil
       .actionBuilder()
       .dbid(dbId)
       .name(action)
-      .concat(actionInputs)
+      .concat([actionInputs])
+      .publicKey(publicKey)
       .signer(signer)
-      .buildTx()
 
-    const result = await kwil.broadcast(tx)
+    if (actionSchema.mutability === "view") {
+      const msg = await actionBuilder.buildMsg()
+      const result = await kwil.call(msg)
 
-    if (result.status !== 200) throw new Error("Failed to fetch table data")
-
-    return result
+      // @ts-ignore - result.data?.result is an Object[] but the type is set as a string
+      return result.data?.result as unknown as Object[]
+    } else {
+      const tx = await actionBuilder.buildTx()
+      return await broadcastTx(kwil, tx)
+    }
   } catch (error) {
     console.error(error)
+    throw error
   }
 }

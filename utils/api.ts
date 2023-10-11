@@ -2,12 +2,16 @@ import {
   IDatabaseStructureDict,
   ITableQueryParams,
   KwilTypes,
-  TxReceipt,
 } from "./database-types"
 
 export interface IApiResponse<T> {
   outcome?: "success" | "error"
   data: T
+}
+
+export interface ITxResponse {
+  outcome: string
+  message: string
 }
 
 export interface ITableResponse {
@@ -73,7 +77,7 @@ export const executeAction = async (
   db: string,
   action: string,
   inputs: Record<string, string>,
-): Promise<Object[] | undefined> => {
+): Promise<IApiResponse<string | Object[]>> => {
   const res = await apiRequest(
     `/api/databases/${db}/action/${action}`,
     "POST",
@@ -82,19 +86,16 @@ export const executeAction = async (
     },
   )
 
-  if (res.status !== 200) {
-    throw new Error("Failed to execute action")
-  }
+  const json = (await res.json()) as IApiResponse<string | Object[]>
 
-  const json = (await res.json()) as IApiResponse<TxReceipt>
+  console.log("Action result", json)
 
-  // return undefined
-  return json.data.body
+  return json
 }
 
 export const deployDatabase = async (
   dbDefinition: string | undefined,
-): Promise<IApiResponse<TxReceipt | string> | undefined> => {
+): Promise<IApiResponse<KwilTypes.TxReceipt | string> | undefined> => {
   console.log("Deploying database", dbDefinition)
   if (!dbDefinition) {
     throw new Error("No database definition provided")
@@ -104,7 +105,7 @@ export const deployDatabase = async (
     dbDefinition,
   })
 
-  const json = (await res.json()) as IApiResponse<TxReceipt | string>
+  const json = (await res.json()) as IApiResponse<KwilTypes.TxReceipt | string>
 
   return json
 }

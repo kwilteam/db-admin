@@ -17,7 +17,7 @@ interface IActionProps {
 
 export default function Action({ database, actionName }: IActionProps) {
   const [data, setData] = useState<Object[] | undefined>(undefined)
-  const [actionError, setActionError] = useState<boolean | undefined>(undefined)
+  const [actionError, setActionError] = useState<string | undefined>(undefined)
   const [actionSuccess, setActionSuccess] = useState<boolean | undefined>(
     undefined,
   )
@@ -29,10 +29,15 @@ export default function Action({ database, actionName }: IActionProps) {
   if (!action) return <Loading className="flex justify-center pt-4" />
 
   const executeAction = async (formValues: Record<string, string>) => {
+    setData(undefined)
+    setColumns(undefined)
+
     const result = await executeActionApi(database, actionName, formValues)
 
-    if (!result) {
-      setActionError(true)
+    console.log(result, "result")
+
+    if (result.outcome === "error") {
+      setActionError(result.data as string)
       setTimeout(() => {
         setActionError(undefined)
       }, 3500)
@@ -40,7 +45,10 @@ export default function Action({ database, actionName }: IActionProps) {
     }
 
     setActionSuccess(true)
-    setData(result)
+    if (typeof result.data === "object") {
+      setData(result.data)
+      setColumns(Object.keys(result.data[0]))
+    }
 
     setTimeout(() => {
       setActionSuccess(undefined)
@@ -51,10 +59,6 @@ export default function Action({ database, actionName }: IActionProps) {
 
   const statements = action?.statements
 
-  if (data && data.length > 0) {
-    setColumns(Object.keys(data[0]))
-  }
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-2 rounded-md bg-slate-100/60 p-2 md:flex-row  md:gap-6">
@@ -62,7 +66,7 @@ export default function Action({ database, actionName }: IActionProps) {
         <ActionForm action={action} executeAction={executeAction} />
       </div>
       <div className="mt-2">
-        {actionError && <Alert text="Error executing action." type="error" />}
+        {actionError && <Alert text={actionError} type="error" />}
         {actionSuccess && (
           <Alert text="Action executed successfully." type="success" />
         )}

@@ -1,4 +1,4 @@
-import { ITableQueryParams, KwilTypes, TxReceipt } from "@/utils/database-types"
+import { ITableQueryParams, KwilTypes } from "@/utils/database-types"
 import { getDatabaseId, getKwilInstance } from "./core"
 
 export const getTableData = async (

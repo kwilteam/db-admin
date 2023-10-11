@@ -1080,11 +1080,6 @@
   resolved "https://registry.yarnpkg.com/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
   integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
 
-"@types/uuid@^8.3.4":
-  version "8.3.4"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
-  integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
-
 "@typescript-eslint/parser@^5.4.2 || ^6.0.0":
   version "6.7.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-6.7.0.tgz#332fe9c7ecf6783d3250b4c8a960bd4af0995807"
@@ -2280,7 +2275,7 @@ esutils@^2.0.2:
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
 
-ethers@^6.3.0, ethers@^6.7.1:
+ethers@^6.7.1:
   version "6.7.1"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.7.1.tgz#9c65e8b5d8e9ad77b7e8cf1c46099892cfafad49"
   integrity sha512-qX5kxIFMfg1i+epfgb0xF4WM7IqapIIu50pOJ17aebkxxa4BacW5jFrQRmCJpDEg2ZK2oNtR5QjrQ1WDBF29dA==
@@ -3029,25 +3024,12 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
-kuneiform-parser@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/kuneiform-parser/-/kuneiform-parser-0.0.2.tgz#b00cd7111dccf9fe4e63baf6d68439a932e159e6"
-  integrity sha512-5Xm5l/I6MrH6YXArpKa52O0fZm1UL4g9gVBYOmMkDNG5MGHppKgJLIoSFVoOw97I/yYiyxIUzRtx03sHVxzndA==
+kuneiform-parser@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/kuneiform-parser/-/kuneiform-parser-0.1.0.tgz#b6479b9a22dba332635a231f17f1fc1f70a1393f"
+  integrity sha512-tR9sm2lvBbSIz8awlMTj5PyRATRti+F4DtLQM3h3EBr3V2FF+E+2QizGEEyvvLhQHCbj8M5N4QQhQ0+pgz7nyQ==
   dependencies:
     axios "^1.4.0"
-
-kwil@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/kwil/-/kwil-3.3.1.tgz#8fe786757a6cb029df6f6dede5f463a1fd917348"
-  integrity sha512-prJoc5l4RomOTk2VHJ8qbNlRQxLHhgVm++hsvDFA4pD0AT9VoOtAReCiL4OpKk+5/tqCm4UATj5FIcevXNug4w==
-  dependencies:
-    "@types/uuid" "^8.3.4"
-    axios "^0.27.2"
-    dotenv "^16.0.3"
-    ethers "^6.3.0"
-    ethers5 "npm:ethers@^5.7.2"
-    jssha "^3.2.0"
-    long "^5.2.1"
 
 language-subtag-registry@~0.3.2:
   version "0.3.22"
