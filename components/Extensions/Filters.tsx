@@ -1,9 +1,10 @@
 "use client"
 
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import Loading from "../Loading"
+import { useAppDispatch } from "@/store/hooks"
+import VerifiedBadge from "../Badge/Verified"
+import OfficialBadge from "../Badge/Official"
 
-export default function SchemaExplorer() {
+export default function ExtensionFilters() {
   const dispatch = useAppDispatch()
 
   return (
@@ -20,22 +21,22 @@ export default function SchemaExplorer() {
             <label className="flex items-center space-x-2 text-sm">
               <input
                 type="checkbox"
-                className="form-checkbox"
+                className="form-checkbox h-4 w-4"
                 // checked={}
                 onChange={() => {}}
               />
-              <span>Official Kwil Extension</span>
+              <OfficialBadge />
             </label>
           </li>
           <li className="cursor-pointer">
             <label className="flex items-center space-x-2 text-sm">
               <input
                 type="checkbox"
-                className="form-checkbox"
+                className="form-checkbox h-4 w-4"
                 // checked={}
                 onChange={() => {}}
               />
-              <span>Verified Publisher</span>
+              <VerifiedBadge />
             </label>
           </li>
         </ul>

@@ -78,3 +78,24 @@ export const deployDatabase = async (
     throw error
   }
 }
+
+export const dropDatabase = async (database: string): Promise<ITxResponse> => {
+  try {
+    const kwil = getKwilInstance()
+    const signer = getSigner()
+    const publicKey = await getPublicKey()
+    const dbId = await getDatabaseId(database)
+
+    const tx = await kwil
+      .dropDbBuilder()
+      .payload({ dbid: dbId })
+      .publicKey(publicKey)
+      .signer(signer)
+      .buildTx()
+
+    return await broadcastTx(kwil, tx)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}

@@ -21,8 +21,10 @@ import {
   HiOutlinePlus,
   HiOutlineChevronUpDown,
   HiOutlineCheck,
+  HiOutlineCheckBadge,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
+import { FaDocker, FaGithub } from "react-icons/fa6"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -48,5 +50,9 @@ export {
   HiOutlineChevronUpDown as ChevronUpDownIcon,
   HiOutlineCheck as CheckIcon,
   HiOutlineUserCircle as AccountsIcon,
+  HiOutlineCheckBadge as VerifiedIcon,
+  HiOutlineUserCircle as PublisherIcon,
+  FaGithub as GitIcon,
+  FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
 }

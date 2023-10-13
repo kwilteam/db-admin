@@ -12,11 +12,11 @@ interface ISettingsItem {
 }
 
 const settingsItems: ISettingsItem[] = [
-  {
-    name: "General",
-    href: "/settings/general",
-    icon: SettingsIcon,
-  },
+  // {
+  //   name: "General",
+  //   href: "/settings/general",
+  //   icon: SettingsIcon,
+  // },
   {
     name: "Accounts",
     href: "/settings/accounts",

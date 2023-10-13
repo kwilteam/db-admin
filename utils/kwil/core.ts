@@ -2,6 +2,13 @@ import { Wallet } from "ethers"
 import { NodeKwil, Utils } from "@kwilteam/kwil-js"
 import { ITxResponse } from "../api"
 import { Transaction } from "@kwilteam/kwil-js/dist/core/tx"
+import os from "os"
+import fs from "fs"
+import path from "path"
+import { getAdminPk } from "../setup"
+
+const userDirectory = os.homedir()
+const kwilAdminUiDirectory = path.join(userDirectory, ".kwil-admin-ui")
 
 export const getKwilInstance = (): NodeKwil => {
   const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
@@ -25,16 +32,13 @@ export const getDatabaseId = async (database: string): Promise<string> => {
 }
 
 export const getSigner = (): Wallet => {
-  const env = getEnvVar("ENV")
   let adminPrivateKey = undefined
 
-  if (env === "development") {
-    adminPrivateKey = getEnvVar("DEV_KWIL_ADMIN_PK")
-  } else if (env === "production") {
-    // TODO Private key must be generated using the Mnemonic which is stored securely on the server
-    adminPrivateKey = "FROM MNEMONIC"
-  } else {
-    throw new Error(`Invalid environment: ${env}`)
+  // load private key from file
+  try {
+    adminPrivateKey = getAdminPk()
+  } catch (error) {
+    throw new Error(`Could not find Key`)
   }
 
   return new Wallet(adminPrivateKey)

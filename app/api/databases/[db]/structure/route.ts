@@ -13,7 +13,7 @@ interface INextRequest {
 export const GET = async (
   request: Request,
   { params }: INextRequest,
-): Promise<NextResponse<IApiResponse<KwilTypes.Database<string> | string>>> => {
+): Promise<NextResponse<IApiResponse<KwilTypes.Database | string>>> => {
   const { db } = params
 
   const result = await getDatabaseStructure(db)
@@ -36,7 +36,7 @@ export const GET = async (
   return NextResponse.json(
     {
       data: databaseStructure,
-    } as unknown as IApiResponse<KwilTypes.Database<string>>,
+    } as unknown as IApiResponse<KwilTypes.Database>,
     {
       status: 200,
     },
