@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { createAdminDb } from "./utils/setup"
 
 // https://nextjs.org/docs/app/building-your-application/routing/middleware
 
@@ -13,8 +14,6 @@ import type { NextRequest } from "next/server"
 // This function can be marked `async` if using `await` inside
 // request.url gets the route URL e.g. http://localhost:3000/
 export function middleware(request: NextRequest) {
-  console.log("middleware", request.nextUrl.pathname)
-
   const pathname = request.nextUrl.pathname
 
   // If logged in and setup, continue to requested page

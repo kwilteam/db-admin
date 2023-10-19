@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: IProps) {
     <ReduxProvider>
       <MobileNavigation />
 
-      <div className="max-h-mobile min-h-mobile flex lg:min-h-screen">
+      <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
         <DesktopNavigation />
 
         <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">

@@ -11,12 +11,15 @@ import { selectCurrentUser } from "@/store/global"
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function UserInfo({ ...props }: IUserInfoProps) {
-  const userName = useAppSelector(selectCurrentUser) ?? "Martin Creedy"
+  const userName = useAppSelector(selectCurrentUser)
+  let initials = "U"
 
-  const initials = userName
-    .split(" ")
-    .map((name) => name[0])
-    .join("")
+  if (userName) {
+    initials = userName
+      .split(" ")
+      .map((name) => name[0])
+      .join("")
+  }
 
   return (
     <Menu as="div">

@@ -9,7 +9,7 @@ import {
   selectSchemaContentDict,
   selectOpenSchemas,
 } from "@/store/ide"
-import DeployToolbar from "@/components/Ide/DeployToolbar"
+import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
 import Alert from "@/components/Alert"
@@ -67,7 +67,7 @@ export default function IdePage() {
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
         <div className="fixed bottom-0 z-20 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
-          <DeployToolbar
+          <ActionPanel
             deploy={deploy}
             isLoading={isDeploying || isSaving}
             outcome={outcome}

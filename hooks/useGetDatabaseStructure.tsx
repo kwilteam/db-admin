@@ -10,7 +10,7 @@ export default function useGetDbStructure() {
     database: string,
     show?: "tables" | "actions",
   ) => {
-    const dbStructure: KwilTypes.Database<string> | undefined =
+    const dbStructure: KwilTypes.Database | undefined =
       await getDatabaseStructure(database)
     if (!dbStructure) return
 

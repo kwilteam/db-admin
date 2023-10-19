@@ -1,8 +1,8 @@
 import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
+import { Monaco } from "@monaco-editor/react"
 import { kfLanguage, customTheme } from "@/lib/kfLanguage"
 import { deployDatabase, saveSchemaContent } from "@/utils/api"
-import { Monaco } from "@monaco-editor/react"
 export interface IDeployOutcome {
   status: "error" | "success" | undefined
   message: string | undefined

@@ -1,3 +1,4 @@
+import { IAccount, IAccountType, IAccountWithType } from "./admin-db/schema"
 import {
   IDatabaseStructureDict,
   ITableQueryParams,
@@ -157,6 +158,48 @@ export const deleteSchema = async (name: string): Promise<boolean> => {
   }
 
   return true
+}
+
+export const getAccounts = async (): Promise<
+  IApiResponse<IAccountWithType[]>
+> => {
+  const res = await apiRequest(`/api/accounts`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to get accounts")
+  }
+
+  const json = (await res.json()) as IApiResponse<IAccountWithType[]>
+
+  return json
+}
+
+export const getAccountTypes = async (): Promise<
+  IApiResponse<IAccountType[]>
+> => {
+  const res = await apiRequest(`/api/accounts/types`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to get account types")
+  }
+
+  const json = (await res.json()) as IApiResponse<IAccountType[]>
+
+  return json
+}
+
+export const getAccount = async (
+  id: number,
+): Promise<IApiResponse<IAccountWithType>> => {
+  const res = await apiRequest(`/api/accounts/${id}`)
+
+  if (res.status !== 200) {
+    throw new Error("Failed to get account")
+  }
+
+  const json = (await res.json()) as IApiResponse<IAccountWithType>
+
+  return json
 }
 
 const createUrl = (path: string): string => {

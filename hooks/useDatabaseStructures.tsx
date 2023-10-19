@@ -7,6 +7,7 @@ export default function useDatabaseStructures() {
   const dispatch = useAppDispatch()
   const databaseStructures = useAppSelector(selectDatabaseStructures)
   const [databaseCount, setDatabaseCount] = useState<number | undefined>()
+  const [error, setError] = useState<boolean | undefined>()
 
   useEffect(() => {
     const fetchDatabases = async () => {
@@ -25,14 +26,16 @@ export default function useDatabaseStructures() {
         console.log("databases", _databases)
 
         setDatabaseCount(Object.keys(_databases).length)
+        setError(false)
 
         dispatch(setDatabases(_databases))
       } catch (error) {
+        setError(true)
         console.error(error)
       }
     }
     fetchDatabases()
   }, [databaseCount, dispatch, databaseStructures])
 
-  return { databaseStructures, databaseCount }
+  return { databaseStructures, databaseCount, error }
 }

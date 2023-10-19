@@ -6,9 +6,10 @@ import useDatabaseStructures from "@/hooks/useDatabaseStructures"
 import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
+import Alert from "../Alert"
 
 export default function DatabasesExplorer() {
-  const { databaseStructures, databaseCount } = useDatabaseStructures()
+  const { databaseStructures, databaseCount, error } = useDatabaseStructures()
   const { getDbStructure } = useGetDbStructure()
   const { db, table, action } = useDatabaseParams()
 
@@ -43,8 +44,15 @@ export default function DatabasesExplorer() {
             </p>
           </div>
         )}
-        {databaseCount === undefined && (
+        {databaseCount === undefined && error === undefined && (
           <Loading className="mt-4 flex justify-center" />
+        )}
+        {error && (
+          <Alert
+            text="Error connecting to Kwil Provider"
+            type="error"
+            className="mx-2"
+          />
         )}
       </ul>
     </div>

@@ -35,17 +35,17 @@ export const databaseSlice = createSlice({
   initialState: initialState,
   reducers: {
     setDatabases: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<IDatabaseStructureDict>,
     ) => {
       state.structureDict = action.payload
     },
 
     setDatabaseObject: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<{
         database: string
-        structure: KwilTypes.Database<string>
+        structure: KwilTypes.Database
       }>,
     ) => {
       if (!state.structureDict) state.structureDict = {}
@@ -54,7 +54,7 @@ export const databaseSlice = createSlice({
     },
 
     setDatabaseVisibility: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<{
         database: string
         key: keyof IDatabaseVisibilityDict[string]
@@ -71,14 +71,14 @@ export const databaseSlice = createSlice({
     },
 
     setDatabaseActiveContext: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<IDatabaseActiveContext>,
     ) => {
       state.activeContext = action.payload
     },
 
     setTablePagination: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<{
         database: string
         table: string
@@ -97,7 +97,7 @@ export const databaseSlice = createSlice({
     },
 
     setTableFilters: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<{
         database: string
         table: string
@@ -117,7 +117,7 @@ export const databaseSlice = createSlice({
     },
 
     setTableSort: (
-      state: DatabaseState,
+      state: IDatabaseState,
       action: PayloadAction<{
         database: string
         table: string
@@ -148,14 +148,14 @@ export const {
   setTableSort,
 } = databaseSlice.actions
 
-export const selectDatabaseStructures = (state: { database: DatabaseState }) =>
+export const selectDatabaseStructures = (state: { database: IDatabaseState }) =>
   state.database.structureDict
 
-export const selectDatabaseVisibility = (state: { database: DatabaseState }) =>
+export const selectDatabaseVisibility = (state: { database: IDatabaseState }) =>
   state.database.visibilityDict
 
 export const selectDatabaseActiveContext = (state: {
-  database: DatabaseState
+  database: IDatabaseState
 }) => {
   const activeContext = state.database.activeContext
 
@@ -165,7 +165,7 @@ export const selectDatabaseActiveContext = (state: {
 }
 
 export const selectAction = (
-  state: { database: DatabaseState },
+  state: { database: IDatabaseState },
   database: string,
   actionName: string,
 ) => {
@@ -177,7 +177,7 @@ export const selectAction = (
 }
 
 export const selectTableQueryParams = (
-  state: { database: DatabaseState },
+  state: { database: IDatabaseState },
   database: string,
   table: string,
 ): ITableQueryParams | undefined => {
