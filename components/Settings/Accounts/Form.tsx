@@ -1,13 +1,19 @@
 import { IAccount, IAccountType } from "@/utils/admin-db/schema"
 import { getAccountTypes } from "@/utils/api"
+import classNames from "classnames"
 import { useEffect, useState } from "react"
 
 interface IFormProps {
   account: IAccount
   setAccount: (account: IAccount) => void
+  invalidFields: string[]
 }
 
-export default function Form({ account, setAccount }: IFormProps) {
+export default function Form({
+  account,
+  setAccount,
+  invalidFields,
+}: IFormProps) {
   const [accountTypes, setAccountTypes] = useState<IAccountType[]>()
 
   useEffect(() => {
@@ -44,12 +50,21 @@ export default function Form({ account, setAccount }: IFormProps) {
           Name
         </label>
         <div className="m-1">
-          <div className="flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md">
+          <div
+            className={classNames({
+              "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
+                true,
+              "ring-red-500": invalidFields.includes("name"),
+            })}
+          >
             <input
               type="text"
-              name="name"
               id="name"
-              className="block flex-1 border-0 bg-transparent p-2 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
+              autoComplete="name"
+              className={classNames({
+                "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                  true,
+              })}
               placeholder="Name"
               value={account?.name ?? ""}
               onChange={(e) => updateAccount("name", e.target.value)}
@@ -65,11 +80,20 @@ export default function Form({ account, setAccount }: IFormProps) {
           Account Type
         </label>
         <div className="m-1">
-          <div className="flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md">
+          <div
+            className={classNames({
+              "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
+                true,
+              "ring-red-500": invalidFields.includes("type_id"),
+            })}
+          >
             <select
-              name="type"
+              id="type"
               autoComplete="type"
-              className="block flex-1 border-0 bg-transparent p-2 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
+              className={classNames({
+                "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                  true,
+              })}
               placeholder="type"
               value={account?.type_id ?? ""}
               onChange={(e) => updateAccount("type_id", e.target.value)}
@@ -92,14 +116,23 @@ export default function Form({ account, setAccount }: IFormProps) {
             Address
           </label>
           <div className="m-1">
-            <div className="flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md">
+            <div
+              className={classNames({
+                "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
+                  true,
+                "ring-red-500": invalidFields.includes("address"),
+              })}
+            >
               <input
                 type="text"
-                name="address"
                 id="address"
+                autoComplete="address"
+                className={classNames({
+                  "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                    true,
+                })}
                 value={account?.address ?? ""}
                 onChange={(e) => updateAccount("address", e.target.value)}
-                className="block flex-1 border-0 bg-transparent p-2 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
           </div>

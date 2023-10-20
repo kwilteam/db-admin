@@ -1,4 +1,5 @@
 import { IAccountWithType } from "@/utils/admin-db/schema"
+import { deleteAccount } from "@/utils/api"
 import Link from "next/link"
 
 interface IAccountsTableProps {
@@ -52,9 +53,7 @@ export default function AccountsTable({ accounts }: IAccountsTableProps) {
             <th
               scope="col"
               className="p-2 text-left text-sm font-semibold text-slate-900"
-            >
-              Edit
-            </th>
+            ></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-200 bg-white">
@@ -84,10 +83,17 @@ export default function AccountsTable({ accounts }: IAccountsTableProps) {
                 <td className="whitespace-nowrap p-2 text-sm text-slate-500">
                   <Link
                     href={`/settings/accounts/${account.id}`}
-                    className="text-kwil visited:text-kwil hover:text-kwil-dark"
+                    className="mx-2 text-kwil visited:text-kwil hover:text-kwil-dark"
                   >
                     Edit
                   </Link>
+                  |
+                  <span
+                    onClick={() => deleteAccount(account.id)}
+                    className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
+                  >
+                    Delete
+                  </span>
                 </td>
               </tr>
             ))}

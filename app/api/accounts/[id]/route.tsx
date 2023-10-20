@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server"
-import { getAccount } from "@/utils/admin-db/db"
+import {
+  addAccount,
+  deleteAccount,
+  getAccount,
+  updateAccount,
+} from "@/utils/admin-db/db"
 import { IApiResponse } from "@/utils/api"
 import { IAccount } from "@/utils/admin-db/schema"
 
@@ -44,6 +49,104 @@ export const GET = async (
       {
         data: undefined,
       } as IApiResponse<undefined>,
+      {
+        status: 400,
+      },
+    )
+  }
+}
+
+export const POST = async (
+  request: Request,
+  { params }: INextRequest,
+): Promise<NextResponse<IApiResponse<IAccount | undefined | string>>> => {
+  const { id } = params
+  const { name, type_id, address } = (await request.json()) as IAccount
+  let result: number | bigint | undefined
+
+  console.log("POST", id, name, type_id, address)
+
+  try {
+    if (Number(id) === 0) {
+      result = addAccount(name, type_id, address)
+    } else {
+      result = updateAccount(id, name, type_id, address)
+    }
+
+    if (!result) {
+      return NextResponse.json(
+        {
+          data: undefined,
+        } as IApiResponse<undefined>,
+        {
+          status: 500,
+        },
+      )
+    }
+
+    return NextResponse.json(
+      {
+        data: undefined,
+        outcome: "success",
+      } as IApiResponse<undefined>,
+      {
+        status: 200,
+      },
+    )
+  } catch (error) {
+    const err = error as Error
+    console.error("An error occurred while fetching accounts:", error)
+    return NextResponse.json(
+      {
+        data: err.message,
+        outcome: "error",
+      } as IApiResponse<string>,
+      {
+        status: 400,
+      },
+    )
+  }
+}
+
+export const DELETE = async (
+  request: Request,
+  { params }: INextRequest,
+): Promise<NextResponse<IApiResponse<IAccount | undefined | string>>> => {
+  const { id } = params
+
+  console.log("DELETE", id)
+
+  try {
+    const result: boolean | undefined = deleteAccount(id)
+
+    if (!result) {
+      return NextResponse.json(
+        {
+          data: undefined,
+        } as IApiResponse<undefined>,
+        {
+          status: 500,
+        },
+      )
+    }
+
+    return NextResponse.json(
+      {
+        data: undefined,
+        outcome: "success",
+      } as IApiResponse<undefined>,
+      {
+        status: 200,
+      },
+    )
+  } catch (error) {
+    const err = error as Error
+    console.error("An error occurred while fetching accounts:", error)
+    return NextResponse.json(
+      {
+        data: err.message,
+        outcome: "error",
+      } as IApiResponse<string>,
       {
         status: 400,
       },

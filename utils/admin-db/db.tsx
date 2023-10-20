@@ -39,6 +39,7 @@ export const initDb = () => {
     console.log(
       "Database initialization and statements execution were successful.",
     )
+
     db.close()
   } catch (error) {
     console.error(
@@ -61,15 +62,15 @@ export const getDb = () => {
 
 // Method to add initial admin user
 export const initAdminUser = (
+  name: string,
   typeId: number,
   address: string,
-  name: string,
 ): void => {
   try {
     // Should only run on setup
     if (adminAccountExists()) return
 
-    addAccount(typeId, address, name, 1)
+    addAccount(name, typeId, address)
   } catch (error: any) {
     console.error("An error occurred during admin user initialization:", error)
     throw error
@@ -95,10 +96,10 @@ export const addAccountType = (name: string): number | bigint | undefined => {
   }
 }
 
-const addAccount = (
+export const addAccount = (
+  name: string,
   typeId: number,
   address: string,
-  name: string,
 ): number | bigint | undefined => {
   try {
     const db = getDb()
@@ -106,14 +107,38 @@ const addAccount = (
     if (!db) return
 
     const userStmt = db.prepare(`
-      INSERT INTO ${Tables.Account} (type_id, address, name) VALUES (?, ?, ?)
+      INSERT INTO ${Tables.Account} (name, type_id, address) VALUES (?, ?, ?)
     `)
 
-    const result = userStmt.run(typeId, address, name)
+    const result = userStmt.run(name, typeId, address)
 
     return result.lastInsertRowid
   } catch (error: any) {
     console.error("An error occurred during account creation:", error)
+    throw error
+  }
+}
+
+export const updateAccount = (
+  id: number,
+  name: string,
+  typeId: number,
+  address: string,
+): number | bigint | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const userStmt = db.prepare(`
+      UPDATE ${Tables.Account} SET name = ?, type_id = ?, address = ? WHERE id = ?
+    `)
+
+    userStmt.run(name, typeId, address, id)
+
+    return id
+  } catch (error: any) {
+    console.error("An error occurred during account update:", error)
     throw error
   }
 }
@@ -134,7 +159,7 @@ const adminAccountExists = (): boolean | undefined => {
   return false
 }
 
-export const deleteAccount = (id: number): void => {
+export const deleteAccount = (id: number): boolean | undefined => {
   try {
     const db = getDb()
 
@@ -145,6 +170,8 @@ export const deleteAccount = (id: number): void => {
     `)
 
     userStmt.run(id)
+
+    return true
   } catch (error: any) {
     console.error("An error occurred during account deletion:", error)
     throw error
@@ -188,28 +215,6 @@ export const getAccount = (id: number): IAccountWithType | undefined => {
   }
 }
 
-export const updateAccount = (
-  id: number,
-  typeId: number,
-  address: string,
-  name: string,
-): void => {
-  try {
-    const db = getDb()
-
-    if (!db) return
-
-    const userStmt = db.prepare(`
-      UPDATE ${Tables.Account} SET type_id = ?, address = ?, name = ? WHERE id = ?
-    `)
-
-    userStmt.run(typeId, address, name, id)
-  } catch (error: any) {
-    console.error("An error occurred during account update:", error)
-    throw error
-  }
-}
-
 export const getAccountTypes = (): IAccountType[] | undefined => {
   try {
     const db = getDb()
@@ -228,4 +233,4 @@ export const getAccountTypes = (): IAccountType[] | undefined => {
 }
 
 initDb()
-initAdminUser(1, "0x00000000000", "Martin Creedy")
+initAdminUser("Martin Creedy", 1, "0x00000000000")
