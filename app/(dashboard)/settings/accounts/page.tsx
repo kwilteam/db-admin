@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getAccounts } from "@/utils/api"
+import { deleteAccount, getAccounts } from "@/utils/api"
+import Link from "next/link"
 import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
 import Table from "@/components/Settings/Accounts/Table"
@@ -9,7 +10,6 @@ import Header from "@/components/Settings/Accounts/Header"
 import ActionPanel from "@/components/Settings/Accounts/ActionPanel"
 import Button from "@/components/Button"
 import { PlusIcon } from "@/utils/icons"
-import Link from "next/link"
 import { IAccountWithType } from "@/utils/admin-db/schema"
 
 export default function AccountsPage() {
@@ -17,28 +17,58 @@ export default function AccountsPage() {
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
 
-  useEffect(() => {
-    const initAccounts = async () => {
-      try {
-        const accounts = await getAccounts()
-        setAccounts(accounts.data)
-      } catch (error) {
-        console.error("An error occurred while retrieving accounts:", error)
-        setError(true)
-      }
-
-      setLoading(false)
+  const fetchAccounts = async () => {
+    try {
+      const accounts = await getAccounts()
+      setAccounts(accounts.data)
+    } catch (error) {
+      console.error("An error occurred while retrieving accounts:", error)
+      setError(true)
     }
 
-    initAccounts()
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchAccounts()
   }, [])
+
+  const confirmDeleteAccount = async (id: number) => {
+    const confirmed = confirm("Are you sure you want to delete this account?")
+
+    if (!confirmed) return
+
+    try {
+      const deleted = await deleteAccount(id)
+
+      if (deleted) {
+        // Reload accounts after deletion
+        fetchAccounts()
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the account:", error)
+      alert("There was an error deleting the account.")
+    }
+  }
 
   return (
     <>
       <Header />
 
       <div className="flex-1 overflow-scroll bg-slate-50">
-        {!loading && accounts && <Table accounts={accounts} />}
+        {!loading && accounts && accounts.length !== 0 && (
+          <Table
+            accounts={accounts}
+            confirmDeleteAccount={confirmDeleteAccount}
+          />
+        )}
+        {!loading && accounts && accounts.length === 0 && (
+          <Alert
+            type="warning"
+            className="m-2"
+            text="No accounts were found."
+          />
+        )}
         {loading && <Loading className="m-2 flex justify-center" />}
         {error && (
           <Alert

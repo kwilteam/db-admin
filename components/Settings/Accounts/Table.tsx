@@ -1,12 +1,15 @@
 import { IAccountWithType } from "@/utils/admin-db/schema"
-import { deleteAccount } from "@/utils/api"
 import Link from "next/link"
 
 interface IAccountsTableProps {
   accounts: IAccountWithType[]
+  confirmDeleteAccount: (id: number) => void
 }
 
-export default function AccountsTable({ accounts }: IAccountsTableProps) {
+export default function AccountsTable({
+  accounts,
+  confirmDeleteAccount,
+}: IAccountsTableProps) {
   return (
     <div
       test-id="accounts-table"
@@ -89,7 +92,7 @@ export default function AccountsTable({ accounts }: IAccountsTableProps) {
                   </Link>
                   |
                   <span
-                    onClick={() => deleteAccount(account.id)}
+                    onClick={() => confirmDeleteAccount(account.id)}
                     className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
                   >
                     Delete

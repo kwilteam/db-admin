@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { saveAccount as saveAccountApi } from "@/utils/api"
 import { IAccount } from "@/utils/admin-db/schema"
 import { getAccount } from "@/utils/api"
 
 export default function useSaveAccount(id: number) {
+  const router = useRouter()
   const [account, setAccount] = useState<IAccount>({
     id: 0,
     name: "",
@@ -90,8 +92,7 @@ export default function useSaveAccount(id: number) {
 
     try {
       await saveAccountApi(account)
-      // TODO: Need to redirect but not working inside hook
-      alert("Account saved successfully.")
+      router.push("/settings/accounts")
     } catch (error) {
       const err = error as Error
       setError(err.message)
