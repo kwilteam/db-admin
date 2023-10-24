@@ -37,6 +37,8 @@ export default function Form({
     setAccount(updatedAccount)
   }
 
+  console.log("invalid", invalidFields)
+
   return (
     <div
       test-id="accounts-form"
@@ -50,20 +52,16 @@ export default function Form({
           Name
         </label>
         <div className="m-1">
-          <div
-            className={classNames({
-              "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
-                true,
-              "ring-red-500": invalidFields.includes("name"),
-            })}
-          >
+          <div className="flex sm:max-w-md">
             <input
               type="text"
               id="name"
               autoComplete="name"
               className={classNames({
-                "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
                   true,
+                "border-slate-300": !invalidFields.includes("name"),
+                "border-red-500": invalidFields.includes("name"),
               })}
               placeholder="Name"
               value={account?.name ?? ""}
@@ -80,19 +78,15 @@ export default function Form({
           Account Type
         </label>
         <div className="m-1">
-          <div
-            className={classNames({
-              "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
-                true,
-              "ring-red-500": invalidFields.includes("type_id"),
-            })}
-          >
+          <div className="flex sm:max-w-md">
             <select
               id="type"
               autoComplete="type"
               className={classNames({
-                "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
                   true,
+                "border-slate-300": !invalidFields.includes("type_id"),
+                "border-red-500": invalidFields.includes("type_id"),
               })}
               placeholder="type"
               value={account?.type_id ?? ""}
@@ -116,20 +110,16 @@ export default function Form({
             Address
           </label>
           <div className="m-1">
-            <div
-              className={classNames({
-                "flex rounded-md shadow-sm ring-1 ring-slate-300 focus-within:ring-2 focus-within:ring-kwil sm:max-w-md":
-                  true,
-                "ring-red-500": invalidFields.includes("address"),
-              })}
-            >
+            <div className="flex sm:max-w-md">
               <input
                 type="text"
                 id="address"
                 autoComplete="address"
                 className={classNames({
-                  "block flex-1 border-0 bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
+                  "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
                     true,
+                  "border-slate-300": !invalidFields.includes("address"),
+                  "border-red-500": invalidFields.includes("address"),
                 })}
                 value={account?.address ?? ""}
                 onChange={(e) => updateAccount("address", e.target.value)}
