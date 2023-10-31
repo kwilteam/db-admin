@@ -7,6 +7,8 @@ interface IProps {
 }
 
 export default function DashboardLayout({ children }: IProps) {
+  // Check to make sure that the admin PK exists, if it doesn't redirect to setup page
+
   return (
     <ReduxProvider>
       <MobileNavigation />

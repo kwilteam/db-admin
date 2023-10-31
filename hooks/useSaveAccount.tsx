@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { saveAccount as saveAccountApi } from "@/utils/api"
 import { IAccount } from "@/utils/admin-db/schema"
 import { getAccount } from "@/utils/api"
+import { validateEmailAddress, validateEthAddress } from "@/utils/validate"
 
 export default function useSaveAccount(id: number) {
   const router = useRouter()
@@ -39,16 +40,6 @@ export default function useSaveAccount(id: number) {
     initAccount()
   }, [id])
 
-  const validateEmail = (email: string) => {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return re.test(email)
-  }
-
-  const validateEthAddress = (address: string) => {
-    return /^(0x)?[0-9a-fA-F]{40}$/i.test(address)
-  }
-
   const validateForm = () => {
     let newInvalidFields: string[] = []
 
@@ -68,7 +59,10 @@ export default function useSaveAccount(id: number) {
       newInvalidFields.push("address")
     }
 
-    if (Number(account.type_id) === 2 && !validateEmail(account.address)) {
+    if (
+      Number(account.type_id) === 2 &&
+      !validateEmailAddress(account.address)
+    ) {
       newInvalidFields.push("address")
     }
 

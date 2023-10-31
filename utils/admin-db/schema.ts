@@ -3,6 +3,7 @@ export enum Tables {
   Account = "account",
   AccessCode = "access_code",
   Settings = "settings",
+  RefreshToken = "refresh_token",
 }
 
 export interface IAccountType {
@@ -40,6 +41,13 @@ export interface IAccessCode {
   expires_at: string
 }
 
+export interface IRefreshToken {
+  id: number
+  account_id: number
+  token: string
+  expires_at: string
+}
+
 export const adminDbSchema: string = `
 CREATE TABLE IF NOT EXISTS ${Tables.AccountType} (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,10 +74,19 @@ CREATE TABLE IF NOT EXISTS ${Tables.Settings} (
 );
 
 CREATE TABLE IF NOT EXISTS ${Tables.AccessCode} (
-  account_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  account_id INTEGER,
   code TEXT UNIQUE,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  expires_at TEXT,
+  FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id)
+);
+
+CREATE TABLE IF NOT EXISTS ${Tables.RefreshToken} (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  account_id INTEGER,
+  token TEXT UNIQUE,
   expires_at TEXT,
   FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id)
 );

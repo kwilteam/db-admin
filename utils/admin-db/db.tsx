@@ -3,6 +3,7 @@ import path from "path"
 import Database from "better-sqlite3"
 import { kwilAdminUiDirectory } from "../setup"
 import { IAccountType, IAccountWithType, Tables, adminDbSchema } from "./schema"
+import { format } from "date-fns"
 
 const dbLocation = path.join(kwilAdminUiDirectory, "data")
 const dbFileLocation = path.join(dbLocation, "admin.sqlite")
@@ -41,12 +42,14 @@ export const initDb = () => {
     )
 
     db.close()
-  } catch (error) {
-    console.error(
-      "An error occurred during database initialization or statements execution:",
-      error,
-    )
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        "An error occurred during database initialization or statements execution:",
+        error,
+      )
+      throw error
+    }
   }
 }
 
@@ -55,8 +58,10 @@ export const getDb = () => {
     const db = new Database(dbFileLocation, { verbose: console.log })
 
     return db
-  } catch (error) {
-    console.log("An error occurred during database connection:", error)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log("An error occurred during database connection:", error)
+    }
   }
 }
 
@@ -71,9 +76,14 @@ export const initAdminUser = (
     if (adminAccountExists()) return
 
     addAccount(name, typeId, address)
-  } catch (error: any) {
-    console.error("An error occurred during admin user initialization:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        "An error occurred during admin user initialization:",
+        error,
+      )
+      throw error
+    }
   }
 }
 
@@ -90,9 +100,11 @@ export const addAccountType = (name: string): number | bigint | undefined => {
     const result = userTypeStmt.run(name)
 
     return result.lastInsertRowid
-  } catch (error: any) {
-    console.error("An error occurred during account type creation:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account type creation:", error)
+      throw error
+    }
   }
 }
 
@@ -113,9 +125,11 @@ export const addAccount = (
     const result = userStmt.run(name, typeId, address)
 
     return result.lastInsertRowid
-  } catch (error: any) {
-    console.error("An error occurred during account creation:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account creation:", error)
+      throw error
+    }
   }
 }
 
@@ -137,9 +151,11 @@ export const updateAccount = (
     userStmt.run(name, typeId, address, id)
 
     return id
-  } catch (error: any) {
-    console.error("An error occurred during account update:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account update:", error)
+      throw error
+    }
   }
 }
 
@@ -172,9 +188,11 @@ export const deleteAccount = (id: number): boolean | undefined => {
     userStmt.run(id)
 
     return true
-  } catch (error: any) {
-    console.error("An error occurred during account deletion:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account deletion:", error)
+      throw error
+    }
   }
 }
 
@@ -193,8 +211,10 @@ export const getAccounts = (): IAccountWithType[] | undefined => {
     `)
 
     return userStmt.all() as IAccountWithType[]
-  } catch (error: any) {
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw error
+    }
   }
 }
 
@@ -209,9 +229,33 @@ export const getAccount = (id: number): IAccountWithType | undefined => {
     `)
 
     return userStmt.get(id) as IAccountWithType
-  } catch (error: any) {
-    console.error("An error occurred during account retrieval:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account retrieval:", error)
+      throw error
+    }
+  }
+}
+
+export const getAccountByAddress = (
+  type: string,
+  address: string,
+): IAccountWithType | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const userStmt = db.prepare(`
+      SELECT * FROM ${Tables.Account} WHERE type_id = (SELECT id FROM ${Tables.AccountType} WHERE name = ?) AND address = ?
+    `)
+
+    return userStmt.get(type, address) as IAccountWithType
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account retrieval:", error)
+      throw error
+    }
   }
 }
 
@@ -226,9 +270,181 @@ export const getAccountTypes = (): IAccountType[] | undefined => {
     `)
 
     return userStmt.all() as IAccountType[]
-  } catch (error: any) {
-    console.error("An error occurred during account type retrieval:", error)
-    throw error
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during account type retrieval:", error)
+      throw error
+    }
+  }
+}
+
+// Invalidates all access codes except the one provided
+export const invalidateAccessCodes = (
+  accountId: number,
+  newCode: number,
+): void => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const currentDate = format(new Date(), "yyyy-MM-dd HH:mm:ss")
+
+    const userStmt = db.prepare(`
+      UPDATE ${Tables.AccessCode} SET expires_at = ? WHERE account_id = ? AND code != ? AND expires_at > ?
+    `)
+
+    userStmt.run(currentDate, accountId, newCode, currentDate)
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during access code invalidation:", error)
+      throw error
+    }
+  }
+}
+
+export const saveAccessCode = (
+  accountId: number,
+  code: number,
+  expiresAt: string,
+): boolean | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const userStmt = db.prepare(`
+      INSERT INTO ${Tables.AccessCode} (account_id, code, expires_at) VALUES (?, ?, ?)
+    `)
+
+    userStmt.run(accountId, code, expiresAt)
+
+    invalidateAccessCodes(accountId, code)
+
+    return true
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during access code creation:", error)
+      throw error
+    }
+  }
+}
+
+export const validateAccessCode = (
+  accountId: number,
+  code: number,
+): boolean | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const currentDate = format(new Date(), "yyyy-MM-dd HH:mm:ss")
+
+    const accessCode = db
+      .prepare(
+        `
+      SELECT COUNT(*) as count FROM ${Tables.AccessCode} WHERE account_id = ? AND code = ? AND expires_at > ?
+    `,
+      )
+      .get(accountId, code, currentDate) as {
+      count: number
+    }
+
+    if (accessCode["count"] === 1) return true
+
+    return false
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during access code validation:", error)
+      throw error
+    }
+  }
+}
+
+export const invalidateRefreshTokens = (
+  accountId: number,
+  token: string,
+): boolean | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const stmt = db.prepare(`
+      DELETE FROM ${Tables.RefreshToken} WHERE account_id = ? AND token != ?
+    `)
+
+    stmt.run(accountId, token)
+
+    return true
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        "An error occurred during refresh token invalidation:",
+        error,
+      )
+      throw error
+    }
+  }
+}
+
+export const saveRefreshToken = (
+  accountId: number,
+  token: string,
+  expiresAt: string,
+): boolean | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const stmt = db.prepare(`
+      INSERT INTO ${Tables.RefreshToken} (account_id, token, expires_at) VALUES (?, ?, ?)
+    `)
+
+    stmt.run(accountId, token, expiresAt)
+
+    invalidateRefreshTokens(accountId, token)
+
+    return true
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during refresh token creation:", error)
+      throw error
+    }
+  }
+}
+
+export const validateRefreshToken = (
+  accountId: number,
+  token: string,
+): boolean | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const currentDate = format(new Date(), "yyyy-MM-dd HH:mm:ss")
+
+    const refreshToken = db
+      .prepare(
+        `
+      SELECT COUNT(*) as count FROM ${Tables.RefreshToken} WHERE account_id = ? AND token = ? AND expires_at > ?
+    `,
+      )
+      .get(accountId, token, currentDate) as {
+      count: number
+    }
+
+    if (refreshToken["count"] === 1) return true
+
+    return false
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during refresh token validation:", error)
+      throw error
+    }
   }
 }
 

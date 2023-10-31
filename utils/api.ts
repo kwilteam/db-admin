@@ -255,6 +255,7 @@ const apiRequest = async (
       body: JSON.stringify(body),
       method,
       cache: "no-store", // Make sure we're not getting a cached response
+      credentials: "same-origin", // include
     }),
   )
   return response
