@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest) => {
     const account = await verifyJwt(token)
 
     return NextResponse.json(
-      { data: account, outcome: "error" },
+      { data: account, outcome: "success" },
       {
         status: 200,
       },

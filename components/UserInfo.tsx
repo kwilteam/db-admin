@@ -6,36 +6,50 @@ import { Menu, Transition } from "@headlessui/react"
 import classNames from "classnames"
 import { ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectCurrentUser } from "@/store/global"
+import { selectCurrentUser, setCurrentUser } from "@/store/global"
+import { getUserInfo } from "@/utils/api"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function UserInfo({ ...props }: IUserInfoProps) {
   const dispatch = useAppDispatch()
-  const userName = useAppSelector(selectCurrentUser)
+  const user = useAppSelector(selectCurrentUser)
   const [initials, setInitials] = useState<string>("")
 
   useEffect(() => {
-    if (!userName) return
+    // Load username from API and set in store
+    const loadUserInfo = async () => {
+      try {
+        const response = await getUserInfo()
 
-    const _initials = userName
-      .split(" ")
-      .map((name) => name[0])
-      .join("")
+        if (response.outcome === "error" || !response.data) {
+          console.error(response)
+          return
+        }
 
-    setInitials(_initials)
-  }, [userName])
+        const userInfo = response.data
+
+        dispatch(setCurrentUser(userInfo))
+      } catch (error) {
+        console.log("error", error)
+      }
+    }
+
+    loadUserInfo()
+  }, [dispatch])
 
   useEffect(() => {
-    if (!userName) return
+    if (!user) return
+
+    const userName = user.name
 
     const _initials = userName
       .split(" ")
-      .map((name) => name[0])
+      .map((name: string) => name[0])
       .join("")
 
     setInitials(_initials)
-  }, [dispatch, userName])
+  }, [user])
 
   return (
     <Menu as="div">

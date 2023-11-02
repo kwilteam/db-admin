@@ -5,9 +5,11 @@ import { redirect } from "next/navigation"
 import { requestAccessCode } from "@/utils/api"
 import Button from "../Button"
 import Alert from "../Alert"
+import Loading from "../Loading"
 
 export default function EmailForm() {
   const [emailAddress, setEmailAddress] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
@@ -15,9 +17,11 @@ export default function EmailForm() {
     e.preventDefault()
 
     try {
+      setLoading(true)
       const result = await requestAccessCode(emailAddress)
       if (result.outcome === "error") {
         setError(result.data ?? "An error occurred")
+        setLoading(false)
 
         setTimeout(() => {
           setError(null)
@@ -26,6 +30,7 @@ export default function EmailForm() {
       }
 
       setSuccess("Check your email for the access code.  Redirecting...")
+      setLoading(true)
 
       setTimeout(() => {
         // redirect(`/access-code`) - Next.js error so using window.location.href
@@ -39,13 +44,13 @@ export default function EmailForm() {
   }
 
   return (
-    <form onSubmit={(e) => submitForm(e)}>
+    <form onSubmit={(e) => submitForm(e)} className="flex flex-col gap-2">
       {error && <Alert text={error ?? "Error"} type="error" />}
       {success && <Alert text={success ?? "Success"} type="success" />}
       <div className="flex justify-center">
         <input
           test-id="email-address-input"
-          className="m-1 flex-1 rounded-md border bg-white p-2"
+          className="flex-1 rounded-md border bg-white p-2"
           type="text"
           onChange={(e) => setEmailAddress(e.target.value)}
           value={emailAddress}
@@ -53,9 +58,13 @@ export default function EmailForm() {
       </div>
 
       <div className="flex justify-center">
-        <Button context="primary" size="md">
-          Continue with Email
-        </Button>
+        {loading ? (
+          <Loading className="flex items-center" />
+        ) : (
+          <Button context="primary" size="md">
+            Continue with Email
+          </Button>
+        )}
       </div>
     </form>
   )

@@ -2,20 +2,18 @@ import { Wallet } from "ethers"
 import { NodeKwil, Utils } from "@kwilteam/kwil-js"
 import { ITxResponse } from "../api"
 import { Transaction } from "@kwilteam/kwil-js/dist/core/tx"
-import os from "os"
-import fs from "fs"
-import path from "path"
 import { getAdminPk } from "../setup"
 
-const userDirectory = os.homedir()
-const kwilAdminUiDirectory = path.join(userDirectory, ".kwil-admin-ui")
-
 export const getKwilInstance = (): NodeKwil => {
-  const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
+  try {
+    const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
 
-  return new NodeKwil({
-    kwilProvider: kwilProviderUrl,
-  })
+    return new NodeKwil({
+      kwilProvider: kwilProviderUrl,
+    })
+  } catch (error) {
+    throw new Error("Failed to get kwil instance")
+  }
 }
 
 export const getDatabaseId = async (database: string): Promise<string> => {

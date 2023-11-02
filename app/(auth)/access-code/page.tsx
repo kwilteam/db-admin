@@ -50,8 +50,6 @@ export default function AccessCodePage() {
   const submitAccessCode = useCallback(async () => {
     const accessCode = code.join("")
 
-    console.log("accessCode", accessCode)
-
     if (accessCode.length !== 6) {
       setError("Please enter an access code")
       setTimeout(() => {

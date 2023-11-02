@@ -29,7 +29,7 @@ export const POST = async (
 
   if (!account) {
     return NextResponse.json(
-      { data: "Account does not exist.", outcome: "error" },
+      { data: "Account could not be found.", outcome: "error" },
       {
         status: 404,
       },
@@ -66,7 +66,10 @@ export const POST = async (
 
   if (!emailSent) {
     return NextResponse.json(
-      { data: "Error sending access code.", outcome: "error" },
+      {
+        data: "Error sending access code email.",
+        outcome: "error",
+      },
       {
         status: 500,
       },

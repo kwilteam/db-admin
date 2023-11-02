@@ -1,4 +1,5 @@
 import { IAccount, IAccountType, IAccountWithType } from "./admin-db/schema"
+import { IAccountJwt } from "./admin-db/token"
 import {
   IDatabaseStructureDict,
   ITableQueryParams,
@@ -261,11 +262,11 @@ export const validateAccessCode = async (
 }
 
 export const getUserInfo = async (): Promise<
-  IApiResponse<string | undefined>
+  IApiResponse<IAccountJwt | undefined>
 > => {
   const res = await apiRequest(`/api/auth/user-info`)
 
-  const json = (await res.json()) as IApiResponse<string | undefined>
+  const json = (await res.json()) as IApiResponse<IAccountJwt | undefined>
 
   return json
 }

@@ -1,13 +1,23 @@
 import nodemailer from "nodemailer"
 
-// TODO: Send the code to the email address / load credentials from env vars
 export const sendAccessCode = async (
   emailAddress: string,
   accessCode: number,
 ): Promise<boolean> => {
-  return true
-
   try {
+    console.log("sendAccessCode", emailAddress, accessCode)
+    const host = process.env.EMAIL_HOST
+    const port = process.env.EMAIL_PORT
+    const secure = process.env.EMAIL_SECURE
+    const user = process.env.EMAIL_USER
+    const password = process.env.EMAIL_PASSWORD
+
+    if (!host?.length || !port?.length || !user?.length || !password?.length) {
+      return false
+    }
+
+    console.log("sendAccessCode", host, port, secure, user, password)
+
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST ?? "smtp.gmail.com",
       port: process.env.EMAIL_PORT ? Number(process.env.EMAIL_PORT) : undefined,

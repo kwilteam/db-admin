@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server"
 import { getAccount, validateRefreshToken } from "@/utils/admin-db/db"
 import { getCookie, setCookie } from "@/utils/admin-db/cookies"
-import { IRefreshJwt, createJwt, verifyJwt } from "@/utils/admin-db/token"
+import {
+  IAccountJwt,
+  IAccountType,
+  IRefreshJwt,
+  createJwt,
+  verifyJwt,
+} from "@/utils/admin-db/token"
 
 // When JWT is expired, client requests new JWT with refresh token
 export const POST = async () => {
@@ -55,11 +61,12 @@ export const POST = async () => {
     )
   }
 
-  const newToken = await createJwt(
+  const newToken = await createJwt<IAccountJwt>(
     {
       id: account.id,
       address: account.address,
-      type: account.type_name,
+      type: account.type_name as IAccountType,
+      name: account.name,
     },
     "15m",
   )

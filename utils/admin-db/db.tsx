@@ -225,7 +225,10 @@ export const getAccount = (id: number): IAccountWithType | undefined => {
     if (!db) return
 
     const userStmt = db.prepare(`
-      SELECT * FROM ${Tables.Account} WHERE id = ?
+      SELECT ${Tables.Account}.*, ${Tables.AccountType}.name as type_name 
+      FROM ${Tables.Account} 
+      JOIN ${Tables.AccountType} ON ${Tables.Account}.type_id = ${Tables.AccountType}.id
+      WHERE ${Tables.Account}.id = ?
     `)
 
     return userStmt.get(id) as IAccountWithType
@@ -247,7 +250,10 @@ export const getAccountByAddress = (
     if (!db) return
 
     const userStmt = db.prepare(`
-      SELECT * FROM ${Tables.Account} WHERE type_id = (SELECT id FROM ${Tables.AccountType} WHERE name = ?) AND address = ?
+      SELECT ${Tables.Account}.*, ${Tables.AccountType}.name as type_name 
+      FROM ${Tables.Account}
+      JOIN ${Tables.AccountType} ON ${Tables.Account}.type_id = ${Tables.AccountType}.id AND ${Tables.AccountType}.name = ?
+      WHERE address = ?
     `)
 
     return userStmt.get(type, address) as IAccountWithType

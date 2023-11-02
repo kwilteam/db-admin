@@ -1,25 +1,32 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import * as jose from "jose"
 
+export type IAccountType = "eth" | "email"
 export interface IAccountJwt {
   id: number
-  type: "eth" | "email"
+  type: IAccountType
   address: string
   name: string
+  /** Any other JWT Claim Set member. */
+  [propName: string]: unknown
 }
 
 export interface IRefreshJwt {
   id: number
+  /** Any other JWT Claim Set member. */
+  [propName: string]: unknown
 }
 
-export const createJwt = async <T extends object>(
+export const createJwt = async <T extends jose.JWTPayload>(
   payload: T,
   expiresIn: "15m" | "1hr" | "30 days",
 ): Promise<string> => {
   const secret = getJwtSecret()
   const alg = "HS256"
 
-  const jwt = await new jose.SignJWT(payload as jose.JWTPayload)
+  console.log("payload", payload)
+
+  const jwt = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer("urn:example:issuer")
