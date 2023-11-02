@@ -278,23 +278,29 @@ export const getAccountTypes = (): IAccountType[] | undefined => {
   }
 }
 
-// Invalidates all access codes except the one provided
-export const invalidateAccessCodes = (
+// Delete all access codes for an account (excluding a specific code if provided)
+export const deleteAccessCodes = (
   accountId: number,
-  newCode: number,
+  excludeCode?: number,
 ): void => {
   try {
     const db = getDb()
 
     if (!db) return
 
-    const currentDate = format(new Date(), "yyyy-MM-dd HH:mm:ss")
+    if (excludeCode) {
+      const userStmt = db.prepare(
+        `DELETE FROM ${Tables.AccessCode} WHERE account_id = ? AND code != ?`,
+      )
 
-    const userStmt = db.prepare(`
-      UPDATE ${Tables.AccessCode} SET expires_at = ? WHERE account_id = ? AND code != ? AND expires_at > ?
-    `)
+      userStmt.run(accountId, excludeCode)
+    } else {
+      const userStmt = db.prepare(
+        `DELETE FROM ${Tables.AccessCode} WHERE account_id = ?`,
+      )
 
-    userStmt.run(currentDate, accountId, newCode, currentDate)
+      userStmt.run(accountId)
+    }
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("An error occurred during access code invalidation:", error)
@@ -319,7 +325,7 @@ export const saveAccessCode = (
 
     userStmt.run(accountId, code, expiresAt)
 
-    invalidateAccessCodes(accountId, code)
+    deleteAccessCodes(accountId, code)
 
     return true
   } catch (error: unknown) {
@@ -343,15 +349,17 @@ export const validateAccessCode = (
 
     const accessCode = db
       .prepare(
-        `
-      SELECT COUNT(*) as count FROM ${Tables.AccessCode} WHERE account_id = ? AND code = ? AND expires_at > ?
-    `,
+        `SELECT COUNT(*) as count FROM ${Tables.AccessCode} WHERE account_id = ? AND code = ? AND expires_at > ?`,
       )
       .get(accountId, code, currentDate) as {
       count: number
     }
 
-    if (accessCode["count"] === 1) return true
+    if (accessCode["count"] === 1) {
+      // Clear all users access codes
+      deleteAccessCodes(accountId)
+      return true
+    }
 
     return false
   } catch (error: unknown) {

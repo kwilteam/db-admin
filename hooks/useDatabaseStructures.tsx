@@ -23,8 +23,6 @@ export default function useDatabaseStructures() {
           return
         }
 
-        console.log("databases", _databases)
-
         setDatabaseCount(Object.keys(_databases).length)
         setError(false)
 

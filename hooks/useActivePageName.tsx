@@ -7,8 +7,7 @@ const useActivePageName = (): string | undefined => {
     pathname.startsWith(item.href),
   )?.name
 
-  if (!activePageName)
-    throw new Error(`No active page name found for pathname: ${pathname}`)
+  if (!activePageName) return undefined
 
   return activePageName
 }

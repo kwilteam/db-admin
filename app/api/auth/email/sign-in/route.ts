@@ -5,27 +5,26 @@ import {
   saveRefreshToken,
   validateAccessCode,
 } from "@/utils/admin-db/db"
-import {
-  IAccountJwt,
-  IRefreshJwt,
-  createJwt,
-  setCookie,
-} from "@/utils/admin-db/auth"
+import { setCookie } from "@/utils/admin-db/cookies"
 import { validateEmailAddress } from "@/utils/validate"
+import { IApiResponse } from "@/utils/api"
+import { IAccountJwt, IRefreshJwt, createJwt } from "@/utils/admin-db/token"
 
 interface IRequestBody {
   emailAddress: string
   accessCode: number
 }
 
-export const POST = async (request: Request) => {
+export const POST = async (
+  request: Request,
+): Promise<NextResponse<IApiResponse<string>>> => {
   const { emailAddress, accessCode } = (await request.json()) as IRequestBody
 
   const validEmail = validateEmailAddress(emailAddress)
 
   if (!validEmail) {
     return NextResponse.json(
-      { message: "Invalid email address." },
+      { data: "Invalid email address.", outcome: "error" },
       {
         status: 400,
       },
@@ -36,39 +35,42 @@ export const POST = async (request: Request) => {
 
   if (!account) {
     return NextResponse.json(
-      { message: "Account does not exist." },
+      { data: "Account does not exist.", outcome: "error" },
       {
         status: 404,
       },
     )
   }
 
+  console.log("Validating access code", account.id, accessCode)
+
   const accessCodeValid = validateAccessCode(account.id, accessCode)
 
   if (!accessCodeValid) {
     return NextResponse.json(
-      { message: "Error validating access code." },
+      { data: "Error validating access code.", outcome: "error" },
       {
         status: 401,
       },
     )
   }
 
-  const newToken = createJwt<IAccountJwt>(
+  const newToken = await createJwt<IAccountJwt>(
     {
       id: account.id,
       address: account.address,
       type: "email",
+      name: account.name,
     },
-    "5m",
+    "15m",
   )
   setCookie("token", newToken)
 
-  const refreshTokenJwt = createJwt<IRefreshJwt>(
+  const refreshTokenJwt = await createJwt<IRefreshJwt>(
     {
       id: account.id,
     },
-    "1hr",
+    "30 days",
   )
 
   const expiresInMonth = format(addDays(new Date(), 30), "yyyy-MM-dd HH:mm:ss")
@@ -76,7 +78,7 @@ export const POST = async (request: Request) => {
   setCookie("refreshToken", refreshTokenJwt)
 
   return NextResponse.json(
-    { message: "Access valid." },
+    { data: "Access valid.", outcome: "success" },
     {
       status: 200,
     },

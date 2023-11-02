@@ -1,21 +1,15 @@
 import { NextResponse } from "next/server"
 import { getAccount, validateRefreshToken } from "@/utils/admin-db/db"
-import {
-  IRefreshJwt,
-  createJwt,
-  getCookie,
-  setCookie,
-  verifyJwt,
-} from "@/utils/admin-db/auth"
+import { getCookie, setCookie } from "@/utils/admin-db/cookies"
+import { IRefreshJwt, createJwt, verifyJwt } from "@/utils/admin-db/token"
 
 // When JWT is expired, client requests new JWT with refresh token
 export const POST = async () => {
   const refreshToken = getCookie("refreshToken")
 
   if (!refreshToken) {
-    console.log("MISSING No refresh token found.")
     return NextResponse.json(
-      { message: "Token not found." },
+      { data: "Token not found.", outcome: "error" },
       {
         status: 401,
       },
@@ -26,7 +20,7 @@ export const POST = async () => {
   let validRefreshToken: IRefreshJwt
   try {
     // First verify the refresh token is valid
-    validRefreshToken = verifyJwt<IRefreshJwt>(refreshToken)
+    validRefreshToken = await verifyJwt<IRefreshJwt>(refreshToken)
 
     console.log("validRefreshToken", validRefreshToken)
 
@@ -43,7 +37,7 @@ export const POST = async () => {
     console.log("validInDb", validInDb)
   } catch (err) {
     return NextResponse.json(
-      { message: "Invalid refresh token." },
+      { data: "Invalid refresh token.", outcome: "error" },
       {
         status: 401,
       },
@@ -54,26 +48,26 @@ export const POST = async () => {
 
   if (account === undefined) {
     return NextResponse.json(
-      { message: "Invalid refresh token." },
+      { data: "Invalid refresh token.", outcome: "error" },
       {
         status: 401,
       },
     )
   }
 
-  const newToken = createJwt(
+  const newToken = await createJwt(
     {
       id: account.id,
       address: account.address,
       type: account.type_name,
     },
-    "5m",
+    "15m",
   )
   setCookie("token", newToken)
 
   // Send new JWT to client
   return NextResponse.json(
-    { token: newToken },
+    { data: newToken, outcome: "success" },
     {
       status: 200,
     },

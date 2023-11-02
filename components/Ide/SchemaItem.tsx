@@ -1,7 +1,7 @@
 import useDeleteSchema from "@/hooks/useDeleteSchema"
 import { setIsMenuOpen } from "@/store/global"
 import { useAppDispatch } from "@/store/hooks"
-import { loadSchema, openSchema } from "@/store/ide"
+import { loadSchema, openSchema } from "@/utils/kwil/ide"
 import { FileIcon } from "@/utils/icons"
 
 interface ISchemaItemProps {

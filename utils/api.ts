@@ -234,6 +234,42 @@ export const deleteAccount = async (
   return json
 }
 
+export const requestAccessCode = async (
+  emailAddress: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/auth/email/access-code`, "POST", {
+    emailAddress,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const validateAccessCode = async (
+  emailAddress: string,
+  accessCode: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/auth/email/sign-in`, "POST", {
+    emailAddress,
+    accessCode,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const getUserInfo = async (): Promise<
+  IApiResponse<string | undefined>
+> => {
+  const res = await apiRequest(`/api/auth/user-info`)
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
 const createUrl = (path: string): string => {
   if (!window)
     throw new Error(

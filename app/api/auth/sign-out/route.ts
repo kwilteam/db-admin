@@ -1,5 +1,10 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 
-export const POST = (req: Request) => {
-  // Get the login details and then create a session
+export const GET = (req: NextRequest) => {
+  const response = NextResponse.redirect(new URL("/sign-in", req.url))
+
+  response.cookies.delete("token")
+  response.cookies.delete("refreshToken")
+
+  return response
 }

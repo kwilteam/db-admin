@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { addNewSchema, selectSavedSchemas } from "@/store/ide"
+import { addNewSchema, selectSavedSchemas } from "@/utils/kwil/ide"
 import { saveSchemaContent } from "@/utils/api"
 
 import { useEffect, useRef, useState } from "react"

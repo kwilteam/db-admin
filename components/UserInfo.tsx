@@ -1,25 +1,41 @@
 "use client"
 
-import { Fragment } from "react"
+import { Fragment, useEffect, useState } from "react"
 import Link from "next/link"
 import { Menu, Transition } from "@headlessui/react"
 import classNames from "classnames"
 import { ProfileIcon, SignOutIcon } from "@/utils/icons"
-import { useAppSelector } from "@/store/hooks"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectCurrentUser } from "@/store/global"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function UserInfo({ ...props }: IUserInfoProps) {
+  const dispatch = useAppDispatch()
   const userName = useAppSelector(selectCurrentUser)
-  let initials = "U"
+  const [initials, setInitials] = useState<string>("")
 
-  if (userName) {
-    initials = userName
+  useEffect(() => {
+    if (!userName) return
+
+    const _initials = userName
       .split(" ")
       .map((name) => name[0])
       .join("")
-  }
+
+    setInitials(_initials)
+  }, [userName])
+
+  useEffect(() => {
+    if (!userName) return
+
+    const _initials = userName
+      .split(" ")
+      .map((name) => name[0])
+      .join("")
+
+    setInitials(_initials)
+  }, [dispatch, userName])
 
   return (
     <Menu as="div">
@@ -83,7 +99,7 @@ const userOptions: IUserOption[] = [
   // },
   {
     name: "Sign out",
-    href: "/api/sign-out",
+    href: "/api/auth/sign-out",
     icon: SignOutIcon,
   },
 ]

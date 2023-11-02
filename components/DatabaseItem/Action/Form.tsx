@@ -60,7 +60,7 @@ export default function ActionForm({
                   className={classNames({
                     "m-1 flex-1 rounded-md border bg-white p-2": true,
                     "border-red-500/70": (errors[input] && isDirty) ?? false,
-                    "border-slate-200/40": !errors[input] ?? true,
+                    "border-slate-300/40": !errors[input] ?? true,
                   })}
                   type="text"
                   onChange={(e) => {

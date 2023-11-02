@@ -35,7 +35,7 @@ export interface ISettings {
 
 export interface IAccessCode {
   account_id: number
-  code: string
+  code: number
   created_at: string
   updated_at: string
   expires_at: string
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS ${Tables.Settings} (
 CREATE TABLE IF NOT EXISTS ${Tables.AccessCode} (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   account_id INTEGER,
-  code TEXT UNIQUE,
+  code INTEGER,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   expires_at TEXT,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS ${Tables.AccessCode} (
 CREATE TABLE IF NOT EXISTS ${Tables.RefreshToken} (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   account_id INTEGER,
-  token TEXT UNIQUE,
+  token TEXT,
   expires_at TEXT,
   FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id)
 );

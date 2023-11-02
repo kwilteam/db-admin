@@ -1,41 +1,47 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import * as jose from "jose"
-
-// TODO: Load this from env vars and throw error if not set
-const jwtSecret = process.env.JWT_SECRET ?? "JWT_SECRET Must be set."
-const secret = new TextEncoder().encode(jwtSecret)
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
+import { IApiResponse } from "./utils/api"
+import { getJwtSecret } from "./utils/admin-db/token"
 
 // https://nextjs.org/docs/app/building-your-application/routing/middleware
 
-// Middleware will need to cover following cases:
-// If setup and NOT logged in, redirect to login page
-// If setup and logged in, continue to requested page
-// If not setup, and no token then redirect to setup page
-
-// This function can be marked `async` if using `await` inside
-// request.url gets the route URL e.g. http://localhost:3000/
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const token = request.cookies.get("token")
   const refreshToken = request.cookies.get("refreshToken")
+  const response = NextResponse.next()
 
   let validToken = await validateToken(token)
 
-  if (!validToken && refreshToken) {
-    validToken = await refreshAndValidateToken(refreshToken, request)
+  // If the token is valid, then request can continue to route
+  if (validToken) {
+    return response
   }
 
-  if (!validToken && pathname !== "/sign-in") {
-    return NextResponse.redirect(new URL("/sign-in", request.url))
-  } else if (pathname === "/") {
-    return NextResponse.redirect(new URL("/databases", request.url))
+  // If the token is invalid, but there is a refresh token, then try to refresh the token
+  if (!validToken && refreshToken) {
+    const newToken = await refreshAndValidateToken(refreshToken, request)
+
+    // If the refresh token is valid, then request can continue to route
+    if (newToken) {
+      // Set the new token in the response
+      response.cookies.set("token", newToken)
+
+      return response
+    }
   }
-  return NextResponse.next()
+
+  // By this point we know the token is invalid and there is no refresh token, so redirect to sign-in
+  if (pathname !== "/sign-in") {
+    return NextResponse.redirect(new URL("/sign-in", request.url))
+  }
 }
 
 async function validateToken(token: any) {
   let validToken: boolean | undefined
+  const secret = getJwtSecret()
   try {
     if (token) {
       const { payload } = await jose.jwtVerify(token.value, secret)
@@ -51,10 +57,10 @@ async function validateToken(token: any) {
 }
 
 async function refreshAndValidateToken(
-  refreshToken: any,
+  refreshToken: RequestCookie,
   request: NextRequest,
-) {
-  let validToken: boolean | undefined
+): Promise<string | undefined> {
+  const secret = getJwtSecret()
   try {
     const { payload: refreshPayload } = await jose.jwtVerify(
       refreshToken.value,
@@ -62,27 +68,23 @@ async function refreshAndValidateToken(
     )
 
     if (refreshPayload) {
-      // NOTE: We have to do this due to a limitation in Next.js, that restricts the middleware as an Edge Function
-      // This means we can't use many of the Node.js APIs, including fs, which we need to access the DB directly
+      // NOTE: We have to do this due to a limitation in Next.js, that restricts the middleware to being an Edge Function with limited Node.js APIs
+      // This means we can't use many including fs, which we need to access the SqliteDB directly, to verify the refresh token is valid
+      // See https://github.com/vercel/next.js/discussions/46722 for more info
       const refreshResponse = await fetch(
-        "http://localhost:3003/api/auth/refresh",
-        {
+        new Request(new URL("/api/auth/refresh", request.url), {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Cookie: `refreshToken=${refreshToken.value}`,
           },
           credentials: "include",
-        },
+        }),
       )
 
       if (refreshResponse.ok) {
-        const body = await refreshResponse.json()
+        const body = (await refreshResponse.json()) as IApiResponse<string>
 
-        const response = NextResponse.next()
-        response.cookies.set("token", body.token)
-
-        return true // TODO: May need to return response
+        return body.data
       } else {
         console.log(refreshResponse.status, refreshResponse.statusText)
         throw new Error("Refresh token request failed")
@@ -91,7 +93,6 @@ async function refreshAndValidateToken(
   } catch (err) {
     console.log("Refresh JWT Token invalid", err)
   }
-  return validToken
 }
 
 // See "Matching Paths" below to learn more

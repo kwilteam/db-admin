@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import classNames from "classnames"
 import useCreateNewSchema from "@/hooks/useCreateNewSchema"
 import { FileCreateIcon, FileIcon } from "@/utils/icons"
-import { selectSavedSchemas, loadSavedSchemas } from "@/store/ide"
+import { selectSavedSchemas, loadSavedSchemas } from "@/utils/kwil/ide"
 import Loading from "../Loading"
 import SchemaItem from "./SchemaItem"
 

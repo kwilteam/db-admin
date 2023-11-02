@@ -37,8 +37,6 @@ export default function Form({
     setAccount(updatedAccount)
   }
 
-  console.log("invalid", invalidFields)
-
   return (
     <div
       test-id="accounts-form"

@@ -1,21 +1,24 @@
 import { NextResponse } from "next/server"
 import { saveAccessCode, getAccountByAddress } from "@/utils/admin-db/db"
 import { addMinutes, format } from "date-fns"
-import { sendAccessCode } from "@/utils/admin-db/auth"
 import { validateEmailAddress } from "@/utils/validate"
+import { IApiResponse } from "@/utils/api"
+import { sendAccessCode } from "@/utils/mail"
 
 interface IRequestBody {
   emailAddress: string
 }
 
-export const POST = async (request: Request) => {
+export const POST = async (
+  request: Request,
+): Promise<NextResponse<IApiResponse<string>>> => {
   const { emailAddress } = (await request.json()) as IRequestBody
 
   const validEmail = validateEmailAddress(emailAddress)
 
   if (!validEmail) {
     return NextResponse.json(
-      { message: "Invalid email address." },
+      { data: "Invalid email address.", outcome: "error" },
       {
         status: 400,
       },
@@ -26,7 +29,7 @@ export const POST = async (request: Request) => {
 
   if (!account) {
     return NextResponse.json(
-      { message: "Account does not exist." },
+      { data: "Account does not exist.", outcome: "error" },
       {
         status: 404,
       },
@@ -51,7 +54,7 @@ export const POST = async (request: Request) => {
 
   if (!accessCodeCreated) {
     return NextResponse.json(
-      { message: "Error creating access code." },
+      { data: "Error creating access code.", outcome: "error" },
       {
         status: 500,
       },
@@ -63,7 +66,7 @@ export const POST = async (request: Request) => {
 
   if (!emailSent) {
     return NextResponse.json(
-      { message: "Error sending access code." },
+      { data: "Error sending access code.", outcome: "error" },
       {
         status: 500,
       },
@@ -71,5 +74,5 @@ export const POST = async (request: Request) => {
   }
 
   // Return success
-  return NextResponse.json({ message: "Access code sent." })
+  return NextResponse.json({ data: "Access code sent.", outcome: "success" })
 }

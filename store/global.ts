@@ -1,8 +1,9 @@
+import { IAccountJwt } from "@/utils/admin-db/cookies"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface IGlobalState {
   isMenuOpen: boolean
-  currentUser: string | undefined
+  currentUser: IAccountJwt | undefined
 }
 
 const initialState: IGlobalState = {
@@ -17,13 +18,13 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setCurrentUser: (state, action) => {
+    setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
       state.currentUser = action.payload
     },
   },
 })
 
-export const { setIsMenuOpen } = globalSlice.actions
+export const { setIsMenuOpen, setCurrentUser } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
