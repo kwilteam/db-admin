@@ -1,4 +1,4 @@
-import { IAccountJwt } from "@/utils/admin-db/token"
+import { IAccountJwt } from "@/utils/admin/token"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface IGlobalState {

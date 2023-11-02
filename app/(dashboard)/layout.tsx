@@ -1,13 +1,20 @@
 import { ReduxProvider } from "@/store/Provider"
 import MobileNavigation from "@/components/Navigation/Mobile"
 import DesktopNavigation from "@/components/Navigation/Desktop"
+import { isAdminPkSetup } from "@/utils/admin/setup"
+import { redirect } from "next/navigation"
 
 interface IProps {
   children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: IProps) {
-  // Check to make sure that the admin PK exists, if it doesn't redirect to setup page
+  const privateKeySetup = isAdminPkSetup()
+
+  // If PK is not setup, redirect to setup process
+  if (!privateKeySetup) {
+    redirect("/setup")
+  }
 
   return (
     <ReduxProvider>

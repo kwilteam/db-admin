@@ -1,5 +1,5 @@
-import { IAccount, IAccountType, IAccountWithType } from "./admin-db/schema"
-import { IAccountJwt } from "./admin-db/token"
+import { IAccount, IAccountType, IAccountWithType } from "./admin/schema"
+import { IAccountJwt } from "./admin/token"
 import {
   IDatabaseStructureDict,
   ITableQueryParams,

@@ -1,8 +1,9 @@
+import fs from "fs"
 import { Wallet } from "ethers"
 import { NodeKwil, Utils } from "@kwilteam/kwil-js"
 import { ITxResponse } from "../api"
 import { Transaction } from "@kwilteam/kwil-js/dist/core/tx"
-import { getAdminPk } from "../setup"
+import { privateKeyFile } from "../admin/setup"
 
 export const getKwilInstance = (): NodeKwil => {
   try {
@@ -30,13 +31,12 @@ export const getDatabaseId = async (database: string): Promise<string> => {
 }
 
 export const getSigner = (): Wallet => {
-  let adminPrivateKey = undefined
+  let adminPrivateKey = getAdminPk()
 
   // load private key from file
-  try {
-    adminPrivateKey = getAdminPk()
-  } catch (error) {
-    throw new Error(`Could not find Key`)
+
+  if (!adminPrivateKey) {
+    throw new Error("Failed to get admin private key")
   }
 
   return new Wallet(adminPrivateKey)
@@ -122,4 +122,12 @@ const getEnvVar = (key: string): string => {
     throw new Error(`${key} not set`)
   }
   return value
+}
+
+export const getAdminPk = (): string | undefined => {
+  if (fs.existsSync(privateKeyFile)) {
+    return fs.readFileSync(privateKeyFile, "utf8")
+  }
+
+  return undefined
 }

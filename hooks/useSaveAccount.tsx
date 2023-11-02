@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { saveAccount as saveAccountApi } from "@/utils/api"
-import { IAccount } from "@/utils/admin-db/schema"
+import { IAccount } from "@/utils/admin/schema"
 import { getAccount } from "@/utils/api"
 import { validateEmailAddress, validateEthAddress } from "@/utils/validate"
 

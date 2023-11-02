@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server"
 import * as jose from "jose"
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import { IApiResponse } from "./utils/api"
-import { getJwtSecret } from "./utils/admin-db/token"
+import { getJwtSecret } from "./utils/admin/token"
 
 // https://nextjs.org/docs/app/building-your-application/routing/middleware
 

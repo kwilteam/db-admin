@@ -4,9 +4,9 @@ import {
   deleteAccount,
   getAccount,
   updateAccount,
-} from "@/utils/admin-db/db"
+} from "@/utils/admin/db"
 import { IApiResponse } from "@/utils/api"
-import { IAccount } from "@/utils/admin-db/schema"
+import { IAccount } from "@/utils/admin/schema"
 
 interface INextRequest {
   request: Request

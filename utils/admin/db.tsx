@@ -1,7 +1,7 @@
 import fs from "fs"
 import path from "path"
 import Database from "better-sqlite3"
-import { kwilAdminUiDirectory } from "../setup"
+import { kwilAdminUiDirectory } from "./setup"
 import { IAccountType, IAccountWithType, Tables, adminDbSchema } from "./schema"
 import { format } from "date-fns"
 
@@ -159,7 +159,7 @@ export const updateAccount = (
   }
 }
 
-const adminAccountExists = (): boolean | undefined => {
+export const adminAccountExists = (): boolean | undefined => {
   const db = getDb()
 
   if (!db) return

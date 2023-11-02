@@ -1,4 +1,4 @@
-import { IAccount, IAccountType } from "@/utils/admin-db/schema"
+import { IAccount, IAccountType } from "@/utils/admin/schema"
 import { getAccountTypes } from "@/utils/api"
 import classNames from "classnames"
 import { useEffect, useState } from "react"

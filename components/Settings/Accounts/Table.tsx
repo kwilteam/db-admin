@@ -1,4 +1,4 @@
-import { IAccountWithType } from "@/utils/admin-db/schema"
+import { IAccountWithType } from "@/utils/admin/schema"
 import Link from "next/link"
 
 interface IAccountsTableProps {

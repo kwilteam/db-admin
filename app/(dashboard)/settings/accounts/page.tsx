@@ -10,7 +10,7 @@ import Header from "@/components/Settings/Accounts/Header"
 import ActionPanel from "@/components/Settings/Accounts/ActionPanel"
 import Button from "@/components/Button"
 import { PlusIcon } from "@/utils/icons"
-import { IAccountWithType } from "@/utils/admin-db/schema"
+import { IAccountWithType } from "@/utils/admin/schema"
 
 export default function AccountsPage() {
   const [accounts, setAccounts] = useState<IAccountWithType[]>()

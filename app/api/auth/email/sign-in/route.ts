@@ -4,11 +4,11 @@ import {
   getAccountByAddress,
   saveRefreshToken,
   validateAccessCode,
-} from "@/utils/admin-db/db"
-import { setCookie } from "@/utils/admin-db/cookies"
+} from "@/utils/admin/db"
+import { setCookie } from "@/utils/admin/session"
 import { validateEmailAddress } from "@/utils/validate"
 import { IApiResponse } from "@/utils/api"
-import { IAccountJwt, IRefreshJwt, createJwt } from "@/utils/admin-db/token"
+import { IAccountJwt, IRefreshJwt, createJwt } from "@/utils/admin/token"
 
 interface IRequestBody {
   emailAddress: string

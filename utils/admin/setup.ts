@@ -8,7 +8,7 @@ dotenv.config()
 
 const userDirectory = os.homedir()
 export const kwilAdminUiDirectory = path.join(userDirectory, ".kwil-admin-ui")
-const privateKeyFile = path.join(kwilAdminUiDirectory, "private.key")
+export const privateKeyFile = path.join(kwilAdminUiDirectory, "private.key")
 
 // Used when setting up the UI for the first time
 export const createAdminPk = (mnemonic?: string) => {
@@ -25,10 +25,6 @@ export const createAdminPk = (mnemonic?: string) => {
   }
 }
 
-export const getAdminPk = (): string => {
-  if (fs.existsSync(privateKeyFile)) {
-    return fs.readFileSync(privateKeyFile, "utf8")
-  }
-
-  throw new Error(`Could not find Key`)
+export const isAdminPkSetup = (): boolean => {
+  return fs.existsSync(privateKeyFile)
 }

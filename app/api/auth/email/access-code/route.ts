@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { saveAccessCode, getAccountByAddress } from "@/utils/admin-db/db"
+import { saveAccessCode, getAccountByAddress } from "@/utils/admin/db"
 import { addMinutes, format } from "date-fns"
 import { validateEmailAddress } from "@/utils/validate"
 import { IApiResponse } from "@/utils/api"
-import { sendAccessCode } from "@/utils/mail"
+import { sendAccessCode } from "@/utils/admin/mail"
 
 interface IRequestBody {
   emailAddress: string

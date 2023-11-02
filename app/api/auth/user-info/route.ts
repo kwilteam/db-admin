@@ -1,5 +1,5 @@
-import { getCookie } from "@/utils/admin-db/cookies"
-import { verifyJwt } from "@/utils/admin-db/token"
+import { getCookie } from "@/utils/admin/session"
+import { verifyJwt } from "@/utils/admin/token"
 import { NextRequest, NextResponse } from "next/server"
 
 export const GET = async (req: NextRequest) => {

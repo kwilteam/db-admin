@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
-import { getAccounts } from "@/utils/admin-db/db"
+import { getAccounts } from "@/utils/admin/db"
 import { IApiResponse } from "@/utils/api"
-import { IAccount } from "@/utils/admin-db/schema"
+import { IAccount } from "@/utils/admin/schema"
 
 export const GET = async (): Promise<
   NextResponse<IApiResponse<IAccount[] | undefined>>
