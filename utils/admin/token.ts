@@ -38,9 +38,14 @@ export const createJwt = async <T extends jose.JWTPayload>(
 }
 
 export const verifyJwt = async <T>(token: RequestCookie) => {
-  const jwtSecret = getJwtSecret()
-  const { payload } = await jose.jwtVerify(token.value, jwtSecret)
-  return payload as T
+  try {
+    const jwtSecret = getJwtSecret()
+    const { payload } = await jose.jwtVerify(token.value, jwtSecret)
+    return payload as T
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }
 
 export const getJwtSecret = () => {
