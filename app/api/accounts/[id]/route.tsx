@@ -7,6 +7,8 @@ import {
 } from "@/utils/admin/db"
 import { IApiResponse } from "@/utils/api"
 import { IAccount } from "@/utils/admin/schema"
+import { IAccountJwt, verifyJwt } from "@/utils/admin/token"
+import { getCookie } from "@/utils/admin/session"
 
 interface INextRequest {
   request: Request
@@ -114,9 +116,17 @@ export const DELETE = async (
 ): Promise<NextResponse<IApiResponse<IAccount | undefined | string>>> => {
   const { id } = params
 
-  console.log("DELETE", id)
-
   try {
+    const token = getCookie("token")
+    if (!token) throw new Error("No token found")
+
+    const account = await verifyJwt<IAccountJwt>(token)
+
+    if (!account) throw new Error("No account found")
+
+    if (account.id === Number(id))
+      throw new Error("Cannot delete your own account")
+
     const result: boolean | undefined = deleteAccount(id)
 
     if (!result) {

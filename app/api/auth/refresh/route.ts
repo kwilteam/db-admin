@@ -22,10 +22,14 @@ export const POST = async () => {
   }
 
   // Ensure the refresh token is valid and linked to the account
-  let validRefreshToken: IRefreshJwt
+  let validRefreshToken: IRefreshJwt | undefined
   try {
     // First verify the refresh token is valid
     validRefreshToken = await verifyJwt<IRefreshJwt>(refreshToken)
+
+    if (!validRefreshToken) {
+      throw new Error("Invalid refresh token.")
+    }
 
     console.log("validRefreshToken", validRefreshToken)
 

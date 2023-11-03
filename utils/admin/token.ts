@@ -44,7 +44,7 @@ export const verifyJwt = async <T>(token: RequestCookie) => {
     return payload as T
   } catch (e) {
     console.error(e)
-    return null
+    return undefined
   }
 }
 

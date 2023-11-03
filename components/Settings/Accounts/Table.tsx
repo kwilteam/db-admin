@@ -1,6 +1,7 @@
-import { IAccountWithType } from "@/utils/admin/schema"
 import Link from "next/link"
-
+import { IAccountWithType } from "@/utils/admin/schema"
+import { selectCurrentUser } from "@/store/global"
+import { useAppSelector } from "@/store/hooks"
 interface IAccountsTableProps {
   accounts: IAccountWithType[]
   confirmDeleteAccount: (id: number) => void
@@ -10,6 +11,8 @@ export default function AccountsTable({
   accounts,
   confirmDeleteAccount,
 }: IAccountsTableProps) {
+  const currentUser = useAppSelector(selectCurrentUser)
+
   return (
     <div
       test-id="accounts-table"
@@ -90,13 +93,17 @@ export default function AccountsTable({
                   >
                     Edit
                   </Link>
-                  |
-                  <span
-                    onClick={() => confirmDeleteAccount(account.id)}
-                    className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
-                  >
-                    Delete
-                  </span>
+                  {currentUser?.id !== account.id && (
+                    <>
+                      |
+                      <span
+                        onClick={() => confirmDeleteAccount(account.id)}
+                        className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
+                      >
+                        Delete
+                      </span>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
