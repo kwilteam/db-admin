@@ -1,4 +1,9 @@
-import { IAccount, IAccountType, IAccountWithType } from "./admin/schema"
+import {
+  EnumAccountType,
+  IAccount,
+  IAccountType,
+  IAccountWithType,
+} from "./admin/schema"
 import { IAccountJwt } from "./admin/token"
 import {
   IDatabaseStructureDict,
@@ -267,6 +272,44 @@ export const getUserInfo = async (): Promise<
   const res = await apiRequest(`/api/auth/user-info`)
 
   const json = (await res.json()) as IApiResponse<IAccountJwt | undefined>
+
+  return json
+}
+
+export const createInitialAccount = async (
+  name: string,
+  typeId: EnumAccountType,
+  address: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/auth/init-account`, "POST", {
+    name,
+    typeId,
+    address,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const generateMnemonic = async (): Promise<
+  IApiResponse<string | undefined>
+> => {
+  const res = await apiRequest(`/api/mnemonic/generate`)
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const createAdminPk = async (
+  mnemonic: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/mnemonic/create-account`, "POST", {
+    mnemonic,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
 
   return json
 }

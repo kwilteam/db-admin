@@ -1,14 +1,10 @@
 import fs from "fs"
-import path from "path"
 import Database from "better-sqlite3"
-import { kwilAdminUiDirectory } from "./setup"
+import { dbFileLocation, kwilAdminUiDirectory } from "./setup"
 import { IAccountType, IAccountWithType, Tables, adminDbSchema } from "./schema"
 import { format } from "date-fns"
 
-const dbLocation = path.join(kwilAdminUiDirectory, "data")
-const dbFileLocation = path.join(dbLocation, "admin.sqlite")
-
-export const initDb = () => {
+export const initDb = (): void => {
   try {
     if (fs.existsSync(dbFileLocation)) return
 
@@ -34,7 +30,7 @@ export const initDb = () => {
 
     db.exec(adminDbSchema)
 
-    addAccountType("eth")
+    addAccountType("wallet")
     addAccountType("email")
 
     console.log(
@@ -70,12 +66,12 @@ export const initAdminUser = (
   name: string,
   typeId: number,
   address: string,
-): void => {
+): number | bigint | undefined => {
   try {
     // Should only run on setup
     if (adminAccountExists()) return
 
-    addAccount(name, typeId, address)
+    return addAccount(name, typeId, address)
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(
@@ -461,6 +457,3 @@ export const validateRefreshToken = (
     }
   }
 }
-
-initDb()
-initAdminUser("Martin Creedy", 1, "0x00000000000")

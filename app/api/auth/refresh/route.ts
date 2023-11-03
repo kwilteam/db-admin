@@ -3,7 +3,6 @@ import { getAccount, validateRefreshToken } from "@/utils/admin/db"
 import { getCookie, setCookie } from "@/utils/admin/session"
 import {
   IAccountJwt,
-  IAccountType,
   IRefreshJwt,
   createJwt,
   verifyJwt,
@@ -65,7 +64,7 @@ export const POST = async () => {
     {
       id: account.id,
       address: account.address,
-      type: account.type_name as IAccountType,
+      type: account.type_id,
       name: account.name,
     },
     "15m",

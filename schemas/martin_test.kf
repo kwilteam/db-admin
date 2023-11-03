@@ -8,7 +8,7 @@ table messages {
 
 action insert_message ($id, $message) public {
   INSERT INTO messages
-  VALUES ($id, $message, address(@caller));
+  VALUES ($id, $message, @caller);
 }
 
 action get_messages () public view {

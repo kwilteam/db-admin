@@ -6,6 +6,11 @@ export enum Tables {
   RefreshToken = "refresh_token",
 }
 
+export enum EnumAccountType {
+  Wallet = 1,
+  Email = 2,
+}
+
 export interface IAccountType {
   id: number
   name: string
@@ -15,7 +20,7 @@ export interface IAccountType {
 
 export interface IAccount {
   id: number
-  type_id: number
+  type_id: EnumAccountType
   address: string
   name: string
   created_at?: string

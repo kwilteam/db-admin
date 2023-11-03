@@ -1,10 +1,10 @@
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import * as jose from "jose"
+import { EnumAccountType } from "./schema"
 
-export type IAccountType = "eth" | "email"
 export interface IAccountJwt {
   id: number
-  type: IAccountType
+  type: EnumAccountType
   address: string
   name: string
   /** Any other JWT Claim Set member. */

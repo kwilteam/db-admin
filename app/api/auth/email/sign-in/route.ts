@@ -9,6 +9,7 @@ import { setCookie } from "@/utils/admin/session"
 import { validateEmailAddress } from "@/utils/validate"
 import { IApiResponse } from "@/utils/api"
 import { IAccountJwt, IRefreshJwt, createJwt } from "@/utils/admin/token"
+import { EnumAccountType } from "@/utils/admin/schema"
 
 interface IRequestBody {
   emailAddress: string
@@ -59,7 +60,7 @@ export const POST = async (
     {
       id: account.id,
       address: account.address,
-      type: "email",
+      type: EnumAccountType.Email,
       name: account.name,
     },
     "15m",
