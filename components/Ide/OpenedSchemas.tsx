@@ -7,7 +7,7 @@ import {
   selectActiveSchema,
   selectOpenSchemas,
   setActiveSchema,
-} from "@/utils/kwil/ide"
+} from "@/store/ide"
 import { CheckIcon, ChevronUpDownIcon } from "@/utils/icons"
 
 export default function OpenedSchemas() {

@@ -13,6 +13,7 @@ interface IDatabaseVisibility {
   isVisible: boolean
   tables: boolean
   actions: boolean
+  loading: boolean
 }
 
 // Dictionary of database names to their visibility

@@ -62,7 +62,6 @@ export const getDatabaseStructure = async (
   return json.data
 }
 
-// TODO: Will need to include pagination, sorting, and filtering
 export const getTableData = async (
   db: string,
   table: string,
@@ -78,6 +77,33 @@ export const getTableData = async (
 
   const json = (await res.json()) as IApiResponse<ITableResponse>
   return json.data
+}
+
+export const deployDatabase = async (
+  dbDefinition: string | undefined,
+): Promise<IApiResponse<KwilTypes.TxReceipt | string> | undefined> => {
+  console.log("Deploying database", dbDefinition)
+  if (!dbDefinition) {
+    throw new Error("No database definition provided")
+  }
+
+  const res = await apiRequest(`/api/databases/deploy`, "POST", {
+    dbDefinition,
+  })
+
+  const json = (await res.json()) as IApiResponse<KwilTypes.TxReceipt | string>
+
+  return json
+}
+
+export const deleteDatabase = async (name: string): Promise<boolean> => {
+  const res = await apiRequest(`/api/databases/${name}/drop`, "DELETE")
+
+  if (res.status !== 200) {
+    throw new Error("Failed to delete database")
+  }
+
+  return true
 }
 
 export const executeAction = async (
@@ -96,23 +122,6 @@ export const executeAction = async (
   const json = (await res.json()) as IApiResponse<string | Object[]>
 
   console.log("Action result", json)
-
-  return json
-}
-
-export const deployDatabase = async (
-  dbDefinition: string | undefined,
-): Promise<IApiResponse<KwilTypes.TxReceipt | string> | undefined> => {
-  console.log("Deploying database", dbDefinition)
-  if (!dbDefinition) {
-    throw new Error("No database definition provided")
-  }
-
-  const res = await apiRequest(`/api/databases/deploy`, "POST", {
-    dbDefinition,
-  })
-
-  const json = (await res.json()) as IApiResponse<KwilTypes.TxReceipt | string>
 
   return json
 }

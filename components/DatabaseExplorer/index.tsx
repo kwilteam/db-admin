@@ -29,10 +29,10 @@ export default function DatabasesExplorer() {
       <ul className="mt-2 flex flex-col">
         {databaseStructures &&
           Object.keys(databaseStructures).map((database, index) => (
-            <Fragment key={index}>
+            <div key={index} className="">
               <DatabaseName database={database} />
               <DatabaseStructure database={database} />
-            </Fragment>
+            </div>
           ))}
         {databaseCount === 0 && (
           <div className="flex h-full flex-col items-center justify-center">

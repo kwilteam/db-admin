@@ -10,7 +10,7 @@ interface INextRequest {
   }
 }
 
-export const GET = async (
+export const DELETE = async (
   request: Request,
   { params }: INextRequest,
 ): Promise<NextResponse<IApiResponse<KwilTypes.Database | string>>> => {

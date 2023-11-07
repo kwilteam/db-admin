@@ -20,17 +20,21 @@ export default function useDataTable({ database, table }: IDataTableProps) {
 
   useEffect(() => {
     const fetchTableData = async () => {
-      setIsLoading(true)
-      const response = await getTableData(database, table, tableQueryParams)
-      setTableData(response?.tableData)
-      setTotalCount(response?.totalCount)
+      try {
+        setIsLoading(true)
+        const response = await getTableData(database, table, tableQueryParams)
+        setTableData(response?.tableData)
+        setTotalCount(response?.totalCount)
 
-      if (response && response.tableData?.length > 0) {
-        const columns = Object.keys(response.tableData[0])
-        setColumns(columns)
+        if (response && response.tableData?.length > 0) {
+          const columns = Object.keys(response.tableData[0])
+          setColumns(columns)
+        }
+
+        setIsLoading(false)
+      } catch (error) {
+        console.log(error)
       }
-
-      setIsLoading(false)
     }
 
     fetchTableData()

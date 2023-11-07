@@ -89,7 +89,7 @@ const DatabaseItem = ({
           databaseStructureItems &&
           databaseStructureItems.map(
             (
-              objectItem: KwilTypes.Table<string> | KwilTypes.ActionSchema,
+              objectItem: KwilTypes.Table | KwilTypes.ActionSchema,
               index: number,
             ) => (
               <DatabaseItemLink

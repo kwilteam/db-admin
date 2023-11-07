@@ -1,7 +1,12 @@
-import { setDatabaseObject, setDatabaseVisibility } from "@/store/database"
+import {
+  setDatabaseLoading,
+  setDatabaseObject,
+  setDatabaseVisibility,
+} from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
 import { getDatabaseStructure } from "@/utils/api"
 import { KwilTypes } from "@/utils/database-types"
+import { redirect } from "next/navigation"
 
 export default function useGetDbStructure() {
   const dispatch = useAppDispatch()
@@ -10,33 +15,54 @@ export default function useGetDbStructure() {
     database: string,
     show?: "tables" | "actions",
   ) => {
-    const dbStructure: KwilTypes.Database | undefined =
-      await getDatabaseStructure(database)
-    if (!dbStructure) return
+    try {
+      dispatch(
+        setDatabaseLoading({
+          database,
+          loading: true,
+        }),
+      )
 
-    dispatch(
-      setDatabaseObject({
-        database,
-        structure: dbStructure,
-      }),
-    )
+      const dbStructure: KwilTypes.Database | undefined =
+        await getDatabaseStructure(database)
+      if (!dbStructure) return
 
-    dispatch(
-      setDatabaseVisibility({
-        database,
-        key: "isVisible",
-        isVisible: true,
-      }),
-    )
+      dispatch(
+        setDatabaseObject({
+          database,
+          structure: dbStructure,
+        }),
+      )
 
-    if (show) {
+      dispatch(
+        setDatabaseLoading({
+          database,
+          loading: false,
+        }),
+      )
+
       dispatch(
         setDatabaseVisibility({
           database,
-          key: show,
+          key: "isVisible",
           isVisible: true,
         }),
       )
+
+      if (show) {
+        dispatch(
+          setDatabaseVisibility({
+            database,
+            key: show,
+            isVisible: true,
+          }),
+        )
+      }
+    } catch (error) {
+      // TODO: Next js redirect error so manually redirecting
+      // redirect("/databases")
+      window.location.href = "/databases"
+      console.error(error)
     }
   }
 

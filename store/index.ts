@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import databaseReducer from "./database"
-import ideReducer from "../utils/kwil/ide"
+import ideReducer from "./ide"
 import globalReducer from "./global"
 
 export const store = configureStore({

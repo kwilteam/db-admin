@@ -9,6 +9,8 @@ export const getKwilInstance = (): NodeKwil => {
   try {
     const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
 
+    console.log("kwilProviderUrl", kwilProviderUrl)
+
     return new NodeKwil({
       kwilProvider: kwilProviderUrl,
     })

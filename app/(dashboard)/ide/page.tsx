@@ -8,7 +8,7 @@ import {
   selectActiveSchema,
   selectSchemaContentDict,
   selectOpenSchemas,
-} from "@/utils/kwil/ide"
+} from "@/store/ide"
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"

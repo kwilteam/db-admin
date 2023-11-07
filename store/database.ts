@@ -70,11 +70,44 @@ export const databaseSlice = createSlice({
       }
     },
 
+    setDatabaseLoading: (
+      state: IDatabaseState,
+      action: PayloadAction<{
+        database: string
+        loading: boolean
+      }>,
+    ) => {
+      const { database, loading } = action.payload
+
+      state.visibilityDict[database] = {
+        ...state.visibilityDict[database],
+        loading,
+      }
+    },
+
     setDatabaseActiveContext: (
       state: IDatabaseState,
       action: PayloadAction<IDatabaseActiveContext>,
     ) => {
       state.activeContext = action.payload
+    },
+
+    removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
+      const database = action.payload
+
+      if (!state.structureDict) return
+
+      delete state.structureDict[database]
+      delete state.visibilityDict[database]
+      delete state.tableQueryParamsDict[database]
+    },
+
+    addDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
+      const database = action.payload
+
+      if (!state.structureDict) return
+
+      state.structureDict[database] = null
     },
 
     setTablePagination: (
@@ -142,7 +175,10 @@ export const {
   setDatabases,
   setDatabaseObject,
   setDatabaseVisibility,
+  setDatabaseLoading,
   setDatabaseActiveContext,
+  removeDatabase,
+  addDatabase,
   setTablePagination,
   setTableFilters,
   setTableSort,

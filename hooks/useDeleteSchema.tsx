@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/store/hooks"
-import { removeSchema } from "@/utils/kwil/ide"
+import { removeSchema } from "@/store/ide"
 import { deleteSchema } from "@/utils/api"
 import React from "react"
 

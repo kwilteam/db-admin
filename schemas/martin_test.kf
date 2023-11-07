@@ -1,4 +1,4 @@
-database martin_test_6;
+database martin_test_7;
 
 table messages {
     id int primary notnull,
@@ -8,7 +8,7 @@ table messages {
 
 action insert_message ($id, $message) public {
   INSERT INTO messages
-  VALUES ($id, $message, @caller);
+  VALUES ($id, $message, address(@caller));
 }
 
 action get_messages () public view {

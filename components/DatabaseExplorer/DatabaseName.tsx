@@ -6,11 +6,13 @@ import {
   setDatabaseVisibility,
 } from "@/store/database"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
+import useDeleteDb from "@/hooks/useDeleteDb"
 
 const DatabaseName = ({ database }: { database: string }) => {
   const { getDbStructure } = useGetDbStructure()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
+  const triggerDeleteDb = useDeleteDb()
 
   const isVisible = databaseVisibility[database]?.isVisible
 
@@ -34,7 +36,7 @@ const DatabaseName = ({ database }: { database: string }) => {
       // id={`${database}-item`}
       key={database}
       className={classNames({
-        "ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
+        "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
           true,
         "text-slate-500 hover:text-slate-900": !isVisible,
         "text-slate-900": isVisible,
@@ -60,6 +62,13 @@ const DatabaseName = ({ database }: { database: string }) => {
         })}
       />
       <span>{database}</span>
+      <span
+        className="invisible ml-auto mr-2 text-slate-400 hover:text-slate-700 group-hover:visible"
+        onClick={(e) => triggerDeleteDb(e, database)}
+        test-id={`database-item-${database}-delete`}
+      >
+        x
+      </span>
     </li>
   )
 }

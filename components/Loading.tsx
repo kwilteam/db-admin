@@ -4,7 +4,7 @@ export default function Loading({ ...props }: ILoadingProps) {
   return (
     <div {...props}>
       <svg
-        className="-ml-1 mr-3 h-5 w-5 animate-spin text-kwil"
+        className="-ml-1 mr-3 h-4 w-4 animate-spin text-kwil"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

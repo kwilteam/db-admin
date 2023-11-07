@@ -3,12 +3,15 @@ import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
 import { kfLanguage, customTheme } from "@/lib/kfLanguage"
 import { deployDatabase, saveSchemaContent } from "@/utils/api"
+import { useAppDispatch } from "@/store/hooks"
+import { addDatabase } from "@/store/database"
 export interface IDeployOutcome {
   status: "error" | "success" | undefined
   message: string | undefined
 }
 
 export default function useIde() {
+  const dispatch = useAppDispatch()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
   const [isDeploying, setIsDeploying] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -48,12 +51,16 @@ export default function useIde() {
     const code = editorRef.current.getValue()
     try {
       const result = await deployDatabase(code)
+      const dbName = getDbName(code)
 
       if (result && result.outcome === "success") {
         setOutcome({
           status: "success",
           message: "Database deployed successfully!",
         })
+        if (dbName) {
+          dispatch(addDatabase(dbName))
+        }
       } else if (result && result.outcome === "error") {
         setOutcome({
           status: "error",
@@ -97,6 +104,11 @@ export default function useIde() {
       }
     }, 1000),
   ).current
+
+  const getDbName = (code: string) => {
+    const dbNameMatch = code.match(/database\s+(\w+);/)
+    return dbNameMatch ? dbNameMatch[1] : undefined
+  }
 
   return {
     handleEditorDidMount,
