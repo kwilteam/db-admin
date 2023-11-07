@@ -1,4 +1,5 @@
 database social_network;
+
 // table for storing users
 // each wallet can have a user
 table users {

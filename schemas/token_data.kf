@@ -1,4 +1,4 @@
-database token_data_2;
+database token_data;
 
 //Below is a sample database to track the prices of certain digital assets
 //The first table is to track the price of btc

@@ -1,8 +1,7 @@
+import { useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { addNewSchema, selectSavedSchemas } from "@/store/ide"
 import { saveSchemaContent } from "@/utils/api"
-
-import { useEffect, useRef, useState } from "react"
 
 export default function useCreateNewSchema() {
   const dispatch = useAppDispatch()
