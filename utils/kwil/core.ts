@@ -9,8 +9,6 @@ export const getKwilInstance = (): NodeKwil => {
   try {
     const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
 
-    console.log("kwilProviderUrl", kwilProviderUrl)
-
     return new NodeKwil({
       kwilProvider: kwilProviderUrl,
     })
@@ -34,8 +32,6 @@ export const getDatabaseId = async (database: string): Promise<string> => {
 
 export const getSigner = (): Wallet => {
   let adminPrivateKey = getAdminPk()
-
-  // load private key from file
 
   if (!adminPrivateKey) {
     throw new Error("Failed to get admin private key")
@@ -118,7 +114,7 @@ export const broadcastTx = async (
   throw new Error(message || "Transaction failed")
 }
 
-const getEnvVar = (key: string): string => {
+export const getEnvVar = (key: string): string => {
   const value = process.env[key]
   if (!value) {
     throw new Error(`${key} not set`)

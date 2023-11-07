@@ -1,5 +1,3 @@
-import SettingsNavigation from "@/components/Settings/Navigation"
-
 export default function AccountsLayout({
   children,
 }: React.PropsWithChildren<{}>) {

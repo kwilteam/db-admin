@@ -4,6 +4,8 @@ import classNames from "classnames"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { AccountsIcon, SettingsIcon } from "@/utils/icons"
+import { useAppDispatch } from "@/store/hooks"
+import { setIsMenuOpen } from "@/store/global"
 
 interface ISettingsItem {
   name: string
@@ -12,11 +14,11 @@ interface ISettingsItem {
 }
 
 const settingsItems: ISettingsItem[] = [
-  // {
-  //   name: "General",
-  //   href: "/settings/general",
-  //   icon: SettingsIcon,
-  // },
+  {
+    name: "General",
+    href: "/settings/general",
+    icon: SettingsIcon,
+  },
   {
     name: "Accounts",
     href: "/settings/accounts",
@@ -26,11 +28,18 @@ const settingsItems: ISettingsItem[] = [
 
 export default function SettingsNavigation() {
   const pathname = usePathname()
+  const dispatch = useAppDispatch()
 
   return (
     <ul className="w-full list-none text-sm">
       {settingsItems.map((item) => (
-        <Link key={item.name} href={item.href}>
+        <Link
+          key={item.name}
+          href={item.href}
+          onClick={() => {
+            dispatch(setIsMenuOpen(false))
+          }}
+        >
           <li
             className={classNames({
               "flex h-10 cursor-pointer select-none flex-row items-center p-2 pl-3 pr-2 hover:text-kwil-dark":

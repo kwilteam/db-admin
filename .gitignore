@@ -37,6 +37,7 @@ next-env.d.ts
 /.whisper/*
 tests/screenshots/*
 schemas/*.kf
+!schemas/hello_world.kf
 !schemas/social_network.kf
 !schemas/token_data.kf
 !schemas/video_game.kf
