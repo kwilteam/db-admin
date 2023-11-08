@@ -22,7 +22,7 @@ export default function ExtensionCard({ extension }: IExtensionCardProps) {
 
   return (
     <div
-      className="flex h-40 w-full cursor-pointer flex-row gap-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm hover:bg-slate-50/30"
+      className="flex w-full cursor-pointer flex-row gap-4 rounded-lg border border-slate-200 bg-white p-3 shadow-sm hover:bg-slate-50/30 md:h-40"
       onClick={() => navigateToExtension(extension.id)}
     >
       <div className="flex flex-col justify-center text-center">
@@ -36,10 +36,10 @@ export default function ExtensionCard({ extension }: IExtensionCardProps) {
       </div>
       <div className="my-1 flex flex-1 flex-col gap-2 overflow-hidden text-sm text-gray-500">
         <div className="font-medium text-gray-900">{extension.name}</div>
-        <div className="text-wrap flex-1 overflow-hidden">
+        <div className="text-wrap md:max-h-auto max-h-24 flex-1 overflow-hidden">
           {extension.description}
         </div>
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col gap-1 md:flex-row md:gap-4">
           <PublisherBadge publisher={extension.publisher} />
           {extension.official && <OfficialBadge />}
           {extension.verifiedPublisher && <VerifiedBadge />}

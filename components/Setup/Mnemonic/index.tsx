@@ -1,7 +1,7 @@
 import Link from "next/link"
-import Button from "../Button"
-import MnemonicCreate from "./MnemonicCreate"
-import MnemonicImport from "./MnemonicImport"
+import Button from "../../Button"
+import MnemonicCreate from "./Create"
+import MnemonicImport from "./Import"
 
 export type TMnemonic = "create" | "import" | null
 

@@ -1,8 +1,8 @@
+import Link from "next/link"
+import { EnumAccountType } from "@/utils/admin/schema"
 import Button from "../Button"
 import EmailAccount from "./EmailAccount"
-import Link from "next/link"
 import WalletAccount from "./WalletAccount"
-import { EnumAccountType } from "@/utils/admin/schema"
 
 interface IAdminAccountProps {
   typeId: EnumAccountType | undefined

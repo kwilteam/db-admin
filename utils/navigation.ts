@@ -30,7 +30,7 @@ export const navigationItems: INavigationItem[] = [
   },
   {
     name: "Settings",
-    href: "/settings",
+    href: "/settings/general",
     icon: SettingsIcon,
     secondaryMobileMenu: true,
   },

@@ -30,6 +30,7 @@ export default function useActionForm({ action }: IUseActionFormProps) {
       event: React.FormEvent<HTMLFormElement>,
     ): IValidateFormProps | undefined => {
       const form = event.currentTarget
+      const tempErrors = []
       setIsDirty(true)
 
       event.preventDefault()
@@ -41,10 +42,12 @@ export default function useActionForm({ action }: IUseActionFormProps) {
       // Validate inputs
       inputs.map((input) => {
         formValues[input] = formData.get(input) as string
-        validateInput(input, formValues[input])
+        if (!validateInput(input, formValues[input])) {
+          tempErrors.push(input)
+        }
       })
 
-      if (Object.values(errors).some((error) => error)) {
+      if (tempErrors.length) {
         console.log("Invalid inputs", errors)
         return
       }
@@ -59,28 +62,20 @@ export default function useActionForm({ action }: IUseActionFormProps) {
       setErrors((prevErrors) => {
         return { ...prevErrors, [input]: true }
       })
+      return false
     } else {
       setErrors((prevErrors) => {
         return { ...prevErrors, [input]: false }
       })
+      return true
     }
   }
 
-  const resetForm = useCallback(
-    (form: HTMLFormElement) => {
-      setIsDirty(false)
+  const resetForm = useCallback((form: HTMLFormElement) => {
+    setIsDirty(false)
 
-      const initialErrors: Record<string, boolean> = {}
-      inputs?.forEach((input) => {
-        initialErrors[input] = true
-      })
-      console.log("Resetting errors", initialErrors)
-      setErrors(initialErrors)
-
-      form.reset()
-    },
-    [inputs],
-  )
+    form.reset()
+  }, [])
 
   return {
     inputs,

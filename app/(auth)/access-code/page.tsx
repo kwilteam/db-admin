@@ -1,13 +1,14 @@
 "use client"
 
 import { useState, useRef, useCallback, useEffect } from "react"
-import { redirect, useSearchParams } from "next/navigation"
+import { redirect, useRouter, useSearchParams } from "next/navigation"
 import { validateAccessCode } from "@/utils/api"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"
 
 export default function AccessCodePage() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const emailAddress = searchParams.get("email")
 
@@ -73,14 +74,13 @@ export default function AccessCodePage() {
 
       setSuccess("Access code validated!  Redirecting...")
 
-      // redirect(`/databases`) - Next.js error so using window.location.href
-      window.location.href = "/databases"
+      router.push("/databases")
     } catch (error) {
       alert("Something went wrong. Please try again.")
       setLoading(false)
       return
     }
-  }, [code, emailAddress])
+  }, [code, emailAddress, router])
 
   useEffect(() => {
     if (code.join("").length === 6) {

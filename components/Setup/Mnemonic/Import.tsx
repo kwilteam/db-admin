@@ -1,12 +1,14 @@
 import { useState } from "react"
-import Button from "../Button"
-import Loading from "../Loading"
-import { createAdminPk } from "@/utils/api"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Alert from "../Alert"
+import { createAdminPk } from "@/utils/api"
+import Button from "../../Button"
+import Loading from "../../Loading"
+import Alert from "../../Alert"
 import classNames from "classnames"
 
 export default function CreateMnemonic() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [mnemonic, setMnemonic] = useState<string>()
   const [success, setSuccess] = useState(false)
@@ -28,7 +30,7 @@ export default function CreateMnemonic() {
         setSuccess(true)
 
         setTimeout(() => {
-          window.location.href = "/"
+          router.push("/")
         }, 1000)
 
         setLoading(false)

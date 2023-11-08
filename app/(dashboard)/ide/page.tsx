@@ -40,7 +40,7 @@ export default function IdePage() {
         <Alert
           type={outcome.status}
           text={outcome.message}
-          className="absolute top-32 z-30 block h-auto w-full lg:hidden"
+          className="absolute top-28 z-30 block h-auto w-full lg:hidden"
         />
       )}
       <div

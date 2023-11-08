@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { requestAccessCode } from "@/utils/api"
 import Button from "../Button"
 import Alert from "../Alert"
 import Loading from "../Loading"
 
 export default function EmailForm() {
+  const router = useRouter()
   const [emailAddress, setEmailAddress] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -33,8 +34,7 @@ export default function EmailForm() {
       setLoading(true)
 
       setTimeout(() => {
-        // redirect(`/access-code`) - Next.js error so using window.location.href
-        window.location.href = `/access-code?email=${emailAddress}`
+        router.push(`/access-code?email=${emailAddress}`)
       }, 1000)
     } catch (error) {
       alert("Something went wrong. Please try again.")

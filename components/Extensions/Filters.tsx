@@ -22,7 +22,6 @@ export default function ExtensionFilters() {
     setTimeoutVal(
       setTimeout(() => {
         dispatch(setFilterValue({ key: "search", value: value }))
-        console.log("searching", value)
       }, 500),
     )
   }

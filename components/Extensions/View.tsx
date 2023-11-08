@@ -15,7 +15,7 @@ export default function ExtensionView({ extension }: IExtensionViewProps) {
     <>
       <div className="flex flex-col gap-4">
         <div className="flex min-h-[160px] w-full flex-row justify-center gap-4 border-b border-slate-100 bg-slate-50/20">
-          <div className="my-3 flex w-1/2 flex-col items-center gap-2 overflow-hidden text-sm text-gray-500">
+          <div className="my-3 flex w-full flex-col items-center gap-2 overflow-hidden text-sm text-gray-500 md:w-1/2">
             <Image
               className="h-16 w-16 rounded-lg p-1"
               src={extension.image}
@@ -34,15 +34,15 @@ export default function ExtensionView({ extension }: IExtensionViewProps) {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-row justify-center gap-4">
-          <div className="flex w-2/3 gap-2">
+        <div className="flex w-full justify-center gap-4">
+          <div className="mx-2 flex w-full flex-col gap-2 md:w-2/3 md:flex-row">
             <div className="flex flex-1 flex-col border border-slate-200">
               <div className="flex bg-slate-50 p-2">About</div>
               <div className="flex p-2">{extension.readme}</div>
             </div>
 
             {extension.installation && (
-              <div className="flex w-1/3 flex-col border border-slate-200">
+              <div className="flex w-full flex-col border border-slate-200 md:w-1/3">
                 <div className="flex bg-slate-50 p-2">Installation</div>
                 <div className="flex p-2">{extension.installation}</div>
               </div>
