@@ -99,6 +99,15 @@ export const ideSlice = createSlice({
         state.activeSchema = state.openSchemas[0]
       }
     },
+
+    setSchemaContent: (
+      state,
+      action: PayloadAction<{ name: string; content: string }>,
+    ) => {
+      const { name, content } = action.payload
+
+      state.schemaContentDict[name] = content
+    },
   },
 
   extraReducers: (builder) => {
@@ -124,6 +133,7 @@ export const {
   setActiveSchema,
   addNewSchema,
   removeSchema,
+  setSchemaContent,
 } = ideSlice.actions
 
 export const selectSavedSchemas = (state: { ide: IIdeState }) =>

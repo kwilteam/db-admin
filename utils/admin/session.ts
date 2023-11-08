@@ -18,8 +18,8 @@ export const getCookie = (name: string): RequestCookie | undefined => {
 
 export const isSignedIn = async (): Promise<boolean> => {
   let signedIn = false
-  let validToken = false
-  let validRefreshToken = false
+  let validToken = undefined
+  let validRefreshToken = undefined
   const token = getCookie("token")
   const refreshToken = getCookie("refreshToken")
 

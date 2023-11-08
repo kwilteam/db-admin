@@ -12,7 +12,7 @@ export default function useSaveAccount(id: number) {
   const [account, setAccount] = useState<IAccount>({
     id: 0,
     name: "",
-    type_id: 0,
+    type_id: 1, // default to wallet
     address: "",
   })
   const [error, setError] = useState<string | undefined>()

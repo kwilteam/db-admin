@@ -5,6 +5,7 @@ import { kfLanguage, customTheme } from "@/lib/kfLanguage"
 import { deployDatabase, saveSchemaContent } from "@/utils/api"
 import { useAppDispatch } from "@/store/hooks"
 import { addDatabase } from "@/store/database"
+import { setSchemaContent } from "@/store/ide"
 export interface IDeployOutcome {
   status: "error" | "success" | undefined
   message: string | undefined
@@ -92,7 +93,17 @@ export default function useIde() {
   const save = useRef(
     debounce(async (name: string, content: string) => {
       try {
-        if (!content) return
+        // Allow empty content to be saved - when deleting a schema
+        // if (!content) return
+
+        dispatch(
+          setSchemaContent({
+            name,
+            content,
+          }),
+        )
+
+        console.log("set schema content", name, content)
 
         setIsSaving(true)
 
@@ -102,7 +113,7 @@ export default function useIde() {
       } catch (error) {
         console.error("Auto-save failed", error)
       }
-    }, 1000),
+    }, 500),
   ).current
 
   const getDbName = (code: string) => {

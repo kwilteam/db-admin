@@ -1,4 +1,4 @@
-database hello_world_2;
+database hello_world;
 
 table greetings {
   id int primary notnull,

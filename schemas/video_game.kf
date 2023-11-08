@@ -1,4 +1,4 @@
-database video_game;
+database video_game______;
 
 // table for storing all the accounts in a game
 table accounts {
