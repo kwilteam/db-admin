@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react"
 import { Fragment } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
 import UserInfo from "../UserInfo"
-import useActivePageName from "@/hooks/useActivePageName"
+import useActivePage from "@/hooks/useActivePage"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectIsMenuOpen, setIsMenuOpen } from "@/store/global"
 import Main from "./Main"
@@ -13,17 +13,15 @@ import { usePathname } from "next/navigation"
 import DatabaseExplorer from "../DatabaseExplorer"
 import classNames from "classnames"
 import SettingsNavigation from "../Settings/Navigation"
+import ExtensionFilters from "../Extensions/Filters"
 
 export default function MobileNavigation() {
   const dispatch = useAppDispatch()
   const isMenuOpen = useAppSelector(selectIsMenuOpen)
-  const activePageName = useActivePageName()
+  const activePage = useActivePage()
   const pathname = usePathname()
 
-  const secondaryNavShown =
-    pathname.startsWith("/databases") ||
-    pathname.startsWith("/ide") ||
-    pathname.startsWith("/settings")
+  const secondaryMobileMenu = activePage?.secondaryMobileMenu ?? false
 
   return (
     <>
@@ -58,12 +56,13 @@ export default function MobileNavigation() {
                 className={classNames({
                   "flex min-h-screen w-80 overflow-scroll border-r border-slate-100 bg-white pl-16 lg:hidden":
                     true,
-                  hidden: !secondaryNavShown,
+                  hidden: !secondaryMobileMenu,
                 })}
               >
                 {pathname.startsWith("/databases") && <DatabaseExplorer />}
                 {pathname.startsWith("/ide") && <SchemaExplorer />}
                 {pathname.startsWith("/settings") && <SettingsNavigation />}
+                {pathname.startsWith("/extensions") && <ExtensionFilters />}
               </div>
               <div
                 className="h-10 lg:hidden"
@@ -72,7 +71,7 @@ export default function MobileNavigation() {
                 <HiOutlineXMark
                   className={classNames({
                     "m-2 h-8 w-8 p-1 text-slate-50": true,
-                    "ml-16": !secondaryNavShown,
+                    "ml-16": !secondaryMobileMenu,
                   })}
                 />
               </div>
@@ -88,7 +87,7 @@ export default function MobileNavigation() {
         >
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
-        <div className="text-slate-100">{activePageName}</div>
+        <div className="text-slate-100">{activePage?.name}</div>
         <UserInfo />
       </div>
     </>

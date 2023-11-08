@@ -9,7 +9,7 @@ const getSettings = async () => {
 
     return {
       adminAccount: address,
-      kwilProvider: getEnvVar("KWIL_PROVIDER_URL") ?? "http://rpc.kwil.io",
+      kwilProvider: getEnvVar("KWIL_PROVIDER_URL") ?? "http://localhost:8080",
     }
   } catch (err) {
     console.error(err)

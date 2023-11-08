@@ -4,6 +4,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import classNames from "classnames"
 import type { INavigationItem } from "@/utils/navigation"
+import { useAppDispatch } from "@/store/hooks"
+import { setIsMenuOpen } from "@/store/global"
 
 interface IProps {
   item: INavigationItem
@@ -11,6 +13,7 @@ interface IProps {
 
 export default function NavigationItem({ item }: IProps) {
   const pathname = usePathname()
+  const dispatch = useAppDispatch()
 
   return (
     <li key={item.href} className="group relative">
@@ -24,6 +27,11 @@ export default function NavigationItem({ item }: IProps) {
             item.href,
           ),
         })}
+        onClick={() => {
+          if (item.closeMobileMenu) {
+            dispatch(setIsMenuOpen(false))
+          }
+        }}
       >
         <item.icon className="h-6 w-6" />
         <NavTooltip

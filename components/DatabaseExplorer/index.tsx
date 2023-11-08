@@ -1,5 +1,5 @@
 "use client"
-import { Fragment, useEffect } from "react"
+import { useEffect } from "react"
 import DatabaseName from "./DatabaseName"
 import DatabaseStructure from "./DatabaseStructure"
 import useDatabaseStructures from "@/hooks/useDatabaseStructures"

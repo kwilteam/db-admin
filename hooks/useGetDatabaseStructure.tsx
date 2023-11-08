@@ -1,4 +1,5 @@
 import {
+  setDatabaseActiveContext,
   setDatabaseLoading,
   setDatabaseObject,
   setDatabaseVisibility,
@@ -6,10 +7,11 @@ import {
 import { useAppDispatch } from "@/store/hooks"
 import { getDatabaseStructure } from "@/utils/api"
 import { KwilTypes } from "@/utils/database-types"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 export default function useGetDbStructure() {
   const dispatch = useAppDispatch()
+  const router = useRouter()
 
   const getDbStructure = async (
     database: string,
@@ -59,10 +61,10 @@ export default function useGetDbStructure() {
         )
       }
     } catch (error) {
-      // TODO: Next js redirect error so manually redirecting
-      // redirect("/databases")
-      window.location.href = "/databases"
       console.error(error)
+
+      dispatch(setDatabaseActiveContext(undefined))
+      router.push("/databases")
     }
   }
 

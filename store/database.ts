@@ -87,7 +87,7 @@ export const databaseSlice = createSlice({
 
     setDatabaseActiveContext: (
       state: IDatabaseState,
-      action: PayloadAction<IDatabaseActiveContext>,
+      action: PayloadAction<IDatabaseActiveContext | undefined>,
     ) => {
       state.activeContext = action.payload
     },

@@ -1,11 +1,11 @@
 "use client"
 
+import { useState, useRef, useCallback, useEffect } from "react"
+import { redirect, useSearchParams } from "next/navigation"
+import { validateAccessCode } from "@/utils/api"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"
-import { validateAccessCode } from "@/utils/api"
-import { redirect, useSearchParams } from "next/navigation"
-import { useState, useRef, useCallback, useEffect } from "react"
 
 export default function AccessCodePage() {
   const searchParams = useSearchParams()

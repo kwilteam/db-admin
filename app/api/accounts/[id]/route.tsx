@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import {
   addAccount,
   deleteAccount,
@@ -18,7 +18,7 @@ interface INextRequest {
 }
 
 export const GET = async (
-  request: Request,
+  request: NextRequest,
   { params }: INextRequest,
 ): Promise<NextResponse<IApiResponse<IAccount | undefined>>> => {
   const { id } = params
