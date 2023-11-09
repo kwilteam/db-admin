@@ -372,6 +372,37 @@ export const validateAccessCode = (
   }
 }
 
+export const getAccessCode = (
+  accountId: number,
+):
+  | {
+      code: number
+      expires_at: string
+    }
+  | undefined => {
+  try {
+    const db = getDb()
+
+    if (!db) return
+
+    const accessCode = db
+      .prepare(
+        `SELECT code, expires_at FROM ${Tables.AccessCode} WHERE account_id = ?`,
+      )
+      .get(accountId) as {
+      code: number
+      expires_at: string
+    }
+
+    return accessCode
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("An error occurred during access code retrieval:", error)
+      throw error
+    }
+  }
+}
+
 export const invalidateRefreshTokens = (
   accountId: number,
   token: string,

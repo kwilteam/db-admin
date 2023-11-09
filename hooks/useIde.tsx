@@ -93,9 +93,6 @@ export default function useIde() {
   const save = useRef(
     debounce(async (name: string, content: string) => {
       try {
-        // Allow empty content to be saved - when deleting a schema
-        // if (!content) return
-
         dispatch(
           setSchemaContent({
             name,

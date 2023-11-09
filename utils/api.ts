@@ -262,13 +262,39 @@ export const requestAccessCode = async (
   return json
 }
 
-export const validateAccessCode = async (
+export const emailSignIn = async (
   emailAddress: string,
   accessCode: string,
 ): Promise<IApiResponse<string | undefined>> => {
   const res = await apiRequest(`/api/auth/email/sign-in`, "POST", {
     emailAddress,
     accessCode,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const walletRequestMessage = async (
+  address: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/auth/wallet/message`, "POST", {
+    address,
+  })
+
+  const json = (await res.json()) as IApiResponse<string | undefined>
+
+  return json
+}
+
+export const walletSignIn = async (
+  address: string,
+  signature: string,
+): Promise<IApiResponse<string | undefined>> => {
+  const res = await apiRequest(`/api/auth/wallet/sign-in`, "POST", {
+    address,
+    signature,
   })
 
   const json = (await res.json()) as IApiResponse<string | undefined>

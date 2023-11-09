@@ -1,7 +1,7 @@
-import classNames from "classnames"
-import "./globals.css"
 import type { Metadata } from "next"
+import classNames from "classnames"
 import { Manrope } from "next/font/google"
+import "./globals.css"
 
 const manrope = Manrope({ subsets: ["latin"] })
 

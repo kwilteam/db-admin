@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react"
 import { redirect, useRouter, useSearchParams } from "next/navigation"
-import { validateAccessCode } from "@/utils/api"
+import { emailSignIn } from "@/utils/api"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"
@@ -61,7 +61,7 @@ export default function AccessCodePage() {
 
     setLoading(true)
     try {
-      const result = await validateAccessCode(emailAddress, accessCode)
+      const result = await emailSignIn(emailAddress, accessCode)
       if (result.outcome === "error") {
         setError(result.data ?? "An error occurred")
 
