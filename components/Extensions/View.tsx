@@ -1,10 +1,12 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
+import { IKwilExtension } from "@/store/extensions"
+import { DockerIcon, GitIcon } from "@/utils/icons"
 import PublisherBadge from "../Badge/Publisher"
 import OfficialBadge from "../Badge/Official"
 import VerifiedBadge from "../Badge/Verified"
-import { IKwilExtension } from "@/store/extensions"
 
 interface IExtensionViewProps {
   extension: IKwilExtension
@@ -30,7 +32,20 @@ export default function ExtensionView({ extension }: IExtensionViewProps) {
             <div className="flex flex-row gap-4">
               <PublisherBadge publisher={extension.publisher} />
               {extension.official && <OfficialBadge />}
-              {extension.verifiedPublisher && <VerifiedBadge />}
+              {extension.verified && <VerifiedBadge />}
+            </div>
+            <div className="flex flex-row gap-4">
+              {extension.gitUrl && (
+                <Link href={extension.gitUrl} target="_blank">
+                  <GitIcon className="h-5 w-5 hover:text-slate-900" />
+                </Link>
+              )}
+
+              {extension.dockerUrl && (
+                <Link href={extension.dockerUrl} target="_blank">
+                  <DockerIcon className="h-5 w-5 hover:text-slate-900" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

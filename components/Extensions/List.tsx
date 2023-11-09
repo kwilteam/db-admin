@@ -10,9 +10,10 @@ import {
   setLoading,
 } from "@/store/extensions"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { getExtensions } from "@/utils/api"
 import ExtensionCard from "./Card"
 import Loading from "../Loading"
-import { getExtensions } from "@/utils/api"
+import Alert from "../Alert"
 
 export default function ExtensionList() {
   const dispatch = useAppDispatch()
@@ -47,6 +48,13 @@ export default function ExtensionList() {
   return (
     <>
       <div className="flex min-h-screen flex-col p-3">
+        {extensions.length === 0 && (
+          <Alert
+            className="w-full"
+            text="No extensions could be found. Clear your filters to see all extensions."
+            type="warning"
+          />
+        )}
         <div className="grid w-full grid-flow-row grid-cols-1 place-items-start gap-2 lg:grid-cols-2">
           {extensions.map((extension) => (
             <ExtensionCard key={extension.name} extension={extension} />

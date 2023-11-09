@@ -4,8 +4,8 @@ export interface IKwilExtension {
   id: number
   name: string
   publisher: string
-  official: boolean
-  verifiedPublisher: boolean
+  verified: string
+  official: string
   image: string
   description: string
   readme: string
@@ -14,12 +14,10 @@ export interface IKwilExtension {
   dockerUrl?: string
 }
 
-type BooleanString = "true" | "false"
-
 export interface IExtensionFilter {
   search: string
-  official: BooleanString
-  verified: BooleanString
+  verified: string
+  official: string
 }
 
 interface IExtensionsState {
@@ -32,8 +30,8 @@ const initialState: IExtensionsState = {
   extensions: [],
   filters: {
     search: "",
-    official: "false",
-    verified: "false",
+    official: "",
+    verified: "",
   },
   loading: false,
 }
@@ -57,14 +55,7 @@ export const extensionsSlice = createSlice({
     ) => {
       const { key, value } = action.payload
 
-      if (key === "search") {
-        state.filters.search = value
-        return
-      }
-
-      if (key === "official" || key === "verified") {
-        state.filters[key] = value as BooleanString
-      }
+      state.filters[key] = value
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload

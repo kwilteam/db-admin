@@ -1,4 +1,3 @@
-import { IKwilExtension } from "@/store/extensions"
 import ExtensionFilters from "@/components/Extensions/Filters"
 import ExtensionList from "@/components/Extensions/List"
 

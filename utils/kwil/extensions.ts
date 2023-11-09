@@ -1,75 +1,33 @@
-import { IExtensionFilter, IKwilExtension } from "@/store/extensions"
+import extensions from "./extensions.json"
 
+import { IExtensionFilter, IKwilExtension } from "@/store/extensions"
 export const getExtensions = async (
   filters: IExtensionFilter,
 ): Promise<IKwilExtension[]> => {
-  return [
-    {
-      id: 1,
-      name: "Database Helper",
-      publisher: "Company 1",
-      official: true,
-      verifiedPublisher: false,
-      image: "/images/kwil.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
-      readme: "This is a readme",
-      gitUrl: "https://github.com/kwilteam/kwil-js",
-      dockerUrl: "https://hub.docker.com/r/kwildb/kwil",
-    },
-    {
-      id: 2,
-      name: "ERC20 Extension",
-      publisher: "Company 2",
-      official: false,
-      verifiedPublisher: true,
-      image: "/images/kwil.png",
-      description:
-        " Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
-      readme: "This is a readme",
-      gitUrl: "https://github.com/kwilteam/kwil-js",
-      dockerUrl: "https://hub.docker.com/r/kwildb/kwil",
-    },
-    {
-      id: 3,
-      name: "ID Helper",
-      publisher: "Company 3",
-      official: true,
-      verifiedPublisher: false,
-      image: "/images/kwil.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
-      readme: "This is a readme",
-      gitUrl: "https://github.com/kwilteam/kwil-js",
-      dockerUrl: "https://hub.docker.com/r/kwildb/kwil",
-    },
-    {
-      id: 4,
-      name: "Data Sync Extension",
-      publisher: "Company 4",
-      official: false,
-      verifiedPublisher: true,
-      image: "/images/kwil.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
-      readme: "This is a readme",
-      gitUrl: "https://github.com/kwilteam/kwil-js",
-      dockerUrl: "https://hub.docker.com/r/kwildb/kwil",
-    },
-    {
-      id: 5,
-      name: "API Integration Extension",
-      publisher: "Company 5",
-      official: true,
-      verifiedPublisher: true,
-      image: "/images/kwil.png",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
-      readme: "This is a readme",
-      gitUrl: "https://github.com/kwilteam/kwil-js",
-      dockerUrl: "https://hub.docker.com/r/kwildb/kwil",
-    },
-  ]
+  return extensions.filter((e) => {
+    if (filters.search.length > 0) {
+      if (
+        !e.name.toLowerCase().includes(filters.search.toLowerCase()) &&
+        !e.description.toLowerCase().includes(filters.search.toLowerCase())
+      ) {
+        return false
+      }
+    }
+
+    if (filters.official === "true") {
+      if (e.official !== filters.official) {
+        return false
+      }
+    }
+
+    if (filters.verified === "true") {
+      if (e.verified !== filters.verified) {
+        return false
+      }
+    }
+
+    return true
+  })
 }
 
 export const getExtension = async (id: number): Promise<IKwilExtension> => {

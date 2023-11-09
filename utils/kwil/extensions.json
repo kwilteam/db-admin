@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "name": "Database Helper",
+    "publisher": "Company 1",
+    "official": "true",
+    "verified": "false",
+    "image": "/images/kwil.png",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "installation": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "readme": "This is a readme",
+    "gitUrl": "https://github.com/kwilteam/kwil-js",
+    "dockerUrl": "https://hub.docker.com/r/kwildb/kwil"
+  },
+  {
+    "id": 2,
+    "name": "ERC20 Extension",
+    "publisher": "Company 2",
+    "official": "false",
+    "verified": "true",
+    "image": "/images/kwil.png",
+    "description": " Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "readme": "This is a readme",
+    "gitUrl": "https://github.com/kwilteam/kwil-js",
+    "dockerUrl": "https://hub.docker.com/r/kwildb/kwil"
+  },
+  {
+    "id": 3,
+    "name": "ID Helper",
+    "publisher": "Company 3",
+    "official": "true",
+    "verified": "false",
+    "image": "/images/kwil.png",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "readme": "This is a readme",
+    "gitUrl": "https://github.com/kwilteam/kwil-js",
+    "dockerUrl": "https://hub.docker.com/r/kwildb/kwil"
+  },
+  {
+    "id": 4,
+    "name": "Data Sync Extension",
+    "publisher": "Company 4",
+    "official": "false",
+    "verified": "true",
+    "image": "/images/kwil.png",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "readme": "This is a readme",
+    "gitUrl": "https://github.com/kwilteam/kwil-js",
+    "dockerUrl": "https://hub.docker.com/r/kwildb/kwil"
+  },
+  {
+    "id": 5,
+    "name": "API Integration Extension",
+    "publisher": "Company 5",
+    "official": "true",
+    "verified": "true",
+    "image": "/images/kwil.png",
+    "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus temporibus quia, quibusdam molestiae voluptatum atque alias.",
+    "readme": "This is a readme",
+    "gitUrl": "https://github.com/kwilteam/kwil-js",
+    "dockerUrl": "https://hub.docker.com/r/kwildb/kwil"
+  }
+]

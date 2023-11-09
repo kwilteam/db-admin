@@ -13,10 +13,10 @@ export default function Alert({ text, type, ...props }: IAlertProps) {
       {...props}
       className={classNames({
         "flex select-none items-center rounded-md p-2 text-xs lg:text-sm": true,
-        "bg-red-200/80 text-red-700": type === "error",
-        "bg-blue-200/80 text-blue-700": type === "info",
-        "bg-green-200/80 text-green-700": type === "success",
-        "bg-yellow-200/80 text-yellow-700": type === "warning",
+        "bg-red-200/60 text-red-700": type === "error",
+        "bg-blue-200/60 text-blue-700": type === "info",
+        "bg-green-200/60 text-green-700": type === "success",
+        "bg-yellow-200/60 text-yellow-700": type === "warning",
         [props.className as string]: props.className !== undefined,
       })}
     >

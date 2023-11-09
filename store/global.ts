@@ -7,7 +7,7 @@ interface IGlobalState {
 }
 
 const initialState: IGlobalState = {
-  isMenuOpen: false,
+  isMenuOpen: true,
   currentUser: undefined,
 }
 

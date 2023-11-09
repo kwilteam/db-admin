@@ -1,9 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import Image from "next/image"
-import { DockerIcon, GitIcon } from "@/utils/icons"
 import { IKwilExtension } from "@/store/extensions"
 import OfficialBadge from "../Badge/Official"
 import VerifiedBadge from "../Badge/Verified"
@@ -36,26 +34,13 @@ export default function ExtensionCard({ extension }: IExtensionCardProps) {
       </div>
       <div className="my-1 flex flex-1 flex-col gap-2 overflow-hidden text-sm text-gray-500">
         <div className="font-medium text-gray-900">{extension.name}</div>
-        <div className="text-wrap md:max-h-auto max-h-24 flex-1 overflow-hidden">
+        <div className="text-wrap md:max-h-auto max-h-36 flex-1 overflow-hidden">
           {extension.description}
         </div>
-        <div className="flex flex-col gap-1 md:flex-row md:gap-4">
+        <div className="flex flex-col items-start gap-1 md:flex-row md:gap-4">
           <PublisherBadge publisher={extension.publisher} />
-          {extension.official && <OfficialBadge />}
-          {extension.verifiedPublisher && <VerifiedBadge />}
-        </div>
-        <div className="flex flex-row gap-4">
-          {extension.gitUrl && (
-            <Link href={extension.gitUrl}>
-              <GitIcon className="h-5 w-5 hover:text-slate-900" />
-            </Link>
-          )}
-
-          {extension.dockerUrl && (
-            <Link href={extension.dockerUrl}>
-              <DockerIcon className="h-5 w-5 hover:text-slate-900" />
-            </Link>
-          )}
+          {extension.official === "true" && <OfficialBadge />}
+          {extension.verified === "true" && <VerifiedBadge />}
         </div>
       </div>
     </div>
