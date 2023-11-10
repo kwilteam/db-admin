@@ -39,4 +39,4 @@ tests/screenshots/*
 schemas/*.kf
 !schemas/hello_world.kf
 
-tests/.kwil_admin_ui/*.*
+tests/.kwil-admin-ui/*
