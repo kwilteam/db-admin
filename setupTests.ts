@@ -25,14 +25,20 @@ if (!baseUrl) {
   throw new Error("NEXT_PUBLIC_TEST_URL is not set")
 }
 
+const headless = process.env.NEXT_PUBLIC_TEST_HEADLESS === "true" ? true : false
+
 beforeAll(async () => {
   browser = await chromium.launch({
-    headless: false,
-    devtools: true,
+    headless,
+    slowMo: 100,
   })
   page = await browser.newPage()
 
   await page.goto("http://localhost:4444")
+
+  page.on("dialog", async (dialog) => {
+    await dialog.accept()
+  })
 
   // Sign in with test account
   const inputElement = await page.waitForSelector("input")
@@ -47,9 +53,7 @@ beforeAll(async () => {
   await page.keyboard.press(isMac ? "Meta+v" : "Control+v")
   await page.keyboard.press("Enter")
 
-  const successMessage = await page.waitForSelector(
-    "text=Access code validated!",
-  )
+  await page.waitForSelector("text=Access code validated!")
 })
 
 afterAll(async () => {
@@ -59,7 +63,7 @@ afterAll(async () => {
 const saveScreenshot = async (fileName: string) => {
   const screenshotPath = path.join(
     __dirname,
-    "screenshots",
+    "tests/screenshots",
     `${fileName}_${new Date().toISOString()}.png`,
   )
 

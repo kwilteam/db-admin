@@ -21,12 +21,12 @@ export const initDb = (): void => {
         Tables.Account,
         Tables.AccountType,
         Tables.AccessCode,
-        Tables.Settings,
+        Tables.RefreshToken,
       ) as {
       count: number
     }
 
-    if (tableExists["count"] == 4) return
+    if (tableExists["count"] === 4) return
 
     db.exec(adminDbSchema)
 
@@ -56,12 +56,7 @@ export const getDb = () => {
     return db
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log(
-        "An error occurred during database connection:",
-        "dbFileLocation",
-        dbFileLocation,
-        error,
-      )
+      console.log("An error occurred during database connection:", error)
     }
   }
 }

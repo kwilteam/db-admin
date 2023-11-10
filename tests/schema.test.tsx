@@ -27,11 +27,15 @@ describe("Schema tests", () => {
 
   test("verify schema tables & actions test", async () => {
     await verifySchemaTablesAndActionsTest()
+  }, 30000)
+
+  test("delete db test", async () => {
+    await deleteDb()
   }, 15000)
 
   test("delete schema test", async () => {
     await deleteSchemaTest()
-  })
+  }, 15000)
 })
 
 async function createSchemaTest() {
@@ -103,12 +107,16 @@ async function createNewSchema() {
   const newSchemaIcon = await page.waitForSelector(
     '[test-id="create-new-schema"]',
   )
+
+  console.log("creating schema", newSchemaIcon)
+
   await newSchemaIcon.click()
 }
 
 async function fillSchemaName() {
   const inputElement = await page.waitForSelector("input")
   await inputElement.fill(schemaName)
+  console.log("fillSchemaName")
   await page.keyboard.press("Enter")
 }
 
@@ -126,7 +134,10 @@ async function deploySchema() {
 }
 
 async function verifyDeployment() {
-  const deployAlert = await page.waitForSelector('[test-id="deploy-outcome"]')
+  // Takes a long time due to Kwil WASM file download
+  const deployAlert = await page.waitForSelector('[test-id="deploy-outcome"]', {
+    timeout: 60000,
+  })
   expect(await deployAlert.isVisible()).toBeTruthy()
   expect(await deployAlert.textContent()).toContain("deployed")
 }
@@ -223,7 +234,22 @@ async function verifyDataInTable(
   )
 }
 
-// Helper functions for deleteSchemaTest
+async function deleteDb() {
+  const dbItem = await page.waitForSelector(
+    `[test-id="database-item-${schemaName}"]`,
+  )
+  expect(await dbItem.isVisible()).toBeTruthy()
+  await dbItem.hover()
+  const dbItemDelete = await page.waitForSelector(
+    `[test-id="database-item-${schemaName}-delete"]`,
+  )
+
+  await dbItemDelete.click()
+  await page.waitForSelector(`[test-id="database-item-${schemaName}"]`, {
+    state: "detached",
+  })
+}
+
 async function deleteSchema() {
   const schemaItem = await page.waitForSelector(
     `[test-id="schema-item-${schemaName}"]`,
@@ -233,9 +259,7 @@ async function deleteSchema() {
   const schemaItemDelete = await page.waitForSelector(
     `[test-id="schema-item-${schemaName}-delete"]`,
   )
-  page.on("dialog", async (dialog) => {
-    await dialog.accept()
-  })
+
   await schemaItemDelete.click()
   await page.waitForSelector(`[test-id="schema-item-${schemaName}"]`, {
     state: "detached",

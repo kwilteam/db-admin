@@ -55,6 +55,7 @@ export {
   getAccountTypes,
   getAccount,
   saveAccount,
+  deleteAccount,
 } from "./accounts"
 
 export {

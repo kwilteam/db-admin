@@ -27,7 +27,7 @@ export default function DeployToolbar({
           test-id="deploy-outcome"
           type={outcome.status}
           text={outcome.message}
-          className="hidden lg:flex"
+          className="hidden md:flex"
         />
       )}
     </div>

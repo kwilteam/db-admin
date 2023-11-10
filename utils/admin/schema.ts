@@ -2,7 +2,6 @@ export enum Tables {
   AccountType = "account_type",
   Account = "account",
   AccessCode = "access_code",
-  Settings = "settings",
   RefreshToken = "refresh_token",
 }
 
