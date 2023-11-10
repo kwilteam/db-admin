@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
-import { verifyJwt } from "./token"
+import { IRefreshJwt, verifyJwt } from "./token"
+import { validateRefreshToken } from "./db"
 
 export const setCookie = (name: string, value: string, options = {}) => {
   cookies().set({
@@ -28,7 +29,14 @@ export const isSignedIn = async (): Promise<boolean> => {
   }
 
   if (refreshToken) {
-    validRefreshToken = await verifyJwt(refreshToken)
+    const verifyRefreshToken = await verifyJwt<IRefreshJwt>(refreshToken)
+
+    if (verifyRefreshToken) {
+      validRefreshToken = validateRefreshToken(
+        verifyRefreshToken.id,
+        refreshToken.value,
+      )
+    }
   }
 
   // If either token is valid, user is signed in
