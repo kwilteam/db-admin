@@ -108,15 +108,12 @@ async function createNewSchema() {
     '[test-id="create-new-schema"]',
   )
 
-  console.log("creating schema", newSchemaIcon)
-
   await newSchemaIcon.click()
 }
 
 async function fillSchemaName() {
   const inputElement = await page.waitForSelector("input")
   await inputElement.fill(schemaName)
-  console.log("fillSchemaName")
   await page.keyboard.press("Enter")
 }
 

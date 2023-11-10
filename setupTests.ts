@@ -25,11 +25,28 @@ if (!baseUrl) {
   throw new Error("NEXT_PUBLIC_TEST_URL is not set")
 }
 
-const headless = process.env.NEXT_PUBLIC_TEST_HEADLESS === "true" ? true : false
+const signInWithTestAccount = async () => {
+  // Enter email
+  const inputElement = await page.waitForSelector("input")
+  await inputElement.fill("test@kwil.com")
+  await page.keyboard.press("Enter")
+
+  // Enter access code
+  const accessCode = "111111"
+  await page.waitForSelector('[test-id="access-code-input-1"]')
+  await write(accessCode)
+  await page.click('[test-id="access-code-input-1"]')
+  const isMac = process.platform === "darwin"
+  await page.keyboard.press(isMac ? "Meta+v" : "Control+v")
+  await page.keyboard.press("Enter")
+
+  // Wait for confirmation
+  await page.waitForSelector("text=Access code validated!")
+}
 
 beforeAll(async () => {
   browser = await chromium.launch({
-    headless,
+    headless: false, // Sign in only seems to work when headless is false
     slowMo: 100,
   })
   page = await browser.newPage()
@@ -41,19 +58,7 @@ beforeAll(async () => {
   })
 
   // Sign in with test account
-  const inputElement = await page.waitForSelector("input")
-  await inputElement.fill("test@kwil.com")
-  await page.keyboard.press("Enter")
-
-  const accessCode = "111111"
-  await page.waitForSelector('[test-id="access-code-input-1"]')
-  await write(accessCode)
-  await page.click('[test-id="access-code-input-1"]')
-  const isMac = process.platform === "darwin"
-  await page.keyboard.press(isMac ? "Meta+v" : "Control+v")
-  await page.keyboard.press("Enter")
-
-  await page.waitForSelector("text=Access code validated!")
+  await signInWithTestAccount()
 })
 
 afterAll(async () => {
