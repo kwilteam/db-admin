@@ -75,10 +75,7 @@ export const POST = async (
   )
 
   const expiresInMonth = format(addDays(new Date(), 30), "yyyy-MM-dd HH:mm:ss")
-
-  if (process.env.APP_ENV !== "test") {
-    saveRefreshToken(account.id, refreshTokenJwt, expiresInMonth) // Save refresh token to DB
-  }
+  saveRefreshToken(account.id, refreshTokenJwt, expiresInMonth) // Save refresh token to DB
   setCookie("refreshToken", refreshTokenJwt)
 
   return NextResponse.json(

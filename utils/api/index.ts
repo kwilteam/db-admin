@@ -74,4 +74,6 @@ export {
   deleteSchema,
 } from "./schema"
 
+export type { ISavedSchemasResponse, ISchemaContentResponse } from "./schema"
+
 export { getExtensions, getExtension } from "./extensions"
