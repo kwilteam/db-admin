@@ -24,7 +24,7 @@ export const POST = async (
 ): Promise<NextResponse<IApiResponse<string>>> => {
   const { address, signature } = (await request.json()) as IRequestBody
 
-  const account = getAccountByAddress("wallet", address)
+  const account = getAccountByAddress(EnumAccountType.Wallet, address)
 
   if (!account) {
     return NextResponse.json(

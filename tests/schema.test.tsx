@@ -1,47 +1,13 @@
-import { chromium, Browser, Page } from "playwright"
-import { write } from "clipboardy"
 import fs from "fs"
 import path from "path"
-import dotenv from "dotenv"
+import { browser, page, baseUrl, saveScreenshot } from "../setupTests"
+import { write } from "clipboardy"
 
-let envPath = path.resolve(process.cwd(), ".env.test.local")
-
-if (!fs.existsSync(envPath)) {
-  envPath = path.resolve(process.cwd(), ".env.test")
-}
-
-dotenv.config({
-  path: envPath,
-})
-
-let browser: Browser
-let page: Page
 let schemaName: string
 let schemaFilePath: string
 let schemaContent: string
 
-const baseUrl = process.env.NEXT_PUBLIC_TEST_URL
-
-if (!baseUrl) {
-  throw new Error("NEXT_PUBLIC_TEST_URL is not set")
-}
-
-const saveScreenshot = async (fileName: string) => {
-  const screenshotPath = path.join(
-    __dirname,
-    "screenshots",
-    `${fileName}_${new Date().toISOString()}.png`,
-  )
-
-  await page.screenshot({ path: screenshotPath })
-}
-
 beforeAll(async () => {
-  browser = await chromium.launch({
-    headless: false,
-  })
-  page = await browser.newPage()
-
   // create random schema name
   schemaName = `test_schema_${Math.floor(Math.random() * 10000)}`
   schemaFilePath = path.join(__dirname, "test_schema.kf") // replace with your schema file path

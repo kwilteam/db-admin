@@ -4,6 +4,7 @@ import { addMinutes, format } from "date-fns"
 import { validateEmailAddress } from "@/utils/validate"
 import { IApiResponse } from "@/utils/api"
 import { sendAccessCode } from "@/utils/admin/mail"
+import { EnumAccountType } from "@/utils/admin/schema"
 
 interface IRequestBody {
   emailAddress: string
@@ -25,7 +26,7 @@ export const POST = async (
     )
   }
 
-  const account = getAccountByAddress("email", emailAddress)
+  const account = getAccountByAddress(EnumAccountType.Email, emailAddress)
 
   if (!account) {
     return NextResponse.json(
@@ -37,7 +38,12 @@ export const POST = async (
   }
 
   // Create access Code
-  const accessCode = Math.floor(100000 + Math.random() * 900000)
+  let accessCode: number
+  if (process.env.APP_ENV === "test") {
+    accessCode = 111111 // For testing login
+  } else {
+    accessCode = Math.floor(100000 + Math.random() * 900000)
+  }
 
   // Set expiry date to 15 minutes from now
   const formattedDate = format(
@@ -62,7 +68,12 @@ export const POST = async (
   }
 
   // Send the access code to the email address
-  const emailSent = await sendAccessCode(emailAddress, accessCode)
+  let emailSent = false
+  if (process.env.APP_ENV === "test") {
+    emailSent = true // For testing login
+  } else {
+    emailSent = await sendAccessCode(emailAddress, accessCode)
+  }
 
   if (!emailSent) {
     return NextResponse.json(

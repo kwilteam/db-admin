@@ -1,6 +1,6 @@
 import fs from "fs"
 import Database from "better-sqlite3"
-import { dbFileLocation, kwilAdminUiDirectory } from "./setup"
+import { dbFileLocation } from "./setup"
 import { IAccountType, IAccountWithType, Tables, adminDbSchema } from "./schema"
 import { format } from "date-fns"
 
@@ -56,7 +56,12 @@ export const getDb = () => {
     return db
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log("An error occurred during database connection:", error)
+      console.log(
+        "An error occurred during database connection:",
+        "dbFileLocation",
+        dbFileLocation,
+        error,
+      )
     }
   }
 }
@@ -237,7 +242,7 @@ export const getAccount = (id: number): IAccountWithType | undefined => {
 }
 
 export const getAccountByAddress = (
-  type: string,
+  typeId: number,
   address: string,
 ): IAccountWithType | undefined => {
   try {
@@ -248,11 +253,11 @@ export const getAccountByAddress = (
     const userStmt = db.prepare(`
       SELECT ${Tables.Account}.*, ${Tables.AccountType}.name as type_name 
       FROM ${Tables.Account}
-      JOIN ${Tables.AccountType} ON ${Tables.Account}.type_id = ${Tables.AccountType}.id AND ${Tables.AccountType}.name = ?
+      JOIN ${Tables.AccountType} ON ${Tables.Account}.type_id = ${Tables.AccountType}.id AND ${Tables.Account}.type_id = ?
       WHERE address = ?
     `)
 
-    return userStmt.get(type, address) as IAccountWithType
+    return userStmt.get(typeId, address) as IAccountWithType
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("An error occurred during account retrieval:", error)
@@ -283,7 +288,7 @@ export const getAccountTypes = (): IAccountType[] | undefined => {
 // Delete all access codes for an account (excluding a specific code if provided)
 export const deleteAccessCodes = (
   accountId: number,
-  excludeCode?: number,
+  excludeCode?: number | bigint,
 ): void => {
   try {
     const db = getDb()
@@ -292,7 +297,7 @@ export const deleteAccessCodes = (
 
     if (excludeCode) {
       const userStmt = db.prepare(
-        `DELETE FROM ${Tables.AccessCode} WHERE account_id = ? AND code != ?`,
+        `DELETE FROM ${Tables.AccessCode} WHERE account_id = ? AND id != ?`,
       )
 
       userStmt.run(accountId, excludeCode)
@@ -325,9 +330,9 @@ export const saveAccessCode = (
       INSERT INTO ${Tables.AccessCode} (account_id, code, expires_at) VALUES (?, ?, ?)
     `)
 
-    userStmt.run(accountId, code, expiresAt)
+    const result = userStmt.run(accountId, code, expiresAt)
 
-    deleteAccessCodes(accountId, code)
+    deleteAccessCodes(accountId, result.lastInsertRowid)
 
     return true
   } catch (error: unknown) {
@@ -357,7 +362,7 @@ export const validateAccessCode = (
       count: number
     }
 
-    if (accessCode["count"] === 1) {
+    if (accessCode["count"] >= 1) {
       // Clear all users access codes
       deleteAccessCodes(accountId)
       return true

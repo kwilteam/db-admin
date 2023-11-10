@@ -31,13 +31,6 @@ export interface IAccountWithType extends IAccount {
   type_name: string
 }
 
-export interface ISettings {
-  key: string
-  value: string
-  created_at: string
-  updated_at: string
-}
-
 export interface IAccessCode {
   account_id: number
   code: number
@@ -69,13 +62,6 @@ CREATE TABLE IF NOT EXISTS ${Tables.Account} (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(type_id) REFERENCES ${Tables.AccountType}(id)
-);
-
-CREATE TABLE IF NOT EXISTS ${Tables.Settings} (
-  key TEXT PRIMARY KEY,
-  value TEXT,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS ${Tables.AccessCode} (

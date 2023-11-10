@@ -3,6 +3,7 @@ import { addMinutes, format } from "date-fns"
 import { saveAccessCode, getAccountByAddress } from "@/utils/admin/db"
 import { IApiResponse } from "@/utils/api"
 import { buildMessage } from "@/utils/wallet"
+import { EnumAccountType } from "@/utils/admin/schema"
 
 interface IRequestBody {
   address: string
@@ -13,7 +14,7 @@ export const POST = async (
 ): Promise<NextResponse<IApiResponse<string>>> => {
   const { address } = (await request.json()) as IRequestBody
 
-  const account = getAccountByAddress("wallet", address)
+  const account = getAccountByAddress(EnumAccountType.Wallet, address)
 
   const shortAddress = `${address.slice(0, 6)}...${address.slice(-6)}`
 

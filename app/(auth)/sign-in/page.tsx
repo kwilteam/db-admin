@@ -1,8 +1,8 @@
-import ConnectWallet from "@/components/SignIn/ConnectWallet"
-import EmailForm from "@/components/SignIn/EmailForm"
+import { redirect } from "next/navigation"
 import { adminAccountExists } from "@/utils/admin/db"
 import { isSignedIn } from "@/utils/admin/session"
-import { redirect } from "next/navigation"
+import ConnectWallet from "@/components/SignIn/ConnectWallet"
+import EmailForm from "@/components/SignIn/EmailForm"
 
 export default async function SignIn() {
   const accountExists = adminAccountExists()

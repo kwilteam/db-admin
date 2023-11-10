@@ -104,6 +104,7 @@ export default function AccessCodePage() {
           {code.map((num, i) => (
             <input
               key={i}
+              test-id={`access-code-input-${i}`}
               type="text"
               inputMode="numeric"
               pattern="[0-9]*"

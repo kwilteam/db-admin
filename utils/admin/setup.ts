@@ -8,8 +8,14 @@ import { initDb } from "./db"
 dotenv.config()
 
 const userDirectory = os.homedir()
-const kwilAdminUiName = process.env.KWIL_ADMIN_UI_DIR_NAME ?? ".kwil-admin-ui"
-export const kwilAdminUiDirectory = path.join(userDirectory, kwilAdminUiName)
+let kwilAdminUiDirectory: string
+
+if (process.env.APP_ENV === "test") {
+  kwilAdminUiDirectory = path.join(process.cwd(), "/tests/.kwil-admin-ui")
+} else {
+  kwilAdminUiDirectory = path.join(userDirectory, ".kwil-admin-ui")
+}
+
 export const privateKeyFile = path.join(kwilAdminUiDirectory, "private.key")
 const dbLocation = path.join(kwilAdminUiDirectory, "data")
 export const dbFileLocation = path.join(dbLocation, "admin.sqlite")

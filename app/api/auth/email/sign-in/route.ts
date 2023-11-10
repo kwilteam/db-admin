@@ -32,7 +32,7 @@ export const POST = async (
     )
   }
 
-  const account = getAccountByAddress("email", emailAddress)
+  const account = getAccountByAddress(EnumAccountType.Email, emailAddress)
 
   if (!account) {
     return NextResponse.json(
