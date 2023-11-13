@@ -108,9 +108,6 @@ async function createNewSchema() {
     '[test-id="create-new-schema"]',
   )
 
-  // pause for 1s for redux store to fully load - reduces flakiness
-  await page.waitForTimeout(1000)
-
   await newSchemaIcon.click()
 }
 

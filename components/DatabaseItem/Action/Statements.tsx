@@ -10,7 +10,7 @@ export default function ActionStatements({
       <h2 className="text-md py-2 text-slate-900 underline">Action Body</h2>
       <div className="flex flex-col gap-2">
         {statements && (
-          <code className="flex flex-col gap-2 rounded-md p-2 text-sm">
+          <code className="flex flex-col gap-2 rounded-md bg-white p-2 text-xs">
             {statements.map((statement) => {
               return (
                 <span key={statement}>

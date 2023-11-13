@@ -23,7 +23,7 @@ describe("Account tests", () => {
       // Verify account was created
       await verifyAccountCreated()
     } catch (error) {
-      await saveScreenshot("delete_schema_test_failure")
+      await saveScreenshot("create_account_test_failure")
       throw error
     }
   })
