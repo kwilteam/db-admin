@@ -5,7 +5,10 @@ export const sendAccessCode = async (
   accessCode: number,
 ): Promise<boolean> => {
   try {
-    console.log("sendAccessCode", emailAddress, accessCode)
+    if (process.env.APP_ENV === "test") {
+      return true // For testing login
+    }
+
     const host = process.env.EMAIL_HOST
     const port = process.env.EMAIL_PORT
     const secure = process.env.EMAIL_SECURE

@@ -48,7 +48,11 @@ export default function AccountPage({ params }: IAccountPageProps) {
             Cancel
           </Link>
         </Button>
-        <Button context="primary" onClick={() => saveAccount()}>
+        <Button
+          context="primary"
+          onClick={() => saveAccount()}
+          test-id="submit-account-btn"
+        >
           <AccountPlusIcon className="mr-1 h-4 w-4" />
           Save
         </Button>

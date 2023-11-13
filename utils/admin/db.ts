@@ -358,8 +358,6 @@ export const validateAccessCode = (
     }
 
     if (accessCode["count"] >= 1) {
-      // Clear all users access codes
-      deleteAccessCodes(accountId)
       return true
     }
 

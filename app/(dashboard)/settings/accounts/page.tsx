@@ -81,7 +81,11 @@ export default function AccountsPage() {
 
       <ActionPanel>
         <Button context="primary">
-          <Link href="/settings/accounts/create" className="flex">
+          <Link
+            href="/settings/accounts/create"
+            className="flex"
+            test-id="new-account-btn"
+          >
             <PlusIcon className="mr-1 h-4 w-4" />
             Create Account
           </Link>

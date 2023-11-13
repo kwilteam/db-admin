@@ -18,7 +18,10 @@ export default function AccountsTable({
       test-id="accounts-table"
       className="m-1 overflow-scroll border border-slate-200 lg:m-2"
     >
-      <table className="min-w-full divide-y divide-slate-200">
+      <table
+        className="min-w-full divide-y divide-slate-200"
+        test-id="accounts-table"
+      >
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">
             <th
@@ -65,7 +68,11 @@ export default function AccountsTable({
         <tbody className="divide-y divide-slate-200 bg-white">
           {accounts &&
             accounts.map((account: IAccountWithType, index: number) => (
-              <tr className="divide-x divide-slate-200" key={index}>
+              <tr
+                className="divide-x divide-slate-200"
+                key={index}
+                test-id={`account-item-${account.name}`}
+              >
                 <td className="whitespace-nowrap p-2 text-sm text-slate-500">
                   {account.name}
                 </td>
@@ -97,6 +104,7 @@ export default function AccountsTable({
                     <>
                       |
                       <span
+                        test-id={`delete-account-${account.address}`}
                         onClick={() => confirmDeleteAccount(account.id)}
                         className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
                       >

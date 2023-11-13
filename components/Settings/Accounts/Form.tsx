@@ -54,6 +54,7 @@ export default function Form({
             <input
               type="text"
               id="name"
+              test-id="account-name-input"
               autoComplete="name"
               className={classNames({
                 "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
@@ -80,6 +81,7 @@ export default function Form({
             <select
               id="type"
               autoComplete="type"
+              test-id="account-type-select"
               className={classNames({
                 "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":
                   true,
@@ -92,7 +94,11 @@ export default function Form({
             >
               <option value="0">Select an account type</option>
               {accountTypes?.map((accountType: IAccountType) => (
-                <option key={accountType.id} value={accountType.id}>
+                <option
+                  key={accountType.id}
+                  value={accountType.id}
+                  test-id={`account-type-option-${accountType.name}`}
+                >
                   {accountType.name}
                 </option>
               ))}
@@ -112,6 +118,7 @@ export default function Form({
               <input
                 type="text"
                 id="address"
+                test-id="account-address-input"
                 autoComplete="address"
                 className={classNames({
                   "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6":

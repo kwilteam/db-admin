@@ -53,3 +53,11 @@ export const getJwtSecret = () => {
   const jwtSecret = process.env.JWT_SECRET ?? "JWT_SECRET Must be set."
   return new TextEncoder().encode(jwtSecret)
 }
+
+export const generateAccessCode = (): number => {
+  if (process.env.APP_ENV === "test") {
+    return 111111 // For testing login
+  } else {
+    return Math.floor(100000 + Math.random() * 900000)
+  }
+}

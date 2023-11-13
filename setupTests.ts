@@ -27,15 +27,19 @@ if (!baseUrl) {
 
 const signInWithTestAccount = async () => {
   // Enter email
+  const testEmail = "test@kwil.com"
   const inputElement = await page.waitForSelector("input")
-  await inputElement.fill("test@kwil.com")
+  await inputElement.fill(testEmail)
   await page.keyboard.press("Enter")
 
   // Enter access code
   const accessCode = "111111"
-  await page.waitForSelector('[test-id="access-code-input-1"]')
+  const accessCodeInputId = '[test-id="access-code-input-1"]'
+  await page.waitForSelector(accessCodeInputId)
   await write(accessCode)
-  await page.click('[test-id="access-code-input-1"]')
+
+  // Paste access code
+  await page.click(accessCodeInputId)
   const isMac = process.platform === "darwin"
   await page.keyboard.press(isMac ? "Meta+v" : "Control+v")
   await page.keyboard.press("Enter")
