@@ -59,13 +59,14 @@ const getTxInfo = async (kwil: NodeKwil, txHash: string) => {
 
     if (txInfo.data?.tx_result?.log === "success") {
       console.log("txInfo", txInfo, "success")
-      console.log("txInfo.data?.tx_result?.log", txInfo.data?.tx.body.payload)
+      console.log("body.payload", txInfo.data?.tx.body)
       outcome = "success"
-      message = txInfo.data?.tx_result?.log ?? "Database deployed successfully"
+      message = txInfo.data?.tx_result?.log
+      // TODO: Does txInfo.data?.tx_result?.data contain action data?
     } else if (txInfo.data?.tx_result?.code !== 0) {
       console.log("txInfo", txInfo, "error")
       outcome = "error"
-      message = txInfo.data?.tx_result?.log ?? "Failed to deploy database"
+      message = txInfo.data?.tx_result?.log ?? "Transaction failed"
     }
 
     // If no outcome is found, continue the loop
@@ -97,8 +98,9 @@ export const broadcastTx = async (
   console.log("txResult", txResult)
 
   if (txResult.data?.tx_hash) {
-    // delay for 1 seconds before querying for tx info - sometimes there is a transaction error when Tx isn't found
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    // delay for 500 ms before querying for tx info - sometimes there is a transaction error when Tx isn't found
+    // In total the delay will be 1 second (500ms here + 500ms in the getTxInfo function)
+    await new Promise((resolve) => setTimeout(resolve, 500))
     const txInfo = await getTxInfo(kwil, txResult.data.tx_hash)
     outcome = txInfo.outcome
     message = txInfo.message

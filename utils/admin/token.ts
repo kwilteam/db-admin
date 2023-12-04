@@ -24,8 +24,6 @@ export const createJwt = async <T extends jose.JWTPayload>(
   const secret = getJwtSecret()
   const alg = "HS256"
 
-  console.log("payload", payload)
-
   const jwt = await new jose.SignJWT(payload)
     .setProtectedHeader({ alg })
     .setIssuedAt()

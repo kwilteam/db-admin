@@ -7,7 +7,7 @@ table greetings {
   #wallet_index index(wallet)
 }
 
-action select_greetings () public {
+action select_greetings () public view {
   SELECT * FROM greetings;
 }
 

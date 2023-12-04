@@ -26,8 +26,6 @@ export const executeAction = async (
       actionInputs.put(key, value as string)
     }
 
-    console.log(actionInputs, "actionInputs")
-
     const signer = getSigner()
     const publicKey = await getPublicKey()
 
