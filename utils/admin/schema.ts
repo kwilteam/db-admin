@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS ${Tables.AccessCode} (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
   expires_at TEXT,
-  FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id)
+  FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS ${Tables.RefreshToken} (
@@ -78,6 +78,6 @@ CREATE TABLE IF NOT EXISTS ${Tables.RefreshToken} (
   account_id INTEGER,
   token TEXT,
   expires_at TEXT,
-  FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id)
+  FOREIGN KEY(account_id) REFERENCES ${Tables.Account}(id) ON DELETE CASCADE
 );
 `
