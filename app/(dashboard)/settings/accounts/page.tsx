@@ -11,8 +11,11 @@ import ActionPanel from "@/components/Settings/Accounts/ActionPanel"
 import Button from "@/components/Button"
 import { PlusIcon } from "@/utils/icons"
 import { IAccountWithType } from "@/utils/admin/schema"
+import { useAppDispatch } from "@/store/hooks"
+import { setAlert } from "@/store/global"
 
 export default function AccountsPage() {
+  const dispatch = useAppDispatch()
   const [accounts, setAccounts] = useState<IAccountWithType[]>()
   const [error, setError] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
@@ -44,11 +47,28 @@ export default function AccountsPage() {
       if (deleted) {
         // Reload accounts after deletion
         fetchAccounts()
+        dispatch(
+          setAlert({
+            type: "success",
+            text: "Account has been successfully deleted.",
+            position: "top",
+          }),
+        )
       }
     } catch (error) {
       console.error("An error occurred while deleting the account:", error)
-      alert("There was an error deleting the account.")
+      dispatch(
+        setAlert({
+          type: "error",
+          text: "There was an error deleting the account.",
+          position: "top",
+        }),
+      )
     }
+
+    setTimeout(() => {
+      dispatch(setAlert(undefined))
+    }, 3000)
   }
 
   return (

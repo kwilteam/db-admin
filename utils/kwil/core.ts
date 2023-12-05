@@ -54,23 +54,23 @@ const getTxInfo = async (kwil: NodeKwil, txHash: string) => {
 
   // Keep querying until we get a success or an error code
   while (outcome === undefined && message === undefined) {
-    await new Promise((resolve) => setTimeout(resolve, 500)) // wait for 0.5 seconds before querying again
-    let txInfo = await kwil.txInfo(txHash)
+    const txInfo = await kwil.txInfo(txHash)
+    const log = txInfo.data?.tx_result?.log
+    const code = txInfo.data?.tx_result?.code
 
-    if (txInfo.data?.tx_result?.log === "success") {
+    if (log === "success") {
       console.log("txInfo", txInfo, "success")
-      console.log("body.payload", txInfo.data?.tx.body)
       outcome = "success"
-      message = txInfo.data?.tx_result?.log
-      // TODO: Does txInfo.data?.tx_result?.data contain action data?
-    } else if (txInfo.data?.tx_result?.code !== 0) {
+      message = log
+    } else if (code !== 0) {
       console.log("txInfo", txInfo, "error")
       outcome = "error"
-      message = txInfo.data?.tx_result?.log ?? "Transaction failed"
+      message = log ?? "Transaction failed"
     }
 
     // If no outcome is found, continue the loop
     if (outcome === undefined && message === undefined) {
+      await new Promise((resolve) => setTimeout(resolve, 500)) // wait for 0.5 seconds before querying again
       continue
     }
 
@@ -95,12 +95,9 @@ export const broadcastTx = async (
   let outcome: string | undefined = undefined
   let message: string | undefined = undefined
 
-  console.log("txResult", txResult)
-
   if (txResult.data?.tx_hash) {
-    // delay for 500 ms before querying for tx info - sometimes there is a transaction error when Tx isn't found
-    // In total the delay will be 1 second (500ms here + 500ms in the getTxInfo function)
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    // delay for 1500 ms before querying for tx info - sometimes there is a transaction error when Tx isn't found
+    await new Promise((resolve) => setTimeout(resolve, 1500))
     const txInfo = await getTxInfo(kwil, txResult.data.tx_hash)
     outcome = txInfo.outcome
     message = txInfo.message

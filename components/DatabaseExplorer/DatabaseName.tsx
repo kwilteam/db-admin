@@ -33,7 +33,6 @@ const DatabaseName = ({ database }: { database: string }) => {
   return (
     <li
       test-id={`database-item-${database}`}
-      // id={`${database}-item`}
       key={database}
       className={classNames({
         "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
@@ -63,7 +62,7 @@ const DatabaseName = ({ database }: { database: string }) => {
       />
       <span>{database}</span>
       <span
-        className="invisible ml-auto mr-2 text-slate-400 hover:text-slate-700 group-hover:visible"
+        className="visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible"
         onClick={(e) => triggerDeleteDb(e, database)}
         test-id={`database-item-${database}-delete`}
       >

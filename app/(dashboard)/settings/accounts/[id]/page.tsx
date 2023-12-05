@@ -18,7 +18,7 @@ interface IAccountPageProps {
 
 export default function AccountPage({ params }: IAccountPageProps) {
   const { id } = params
-  const { account, setAccount, error, loading, invalidFields, saveAccount } =
+  const { account, setAccount, loading, invalidFields, saveAccount } =
     useSaveAccount(id)
 
   return (
@@ -30,7 +30,6 @@ export default function AccountPage({ params }: IAccountPageProps) {
       />
 
       <div className="flex-1 overflow-scroll bg-slate-50">
-        {error && <Alert type="error" text={error} className="m-2" />}
         {!loading && (
           <Form
             account={account}

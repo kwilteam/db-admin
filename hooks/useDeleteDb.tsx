@@ -4,8 +4,10 @@ import {
   removeDatabase,
   selectDatabaseActiveContext,
   setDatabaseActiveContext,
+  setDatabaseLoading,
 } from "@/store/database"
 import { deleteDatabase } from "@/utils/api"
+import { setAlert } from "@/store/global"
 
 export default function useDeleteDb() {
   const dispatch = useAppDispatch()
@@ -21,17 +23,53 @@ export default function useDeleteDb() {
     const c = confirm(`Are you sure you want to delete '${database}'?`)
 
     if (c) {
-      const deleted = await deleteDatabase(database)
+      dispatch(
+        setDatabaseLoading({
+          database,
+          loading: true,
+        }),
+      )
 
-      if (deleted) {
-        dispatch(removeDatabase(database))
+      try {
+        const deleted = await deleteDatabase(database)
 
-        // If we delete the active database, we need navigate away from this database view
-        if (databaseContext && database === databaseContext.database) {
-          dispatch(setDatabaseActiveContext(undefined))
-          router.push("/databases")
+        if (deleted) {
+          dispatch(removeDatabase(database))
+          dispatch(
+            setAlert({
+              type: "success",
+              text: `Database "${database}" has now been deleted.`,
+              position: "top",
+            }),
+          )
+
+          // If we delete the active database, we need navigate away from this database view
+          if (databaseContext && database === databaseContext.database) {
+            dispatch(setDatabaseActiveContext(undefined))
+            router.push("/databases")
+          }
         }
+      } catch (error) {
+        console.error(error)
+        dispatch(
+          setAlert({
+            type: "error",
+            text: "Database could not be deleted. Please refresh and try again.",
+            position: "top",
+          }),
+        )
       }
+
+      dispatch(
+        setDatabaseLoading({
+          database,
+          loading: false,
+        }),
+      )
+
+      setTimeout(() => {
+        dispatch(setAlert(undefined))
+      }, 3000)
     }
   }
 

@@ -3,6 +3,7 @@ import MobileNavigation from "@/components/Navigation/Mobile"
 import DesktopNavigation from "@/components/Navigation/Desktop"
 import { isAdminPkSetup } from "@/utils/admin/setup"
 import { redirect } from "next/navigation"
+import GlobalAlert from "@/components/GlobalAlert"
 
 interface IProps {
   children: React.ReactNode
@@ -25,6 +26,7 @@ export default function DashboardLayout({ children }: IProps) {
 
         <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
           {children}
+          <GlobalAlert />
         </div>
       </div>
     </ReduxProvider>

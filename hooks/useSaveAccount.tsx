@@ -6,8 +6,11 @@ import { saveAccount as saveAccountApi } from "@/utils/api"
 import { IAccount } from "@/utils/admin/schema"
 import { getAccount } from "@/utils/api"
 import { validateEmailAddress, validateEthAddress } from "@/utils/validate"
+import { useAppDispatch } from "@/store/hooks"
+import { setAlert } from "@/store/global"
 
 export default function useSaveAccount(id: number) {
+  const dispatch = useAppDispatch()
   const router = useRouter()
   const [account, setAccount] = useState<IAccount>({
     id: 0,
@@ -15,7 +18,6 @@ export default function useSaveAccount(id: number) {
     type_id: 1, // default to wallet
     address: "",
   })
-  const [error, setError] = useState<string | undefined>()
   const [loading, setLoading] = useState<boolean>(true)
   const [invalidFields, setInvalidFields] = useState<string[]>([])
 
@@ -31,14 +33,25 @@ export default function useSaveAccount(id: number) {
         setAccount(account.data)
       } catch (error) {
         console.error("An error occurred while retrieving account:", error)
-        setError("There was an error loading the account.")
+
+        dispatch(
+          setAlert({
+            type: "error",
+            text: "There was an error loading the account.",
+            position: "top",
+          }),
+        )
+
+        setTimeout(() => {
+          dispatch(setAlert(undefined))
+        }, 3000)
       }
 
       setLoading(false)
     }
 
     initAccount()
-  }, [id])
+  }, [id, dispatch])
 
   const validateForm = () => {
     let newInvalidFields: string[] = []
@@ -87,21 +100,34 @@ export default function useSaveAccount(id: number) {
     try {
       await saveAccountApi(account)
       router.push("/settings/accounts")
+
+      dispatch(
+        setAlert({
+          type: "success",
+          text: "Account has been saved.",
+          position: "top",
+        }),
+      )
     } catch (error) {
       const err = error as Error
-      setError(err.message)
       console.error("An error occurred while saving account:", error)
-
-      setTimeout(() => {
-        setError(undefined)
-      }, 3000)
+      dispatch(
+        setAlert({
+          type: "error",
+          text: `An error occurred while saving account: ${err.message}`,
+          position: "top",
+        }),
+      )
     }
+
+    setTimeout(() => {
+      dispatch(setAlert(undefined))
+    }, 3000)
   }
 
   return {
     account,
     setAccount,
-    error,
     loading,
     invalidFields,
     saveAccount,

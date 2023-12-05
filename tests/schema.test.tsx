@@ -132,7 +132,7 @@ async function deploySchema() {
 
 async function verifyDeployment() {
   // Takes a long time due to Kwil WASM file download
-  const deployAlert = await page.waitForSelector('[test-id="deploy-outcome"]', {
+  const deployAlert = await page.waitForSelector('[test-id="global-alert"]', {
     timeout: 60000,
   })
   expect(await deployAlert.isVisible()).toBeTruthy()

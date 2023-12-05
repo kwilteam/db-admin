@@ -1,8 +1,8 @@
 "use client"
 
-import useIde from "@/hooks/useIde"
-import { Editor } from "@monaco-editor/react"
 import classNames from "classnames"
+import { Editor } from "@monaco-editor/react"
+import useIde from "@/hooks/useIde"
 import { useAppSelector } from "@/store/hooks"
 import {
   selectActiveSchema,
@@ -12,7 +12,6 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
-import Alert from "@/components/Alert"
 
 export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
@@ -25,7 +24,6 @@ export default function IdePage() {
     deploy,
     isDeploying,
     isSaving,
-    outcome,
     language,
     theme,
   } = useIde()
@@ -35,14 +33,7 @@ export default function IdePage() {
       <div className="flex w-full flex-col lg:h-10">
         <OpenedSchemas />
       </div>
-      {/* Mobile alert */}
-      {outcome?.status && outcome.message && (
-        <Alert
-          type={outcome.status}
-          text={outcome.message}
-          className="absolute top-28 z-30 block h-auto w-full lg:hidden"
-        />
-      )}
+
       <div
         className={classNames({
           "flex h-full w-full flex-1": true,
@@ -67,11 +58,7 @@ export default function IdePage() {
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
         <div className="fixed bottom-0 z-20 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
-          <ActionPanel
-            deploy={deploy}
-            isLoading={isDeploying || isSaving}
-            outcome={outcome}
-          />
+          <ActionPanel deploy={deploy} isLoading={isDeploying || isSaving} />
         </div>
       )}
     </div>

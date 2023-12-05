@@ -1,6 +1,6 @@
-import DatabaseItem from "./DatabaseItem"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseVisibility } from "@/store/database"
+import DatabaseItem from "./DatabaseItem"
 import Loading from "../Loading"
 
 const DatabaseStructure = ({ database }: { database: string }) => {

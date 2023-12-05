@@ -6,17 +6,13 @@ import { deployDatabase, saveSchemaContent } from "@/utils/api"
 import { useAppDispatch } from "@/store/hooks"
 import { addDatabase } from "@/store/database"
 import { setSchemaContent } from "@/store/ide"
-export interface IDeployOutcome {
-  status: "error" | "success" | undefined
-  message: string | undefined
-}
+import { setAlert } from "@/store/global"
 
 export default function useIde() {
   const dispatch = useAppDispatch()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
   const [isDeploying, setIsDeploying] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
-  const [outcome, setOutcome] = useState<IDeployOutcome | undefined>()
   const language = "kuneiformLang"
   const theme = "kuneiformTheme"
 
@@ -48,37 +44,47 @@ export default function useIde() {
     if (!editorRef.current) return
 
     setIsDeploying(true)
-    setOutcome(undefined)
+
     const code = editorRef.current.getValue()
     try {
       const result = await deployDatabase(code)
       const dbName = getDbName(code)
 
       if (result && result.outcome === "success") {
-        setOutcome({
-          status: "success",
-          message: "Database deployed successfully!",
-        })
+        dispatch(
+          setAlert({
+            type: "success",
+            text: "Database deployed successfully!",
+            position: "top",
+          }),
+        )
         if (dbName) {
           dispatch(addDatabase(dbName))
         }
       } else if (result && result.outcome === "error") {
-        setOutcome({
-          status: "error",
-          message: result.data as string,
-        })
+        dispatch(
+          setAlert({
+            type: "error",
+            text: result.data as string,
+            position: "top",
+          }),
+        )
       }
 
       console.log(result, "result")
     } catch (e) {
       console.error(e)
-      setOutcome({
-        status: "error",
-        message: "Something went wrong!",
-      })
+
+      dispatch(
+        setAlert({
+          type: "error",
+          text: "The database could not be deployed.",
+          position: "top",
+        }),
+      )
     }
 
-    setTimeout(() => setOutcome(undefined), 5000)
+    setTimeout(() => dispatch(setAlert(undefined)), 3000)
     setIsDeploying(false)
   }
 
@@ -124,7 +130,6 @@ export default function useIde() {
     deploy,
     isDeploying,
     isSaving,
-    outcome,
     language,
     theme,
   }

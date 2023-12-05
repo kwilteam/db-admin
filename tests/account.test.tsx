@@ -26,7 +26,7 @@ describe("Account tests", () => {
       await saveScreenshot("create_account_test_failure")
       throw error
     }
-  })
+  }, 10000)
 
   test("delete account test", async () => {
     await deleteAccountTest()
