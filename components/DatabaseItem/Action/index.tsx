@@ -34,8 +34,6 @@ export default function Action({ database, actionName }: IActionProps) {
 
     const result = await executeActionApi(database, actionName, formValues)
 
-    console.log(result, "result")
-
     if (result.outcome === "error") {
       setActionError(result.data as string)
       setTimeout(() => {
@@ -47,7 +45,10 @@ export default function Action({ database, actionName }: IActionProps) {
     setActionSuccess(true)
     if (typeof result.data === "object") {
       setData(result.data)
-      setColumns(Object.keys(result.data[0]))
+      console.log("result.data", result.data)
+      if (result.data.length > 0) {
+        setColumns(Object.keys(result.data[0]))
+      }
     }
 
     setTimeout(() => {

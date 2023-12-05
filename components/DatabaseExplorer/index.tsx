@@ -7,11 +7,14 @@ import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
 import Alert from "../Alert"
+import { selectAlert } from "@/store/global"
+import { useAppSelector } from "@/store/hooks"
 
 export default function DatabasesExplorer() {
-  const { databaseStructures, databaseCount, error } = useDatabaseStructures()
+  const { databaseStructures, databaseCount } = useDatabaseStructures()
   const { getDbStructure } = useGetDbStructure()
   const { db, table, action } = useDatabaseParams()
+  const alert = useAppSelector(selectAlert)
 
   useEffect(() => {
     if (db) {
@@ -44,15 +47,8 @@ export default function DatabasesExplorer() {
             </p>
           </div>
         )}
-        {databaseCount === undefined && error === undefined && (
+        {databaseCount === undefined && alert === undefined && (
           <Loading className="mt-4 flex justify-center" />
-        )}
-        {error && (
-          <Alert
-            text="Error connecting to Kwil Provider"
-            type="error"
-            className="mx-2"
-          />
         )}
       </ul>
     </div>
