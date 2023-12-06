@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { getExtensions } from "@/utils/api"
 import {
   IKwilExtension,
   selectExtensions,
@@ -10,10 +11,9 @@ import {
   setLoading,
 } from "@/store/extensions"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { getExtensions } from "@/utils/api"
+import { setAlert } from "@/store/global"
 import ExtensionCard from "./Card"
 import Loading from "../Loading"
-import Alert from "../Alert"
 
 export default function ExtensionList() {
   const dispatch = useAppDispatch()
@@ -33,6 +33,16 @@ export default function ExtensionList() {
           return
         }
 
+        if (_extensions.data.length === 0) {
+          dispatch(
+            setAlert({
+              type: "warning",
+              text: "No extensions could be found. Try clearing any filters to see all extensions.",
+              position: "top",
+            }),
+          )
+        }
+
         dispatch(setExtensions(_extensions.data as IKwilExtension[]))
         dispatch(setLoading(false))
       } catch (error) {
@@ -41,6 +51,10 @@ export default function ExtensionList() {
     }
 
     fetchExtensions()
+
+    return () => {
+      dispatch(setAlert(undefined))
+    }
   }, [dispatch, filters])
 
   if (loading) return <Loading className="mt-4 flex w-full justify-center" />
@@ -48,13 +62,6 @@ export default function ExtensionList() {
   return (
     <>
       <div className="flex min-h-screen flex-col p-3">
-        {extensions.length === 0 && (
-          <Alert
-            className="w-full"
-            text="No extensions could be found. Clear your filters to see all extensions."
-            type="warning"
-          />
-        )}
         <div className="grid w-full grid-flow-row grid-cols-1 place-items-start gap-2 lg:grid-cols-2">
           {extensions.map((extension) => (
             <ExtensionCard key={extension.name} extension={extension} />

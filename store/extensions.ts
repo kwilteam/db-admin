@@ -33,7 +33,7 @@ const initialState: IExtensionsState = {
     official: "",
     verified: "",
   },
-  loading: false,
+  loading: true,
 }
 
 export const extensionsSlice = createSlice({

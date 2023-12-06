@@ -40,6 +40,10 @@ export default function useDatabaseStructures() {
       }
     }
     fetchDatabases()
+
+    return () => {
+      dispatch(setAlert(undefined))
+    }
   }, [databaseCount, dispatch, databaseStructures])
 
   return { databaseStructures, databaseCount }
