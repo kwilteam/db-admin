@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import { executeAction as executeActionApi } from "@/utils/api"
-import { useAppSelector } from "@/store/hooks"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAction } from "@/store/database"
-import Alert from "@/components/Alert"
+import { setAlert } from "@/store/global"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
@@ -16,11 +16,8 @@ interface IActionProps {
 }
 
 export default function Action({ database, actionName }: IActionProps) {
+  const dispatch = useAppDispatch()
   const [data, setData] = useState<Object[] | undefined>(undefined)
-  const [actionError, setActionError] = useState<string | undefined>(undefined)
-  const [actionSuccess, setActionSuccess] = useState<boolean | undefined>(
-    undefined,
-  )
   const [columns, setColumns] = useState<string[] | undefined>(undefined)
   const action = useAppSelector((state) =>
     selectAction(state, database, actionName),
@@ -28,32 +25,37 @@ export default function Action({ database, actionName }: IActionProps) {
 
   if (!action) return <Loading className="flex justify-center pt-4" />
 
-  const executeAction = async (formValues: Record<string, string>) => {
+  const executeAction = async (
+    formValues: Record<string, string>,
+  ): Promise<boolean> => {
     setData(undefined)
     setColumns(undefined)
 
     const result = await executeActionApi(database, actionName, formValues)
 
     if (result.outcome === "error") {
-      setActionError(result.data as string)
+      dispatch(setAlert({ text: result.data as string, type: "error" }))
       setTimeout(() => {
-        setActionError(undefined)
-      }, 3500)
+        dispatch(setAlert(undefined))
+      }, 3000)
+
       return false
     }
 
-    setActionSuccess(true)
-    if (typeof result.data === "object") {
+    // If the action was successful, show a success message
+    dispatch(
+      setAlert({ text: "Action executed successfully!", type: "success" }),
+    )
+
+    // If the action returned data, show it in a table
+    if (typeof result.data === "object" && result.data.length > 0) {
       setData(result.data)
-      console.log("result.data", result.data)
-      if (result.data.length > 0) {
-        setColumns(Object.keys(result.data[0]))
-      }
+      setColumns(Object.keys(result.data[0]))
     }
 
     setTimeout(() => {
-      setActionSuccess(undefined)
-    }, 3500)
+      dispatch(setAlert(undefined))
+    }, 3000)
 
     return true
   }
@@ -65,12 +67,6 @@ export default function Action({ database, actionName }: IActionProps) {
       <div className="flex flex-col gap-2 rounded-md bg-slate-100/60 p-2 md:flex-row  md:gap-6">
         <ActionStatements statements={statements} />
         <ActionForm action={action} executeAction={executeAction} />
-      </div>
-      <div className="mt-2">
-        {actionError && <Alert text={actionError} type="error" />}
-        {actionSuccess && (
-          <Alert text="Action executed successfully." type="success" />
-        )}
       </div>
       <div className="mt-2">
         {data && <DataTable data={data} type="action" columns={columns} />}
