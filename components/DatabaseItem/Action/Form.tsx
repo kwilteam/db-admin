@@ -72,7 +72,7 @@ export default function ActionForm({
           })}
         {!inputs?.length && <Alert type="info" text="No inputs" />}
 
-        <div className="mx-0 my-2">
+        <div className="my-2">
           {!isExecuting && (
             <Button test-id="execute-action" context="primary">
               Execute Action
