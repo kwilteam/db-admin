@@ -3,7 +3,7 @@ import {
   broadcastTx,
   getDatabaseId,
   getKwilInstance,
-  getPublicKey,
+  getAddress,
   getSigner,
 } from "./core"
 import { Utils } from "@kwilteam/kwil-js"
@@ -27,7 +27,7 @@ export const executeAction = async (
     }
 
     const signer = getSigner()
-    const publicKey = await getPublicKey()
+    const publicKey = await getAddress()
 
     const actionBuilder = kwil
       .actionBuilder()

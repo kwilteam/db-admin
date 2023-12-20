@@ -12,6 +12,7 @@ export const POST = async (
 ): Promise<NextResponse<IApiResponse<KwilTypes.TxReceipt | string>>> => {
   const { dbDefinition } = (await request.json()) as IDeployProps
 
+  console.log("dbDefinition", dbDefinition)
   try {
     const txResponse = await deployDatabase(dbDefinition)
 

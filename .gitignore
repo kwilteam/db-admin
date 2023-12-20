@@ -40,3 +40,4 @@ schemas/*.kf
 !schemas/hello_world.kf
 
 tests/.kwil-admin-ui/*
+mnemonic.txt

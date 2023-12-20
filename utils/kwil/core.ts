@@ -8,9 +8,12 @@ import { privateKeyFile } from "../admin/setup"
 export const getKwilInstance = (): NodeKwil => {
   try {
     const kwilProviderUrl = getEnvVar("KWIL_PROVIDER_URL")
+    const chainId = getEnvVar("KWIL_CHAIN_ID")
 
     return new NodeKwil({
       kwilProvider: kwilProviderUrl,
+      chainId,
+      logging: true,
     })
   } catch (error) {
     throw new Error("Failed to get kwil instance")
@@ -20,7 +23,7 @@ export const getKwilInstance = (): NodeKwil => {
 export const getDatabaseId = async (database: string): Promise<string> => {
   const kwil = getKwilInstance()
 
-  const publicKey = await getPublicKey()
+  const publicKey = await getAddress()
 
   // Get the DBID using the database name and the provider address
   const dbId = kwil.getDBID(publicKey, database)
@@ -40,12 +43,12 @@ export const getSigner = (): Wallet => {
   return new Wallet(adminPrivateKey)
 }
 
-export const getPublicKey = async (): Promise<string> => {
+export const getAddress = async (): Promise<string> => {
   const signer = getSigner()
 
-  const publicKey = await Utils.recoverSecp256k1PubKey(signer)
+  const address = await signer.getAddress()
 
-  return publicKey
+  return address
 }
 
 const getTxInfo = async (kwil: NodeKwil, txHash: string) => {

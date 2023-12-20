@@ -3,7 +3,7 @@ import {
   broadcastTx,
   getDatabaseId,
   getKwilInstance,
-  getPublicKey,
+  getAddress,
   getSigner,
 } from "./core"
 import { KuneiformObject, NodeParser } from "kuneiform-parser"
@@ -14,10 +14,21 @@ export const getDatabases = async (): Promise<
 > => {
   try {
     const kwil = getKwilInstance()
-    const publicKey = await getPublicKey()
+    const publicKey = await getAddress()
     const result = await kwil.listDatabases(publicKey)
 
-    return result
+    let databases: string[] = []
+
+    if (result.status === 200 && result.data instanceof Array) {
+      for (const db of result.data) {
+        databases.push(db.name)
+      }
+    }
+
+    return {
+      status: result.status,
+      data: databases,
+    }
   } catch (error) {
     console.error(error)
   }
@@ -46,7 +57,7 @@ export const deployDatabase = async (
   try {
     const kwil = getKwilInstance()
     const signer = getSigner()
-    const publicKey = await getPublicKey()
+    const address = await getAddress()
 
     // 1. Convert string to object using
     const parser = await NodeParser.load()
@@ -64,11 +75,13 @@ export const deployDatabase = async (
 
     const kfObject: KuneiformObject = JSON.parse(kuneiformSchema.json)
 
+    console.log("kfObject", kfObject)
+
     // 2. Deploy database
     const tx = await kwil
       .dbBuilder()
       .payload(kfObject)
-      .publicKey(publicKey)
+      .publicKey(address)
       .signer(signer)
       .buildTx()
 
@@ -83,7 +96,7 @@ export const dropDatabase = async (database: string): Promise<ITxResponse> => {
   try {
     const kwil = getKwilInstance()
     const signer = getSigner()
-    const publicKey = await getPublicKey()
+    const publicKey = await getAddress()
     const dbId = await getDatabaseId(database)
 
     const tx = await kwil

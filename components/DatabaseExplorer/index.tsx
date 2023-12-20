@@ -16,6 +16,8 @@ export default function DatabasesExplorer() {
   const { db, table, action } = useDatabaseParams()
   const alert = useAppSelector(selectAlert)
 
+  console.log("databaseStructures", databaseStructures)
+
   useEffect(() => {
     if (db) {
       const show = table ? "tables" : action ? "actions" : undefined

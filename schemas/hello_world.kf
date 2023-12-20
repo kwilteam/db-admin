@@ -7,22 +7,22 @@ table greetings {
   #wallet_index index(wallet)
 }
 
-action select_greetings () public view {
+action select_greetings () view public {
   SELECT * FROM greetings;
 }
 
 action insert_greeting ($id, $message) public {
   INSERT INTO greetings
-  VALUES ($id, $message, address(@caller));
+  VALUES ($id, $message, @caller);
 }
 
 action update_greeting ($id, $message) public {
   UPDATE greetings 
   SET message = $message 
-  WHERE id = $id AND wallet = address(@caller);
+  WHERE id = $id AND wallet = @caller;
 }
 
 action delete_greeting ($id) public {
   DELETE FROM greetings 
-  WHERE id = $id AND wallet = address(@caller);
+  WHERE id = $id AND wallet = @caller;
 }
