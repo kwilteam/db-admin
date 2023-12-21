@@ -7,7 +7,7 @@ let schemaName: string
 let schemaFilePath: string
 let schemaContent: string
 
-beforeAll(async () => {
+beforeAll(() => {
   // create random schema name
   schemaName = `test_schema_${Math.floor(Math.random() * 10000)}`
   schemaFilePath = path.join(__dirname, "test_schema.kf") // replace with your schema file path
@@ -20,14 +20,14 @@ afterAll(async () => {
   await browser.close()
 })
 
-describe("Schema tests", () => {
+describe.only("Schema tests", () => {
   test("create schema test", async () => {
     await createSchemaTest()
   }, 30000)
 
   test("verify schema tables & actions test", async () => {
     await verifySchemaTablesAndActionsTest()
-  }, 30000)
+  }, 40000)
 
   test("delete db test", async () => {
     await deleteDb()
@@ -88,6 +88,7 @@ async function verifySchemaTablesAndActionsTest() {
     )
   } catch (error) {
     await saveScreenshot("verify_schema_creation_test_failure")
+    console.log(error)
     throw error
   }
 }

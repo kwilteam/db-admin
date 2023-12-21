@@ -3,7 +3,7 @@ import { browser, page, baseUrl, saveScreenshot } from "../setupTests"
 
 let walletAddress: string
 
-beforeAll(async () => {
+beforeAll(() => {
   walletAddress = "0xbE2A33fCfB32a7eb0911bD05F44dFCCCA71cEe9A"
 })
 

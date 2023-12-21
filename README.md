@@ -14,6 +14,15 @@ Once this has been created the Admin user will be able to import or create a new
 
 After the setup is completed the user will be redirected to the dashboard page.
 
+## Development Setup
+
+To start the development server, first add the environment variables to a `.env.local` file. Then run the following commands:
+
+```bash
+yarn install
+yarn dev
+```
+
 ## Testing the Kwil DB Admin
 
 Integration Tests are written using Playwright and can be run by following these steps:
