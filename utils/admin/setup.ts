@@ -52,7 +52,7 @@ export const createAdminPk = (mnemonic: string): boolean => {
   if (!fs.existsSync(privateKeyFile)) {
     try {
       const wallet = mnemonic
-        ? HDNodeWallet.fromPhrase(mnemonic, `m/44'/60'/0'/0/0`)
+        ? HDNodeWallet.fromPhrase(mnemonic)
         : HDNodeWallet.createRandom()
 
       fs.writeFileSync(privateKeyFile, wallet.privateKey)
