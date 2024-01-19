@@ -82,7 +82,7 @@ export const deployDatabase = async (
       .dbBuilder()
       .payload(kfObject)
       .publicKey(address)
-      .signer(signer)
+      // .signer(signer)
       .buildTx()
 
     return await broadcastTx(kwil, tx)
@@ -103,7 +103,7 @@ export const dropDatabase = async (database: string): Promise<ITxResponse> => {
       .dropDbBuilder()
       .payload({ dbid: dbId })
       .publicKey(publicKey)
-      .signer(signer)
+      // .signer(signer)
       .buildTx()
 
     return await broadcastTx(kwil, tx)

@@ -16,7 +16,8 @@ export const getKwilInstance = (): NodeKwil => {
       logging: true,
     })
   } catch (error) {
-    throw new Error("Failed to get kwil instance")
+    const err = error as Error
+    throw new Error(err.message ?? "Failed to connect to kwil instance")
   }
 }
 
@@ -118,7 +119,9 @@ export const broadcastTx = async (
 
 export const getEnvVar = (key: string): string => {
   const value = process.env[key]
-  if (!value) {
+
+  if (value === undefined) {
+    console.error(`Env var ${key} not set`)
     throw new Error(`${key} not set`)
   }
   return value

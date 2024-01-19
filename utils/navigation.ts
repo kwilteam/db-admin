@@ -21,13 +21,13 @@ export const navigationItems: INavigationItem[] = [
     icon: IdeIcon,
     secondaryMobileMenu: true,
   },
-  {
-    name: "Extensions",
-    href: "/extensions",
-    icon: ExtensionsIcon,
-    secondaryMobileMenu: true,
-    closeMobileMenu: true,
-  },
+  // {
+  //   name: "Extensions",
+  //   href: "/extensions",
+  //   icon: ExtensionsIcon,
+  //   secondaryMobileMenu: true,
+  //   closeMobileMenu: true,
+  // },
   {
     name: "Settings",
     href: "/settings",
