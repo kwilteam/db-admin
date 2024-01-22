@@ -1,7 +1,6 @@
 import { ReduxProvider } from "@/store/Provider"
 import MobileNavigation from "@/components/Navigation/Mobile"
 import DesktopNavigation from "@/components/Navigation/Desktop"
-import { isAdminPkSetup } from "@/utils/admin/setup"
 import { redirect } from "next/navigation"
 import GlobalAlert from "@/components/GlobalAlert"
 
@@ -10,13 +9,6 @@ interface IProps {
 }
 
 export default function DashboardLayout({ children }: IProps) {
-  const privateKeySetup = isAdminPkSetup()
-
-  // If PK is not setup, redirect to setup process
-  if (!privateKeySetup) {
-    redirect("/setup")
-  }
-
   return (
     <ReduxProvider>
       <MobileNavigation />

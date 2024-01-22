@@ -39,24 +39,6 @@ export const apiRequest = async (
   )
   return response
 }
-export {
-  createInitialAccount,
-  createAdminPk,
-  generateMnemonic,
-  emailSignIn,
-  requestAccessCode,
-  walletRequestMessage,
-  walletSignIn,
-  getUserInfo,
-} from "./auth"
-
-export {
-  getAccounts,
-  getAccountTypes,
-  getAccount,
-  saveAccount,
-  deleteAccount,
-} from "./accounts"
 
 export {
   getDatabaseStructure,

@@ -35,7 +35,7 @@ export const executeAction = async (
       .name(action)
       .concat([actionInputs])
       .publicKey(publicKey)
-      .signer(signer)
+      // .signer(signer)
 
     if (actionSchema.mutability === "view") {
       const msg = await actionBuilder.buildMsg()

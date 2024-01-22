@@ -2,7 +2,9 @@
 
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
-import useIde from "@/hooks/useIde"
+import useDeployDatabase from "@/hooks/ide/useDeployDatabase"
+import useEditorMount from "@/hooks/ide/useEditorMount"
+import useSaveSchema from "@/hooks/ide/useSaveSchema"
 import { useAppSelector } from "@/store/hooks"
 import {
   selectActiveSchema,
@@ -13,20 +15,16 @@ import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
 
+const language = "kuneiformLang"
+const theme = "kuneiformTheme"
+
 export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
-
-  const {
-    handleEditorDidMount,
-    save,
-    deploy,
-    isDeploying,
-    isSaving,
-    language,
-    theme,
-  } = useIde()
+  const { handleEditorDidMount, editorRef } = useEditorMount()
+  const { deploy, isDeploying } = useDeployDatabase(editorRef)
+  const { save, isSaving } = useSaveSchema()
 
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-col">

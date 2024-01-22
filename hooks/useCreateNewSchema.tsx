@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { addNewSchema, selectSavedSchemas } from "@/store/ide"
 import { saveSchemaContent } from "@/utils/api"
@@ -10,59 +10,59 @@ export default function useCreateNewSchema() {
   const [isCreatingNewSchema, setIsCreatingNewSchema] = useState(false)
   const newSchemaInputRef = useRef<HTMLInputElement | null>(null)
 
-  const newSchemaNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let schemaName = event.target.value
-    // Remove any special characters that could not be saved on any file system
-    schemaName = schemaName.replace(/[\\\/:*?"<>|,`]/g, "")
-    setNewSchemaName(schemaName)
-  }
+  const newSchemaNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      let schemaName = event.target.value
+      schemaName = schemaName.replace(/[\\\/:*?"<>|,`]/g, "")
+      setNewSchemaName(schemaName)
+    },
+    [],
+  )
 
-  const newSchemaNameSubmit = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (event.key === "Enter" && newSchemaName) {
-      createNewSchema()
-    }
-  }
+  const schemaExists = useCallback(
+    (newSchemaName: string) => {
+      if (savedSchemas && savedSchemas.includes(newSchemaName)) {
+        return true
+      }
 
-  const newSchemaNameBlur = () => {
-    if (newSchemaName) {
-      createNewSchema()
-    } else {
-      setIsCreatingNewSchema(false)
-    }
-  }
+      return false
+    },
+    [savedSchemas],
+  )
 
-  const createNewSchema = () => {
+  const createNewSchema = useCallback(() => {
     if (!newSchemaName || schemaExists(newSchemaName)) {
       return
     }
-    console.log(
-      "Creating new schema: ",
-      newSchemaName,
-      savedSchemas,
-      schemaExists(newSchemaName),
-    )
 
     dispatch(addNewSchema(newSchemaName))
     saveSchemaContent(newSchemaName, "")
     setIsCreatingNewSchema(false)
     setNewSchemaName(null)
-  }
+  }, [newSchemaName, schemaExists, dispatch])
 
-  const schemaExists = (newSchemaName: string) => {
-    if (savedSchemas && savedSchemas.includes(newSchemaName)) {
-      return true
+  const newSchemaNameSubmit = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" && newSchemaName) {
+        createNewSchema()
+      }
+    },
+    [newSchemaName, createNewSchema],
+  )
+
+  const newSchemaNameBlur = useCallback(() => {
+    if (newSchemaName) {
+      createNewSchema()
+    } else {
+      setIsCreatingNewSchema(false)
     }
-
-    return false
-  }
+  }, [newSchemaName, createNewSchema])
 
   useEffect(() => {
     if (isCreatingNewSchema) {
       newSchemaInputRef.current?.focus()
     }
-  }, [isCreatingNewSchema])
+  }, [isCreatingNewSchema, newSchemaInputRef])
 
   return {
     newSchemaName,

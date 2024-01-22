@@ -1,9 +1,7 @@
-import fs from "fs"
 import { Wallet } from "ethers"
-import { NodeKwil, Utils } from "@kwilteam/kwil-js"
+import { NodeKwil } from "@kwilteam/kwil-js"
 import { ITxResponse } from "../api"
 import { Transaction } from "@kwilteam/kwil-js/dist/core/tx"
-import { privateKeyFile } from "../admin/setup"
 
 export const getKwilInstance = (): NodeKwil => {
   try {
@@ -128,9 +126,5 @@ export const getEnvVar = (key: string): string => {
 }
 
 export const getAdminPk = (): string | undefined => {
-  if (fs.existsSync(privateKeyFile)) {
-    return fs.readFileSync(privateKeyFile, "utf8")
-  }
-
-  return undefined
+  return process.env.KWIL_ADMIN_PK
 }

@@ -1,5 +1,4 @@
 import { IAlertType } from "@/components/Alert"
-import { IAccountJwt } from "@/utils/admin/token"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 interface IAlert {
@@ -10,13 +9,13 @@ interface IAlert {
 
 interface IGlobalState {
   isMenuOpen: boolean
-  currentUser: IAccountJwt | undefined
+  // currentUser: IAccountJwt | undefined
   alert: IAlert | undefined
 }
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  currentUser: undefined,
+  // currentUser: undefined,
   alert: undefined,
 }
 
@@ -27,22 +26,22 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
-      state.currentUser = action.payload
-    },
+    // setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
+    //   state.currentUser = action.payload
+    // },
     setAlert: (state, action: PayloadAction<IAlert | undefined>) => {
       state.alert = action.payload
     },
   },
 })
 
-export const { setIsMenuOpen, setCurrentUser, setAlert } = globalSlice.actions
+export const { setIsMenuOpen, setAlert } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectCurrentUser = (state: { global: IGlobalState }) =>
-  state.global.currentUser
+// export const selectCurrentUser = (state: { global: IGlobalState }) =>
+//   state.global.currentUser
 
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert

@@ -6,7 +6,6 @@ import useDatabaseStructures from "@/hooks/useDatabaseStructures"
 import Loading from "../Loading"
 import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
 import useDatabaseParams from "@/hooks/useDatabaseParams"
-import Alert from "../Alert"
 import { selectAlert } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
 
