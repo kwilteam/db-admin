@@ -24,26 +24,24 @@ export default function useDatabaseStructures() {
         }
 
         setDatabaseCount(Object.keys(_databases).length)
-        dispatch(setAlert(undefined))
 
         dispatch(setDatabases(_databases))
       } catch (error) {
         dispatch(
-          setAlert({
-            type: "error",
-            text: "Failed to connect to Kwil Provider",
-            position: "top",
-          }),
+          setAlert(
+            {
+              type: "error",
+              text: "Failed to connect to Kwil Provider",
+              position: "top",
+            },
+            false,
+          ),
         )
 
         console.error(error)
       }
     }
     fetchDatabases()
-
-    return () => {
-      dispatch(setAlert(undefined))
-    }
   }, [databaseCount, dispatch, databaseStructures])
 
   return { databaseStructures, databaseCount }

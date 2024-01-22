@@ -35,9 +35,6 @@ export default function Action({ database, actionName }: IActionProps) {
 
     if (result.outcome === "error") {
       dispatch(setAlert({ text: result.data as string, type: "error" }))
-      setTimeout(() => {
-        dispatch(setAlert(undefined))
-      }, 3000)
 
       return false
     }
@@ -52,10 +49,6 @@ export default function Action({ database, actionName }: IActionProps) {
       setData(result.data)
       setColumns(Object.keys(result.data[0]))
     }
-
-    setTimeout(() => {
-      dispatch(setAlert(undefined))
-    }, 3000)
 
     return true
   }

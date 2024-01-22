@@ -1,10 +1,8 @@
-import { useRef, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import * as monaco from "monaco-editor"
-import { deployDatabase, saveSchemaContent } from "@/utils/api"
-import { debounce } from "@/utils/debounce"
+import { deployDatabase } from "@/utils/api"
 import { useAppDispatch } from "@/store/hooks"
 import { addDatabase } from "@/store/database"
-import { setSchemaContent } from "@/store/ide"
 import { setAlert } from "@/store/global"
 
 export default function useDeployDatabase(
@@ -53,9 +51,9 @@ export default function useDeployDatabase(
           position: "top",
         }),
       )
+    } finally {
+      setIsDeploying(false)
     }
-
-    setIsDeploying(false)
   }
 
   useEffect(() => {

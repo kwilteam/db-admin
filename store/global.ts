@@ -1,5 +1,6 @@
 import { IAlertType } from "@/components/Alert"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { AppDispatch } from "."
 
 interface IAlert {
   text: string
@@ -29,13 +30,16 @@ export const globalSlice = createSlice({
     // setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
     //   state.currentUser = action.payload
     // },
-    setAlert: (state, action: PayloadAction<IAlert | undefined>) => {
+    setAlertStart: (state, action: PayloadAction<IAlert>) => {
       state.alert = action.payload
+    },
+    setAlertEnd: (state) => {
+      state.alert = undefined
     },
   },
 })
 
-export const { setIsMenuOpen, setAlert } = globalSlice.actions
+export const { setIsMenuOpen } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
@@ -47,3 +51,25 @@ export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
 
 export default globalSlice.reducer
+
+export const setAlert =
+  (alert: IAlert, autoHide: boolean = true) =>
+  (dispatch: AppDispatch) => {
+    dispatch(setAlertStart(alert))
+
+    if (autoHide) {
+      setTimeout(() => {
+        dispatch(setAlertEnd())
+      }, 4000)
+    }
+  }
+
+const setAlertStart = (alert: IAlert): PayloadAction<IAlert> => ({
+  type: "global/setAlertStart",
+  payload: alert,
+})
+
+const setAlertEnd = (): PayloadAction<undefined> => ({
+  type: "global/setAlertEnd",
+  payload: undefined,
+})

@@ -66,10 +66,6 @@ export default function useDeleteDb() {
           loading: false,
         }),
       )
-
-      setTimeout(() => {
-        dispatch(setAlert(undefined))
-      }, 3000)
     }
   }
 

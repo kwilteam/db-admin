@@ -32,6 +32,8 @@ export default function useSaveSchema() {
             position: "top",
           }),
         )
+      } finally {
+        setIsSaving(false)
       }
     }, 500),
   ).current

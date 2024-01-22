@@ -26,6 +26,9 @@ export default function IdePage() {
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
 
+  console.log("isSaving", isSaving)
+  console.log("isDeploying", isDeploying)
+
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-col">
       <div className="flex w-full flex-col lg:h-10">
