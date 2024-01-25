@@ -62,11 +62,11 @@ export default function useDeployDatabase(
 
     setIsDeploying(true)
 
-    const code = editorRef.current.getValue()
+    const schema = editorRef.current.getValue()
 
     try {
       // 1. Compile the code
-      const compiledSchema = await compileSchema(code)
+      const compiledSchema = await compileSchema(schema)
 
       if (compiledSchema) {
         // 2. Sign compiled code using Kwil Browser Node
@@ -76,46 +76,32 @@ export default function useDeployDatabase(
         const { writeKwilProvider } = await getKwilProvider()
         const kwilSigner = await getKwilSigner()
 
-        const res = await writeKwilProvider.deploy(
-          {
-            schema: compiledSchema,
-            description: "Deployed from Kwil Browser",
-          },
-          kwilSigner,
-        )
+        const deployBody = {
+          schema: compiledSchema,
+          description: "Deployed from Kwil Browser",
+        }
+
+        const res = await writeKwilProvider.deploy(deployBody, kwilSigner, true)
 
         console.log("Deployed Schema", res)
 
-        // 4. Check if there is a TX hash
-        if (!res.data || !res.data.tx_hash) {
-          throw new Error("No transaction hash found")
+        const dbName = parseDbName(schema)
+
+        dispatch(
+          setAlert({
+            type: "success",
+            text: "Database deployed successfully!",
+          }),
+        )
+
+        if (dbName) {
+          dispatch(addDatabase(dbName))
         }
-
-        console.log("Checking TX", res.data.tx_hash)
-
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-
-        const txRes = await getKwilTx(writeKwilProvider, res.data.tx_hash)
-
-        console.log("TX Res", txRes)
-
-        // Need to keep checking TX until there is a response from Provider
-
-        // const dbName = getDbName(code)
-
-        // dispatch(
-        //   setAlert({
-        //     type: "success",
-        //     text: "Database deployed successfully!",
-        //   }),
-        // )
-
-        // if (dbName) {
-        //   dispatch(addDatabase(dbName))
-        // }
       }
     } catch (error) {
       const err = error as Error
+
+      console.log("Deploy Error Msg", err.message)
       dispatch(
         setAlert({
           type: "error",
@@ -130,7 +116,7 @@ export default function useDeployDatabase(
   return { deploy, isDeploying }
 }
 
-const getDbName = (code: string) => {
+const parseDbName = (code: string) => {
   const dbNameMatch = code.match(/database\s+(\w+);/)
   return dbNameMatch ? dbNameMatch[1] : undefined
 }
