@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { SettingsIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
+import UserAccount from "../UserAccount"
 
 interface ISettingsItem {
   name: string

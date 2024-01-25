@@ -24,10 +24,8 @@ export default function IdePage() {
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
   const { handleEditorDidMount, editorRef } = useEditorMount()
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
-  const { save, isSaving } = useSaveSchema()
 
-  console.log("isSaving", isSaving)
-  console.log("isDeploying", isDeploying)
+  const { save, isSaving } = useSaveSchema()
 
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-col">

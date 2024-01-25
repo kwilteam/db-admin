@@ -10,12 +10,10 @@ import { selectAlert } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
 
 export default function DatabasesExplorer() {
+  const alert = useAppSelector(selectAlert)
   const { databaseStructures, databaseCount } = useDatabaseStructures()
   const { getDbStructure } = useGetDbStructure()
   const { db, table, action } = useDatabaseParams()
-  const alert = useAppSelector(selectAlert)
-
-  console.log("databaseStructures", databaseStructures)
 
   useEffect(() => {
     if (db) {

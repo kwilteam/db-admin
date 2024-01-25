@@ -15,7 +15,7 @@ export const getDatabases = async (): Promise<
   try {
     const kwil = getKwilInstance()
     const publicKey = await getAddress()
-    const result = await kwil.listDatabases(publicKey)
+    const result = await kwil.listDatabases()
 
     let databases: string[] = []
 

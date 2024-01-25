@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import classNames from "classnames"
 import { Manrope } from "next/font/google"
+import { ReduxProvider } from "@/store/Provider"
 import "./globals.css"
 
 const manrope = Manrope({ subsets: ["latin"] })
@@ -26,7 +27,7 @@ export default function RootLayout({
           "text-slate-700": true,
         })}
       >
-        {children}
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   )

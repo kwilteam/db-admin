@@ -42,7 +42,7 @@ export default function useDatabaseStructures() {
       }
     }
     fetchDatabases()
-  }, [databaseCount, dispatch, databaseStructures])
+  }, [dispatch, databaseStructures])
 
   return { databaseStructures, databaseCount }
 }

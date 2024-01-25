@@ -3,7 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { Fragment } from "react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
-import UserInfo from "../UserInfo"
+import UserInfo from "../UserAccount"
 import useActivePage from "@/hooks/useActivePage"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectIsMenuOpen, setIsMenuOpen } from "@/store/global"
@@ -80,7 +80,7 @@ export default function MobileNavigation() {
         </Dialog>
       </Transition>
 
-      <div className="flex flex-row items-center justify-between bg-kwil p-1 lg:hidden">
+      <div className="flex flex-row items-center justify-between bg-kwil p-4 lg:hidden">
         <button
           className="lg:hidden"
           onClick={() => dispatch(setIsMenuOpen(true))}
@@ -88,7 +88,6 @@ export default function MobileNavigation() {
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
         <div className="text-slate-100">{activePage?.name}</div>
-        <UserInfo />
       </div>
     </>
   )

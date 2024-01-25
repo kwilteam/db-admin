@@ -10,13 +10,13 @@ interface IAlert {
 
 interface IGlobalState {
   isMenuOpen: boolean
-  // currentUser: IAccountJwt | undefined
+  currentAccount?: string
   alert: IAlert | undefined
 }
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  // currentUser: undefined,
+  currentAccount: undefined,
   alert: undefined,
 }
 
@@ -27,9 +27,9 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    // setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
-    //   state.currentUser = action.payload
-    // },
+    setCurrentAccount: (state, action: PayloadAction<string | undefined>) => {
+      state.currentAccount = action.payload
+    },
     setAlertStart: (state, action: PayloadAction<IAlert>) => {
       state.alert = action.payload
     },
@@ -39,13 +39,13 @@ export const globalSlice = createSlice({
   },
 })
 
-export const { setIsMenuOpen } = globalSlice.actions
+export const { setIsMenuOpen, setCurrentAccount } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-// export const selectCurrentUser = (state: { global: IGlobalState }) =>
-//   state.global.currentUser
+export const selectCurrentAccount = (state: { global: IGlobalState }) =>
+  state.global.currentAccount
 
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
@@ -60,7 +60,7 @@ export const setAlert =
     if (autoHide) {
       setTimeout(() => {
         dispatch(setAlertEnd())
-      }, 4000)
+      }, 5000)
     }
   }
 

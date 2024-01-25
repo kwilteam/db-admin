@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
 import * as monaco from "monaco-editor"
-import { deployDatabase } from "@/utils/api"
+import { compileSchema } from "@/utils/server-actions"
 import { useAppDispatch } from "@/store/hooks"
 import { addDatabase } from "@/store/database"
 import { setAlert } from "@/store/global"
+import { getKwilProvider, getKwilSigner, getKwilTx } from "@/utils/wallet"
 
 export default function useDeployDatabase(
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor | undefined>,
@@ -11,56 +12,120 @@ export default function useDeployDatabase(
   const dispatch = useAppDispatch()
   const [isDeploying, setIsDeploying] = useState(false)
 
+  // const deploy = async () => {
+  //   if (!editorRef.current) return
+
+  //   setIsDeploying(true)
+
+  //   const code = editorRef.current.getValue()
+  //   try {
+  //     const result = await deployDatabase(code)
+  //     const dbName = getDbName(code)
+
+  //     if (result && result.outcome === "success") {
+  //       dispatch(
+  //         setAlert({
+  //           type: "success",
+  //           text: "Database deployed successfully!",
+  //           position: "top",
+  //         }),
+  //       )
+  //       if (dbName) {
+  //         dispatch(addDatabase(dbName))
+  //       }
+  //     } else if (result && result.outcome === "error") {
+  //       dispatch(
+  //         setAlert({
+  //           type: "error",
+  //           text: result.data as string,
+  //           position: "top",
+  //         }),
+  //       )
+  //     }
+  //   } catch (error) {
+
+  //     const err = error as Error
+  //     dispatch(
+  //       setAlert({
+  //         type: "error",
+  //         text: `The database could not be deployed due to: ${err.message}`,
+  //         position: "top",
+  //       }),
+  //     )
+  //   } finally {
+  //     setIsDeploying(false)
+  //   }
+  // }
+
   const deploy = async () => {
     if (!editorRef.current) return
 
     setIsDeploying(true)
 
     const code = editorRef.current.getValue()
-    try {
-      const result = await deployDatabase(code)
-      const dbName = getDbName(code)
 
-      if (result && result.outcome === "success") {
-        dispatch(
-          setAlert({
-            type: "success",
-            text: "Database deployed successfully!",
-            position: "top",
-          }),
+    try {
+      // 1. Compile the code
+      const compiledSchema = await compileSchema(code)
+
+      if (compiledSchema) {
+        // 2. Sign compiled code using Kwil Browser Node
+        console.log("Compiled Schema", compiledSchema)
+
+        // 3. Deploy the signed code using Kwil Browser Node
+        const { writeKwilProvider } = await getKwilProvider()
+        const kwilSigner = await getKwilSigner()
+
+        const res = await writeKwilProvider.deploy(
+          {
+            schema: compiledSchema,
+            description: "Deployed from Kwil Browser",
+          },
+          kwilSigner,
         )
-        if (dbName) {
-          dispatch(addDatabase(dbName))
+
+        console.log("Deployed Schema", res)
+
+        // 4. Check if there is a TX hash
+        if (!res.data || !res.data.tx_hash) {
+          throw new Error("No transaction hash found")
         }
-      } else if (result && result.outcome === "error") {
-        dispatch(
-          setAlert({
-            type: "error",
-            text: result.data as string,
-            position: "top",
-          }),
-        )
+
+        console.log("Checking TX", res.data.tx_hash)
+
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        const txRes = await getKwilTx(writeKwilProvider, res.data.tx_hash)
+
+        console.log("TX Res", txRes)
+
+        // Need to keep checking TX until there is a response from Provider
+
+        // const dbName = getDbName(code)
+
+        // dispatch(
+        //   setAlert({
+        //     type: "success",
+        //     text: "Database deployed successfully!",
+        //   }),
+        // )
+
+        // if (dbName) {
+        //   dispatch(addDatabase(dbName))
+        // }
       }
     } catch (error) {
       const err = error as Error
-
       dispatch(
         setAlert({
           type: "error",
           text: `The database could not be deployed due to: ${err.message}`,
-          position: "top",
         }),
       )
     } finally {
       setIsDeploying(false)
     }
   }
-
-  useEffect(() => {
-    return () => {
-      setIsDeploying(false)
-    }
-  }, [])
 
   return { deploy, isDeploying }
 }
