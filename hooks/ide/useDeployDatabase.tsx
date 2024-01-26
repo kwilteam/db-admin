@@ -4,7 +4,7 @@ import { compileSchema } from "@/utils/server-actions"
 import { useAppDispatch } from "@/store/hooks"
 import { addDatabase } from "@/store/database"
 import { setAlert } from "@/store/global"
-import { getKwilProvider, getKwilSigner, getKwilTx } from "@/utils/wallet"
+import { getKwilProvider, getKwilSigner } from "@/utils/kwil/client"
 
 export default function useDeployDatabase(
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor | undefined>,

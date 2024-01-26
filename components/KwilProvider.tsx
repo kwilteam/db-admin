@@ -2,7 +2,12 @@
 
 import { Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
-import { CheckIcon, ChevronDownIcon, PlusIcon } from "@/utils/icons"
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  PlusIcon,
+  ProviderIcon,
+} from "@/utils/icons"
 import classNames from "classnames"
 
 enum KwilProviderStatus {
@@ -44,8 +49,8 @@ export default function KwilProvider({ ...props }: IUserInfoProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center rounded-md bg-kwil/70 px-4 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-          <span className="font-medium">Provider: </span>&nbsp;
+        <Menu.Button className="inline-flex w-full justify-center gap-2 rounded-md bg-kwil/70 px-4 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+          <ProviderIcon className="h-5 w-5" />
           <span>{currentProvider}</span>
           <ChevronDownIcon
             className="-mr-1 ml-2 h-5 w-5 text-white hover:text-slate-100"

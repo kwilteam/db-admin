@@ -23,10 +23,10 @@ import {
   HiOutlineCheck,
   HiOutlineCheckBadge,
   HiOutlineXMark,
-  HiOutlineUserPlus,
+  HiServerStack,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
-import { FaDocker, FaGithub } from "react-icons/fa6"
+import { FaDocker, FaGithub, FaNetworkWired } from "react-icons/fa6"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -57,4 +57,5 @@ export {
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
+  HiServerStack as ProviderIcon,
 }

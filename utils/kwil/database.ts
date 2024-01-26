@@ -19,6 +19,8 @@ export const getDatabases = async (): Promise<
 
     let databases: string[] = []
 
+    console.log("result", result)
+
     if (result.status === 200 && result.data instanceof Array) {
       for (const db of result.data) {
         databases.push(db.name)
