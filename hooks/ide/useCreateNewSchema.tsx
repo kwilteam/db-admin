@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { addNewSchema, selectSavedSchemas } from "@/store/ide"
-import { saveSchemaContent } from "@/utils/api"
+import { setSchema } from "@/utils/idb/ide"
+import useIdb from "../useIdb"
+import { setAlert } from "@/store/global"
 
 export default function useCreateNewSchema() {
   const dispatch = useAppDispatch()
@@ -9,6 +11,7 @@ export default function useCreateNewSchema() {
   const [newSchemaName, setNewSchemaName] = useState<string | null>(null)
   const [isCreatingNewSchema, setIsCreatingNewSchema] = useState(false)
   const newSchemaInputRef = useRef<HTMLInputElement | null>(null)
+  const idb = useIdb()
 
   const newSchemaNameChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,16 +33,27 @@ export default function useCreateNewSchema() {
     [savedSchemas],
   )
 
-  const createNewSchema = useCallback(() => {
-    if (!newSchemaName || schemaExists(newSchemaName)) {
-      return
-    }
+  const createNewSchema = useCallback(async () => {
+    try {
+      if (!idb) return
+      if (!newSchemaName || schemaExists(newSchemaName)) {
+        return
+      }
 
-    dispatch(addNewSchema(newSchemaName))
-    saveSchemaContent(newSchemaName, "")
-    setIsCreatingNewSchema(false)
-    setNewSchemaName(null)
-  }, [newSchemaName, schemaExists, dispatch])
+      await setSchema(idb, newSchemaName, "")
+      dispatch(addNewSchema(newSchemaName))
+    } catch (error) {
+      dispatch(
+        setAlert({
+          type: "error",
+          text: "Failed to create new schema due to an unexpected error. Please try again.",
+        }),
+      )
+    } finally {
+      setIsCreatingNewSchema(false)
+      setNewSchemaName(null)
+    }
+  }, [newSchemaName, schemaExists, dispatch, idb])
 
   const newSchemaNameSubmit = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {

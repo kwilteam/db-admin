@@ -1,4 +1,4 @@
-database hello_world;
+const helloWorld = `database hello_world;
 
 table greetings {
   id int primary notnull,
@@ -25,4 +25,6 @@ action update_greeting ($id, $message) public {
 action delete_greeting ($id) public {
   DELETE FROM greetings 
   WHERE id = $id AND wallet = @caller;
-}
+}`
+
+export default helloWorld

@@ -49,13 +49,4 @@ export {
   executeAction,
 } from "./database"
 
-export {
-  getSavedSchemas,
-  getSchemaContent,
-  saveSchemaContent,
-  deleteSchema,
-} from "./schema"
-
-export type { ISavedSchemasResponse, ISchemaContentResponse } from "./schema"
-
 export { getExtensions, getExtension } from "./extensions"
