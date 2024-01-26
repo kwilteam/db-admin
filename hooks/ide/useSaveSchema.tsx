@@ -8,13 +8,13 @@ import useIdb from "../useIdb"
 
 export default function useSaveSchema() {
   const dispatch = useAppDispatch()
-  const db = useIdb()
+  const idb = useIdb()
   const [isSaving, setIsSaving] = useState(false)
 
   const saveMethod = useCallback(
     async (name: string, content: string) => {
       try {
-        if (!db) return
+        if (!idb) return
 
         dispatch(
           setSchemaContent({
@@ -26,7 +26,7 @@ export default function useSaveSchema() {
         setIsSaving(true)
         console.log("saving schema idb", name, content)
 
-        await setSchema(db, name, content)
+        await setSchema(idb, name, content)
       } catch (error) {
         dispatch(
           setAlert({
@@ -38,7 +38,7 @@ export default function useSaveSchema() {
         setIsSaving(false)
       }
     },
-    [db, dispatch],
+    [idb, dispatch],
   )
 
   const save = debounce(saveMethod, 500)

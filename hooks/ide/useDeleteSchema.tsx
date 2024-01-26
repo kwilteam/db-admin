@@ -7,7 +7,7 @@ import { setAlert } from "@/store/global"
 
 export default function useDeleteSchema() {
   const dispatch = useAppDispatch()
-  const db = useIdb()
+  const idb = useIdb()
 
   const triggerDeleteSchema = useCallback(
     async (
@@ -16,12 +16,12 @@ export default function useDeleteSchema() {
     ) => {
       try {
         e.stopPropagation() // To prevent triggering openSchema
-        if (!db) return
+        if (!idb) return
 
         const c = confirm(`Are you sure you want to delete ${schema}.kf?`)
 
         if (c) {
-          await deleteSchema(db, schema)
+          await deleteSchema(idb, schema)
 
           dispatch(removeSchema(schema))
         }
@@ -36,7 +36,7 @@ export default function useDeleteSchema() {
         return
       }
     },
-    [dispatch, db],
+    [dispatch, idb],
   )
 
   return triggerDeleteSchema
