@@ -2,16 +2,11 @@
 
 import { Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  PlusIcon,
-  ProviderIcon,
-} from "@/utils/icons"
+import { ChevronDownIcon, PlusIcon, ProviderIcon } from "@/utils/icons"
 import classNames from "classnames"
 
-enum KwilProviderStatus {
-  Checking,
+export enum KwilProviderStatus {
+  Unknown,
   Online,
   Offline,
 }
@@ -22,7 +17,9 @@ interface IKwilProvider {
   status: KwilProviderStatus
 }
 
-interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
+  currentProvider: string
+}
 
 // TODO: get providers from store (loaded from indexedDB)
 const providers: IKwilProvider[] = [
@@ -34,7 +31,7 @@ const providers: IKwilProvider[] = [
   {
     name: "Localhost",
     url: "http://localhost:8080",
-    status: KwilProviderStatus.Checking,
+    status: KwilProviderStatus.Unknown,
   },
   {
     name: "My Server",
@@ -43,9 +40,10 @@ const providers: IKwilProvider[] = [
   },
 ]
 
-const currentProvider = "Testnet"
-
-export default function KwilProvider({ ...props }: IUserInfoProps) {
+export default function KwilProviders({
+  currentProvider,
+  ...props
+}: IKwilProvidersProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -70,7 +68,11 @@ export default function KwilProvider({ ...props }: IUserInfoProps) {
         <Menu.Items className="absolute right-0 mt-3 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
           <div className="px-1 pb-1">
             {providers.map((provider) => (
-              <ProviderItem key={provider.name} provider={provider} />
+              <ProviderItem
+                isCurrent={provider.name === currentProvider}
+                key={provider.name}
+                provider={provider}
+              />
             ))}
             <hr className="m-1 border-slate-100" />
             <Menu.Item>
@@ -91,23 +93,29 @@ export default function KwilProvider({ ...props }: IUserInfoProps) {
   )
 }
 
-const ProviderItem = ({ provider }: { provider: IKwilProvider }) => {
+const ProviderItem = ({
+  isCurrent,
+  provider,
+}: {
+  isCurrent: boolean
+  provider: IKwilProvider
+}) => {
   return (
     <Menu.Item key={provider.name}>
       <button
         className={classNames({
           "group my-1 flex w-full items-center gap-2 overflow-clip rounded-md px-2 py-3 text-sm hover:bg-kwil-light/10 focus:outline-none":
             true,
-          "bg-kwil-light/10": provider.name === currentProvider,
+          "bg-kwil-light/10": isCurrent,
         })}
       >
         <div
           className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
             "bg-lime-500": provider.status === KwilProviderStatus.Online,
-            "bg-amber-400": provider.status === KwilProviderStatus.Checking,
+            "bg-amber-400": provider.status === KwilProviderStatus.Unknown,
             "bg-red-500":
               provider.status !== KwilProviderStatus.Online &&
-              provider.status !== KwilProviderStatus.Checking,
+              provider.status !== KwilProviderStatus.Unknown,
           })}
         />
 

@@ -9,10 +9,13 @@ import { Menu, Transition } from "@headlessui/react"
 import { Fragment } from "react"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
-  account: string | undefined
+  currentAccount: string | undefined
 }
 
-export default function UserAccount({ account, ...props }: IUserInfoProps) {
+export default function UserAccount({
+  currentAccount,
+  ...props
+}: IUserInfoProps) {
   const dispatch = useAppDispatch()
   const [abbreviatedAccount, setAbbreviatedAccount] = useState<
     string | undefined
@@ -23,12 +26,13 @@ export default function UserAccount({ account, ...props }: IUserInfoProps) {
   }
 
   useEffect(() => {
-    if (account) {
-      const _abbreviatedUser = account.slice(0, 5) + "..." + account.slice(-5)
+    if (currentAccount) {
+      const _abbreviatedUser =
+        currentAccount.slice(0, 5) + "..." + currentAccount.slice(-5)
 
       setAbbreviatedAccount(_abbreviatedUser)
     } else setAbbreviatedAccount(undefined)
-  }, [account])
+  }, [currentAccount])
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
@@ -40,7 +44,7 @@ export default function UserAccount({ account, ...props }: IUserInfoProps) {
     }
   }, [dispatch])
 
-  if (!account) return null
+  if (!currentAccount) return null
 
   return (
     <Menu as="div" className="relative inline-block text-left">

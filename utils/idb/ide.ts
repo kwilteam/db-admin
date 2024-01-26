@@ -1,11 +1,12 @@
 import { IDBPDatabase } from "idb"
+import { StoreNames } from "./init"
 
 export const getSchemas = async (idb: IDBPDatabase<unknown>) => {
-  return idb.getAllKeys("schema")
+  return idb.getAllKeys(StoreNames.SCHEMA)
 }
 
 export const getSchema = async (idb: IDBPDatabase<unknown>, key: string) => {
-  return await idb.get("schema", key)
+  return await idb.get(StoreNames.SCHEMA, key)
 }
 
 export const setSchema = async (
@@ -14,7 +15,7 @@ export const setSchema = async (
   content: string,
 ): Promise<void> => {
   try {
-    await idb.put("schema", {
+    await idb.put(StoreNames.SCHEMA, {
       name,
       content,
     })
@@ -29,7 +30,7 @@ export const deleteSchema = async (
   key: string,
 ): Promise<void> => {
   try {
-    await idb.delete("schema", key)
+    await idb.delete(StoreNames.SCHEMA, key)
   } catch (error) {
     throw error
   }

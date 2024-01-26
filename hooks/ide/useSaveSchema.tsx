@@ -24,7 +24,6 @@ export default function useSaveSchema() {
         )
 
         setIsSaving(true)
-        console.log("saving schema idb", name, content)
 
         await setSchema(idb, name, content)
       } catch (error) {
