@@ -1,24 +1,23 @@
 import { Fragment } from "react"
 import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
-import { saveSetting } from "@/store/global"
+import { saveActiveAccount } from "@/store/global"
 import { getAddress } from "@/utils/wallet"
 import { useAppDispatch } from "@/store/hooks"
-import { SettingsKeys } from "@/utils/idb/init"
 import Button from "./Button"
 
 export default function ConnectWalletDialog({
-  currentAccount,
+  activeAccount,
   settingsLoaded,
 }: {
-  currentAccount: string | undefined
+  activeAccount: string | undefined
   settingsLoaded: boolean
 }) {
   return (
     <>
       <Transition
         appear
-        show={!currentAccount && settingsLoaded ? true : false}
+        show={!activeAccount && settingsLoaded ? true : false}
         as={Fragment}
       >
         <Dialog as="div" className="relative z-10" onClose={() => {}}>
@@ -84,7 +83,7 @@ function ConnectWallet() {
     try {
       const address = await getAddress()
 
-      dispatch(saveSetting({ key: SettingsKeys.ACCOUNT, value: address }))
+      dispatch(saveActiveAccount(address))
     } catch (e) {
       console.log(e)
     }

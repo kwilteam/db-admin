@@ -3,6 +3,7 @@ import databaseReducer from "./database"
 import ideReducer from "./ide"
 import globalReducer from "./global"
 import extensionsReducer from "./extensions"
+import providersReducer from "./providers"
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     database: databaseReducer,
     ide: ideReducer,
     extensions: extensionsReducer,
+    providers: providersReducer,
   },
 })
 

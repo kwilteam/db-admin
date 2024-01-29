@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { addNewSchema, selectSavedSchemas } from "@/store/ide"
 import { setSchema } from "@/utils/idb/ide"
-import useIdb from "../idb/useIdb"
+import useIdb from "../useIdb"
 import { setAlert } from "@/store/global"
 
 export default function useCreateNewSchema() {

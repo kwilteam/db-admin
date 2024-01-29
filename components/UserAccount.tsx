@@ -2,17 +2,16 @@
 
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
-import { saveSetting } from "@/store/global"
 import { useAppDispatch } from "@/store/hooks"
-import { SettingsKeys } from "@/utils/idb/init"
+import { saveActiveAccount } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
-  currentAccount: string | undefined
+  activeAccount: string | undefined
 }
 
 export default function UserAccount({
-  currentAccount,
+  activeAccount,
   ...props
 }: IUserInfoProps) {
   const dispatch = useAppDispatch()
@@ -21,31 +20,21 @@ export default function UserAccount({
   >()
 
   const disconnectWallet = () => {
-    dispatch(
-      saveSetting({
-        key: SettingsKeys.ACCOUNT,
-        value: undefined,
-      }),
-    )
+    dispatch(saveActiveAccount(undefined))
   }
 
   useEffect(() => {
-    if (currentAccount) {
+    if (activeAccount) {
       const _abbreviatedUser =
-        currentAccount.slice(0, 5) + "..." + currentAccount.slice(-5)
+        activeAccount.slice(0, 5) + "..." + activeAccount.slice(-5)
 
       setAbbreviatedAccount(_abbreviatedUser)
     } else setAbbreviatedAccount(undefined)
-  }, [currentAccount])
+  }, [activeAccount])
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
-      dispatch(
-        saveSetting({
-          key: SettingsKeys.ACCOUNT,
-          value: accounts[0],
-        }),
-      )
+      dispatch(saveActiveAccount(accounts[0]))
     })
 
     return () => {
@@ -53,7 +42,7 @@ export default function UserAccount({
     }
   }, [dispatch])
 
-  if (!currentAccount) return null
+  if (!activeAccount) return null
 
   return (
     <Menu as="div" className="relative inline-block text-left">

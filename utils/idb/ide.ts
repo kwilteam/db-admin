@@ -2,11 +2,21 @@ import { IDBPDatabase } from "idb"
 import { StoreNames } from "./init"
 import helloWorldSchema from "@/schemas/hello_world"
 
-export const getSchemas = async (idb: IDBPDatabase<unknown>) => {
-  return idb.getAllKeys(StoreNames.SCHEMA)
+export interface ISchema {
+  name: string
+  content: string
 }
 
-export const getSchema = async (idb: IDBPDatabase<unknown>, key: string) => {
+export const getSchemas = async (
+  idb: IDBPDatabase<unknown>,
+): Promise<string[]> => {
+  return (await idb.getAllKeys(StoreNames.SCHEMA)).map((key) => key.toString())
+}
+
+export const getSchema = async (
+  idb: IDBPDatabase<unknown>,
+  key: string,
+): Promise<ISchema | undefined> => {
   return await idb.get(StoreNames.SCHEMA, key)
 }
 

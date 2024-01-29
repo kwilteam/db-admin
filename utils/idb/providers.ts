@@ -1,11 +1,21 @@
 import { IDBPDatabase } from "idb"
 import { StoreNames } from "./init"
 
-export const getProviders = async (idb: IDBPDatabase<unknown>) => {
-  return idb.getAllKeys(StoreNames.PROVIDER)
+export interface IProvider {
+  name: string
+  url: string
 }
 
-export const getProvider = async (idb: IDBPDatabase<unknown>, key: string) => {
+export const getProviders = async (
+  idb: IDBPDatabase<unknown>,
+): Promise<IProvider[]> => {
+  return idb.getAll(StoreNames.PROVIDER)
+}
+
+export const getProvider = async (
+  idb: IDBPDatabase<unknown>,
+  key: string,
+): Promise<IProvider> => {
   return await idb.get(StoreNames.PROVIDER, key)
 }
 

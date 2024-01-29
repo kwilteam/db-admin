@@ -1,20 +1,15 @@
 import { IDBPDatabase } from "idb"
 import { SettingsKeys, StoreNames } from "./init"
 
-export const getSettings = async (idb: IDBPDatabase<unknown>) => {
-  const accountSetting = await getSetting(idb, SettingsKeys.ACCOUNT)
-  const providerSetting = await getSetting(idb, SettingsKeys.PROVIDER)
-
-  let provider = providerSetting?.value
-  let account = accountSetting?.value
-
-  return { account, provider }
+export interface ISetting {
+  name: SettingsKeys
+  value: string | undefined
 }
 
 export const getSetting = async (
   idb: IDBPDatabase<unknown>,
   key: SettingsKeys,
-) => {
+): Promise<ISetting | undefined> => {
   return await idb.get(StoreNames.SETTINGS, key)
 }
 

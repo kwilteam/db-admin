@@ -45,8 +45,20 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
     // Only if the database has just been created
     if (!dbExists) {
       await setupSchema(db)
-      await setupProviders(db)
+    }
+
+    // Inserting default settings after the upgrade has finished
+    // Only if the settings store is empty
+    const settings = await db.getAll(StoreNames.SETTINGS)
+    if (!settings.length) {
       await setupSettings(db)
+    }
+
+    // Inserting default providers after the upgrade has finished
+    // Only if the provider store is empty
+    const providers = await db.getAll(StoreNames.PROVIDER)
+    if (!providers.length) {
+      await setupProviders(db)
     }
 
     return db

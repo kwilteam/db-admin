@@ -10,49 +10,61 @@ interface IAlert {
   position?: "top" | "bottom"
 }
 
-interface ISettings {
-  provider: string | undefined
-  account: string | undefined
-}
+// interface ISettings {
+//   provider: string | undefined
+//   account: string | undefined
+// }
 
 interface IGlobalState {
   isMenuOpen: boolean
-  settings: ISettings
+  // settings: ISettings
+  activeAccount: string | undefined
   settingsLoaded: boolean
   alert: IAlert | undefined
 }
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  settings: {
-    provider: undefined,
-    account: undefined,
-  },
+  // settings: {
+  //   provider: undefined,
+  //   account: undefined,
+  // },
+  activeAccount: undefined,
   settingsLoaded: false,
   alert: undefined,
 }
 
-export const loadSettings = createAsyncThunk("ide/loadSettings", async () => {
-  const db = await initIdb()
-  if (!db) return
+// export const loadSettings = createAsyncThunk("ide/loadSettings", async () => {
+//   const db = await initIdb()
+//   if (!db) return
 
-  const { value: provider } = await getSetting(db, SettingsKeys.PROVIDER)
-  const { value: account } = await getSetting(db, SettingsKeys.ACCOUNT)
+//   const providerSetting = await getSetting(db, SettingsKeys.PROVIDER)
+//   const accountSetting = await getSetting(db, SettingsKeys.ACCOUNT)
 
-  return { provider, account }
-})
+//   return { provider: providerSetting?.value, account: accountSetting?.value }
+// })
 
-export const saveSetting = createAsyncThunk(
-  "ide/saveSetting",
-  async (settings: { key: SettingsKeys; value: string | undefined }) => {
+export const loadActiveAccount = createAsyncThunk(
+  "ide/loadActiveAccount",
+  async () => {
     const db = await initIdb()
     if (!db) return
 
-    const { key, value } = settings
+    const accountSetting = await getSetting(db, SettingsKeys.ACCOUNT)
 
-    await setSetting(db, key, value)
+    return accountSetting?.value
+  },
+)
 
-    return { key, value }
+export const saveActiveAccount = createAsyncThunk(
+  "ide/saveActiveAccount",
+  async (account: string | undefined) => {
+    const db = await initIdb()
+    if (!db) return
+
+    await setSetting(db, SettingsKeys.ACCOUNT, account)
+
+    return account
   },
 )
 
@@ -74,21 +86,12 @@ export const globalSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadSettings.fulfilled, (state, action) => {
-      if (!action.payload) return
-      const { provider, account } = action.payload
-      state.settings.provider = provider
-      state.settings.account = account
+    builder.addCase(loadActiveAccount.fulfilled, (state, action) => {
+      state.activeAccount = action.payload
       state.settingsLoaded = true
     }),
-      builder.addCase(saveSetting.fulfilled, (state, action) => {
-        if (!action.payload) return
-        const { key, value } = action.payload
-        if (key === SettingsKeys.PROVIDER) {
-          state.settings.provider = value
-        } else if (key === SettingsKeys.ACCOUNT) {
-          state.settings.account = value
-        }
+      builder.addCase(saveActiveAccount.fulfilled, (state, action) => {
+        state.activeAccount = action.payload
       })
   },
 })
@@ -98,8 +101,8 @@ export const { setIsMenuOpen, setSettingsLoaded } = globalSlice.actions
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectSettings = (state: { global: IGlobalState }) =>
-  state.global.settings
+export const selectActiveAccount = (state: { global: IGlobalState }) =>
+  state.global.activeAccount
 
 export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
   state.global.settingsLoaded
