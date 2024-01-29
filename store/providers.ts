@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { SettingsKeys, initIdb } from "@/utils/idb/init"
 import { IProvider, getProviders } from "@/utils/idb/providers"
-import { getSetting } from "@/utils/idb/settings"
+import { getSetting, setSetting } from "@/utils/idb/settings"
 
 export enum KwilProviderStatus {
   Unknown,
@@ -38,6 +38,18 @@ export const loadProviders = createAsyncThunk(
   },
 )
 
+export const saveActiveProvider = createAsyncThunk(
+  "providers/saveActiveProvider",
+  async (provider: string | undefined) => {
+    const db = await initIdb()
+    if (!db) return
+
+    await setSetting(db, SettingsKeys.PROVIDER, provider)
+
+    return provider
+  },
+)
+
 export const providersSlice = createSlice({
   name: "providers",
   initialState: initialState,
@@ -50,6 +62,10 @@ export const providersSlice = createSlice({
 
       state.activeProvider = activeProvider
       state.providers = providers
+    })
+
+    builder.addCase(saveActiveProvider.fulfilled, (state, action) => {
+      state.activeProvider = action.payload
     })
   },
 })

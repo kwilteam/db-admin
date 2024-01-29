@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useEffect } from "react"
+import { Fragment, useCallback, useEffect, useState } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { ChevronDownIcon, PlusIcon, ProviderIcon } from "@/utils/icons"
 import classNames from "classnames"
@@ -8,9 +8,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   IKwilProvider,
   KwilProviderStatus,
-  loadProviders,
+  saveActiveProvider,
   selectProviders,
 } from "@/store/providers"
+import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -20,16 +21,59 @@ export default function KwilProviders({
   activeProvider,
   ...props
 }: IKwilProvidersProps) {
-  const dispatch = useAppDispatch()
   const providers = useAppSelector(selectProviders)
+  const { readOnlyKwilProvider } = useKwilProvider()
+  const [status, setStatus] = useState<KwilProviderStatus>(
+    KwilProviderStatus.Unknown,
+  )
+
+  // TODO: Doesn't ping if provider is offline on first load
+  const pingProvider = useCallback(async () => {
+    try {
+      const res = await readOnlyKwilProvider?.ping()
+
+      if (res?.status === 200) {
+        setStatus(KwilProviderStatus.Online)
+      } else {
+        setStatus(KwilProviderStatus.Offline)
+      }
+    } catch (error) {
+      setStatus(KwilProviderStatus.Offline)
+    }
+  }, [readOnlyKwilProvider])
+
+  useEffect(() => {
+    if (!activeProvider) return
+
+    setStatus(KwilProviderStatus.Unknown)
+  }, [activeProvider])
+
+  useEffect(() => {
+    pingProvider()
+
+    const interval = setInterval(() => {
+      pingProvider()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [pingProvider])
 
   if (!providers) return null
 
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-2 rounded-md bg-kwil/70 px-4 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 px-4 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProviderIcon className="h-5 w-5" />
+          <div
+            className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
+              "border bg-lime-500": status === KwilProviderStatus.Online,
+              "border bg-red-500": status === KwilProviderStatus.Offline,
+              "animate-pulse bg-amber-500":
+                status !== KwilProviderStatus.Online &&
+                status !== KwilProviderStatus.Offline,
+            })}
+          />
           <span>{activeProvider}</span>
           <ChevronDownIcon
             className="-mr-1 ml-2 h-5 w-5 text-white hover:text-slate-100"
@@ -82,28 +126,8 @@ const ProviderItem = ({
   isCurrent: boolean
   provider: IKwilProvider
 }) => {
-  const dispatch = useAppDispatch()
   const { name, status, url } = provider
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(url)
-        .then((response) => {
-          if (response.ok) {
-            provider.status = KwilProviderStatus.Online
-          } else {
-            provider.status = KwilProviderStatus.Offline
-          }
-        })
-        .catch(() => {
-          provider.status = KwilProviderStatus.Offline
-        })
-    }, 2000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [url, provider])
+  const dispatch = useAppDispatch()
 
   return (
     <Menu.Item key={name}>
@@ -113,17 +137,8 @@ const ProviderItem = ({
             true,
           "bg-kwil-light/10": isCurrent,
         })}
+        onClick={() => dispatch(saveActiveProvider(name))}
       >
-        <div
-          className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
-            "border bg-lime-500": status === KwilProviderStatus.Online,
-            "border bg-red-500": status === KwilProviderStatus.Offline,
-            "animate-pulse bg-amber-500":
-              status !== KwilProviderStatus.Online &&
-              status !== KwilProviderStatus.Offline,
-          })}
-        />
-
         <span className="flex flex-shrink-0 text-xs font-medium text-slate-800">
           {name}
         </span>
