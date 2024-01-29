@@ -1,5 +1,7 @@
 import { openDB, IDBPDatabase } from "idb"
-import helloWorldSchema from "@/schemas/hello_world"
+import { setupSettings } from "./settings"
+import { setupSchema } from "./ide"
+import { setupProviders } from "./providers"
 
 export enum StoreNames {
   SCHEMA = "schema",
@@ -14,37 +16,6 @@ export enum SettingsKeys {
 
 const createStore = (db: IDBPDatabase<unknown>, storeName: StoreNames) => {
   db.createObjectStore(storeName, { keyPath: "name" })
-}
-
-const setupSchema = async (db: IDBPDatabase<unknown>) => {
-  await db.put(StoreNames.SCHEMA, {
-    name: "hello_world",
-    content: helloWorldSchema,
-  })
-}
-
-const setupProviders = async (db: IDBPDatabase<unknown>) => {
-  await db.put(StoreNames.PROVIDER, {
-    name: "Testnet",
-    url: "https://testnet.kwil.com",
-  })
-
-  await db.put(StoreNames.PROVIDER, {
-    name: "Localhost",
-    url: "http://localhost:8080",
-  })
-}
-
-const setupSettings = async (db: IDBPDatabase<unknown>) => {
-  await db.put(StoreNames.SETTINGS, {
-    name: SettingsKeys.PROVIDER,
-    value: "Testnet",
-  })
-
-  await db.put(StoreNames.SETTINGS, {
-    name: SettingsKeys.ACCOUNT,
-    value: undefined,
-  })
 }
 
 export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {

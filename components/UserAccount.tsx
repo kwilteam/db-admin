@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectCurrentAccount, setCurrentAccount } from "@/store/global"
-import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
-
+import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
-import { Fragment } from "react"
+import { saveSetting } from "@/store/global"
+import { useAppDispatch } from "@/store/hooks"
+import { SettingsKeys } from "@/utils/idb/init"
+import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   currentAccount: string | undefined
@@ -22,7 +21,12 @@ export default function UserAccount({
   >()
 
   const disconnectWallet = () => {
-    dispatch(setCurrentAccount(undefined))
+    dispatch(
+      saveSetting({
+        key: SettingsKeys.ACCOUNT,
+        value: undefined,
+      }),
+    )
   }
 
   useEffect(() => {
@@ -36,7 +40,12 @@ export default function UserAccount({
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
-      dispatch(setCurrentAccount(accounts[0]))
+      dispatch(
+        saveSetting({
+          key: SettingsKeys.ACCOUNT,
+          value: accounts[0],
+        }),
+      )
     })
 
     return () => {

@@ -2,7 +2,7 @@ import { IAlertType } from "@/components/Alert"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppDispatch } from "."
 import { SettingsKeys, initIdb } from "@/utils/idb/init"
-import { getSetting } from "@/utils/idb/settings"
+import { getSetting, setSetting } from "@/utils/idb/settings"
 
 interface IAlert {
   text: string
@@ -10,47 +10,51 @@ interface IAlert {
   position?: "top" | "bottom"
 }
 
+interface ISettings {
+  provider: string | undefined
+  account: string | undefined
+}
+
 interface IGlobalState {
   isMenuOpen: boolean
-  currentAccount?: string
-  currentProvider?: string
+  settings: ISettings
+  settingsLoaded: boolean
   alert: IAlert | undefined
 }
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  currentAccount: undefined,
-  currentProvider: undefined,
+  settings: {
+    provider: undefined,
+    account: undefined,
+  },
+  settingsLoaded: false,
   alert: undefined,
 }
 
-export const loadSettingsFromIdb = createAsyncThunk(
-  "ide/loadSettingsFromIdb",
-  async () => {
+export const loadSettings = createAsyncThunk("ide/loadSettings", async () => {
+  const db = await initIdb()
+  if (!db) return
+
+  const { value: provider } = await getSetting(db, SettingsKeys.PROVIDER)
+  const { value: account } = await getSetting(db, SettingsKeys.ACCOUNT)
+
+  return { provider, account }
+})
+
+export const saveSetting = createAsyncThunk(
+  "ide/saveSetting",
+  async (settings: { key: SettingsKeys; value: string | undefined }) => {
     const db = await initIdb()
     if (!db) return
 
-    const { value: currentProvider } = await getSetting(
-      db,
-      SettingsKeys.PROVIDER,
-    )
-    const { value: currentAccount } = await getSetting(db, SettingsKeys.ACCOUNT)
+    const { key, value } = settings
 
-    return { currentProvider, currentAccount }
+    await setSetting(db, key, value)
+
+    return { key, value }
   },
 )
-
-// export const loadProvidersFromIdb = createAsyncThunk(
-//   "ide/loadProvidersFromIdb",
-//   async () => {
-//     const db = await initIdb()
-//     if (!db) return
-
-//     const providers = await db.getAll(StoreNames.PROVIDER)
-
-//     return providers
-//   },
-// )
 
 export const globalSlice = createSlice({
   name: "global",
@@ -59,11 +63,8 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setCurrentAccount: (state, action: PayloadAction<string | undefined>) => {
-      state.currentAccount = action.payload
-    },
-    setCurrentProvider: (state, action: PayloadAction<string | undefined>) => {
-      state.currentProvider = action.payload
+    setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
+      state.settingsLoaded = action.payload
     },
     setAlertStart: (state, action: PayloadAction<IAlert>) => {
       state.alert = action.payload
@@ -73,27 +74,35 @@ export const globalSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadSettingsFromIdb.fulfilled, (state, action) => {
+    builder.addCase(loadSettings.fulfilled, (state, action) => {
       if (!action.payload) return
-      const { currentProvider, currentAccount } = action.payload
-
-      state.currentProvider = currentProvider
-      state.currentAccount = currentAccount
-    })
+      const { provider, account } = action.payload
+      state.settings.provider = provider
+      state.settings.account = account
+      state.settingsLoaded = true
+    }),
+      builder.addCase(saveSetting.fulfilled, (state, action) => {
+        if (!action.payload) return
+        const { key, value } = action.payload
+        if (key === SettingsKeys.PROVIDER) {
+          state.settings.provider = value
+        } else if (key === SettingsKeys.ACCOUNT) {
+          state.settings.account = value
+        }
+      })
   },
 })
 
-export const { setIsMenuOpen, setCurrentAccount, setCurrentProvider } =
-  globalSlice.actions
+export const { setIsMenuOpen, setSettingsLoaded } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectCurrentAccount = (state: { global: IGlobalState }) =>
-  state.global.currentAccount
+export const selectSettings = (state: { global: IGlobalState }) =>
+  state.global.settings
 
-export const selectCurrentProvider = (state: { global: IGlobalState }) =>
-  state.global.currentProvider
+export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
+  state.global.settingsLoaded
 
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert

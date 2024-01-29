@@ -1,18 +1,18 @@
 "use client"
 
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
-  loadSettingsFromIdb,
-  selectCurrentAccount,
-  selectCurrentProvider,
+  loadSettings,
+  selectSettings,
+  selectSettingsLoaded,
 } from "@/store/global"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import useMount from "@/hooks/useMount"
 import MobileNavigation from "@/components/Navigation/Mobile"
 import DesktopNavigation from "@/components/Navigation/Desktop"
 import GlobalAlert from "@/components/GlobalAlert"
 import UserAccount from "@/components/UserAccount"
 import KwilProviders from "@/components/KwilProviders"
 import ConnectWalletDialog from "@/components/ConnectWalletDialog"
-import { useEffect } from "react"
 
 interface IProps {
   children: React.ReactNode
@@ -20,12 +20,13 @@ interface IProps {
 
 export default function DashboardLayout({ children }: IProps) {
   const dispatch = useAppDispatch()
-  const currentProvider = useAppSelector(selectCurrentProvider)
-  const currentAccount = useAppSelector(selectCurrentAccount)
+  const { account: currentAccount, provider: currentProvider } =
+    useAppSelector(selectSettings)
+  const settingsLoaded = useAppSelector(selectSettingsLoaded)
 
-  useEffect(() => {
-    dispatch(loadSettingsFromIdb())
-  }, [dispatch])
+  useMount(() => {
+    dispatch(loadSettings())
+  })
 
   return (
     <>
@@ -52,7 +53,11 @@ export default function DashboardLayout({ children }: IProps) {
           )}
         </div>
       </>
-      {!currentAccount && <ConnectWalletDialog />}
+
+      <ConnectWalletDialog
+        currentAccount={currentAccount}
+        settingsLoaded={settingsLoaded}
+      />
     </>
   )
 }

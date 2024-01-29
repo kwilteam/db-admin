@@ -1,5 +1,6 @@
 import { IDBPDatabase } from "idb"
 import { StoreNames } from "./init"
+import helloWorldSchema from "@/schemas/hello_world"
 
 export const getSchemas = async (idb: IDBPDatabase<unknown>) => {
   return idb.getAllKeys(StoreNames.SCHEMA)
@@ -34,4 +35,11 @@ export const deleteSchema = async (
   } catch (error) {
     throw error
   }
+}
+
+export const setupSchema = async (db: IDBPDatabase<unknown>) => {
+  await db.put(StoreNames.SCHEMA, {
+    name: "hello_world",
+    content: helloWorldSchema,
+  })
 }
