@@ -20,8 +20,11 @@ export const useKwilProvider = (): {
   >()
   const activeProvider = useAppSelector(selectActiveProvider)
   const providers = useAppSelector(selectProviders)
-  const [provider, setProvider] = useState<IKwilProvider | undefined>()
+  const [providerObject, setProviderObject] = useState<
+    IKwilProvider | undefined
+  >()
 
+  // Use the active provider to find the provider object from the list of providers in the LocalStorage
   useEffect(() => {
     if (!activeProvider) return
 
@@ -29,16 +32,17 @@ export const useKwilProvider = (): {
 
     if (!_provider) throw new Error("Failed to find provider")
 
-    setProvider(_provider)
+    setProviderObject(_provider)
   }, [activeProvider, providers])
 
+  // Once we have the provider object, initialize the kwil providers
   useEffect(() => {
-    if (!provider) return
+    if (!providerObject) return
 
     const init = async () => {
       try {
         const _readOnlyKwilProvider = new WebKwil({
-          kwilProvider: provider.url,
+          kwilProvider: providerObject.url,
           chainId: "",
           logging: true, // TODO: enable logging, default false
         })
@@ -47,16 +51,17 @@ export const useKwilProvider = (): {
 
         const chainId = data?.chain_id
 
-        if (!chainId) throw new Error("Failed to fetch chain ID")
+        // Only initialize the write provider if we have a chainId
+        if (chainId) {
+          const _writeKwilProvider = new WebKwil({
+            kwilProvider: providerObject.url,
+            chainId,
+            logging: true, // enable logging, default false
+          })
 
-        const _writeKwilProvider = new WebKwil({
-          kwilProvider: provider.url,
-          chainId,
-          logging: true, // enable logging, default false
-        })
-
-        setReadOnlyKwilProvider(_readOnlyKwilProvider)
-        setWriteKwilProvider(_writeKwilProvider)
+          setReadOnlyKwilProvider(_readOnlyKwilProvider)
+          setWriteKwilProvider(_writeKwilProvider)
+        }
       } catch (error) {
         console.log("Failed to initialize kwil provider", error)
         setReadOnlyKwilProvider(undefined)
@@ -65,7 +70,7 @@ export const useKwilProvider = (): {
     }
 
     init()
-  }, [provider])
+  }, [providerObject])
 
   return { readOnlyKwilProvider, writeKwilProvider }
 }

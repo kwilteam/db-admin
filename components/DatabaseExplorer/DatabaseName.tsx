@@ -5,35 +5,36 @@ import {
   selectDatabaseVisibility,
   setDatabaseVisibility,
 } from "@/store/database"
-import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
-import useDeleteDb from "@/hooks/useDeleteDb"
+import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
+import useDeleteDb from "@/hooks/database/useDeleteDb"
+import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
 
-const DatabaseName = ({ database }: { database: string }) => {
-  const { getDbStructure } = useGetDbStructure()
+const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
+  const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
   const triggerDeleteDb = useDeleteDb()
 
-  const isVisible = databaseVisibility[database]?.isVisible
+  const isVisible = databaseVisibility[database.name]?.isVisible
 
-  const getSchemaOrHide = (database: string) => {
+  const getSchemaOrHide = (database: IDatasetInfoWithoutOwner) => {
     if (isVisible) {
       dispatch(
         setDatabaseVisibility({
-          database,
+          database: database.name,
           key: "isVisible",
           isVisible: false,
         }),
       )
     } else {
-      getDbStructure(database)
+      getSchema(database)
     }
   }
 
   return (
     <li
-      test-id={`database-item-${database}`}
-      key={database}
+      test-id={`database-item-${database.dbid}`}
+      key={database.dbid}
       className={classNames({
         "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
           true,
@@ -60,10 +61,10 @@ const DatabaseName = ({ database }: { database: string }) => {
           "text-amber-500": isVisible,
         })}
       />
-      <span>{database}</span>
+      <span>{database.name}</span>
       <span
         className="visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible"
-        onClick={(e) => triggerDeleteDb(e, database)}
+        onClick={(e) => triggerDeleteDb(e, database.name)}
         test-id={`database-item-${database}-delete`}
       >
         x

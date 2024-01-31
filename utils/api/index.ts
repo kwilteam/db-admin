@@ -42,7 +42,6 @@ export const apiRequest = async (
 
 export {
   getDatabaseStructure,
-  getDatabases,
   getTableData,
   deployDatabase,
   deleteDatabase,

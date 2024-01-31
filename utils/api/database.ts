@@ -1,23 +1,5 @@
 import { IApiResponse, ITableResponse, apiRequest } from "."
-import {
-  IDatabaseStructureDict,
-  ITableQueryParams,
-  KwilTypes,
-} from "../database-types"
-
-export const getDatabases = async (): Promise<
-  IDatabaseStructureDict | undefined
-> => {
-  const res = await apiRequest("/api/databases")
-
-  if (res.status !== 200) {
-    throw new Error("Failed to fetch databases")
-  }
-
-  const json = (await res.json()) as IApiResponse<IDatabaseStructureDict>
-
-  return json.data
-}
+import { ITableQueryParams, KwilTypes } from "../database-types"
 
 export const getDatabaseStructure = async (
   db: string,

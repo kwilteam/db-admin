@@ -1,4 +1,4 @@
-import { KwilTypes } from "@/utils/database-types"
+import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
@@ -10,10 +10,10 @@ import Link from "next/link"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   setDatabaseVisibility,
-  selectDatabaseStructures,
+  selectDatabaseSchemas,
   selectDatabaseVisibility,
 } from "@/store/database"
-import useDatabaseParams from "@/hooks/useDatabaseParams"
+import useDatabaseParams from "@/hooks/database/useDatabaseParams"
 import { setIsMenuOpen } from "@/store/global"
 
 interface IItemTypes {
@@ -24,16 +24,16 @@ const DatabaseItem = ({
   database,
   itemType,
 }: {
-  database: string
+  database: IDatasetInfoWithoutOwner
   itemType: IItemTypes[string]
 }) => {
   const dispatch = useAppDispatch()
-  const databaseStructures = useAppSelector(selectDatabaseStructures)
+  const databaseSchemas = useAppSelector(selectDatabaseSchemas)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 
-  const visible = databaseVisibility[database]?.[itemType]
-  const databaseStructureItems =
-    databaseStructures && databaseStructures[database]?.[itemType]
+  const visible = databaseVisibility[database.name]?.[itemType]
+  const databaseSchemaItems =
+    databaseSchemas && databaseSchemas[database.name]?.[itemType]
 
   return (
     <>
@@ -48,7 +48,7 @@ const DatabaseItem = ({
         onClick={() =>
           dispatch(
             setDatabaseVisibility({
-              database,
+              database: database.name,
               key: itemType,
             }),
           )
@@ -86,56 +86,63 @@ const DatabaseItem = ({
       </div>
       <div className="mb-1">
         {visible &&
-          databaseStructureItems &&
-          databaseStructureItems.map(
+          databaseSchemaItems &&
+          databaseSchemaItems.map(
             (
               objectItem: KwilTypes.Table | KwilTypes.ActionSchema,
               index: number,
             ) => (
               <DatabaseItemLink
                 key={index}
-                database={database}
+                databaseName={database.name}
                 itemName={objectItem.name}
                 itemType={itemType}
               />
             ),
           )}
 
-        {visible &&
-          databaseStructureItems &&
-          databaseStructureItems?.length == 0 && (
-            <div className="ml-10 text-xs">No {itemType} found</div>
-          )}
+        {visible && databaseSchemaItems && databaseSchemaItems?.length == 0 && (
+          <div className="ml-10 text-xs">No {itemType} found</div>
+        )}
       </div>
     </>
   )
 }
 
 const DatabaseItemLink = ({
-  database,
+  databaseName,
   itemName,
   itemType,
 }: {
-  database: string
+  databaseName: string
   itemName: string
   itemType: IItemTypes[string]
 }) => {
   const dispatch = useAppDispatch()
   const singularItemType = itemType.slice(0, -1)
-  const { db, table: activeTable, action: activeAction } = useDatabaseParams()
+  const {
+    db: dbParam,
+    table: activeTable,
+    action: activeAction,
+  } = useDatabaseParams()
 
+  // For direct links, we need to check if the current item is active
   const active =
-    (db === database && itemType === "tables" && activeTable === itemName) ||
-    (db === database && itemType === "actions" && activeAction === itemName)
+    (dbParam === databaseName &&
+      itemType === "tables" &&
+      activeTable === itemName) ||
+    (dbParam === databaseName &&
+      itemType === "actions" &&
+      activeAction === itemName)
 
   return (
     <div
-      test-id={`database-item-${database}-${itemType}-${itemName}`}
-      key={`${database}-${itemType}-${itemName}`}
+      test-id={`database-item-${databaseName}-${itemType}-${itemName}`}
+      key={`${databaseName}-${itemType}-${itemName}`}
       className="ml-6 overflow-hidden text-sm"
     >
       <Link
-        href={`/databases/${database}/${singularItemType}/${itemName}`}
+        href={`/databases/${databaseName}/${singularItemType}/${itemName}`}
         className={classNames({
           "flex select-none flex-row items-center gap-1 hover:text-slate-900":
             true,

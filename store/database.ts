@@ -1,5 +1,6 @@
 import {
-  IDatabaseStructureDict,
+  // IDatabaseStructureDict,
+  IDatabaseSchemaDict,
   IDatabaseVisibilityDict,
   ITableQueryParamsDict,
   ITableQueryParams,
@@ -7,6 +8,7 @@ import {
   ITableFilter,
   ITableSort,
   KwilTypes,
+  IDatasetInfoWithoutOwner,
 } from "@/utils/database-types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
@@ -17,14 +19,18 @@ export interface IDatabaseActiveContext {
 }
 
 interface IDatabaseState {
-  structureDict: IDatabaseStructureDict | undefined
+  databases: IDatasetInfoWithoutOwner[]
+  // structureDict: IDatabaseStructureDict | undefined
+  schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
   activeContext: IDatabaseActiveContext | undefined
 }
 
 const initialState: IDatabaseState = {
-  structureDict: undefined,
+  databases: [],
+  // structureDict: undefined,
+  schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
   activeContext: undefined,
@@ -34,23 +40,41 @@ export const databaseSlice = createSlice({
   name: "database",
   initialState: initialState,
   reducers: {
+    // setDatabases: (
+    //   state: IDatabaseState,
+    //   action: PayloadAction<IDatabaseStructureDict>,
+    // ) => {
+    //   state.structureDict = action.payload
+    // },
+
+    // setDatabaseObject: (
+    //   state: IDatabaseState,
+    //   action: PayloadAction<{
+    //     database: string
+    //     structure: KwilTypes.Database
+    //   }>,
+    // ) => {
+    //   if (!state.structureDict) state.structureDict = {}
+
+    //   state.structureDict[action.payload.database] = action.payload.structure
+    // },
+
     setDatabases: (
       state: IDatabaseState,
-      action: PayloadAction<IDatabaseStructureDict>,
+      action: PayloadAction<IDatasetInfoWithoutOwner[]>,
     ) => {
-      state.structureDict = action.payload
+      state.databases = action.payload
     },
 
-    setDatabaseObject: (
+    setDatabaseSchema: (
       state: IDatabaseState,
       action: PayloadAction<{
         database: string
-        structure: KwilTypes.Database
+        schema: KwilTypes.Database
       }>,
     ) => {
-      if (!state.structureDict) state.structureDict = {}
-
-      state.structureDict[action.payload.database] = action.payload.structure
+      const { database, schema } = action.payload
+      state.schemaDict[database] = schema
     },
 
     setDatabaseVisibility: (
@@ -95,9 +119,9 @@ export const databaseSlice = createSlice({
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
       const database = action.payload
 
-      if (!state.structureDict) return
+      if (!state.schemaDict) return
 
-      delete state.structureDict[database]
+      delete state.schemaDict[database]
       delete state.visibilityDict[database]
       delete state.tableQueryParamsDict[database]
     },
@@ -105,9 +129,9 @@ export const databaseSlice = createSlice({
     addDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
       const database = action.payload
 
-      if (!state.structureDict) return
+      if (!state.schemaDict) return
 
-      state.structureDict[database] = null
+      state.schemaDict[database] = null
     },
 
     setTablePagination: (
@@ -173,7 +197,7 @@ export const databaseSlice = createSlice({
 
 export const {
   setDatabases,
-  setDatabaseObject,
+  setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseLoading,
   setDatabaseActiveContext,
@@ -184,8 +208,11 @@ export const {
   setTableSort,
 } = databaseSlice.actions
 
-export const selectDatabaseStructures = (state: { database: IDatabaseState }) =>
-  state.database.structureDict
+export const selectDatabases = (state: { database: IDatabaseState }) =>
+  state.database.databases
+
+export const selectDatabaseSchemas = (state: { database: IDatabaseState }) =>
+  state.database.schemaDict
 
 export const selectDatabaseVisibility = (state: { database: IDatabaseState }) =>
   state.database.visibilityDict
@@ -205,7 +232,7 @@ export const selectAction = (
   database: string,
   actionName: string,
 ) => {
-  const actions = state.database.structureDict?.[database]?.actions
+  const actions = state.database.schemaDict?.[database]?.actions
 
   if (!actions) return undefined
 

@@ -2,7 +2,6 @@ import { useCallback, useState } from "react"
 import * as monaco from "monaco-editor"
 import { compileSchema } from "@/utils/server-actions"
 import { useAppDispatch } from "@/store/hooks"
-import { addDatabase } from "@/store/database"
 import { setAlert } from "@/store/global"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
@@ -38,20 +37,12 @@ export default function useDeployDatabase(
 
         const res = await writeKwilProvider.deploy(deployBody, kwilSigner, true)
 
-        console.log("Deployed Schema", res)
-
-        const dbName = parseDbName(schema)
-
         dispatch(
           setAlert({
             type: "success",
             text: "Database deployed successfully!",
           }),
         )
-
-        if (dbName) {
-          dispatch(addDatabase(dbName))
-        }
       }
     } catch (error) {
       const err = error as Error
@@ -69,9 +60,4 @@ export default function useDeployDatabase(
   }, [editorRef, dispatch, writeKwilProvider, kwilSigner])
 
   return { deploy, isDeploying }
-}
-
-const parseDbName = (code: string) => {
-  const dbNameMatch = code.match(/database\s+(\w+);/)
-  return dbNameMatch ? dbNameMatch[1] : undefined
 }

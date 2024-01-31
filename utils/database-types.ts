@@ -4,7 +4,13 @@ import { Types as KwilTypes } from "@kwilteam/kwil-js"
 export type { KwilTypes }
 
 // Dictionary of database names to their object
-export interface IDatabaseStructureDict {
+// export interface IDatabaseStructureDict {
+//   [key: string]: KwilTypes.Database | null
+// }
+
+// Dictionary of database names to their schema
+
+export interface IDatabaseSchemaDict {
   [key: string]: KwilTypes.Database | null
 }
 
@@ -47,4 +53,9 @@ export interface ITableFilter {
 export interface ITableSort {
   column: string
   direction: "asc" | "desc"
+}
+
+export interface IDatasetInfoWithoutOwner {
+  name: string
+  dbid: string
 }

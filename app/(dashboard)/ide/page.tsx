@@ -24,7 +24,6 @@ export default function IdePage() {
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
   const { handleEditorDidMount, editorRef } = useEditorMount()
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
-
   const { save, isSaving } = useSaveSchema()
 
   return (
