@@ -1,5 +1,4 @@
 import {
-  // IDatabaseStructureDict,
   IDatabaseSchemaDict,
   IDatabaseVisibilityDict,
   ITableQueryParamsDict,
@@ -20,7 +19,6 @@ export interface IDatabaseActiveContext {
 
 interface IDatabaseState {
   databases: IDatasetInfoWithoutOwner[]
-  // structureDict: IDatabaseStructureDict | undefined
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
@@ -29,7 +27,6 @@ interface IDatabaseState {
 
 const initialState: IDatabaseState = {
   databases: [],
-  // structureDict: undefined,
   schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
@@ -40,25 +37,6 @@ export const databaseSlice = createSlice({
   name: "database",
   initialState: initialState,
   reducers: {
-    // setDatabases: (
-    //   state: IDatabaseState,
-    //   action: PayloadAction<IDatabaseStructureDict>,
-    // ) => {
-    //   state.structureDict = action.payload
-    // },
-
-    // setDatabaseObject: (
-    //   state: IDatabaseState,
-    //   action: PayloadAction<{
-    //     database: string
-    //     structure: KwilTypes.Database
-    //   }>,
-    // ) => {
-    //   if (!state.structureDict) state.structureDict = {}
-
-    //   state.structureDict[action.payload.database] = action.payload.structure
-    // },
-
     setDatabases: (
       state: IDatabaseState,
       action: PayloadAction<IDatasetInfoWithoutOwner[]>,
@@ -119,8 +97,7 @@ export const databaseSlice = createSlice({
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
       const database = action.payload
 
-      if (!state.schemaDict) return
-
+      state.databases = state.databases.filter((db) => db.name !== database)
       delete state.schemaDict[database]
       delete state.visibilityDict[database]
       delete state.tableQueryParamsDict[database]
@@ -246,9 +223,15 @@ export const selectTableQueryParams = (
 ): ITableQueryParams | undefined => {
   const tableQueryParams =
     state.database.tableQueryParamsDict?.[database]?.[table]
-  if (!tableQueryParams) return undefined
 
   return tableQueryParams
+}
+
+export const selectDatabaseObject = (
+  state: { database: IDatabaseState },
+  database: string,
+): IDatasetInfoWithoutOwner | undefined => {
+  return state.database.databases.find((db) => db.name === database)
 }
 
 export default databaseSlice.reducer

@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useAppDispatch } from "@/store/hooks"
 import { setDatabaseActiveContext } from "@/store/database"
-import useDataTable from "@/hooks/useDataTable"
+import useDataTable from "@/hooks/database/useDataTable"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import Pagination from "@/components/DatabaseItem/Table/Pagination"
 import Header from "@/components/DatabaseItem/Header"
@@ -20,18 +20,17 @@ interface IProps {
 export default function DatabaseTablePage({ params }: IProps) {
   const { db: database, table } = params
   const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(setDatabaseActiveContext({ database, type: "table", name: table }))
-  }, [database, table, dispatch])
-
   const { tableData, totalCount, columns, isLoading } = useDataTable({
     database,
     table,
   })
 
+  useEffect(() => {
+    dispatch(setDatabaseActiveContext({ database, type: "table", name: table }))
+  }, [database, table, dispatch])
+
   return (
-    <div className="max-h-mobile min-h-mobile flex flex-col bg-white lg:min-h-screen">
+    <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
       <Header database={database} type="table" name={table} />
 
       {columns && (

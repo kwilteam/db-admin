@@ -8,7 +8,7 @@ import {
 } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
 import { useKwilProvider } from "../kwil/useKwilProvider"
-import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
+import { IDatasetInfoWithoutOwner } from "@/utils/database-types"
 
 export default function useDatabaseSchema() {
   const dispatch = useAppDispatch()
@@ -17,7 +17,7 @@ export default function useDatabaseSchema() {
 
   const getSchema = useCallback(
     async (database: IDatasetInfoWithoutOwner, show?: "tables" | "actions") => {
-      if (!readOnlyKwilProvider) return
+      if (!readOnlyKwilProvider || !dispatch || !router) return
 
       console.log("getSchema", database, show)
 
@@ -41,8 +41,6 @@ export default function useDatabaseSchema() {
 
         // Remove owner from schema as Uint8Array cannot be serialized in redux
         delete (schemaRes.data as { [key: string]: any })["owner"]
-
-        console.log("schemaRes", schemaRes.data)
 
         dispatch(
           setDatabaseSchema({

@@ -1,10 +1,10 @@
 import { SortIcon } from "@/utils/icons"
 import { Popover, Switch, Transition } from "@headlessui/react"
 import { Fragment, useMemo } from "react"
-import Button from "@/components/Button"
-import useTableSort from "@/hooks/useTableSort"
-import { ITableSort } from "@/utils/database-types"
 import classNames from "classnames"
+import { ITableSort } from "@/utils/database-types"
+import useTableSort from "@/hooks/database/useTableSort"
+import Button from "@/components/Button"
 
 interface ISortingProps {
   database: string

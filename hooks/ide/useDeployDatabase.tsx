@@ -35,7 +35,7 @@ export default function useDeployDatabase(
           description: "Deployed from Kwil Browser",
         }
 
-        const res = await writeKwilProvider.deploy(deployBody, kwilSigner, true)
+        await writeKwilProvider.deploy(deployBody, kwilSigner, true)
 
         dispatch(
           setAlert({

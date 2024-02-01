@@ -1,29 +1,15 @@
 "use client"
-import { useEffect } from "react"
+
+import { selectAlert } from "@/store/global"
+import { useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
 import useDatabases from "@/hooks/database/useDatabases"
 import Loading from "../Loading"
-import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
-import useDatabaseParams from "@/hooks/database/useDatabaseParams"
-import { selectAlert } from "@/store/global"
-import { useAppSelector } from "@/store/hooks"
 
 export default function DatabasesExplorer() {
   const alert = useAppSelector(selectAlert)
   const { databases, count } = useDatabases()
-  const { getSchema } = useDatabaseSchema()
-  const { db, table, action } = useDatabaseParams()
-
-  // This is to auto load the current URL database for direct links
-  // database is passed as string but need to get the database object from within the store, then pass the dbid to getSchema
-  // useEffect(() => {
-  //   if (db) {
-  //     const show = table ? "tables" : action ? "actions" : undefined
-  //     getSchema(db, show)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [db])
 
   return (
     <div

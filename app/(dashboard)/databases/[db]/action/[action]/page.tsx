@@ -11,7 +11,6 @@ interface IProps {
   }
 }
 
-// TODO: Verify that the table exists on the database before rendering form
 export default function DatabaseActionPage({ params }: IProps) {
   const { db: database, action: name } = params
   const type = "action"
@@ -19,7 +18,7 @@ export default function DatabaseActionPage({ params }: IProps) {
   dispatch(setDatabaseActiveContext({ database, type, name }))
 
   return (
-    <div className="max-h-mobile min-h-mobile flex flex-col bg-white lg:min-h-screen">
+    <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
       <Title database={database} type={type} name={name} />
 
       <div className="flex-1 overflow-scroll bg-slate-50 p-2 lg:min-h-full">

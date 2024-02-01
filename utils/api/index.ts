@@ -40,12 +40,4 @@ export const apiRequest = async (
   return response
 }
 
-export {
-  getDatabaseStructure,
-  getTableData,
-  deployDatabase,
-  deleteDatabase,
-  executeAction,
-} from "./database"
-
 export { getExtensions, getExtension } from "./extensions"

@@ -51,11 +51,12 @@ export default function KwilProviders({
   useEffect(() => {
     pingProvider()
 
-    const interval = setInterval(() => {
-      pingProvider()
-    }, 5000)
+    // TODO: Removed this for now during testing
+    // const interval = setInterval(() => {
+    //   pingProvider()
+    // }, 5000)
 
-    return () => clearInterval(interval)
+    // return () => clearInterval(interval)
   }, [pingProvider])
 
   if (!providers) return null

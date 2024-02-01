@@ -5,15 +5,15 @@ import {
   selectDatabaseVisibility,
   setDatabaseVisibility,
 } from "@/store/database"
+import { IDatasetInfoWithoutOwner } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
 import useDeleteDb from "@/hooks/database/useDeleteDb"
-import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
 
 const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
-  const triggerDeleteDb = useDeleteDb()
+  const triggerDeleteDb = useDeleteDb(database)
 
   const isVisible = databaseVisibility[database.name]?.isVisible
 

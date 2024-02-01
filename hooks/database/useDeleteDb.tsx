@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
@@ -6,19 +7,25 @@ import {
   setDatabaseActiveContext,
   setDatabaseLoading,
 } from "@/store/database"
-import { deleteDatabase } from "@/utils/api"
 import { setAlert } from "@/store/global"
+import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
+import { useKwilProvider } from "../kwil/useKwilProvider"
+import { useKwilSigner } from "../kwil/useKwilSigner"
 
-export default function useDeleteDb() {
+export default function useDeleteDb(databaseObject: IDatasetInfoWithoutOwner) {
   const dispatch = useAppDispatch()
-  const databaseContext = useAppSelector(selectDatabaseActiveContext)
   const router = useRouter()
+  const { writeKwilProvider } = useKwilProvider()
+  const kwilSigner = useKwilSigner()
+  const activeDatabaseContext = useAppSelector(selectDatabaseActiveContext)
 
   const triggerDeleteDb = async (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
     database: string,
   ) => {
     e.stopPropagation() // To prevent triggering openSchema
+
+    if (!writeKwilProvider || !kwilSigner || !databaseObject) return
 
     const c = confirm(`Are you sure you want to delete '${database}'?`)
 
@@ -31,7 +38,14 @@ export default function useDeleteDb() {
       )
 
       try {
-        const deleted = await deleteDatabase(database)
+        const dropBody: KwilTypes.DropBody = {
+          dbid: databaseObject.dbid,
+        }
+        const deleted = await writeKwilProvider?.drop(
+          dropBody,
+          kwilSigner,
+          true,
+        )
 
         if (deleted) {
           dispatch(removeDatabase(database))
@@ -44,7 +58,10 @@ export default function useDeleteDb() {
           )
 
           // If we delete the active database, we need navigate away from this database view
-          if (databaseContext && database === databaseContext.database) {
+          if (
+            activeDatabaseContext &&
+            database === activeDatabaseContext.database
+          ) {
             dispatch(setDatabaseActiveContext(undefined))
             router.push("/databases")
           }

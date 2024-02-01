@@ -1,15 +1,11 @@
 import Alert from "@/components/Alert"
 import Header from "@/components/Settings/General/Header"
-import { getEnvVar, getSigner } from "@/utils/kwil/core"
 
 const getSettings = async () => {
   try {
-    const signer = getSigner()
-    const address = await signer.getAddress()
-
     return {
-      adminAccount: address,
-      kwilProvider: getEnvVar("KWIL_PROVIDER_URL") ?? "http://localhost:8080",
+      adminAccount: "Bla",
+      kwilProvider: "http://localhost:8080",
     }
   } catch (err) {
     console.error(err)

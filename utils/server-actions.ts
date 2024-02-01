@@ -11,8 +11,6 @@ export async function compileSchema(
   const kuneiformSchema = await parser.parse(schema)
 
   if (!kuneiformSchema.json) {
-    // TODO: Instead the error should be thrown in the parser
-
     throw new Error(
       // @ts-ignore
       kuneiformSchema.error || "Failed to parse database definition",

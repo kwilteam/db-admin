@@ -1,10 +1,10 @@
+import { Fragment } from "react"
 import { Popover, Transition } from "@headlessui/react"
 import { FilterIcon, PlusIcon } from "@/utils/icons"
-import { Fragment } from "react"
-import Button from "@/components/Button"
-import classNames from "classnames"
 import { ITableFilter } from "@/utils/database-types"
-import useTableFilters from "@/hooks/useTableFilters"
+import classNames from "classnames"
+import useTableFilters from "@/hooks/database/useTableFilters"
+import Button from "@/components/Button"
 
 interface IFiltersProps {
   database: string
