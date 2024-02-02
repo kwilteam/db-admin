@@ -11,10 +11,12 @@ export default function useDatabases() {
   const [count, setCount] = useState<number | undefined>()
 
   useEffect(() => {
+    if (!readOnlyKwilProvider) return
+
     const fetchDatabases = async () => {
       try {
         // TODO: If show only mine then include the current account address as a param
-        const databasesResponse = await readOnlyKwilProvider?.listDatabases()
+        const databasesResponse = await readOnlyKwilProvider.listDatabases()
         const _databases = databasesResponse?.data
 
         if (
@@ -28,13 +30,21 @@ export default function useDatabases() {
         }
 
         // Strip owner from database as Uint8Array cannot be serialized in redux
-        const databasesWithoutOwner = _databases.map(
-          ({ owner, ...database }) => database,
-        )
+        const databasesWithoutOwner = _databases.map((database) => {
+          const { owner, ...rest } = database
+          return rest
+        })
+
+        // const databases = _databases.map((database) => {
+        //   const ownerString = new TextDecoder().decode(database.owner)
+        //   database.owner = ownerString
+        //   return database
+        // })
+
+        console.log("databases", databasesWithoutOwner)
 
         setCount(_databases.length)
         dispatch(setDatabases(databasesWithoutOwner))
-        // dispatch(setDatabases(_databases))
       } catch (error) {
         dispatch(
           setAlert(

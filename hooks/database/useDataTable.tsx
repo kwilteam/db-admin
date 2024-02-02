@@ -23,22 +23,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
   )
 
   useEffect(() => {
-    if (
-      !database ||
-      !table ||
-      !readOnlyKwilProvider ||
-      // !tableQueryParams ||
-      !databaseObject
-    ) {
-      console.log("useDataTable: missing dependencies")
-      console.log("database", database)
-      console.log("table", table)
-      console.log("readOnlyKwilProvider", readOnlyKwilProvider)
-      console.log("tableQueryParams", tableQueryParams)
-      console.log("databaseObject", databaseObject)
-
-      return
-    }
+    if (!database || !table || !readOnlyKwilProvider || !databaseObject) return
 
     const fetchTableData = async () => {
       try {

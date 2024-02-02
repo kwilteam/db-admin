@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react"
 import { KwilSigner } from "@kwilteam/kwil-js" // or NodeKwil
 import { getAddress, getSigner } from "../../utils/wallet"
+import { useAppSelector } from "@/store/hooks"
+import { selectActiveAccount } from "@/store/global"
 
 export const useKwilSigner = (): KwilSigner | undefined => {
+  const activeAccount = useAppSelector(selectActiveAccount)
   const [kwilSigner, setKwilSigner] = useState<KwilSigner>()
 
   useEffect(() => {
@@ -18,7 +21,7 @@ export const useKwilSigner = (): KwilSigner | undefined => {
     }
 
     initKwilSigner()
-  }, [])
+  }, [activeAccount])
 
   return kwilSigner
 }
