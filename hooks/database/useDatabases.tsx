@@ -1,22 +1,37 @@
 import { useEffect, useState } from "react"
-import { selectDatabases, setDatabases } from "@/store/database"
-import { setAlert } from "@/store/global"
+import {
+  selectDatabaseFilters,
+  selectDatabases,
+  setDatabases,
+} from "@/store/database"
+import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
+import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { useKwilProvider } from "../kwil/useKwilProvider"
 
 export default function useDatabases() {
   const dispatch = useAppDispatch()
   const { readOnlyKwilProvider } = useKwilProvider()
   const databases = useAppSelector(selectDatabases)
+  const databaseFilters = useAppSelector(selectDatabaseFilters)
+  const activeAccount = useAppSelector(selectActiveAccount)
   const [count, setCount] = useState<number | undefined>()
 
   useEffect(() => {
-    if (!readOnlyKwilProvider) return
+    if (!readOnlyKwilProvider || !databaseFilters) return
 
     const fetchDatabases = async () => {
       try {
         // TODO: If show only mine then include the current account address as a param
-        const databasesResponse = await readOnlyKwilProvider.listDatabases()
+        let databasesResponse
+        if (databaseFilters.showAll) {
+          databasesResponse = await readOnlyKwilProvider.listDatabases()
+        } else {
+          databasesResponse =
+            await readOnlyKwilProvider.listDatabases(activeAccount)
+        }
+
         const _databases = databasesResponse?.data
 
         if (
@@ -29,22 +44,16 @@ export default function useDatabases() {
           return
         }
 
-        // Strip owner from database as Uint8Array cannot be serialized in redux
-        const databasesWithoutOwner = _databases.map((database) => {
-          const { owner, ...rest } = database
-          return rest
-        })
+        const databases: IDatasetInfoStringOwner[] = _databases.map(
+          (database) => {
+            return { ...database, owner: bytesToHex(database.owner) }
+          },
+        )
 
-        // const databases = _databases.map((database) => {
-        //   const ownerString = new TextDecoder().decode(database.owner)
-        //   database.owner = ownerString
-        //   return database
-        // })
-
-        console.log("databases", databasesWithoutOwner)
+        console.log("databases", databases)
 
         setCount(_databases.length)
-        dispatch(setDatabases(databasesWithoutOwner))
+        dispatch(setDatabases(databases))
       } catch (error) {
         dispatch(
           setAlert(
@@ -61,7 +70,7 @@ export default function useDatabases() {
       }
     }
     fetchDatabases()
-  }, [dispatch, readOnlyKwilProvider])
+  }, [dispatch, readOnlyKwilProvider, databaseFilters, activeAccount])
 
   return { databases, count }
 }

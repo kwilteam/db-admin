@@ -1,4 +1,4 @@
-import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
+import { IDatasetInfoStringOwner, KwilTypes } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
@@ -24,7 +24,7 @@ const DatabaseItem = ({
   database,
   itemType,
 }: {
-  database: IDatasetInfoWithoutOwner
+  database: IDatasetInfoStringOwner
   itemType: IItemTypes[string]
 }) => {
   const dispatch = useAppDispatch()

@@ -4,6 +4,7 @@ import {
   HiOutlinePencilSquare,
   HiOutlineBolt,
   HiOutlineUserCircle,
+  HiOutlineUser,
   HiOutlineCodeBracket,
   HiOutlineTableCells,
   HiOutlineChevronDown,
@@ -26,7 +27,7 @@ import {
   HiServerStack,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
-import { FaDocker, FaGithub, FaNetworkWired } from "react-icons/fa6"
+import { FaDocker, FaGithub } from "react-icons/fa6"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -54,8 +55,9 @@ export {
   HiOutlineCheckBadge as VerifiedIcon,
   HiOutlineUserCircle as PublisherIcon,
   HiOutlineXMark as CloseIcon,
+  HiServerStack as ProviderIcon,
+  HiOutlineUser as UserIcon,
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
-  HiServerStack as ProviderIcon,
 }

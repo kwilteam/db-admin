@@ -49,7 +49,8 @@ export interface ITableSort {
   direction: "asc" | "desc"
 }
 
-export interface IDatasetInfoWithoutOwner {
+export interface IDatasetInfoStringOwner {
   name: string
+  owner: string
   dbid: string
 }

@@ -8,11 +8,11 @@ import {
   setDatabaseLoading,
 } from "@/store/database"
 import { setAlert } from "@/store/global"
-import { IDatasetInfoWithoutOwner, KwilTypes } from "@/utils/database-types"
+import { IDatasetInfoStringOwner, KwilTypes } from "@/utils/database-types"
 import { useKwilProvider } from "../kwil/useKwilProvider"
 import { useKwilSigner } from "../kwil/useKwilSigner"
 
-export default function useDeleteDb(databaseObject: IDatasetInfoWithoutOwner) {
+export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const { writeKwilProvider } = useKwilProvider()

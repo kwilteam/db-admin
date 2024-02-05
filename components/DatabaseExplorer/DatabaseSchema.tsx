@@ -1,4 +1,4 @@
-import { IDatasetInfoWithoutOwner } from "@/utils/database-types"
+import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseVisibility } from "@/store/database"
 import DatabaseItem from "./DatabaseItem"
@@ -7,7 +7,7 @@ import Loading from "../Loading"
 const DatabaseSchema = ({
   database,
 }: {
-  database: IDatasetInfoWithoutOwner
+  database: IDatasetInfoStringOwner
 }) => {
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 

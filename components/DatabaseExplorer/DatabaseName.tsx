@@ -1,15 +1,26 @@
 import classNames from "classnames"
-import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/utils/icons"
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  DatabaseIcon,
+  UserIcon,
+} from "@/utils/icons"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   selectDatabaseVisibility,
   setDatabaseVisibility,
 } from "@/store/database"
-import { IDatasetInfoWithoutOwner } from "@/utils/database-types"
+import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
 import useDeleteDb from "@/hooks/database/useDeleteDb"
 
-const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
+const DatabaseName = ({
+  database,
+  myDatabase,
+}: {
+  database: IDatasetInfoStringOwner
+  myDatabase?: boolean
+}) => {
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
@@ -17,7 +28,7 @@ const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
 
   const isVisible = databaseVisibility[database.name]?.isVisible
 
-  const getSchemaOrHide = (database: IDatasetInfoWithoutOwner) => {
+  const getSchemaOrHide = (database: IDatasetInfoStringOwner) => {
     if (isVisible) {
       dispatch(
         setDatabaseVisibility({
@@ -35,12 +46,13 @@ const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
     <li
       test-id={`database-item-${database.dbid}`}
       key={database.dbid}
-      className={classNames({
-        "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
-          true,
-        "text-slate-500 hover:text-slate-900": !isVisible,
-        "text-slate-900": isVisible,
-      })}
+      className={classNames(
+        "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm",
+        {
+          "text-slate-500 hover:text-slate-900": !isVisible,
+          "text-slate-900": isVisible,
+        },
+      )}
       onClick={() => getSchemaOrHide(database)}
     >
       <ChevronDownIcon
@@ -59,11 +71,31 @@ const DatabaseName = ({ database }: { database: IDatasetInfoWithoutOwner }) => {
         className={classNames({
           "h-4 w-4": true,
           "text-amber-500": isVisible,
+          // "text-blue-400": myDatabase && !isVisible,
         })}
       />
-      <span>{database.name}</span>
       <span
-        className="visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible"
+        className={classNames({
+          italic: myDatabase,
+        })}
+      >
+        {database.name}
+      </span>
+
+      <UserIcon
+        className={classNames({
+          "h-4 w-4": true,
+          hidden: !myDatabase,
+          flex: myDatabase,
+        })}
+      />
+      <span
+        className={classNames(
+          "visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible",
+          {
+            hidden: !myDatabase,
+          },
+        )}
         onClick={(e) => triggerDeleteDb(e, database.name)}
         test-id={`database-item-${database}-delete`}
       >

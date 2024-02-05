@@ -7,7 +7,7 @@ import {
   ITableFilter,
   ITableSort,
   KwilTypes,
-  IDatasetInfoWithoutOwner,
+  IDatasetInfoStringOwner,
 } from "@/utils/database-types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
@@ -17,8 +17,14 @@ export interface IDatabaseActiveContext {
   name: string
 }
 
+export interface IDatabaseFilters {
+  showAll: boolean
+  search: string
+}
+
 interface IDatabaseState {
-  databases: IDatasetInfoWithoutOwner[]
+  databases: IDatasetInfoStringOwner[]
+  databaseFilters: IDatabaseFilters
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
@@ -27,6 +33,10 @@ interface IDatabaseState {
 
 const initialState: IDatabaseState = {
   databases: [],
+  databaseFilters: {
+    showAll: true,
+    search: "",
+  },
   schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
@@ -39,9 +49,23 @@ export const databaseSlice = createSlice({
   reducers: {
     setDatabases: (
       state: IDatabaseState,
-      action: PayloadAction<IDatasetInfoWithoutOwner[]>,
+      action: PayloadAction<IDatasetInfoStringOwner[]>,
     ) => {
       state.databases = action.payload
+    },
+
+    setDataFilterSearch: (
+      state: IDatabaseState,
+      action: PayloadAction<string>,
+    ) => {
+      state.databaseFilters.search = action.payload
+    },
+
+    setDataFilterShowAll: (
+      state: IDatabaseState,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.databaseFilters.showAll = action.payload
     },
 
     setDatabaseSchema: (
@@ -174,6 +198,8 @@ export const databaseSlice = createSlice({
 
 export const {
   setDatabases,
+  setDataFilterSearch,
+  setDataFilterShowAll,
   setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseLoading,
@@ -187,6 +213,9 @@ export const {
 
 export const selectDatabases = (state: { database: IDatabaseState }) =>
   state.database.databases
+
+export const selectDatabaseFilters = (state: { database: IDatabaseState }) =>
+  state.database.databaseFilters
 
 export const selectDatabaseSchemas = (state: { database: IDatabaseState }) =>
   state.database.schemaDict
@@ -230,7 +259,7 @@ export const selectTableQueryParams = (
 export const selectDatabaseObject = (
   state: { database: IDatabaseState },
   database: string,
-): IDatasetInfoWithoutOwner | undefined => {
+): IDatasetInfoStringOwner | undefined => {
   return state.database.databases.find((db) => db.name === database)
 }
 
