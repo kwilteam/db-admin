@@ -54,20 +54,19 @@ export default function DatabasesExplorer() {
           <Loading className="mt-4 flex justify-center" />
         )}
 
-        {count === 0 && (
+        <DatabaseFilters />
+
+        {(count === 0 ||
+          (myDatabases.length === 0 && sharedDatabases.length === 0)) && (
           <div className="flex h-full flex-col items-center justify-center">
             <p className="text-sm font-semibold text-slate-500">
               No databases were found
-            </p>
-            <p className="text-xs text-slate-400">
-              Deploy a database to get started
             </p>
           </div>
         )}
 
         {count !== undefined && count > 0 && (
           <>
-            <DatabaseFilters />
             <DatabaseList databases={myDatabases} myDatabase />
             <DatabaseList databases={sharedDatabases} />
           </>
