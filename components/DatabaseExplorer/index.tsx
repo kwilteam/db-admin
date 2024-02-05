@@ -54,10 +54,12 @@ export default function DatabasesExplorer() {
           <Loading className="mt-4 flex justify-center" />
         )}
 
-        <DatabaseFilters />
+        {count !== undefined && <DatabaseFilters />}
 
         {(count === 0 ||
-          (myDatabases.length === 0 && sharedDatabases.length === 0)) && (
+          (myDatabases.length === 0 &&
+            sharedDatabases.length === 0 &&
+            count !== undefined)) && (
           <div className="flex h-full flex-col items-center justify-center">
             <p className="text-sm font-semibold text-slate-500">
               No databases were found
