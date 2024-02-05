@@ -65,7 +65,7 @@ export default function DatabasesExplorer() {
           </div>
         )}
 
-        {count && (
+        {count !== undefined && count > 0 && (
           <>
             <DatabaseFilters />
             <DatabaseList databases={myDatabases} myDatabase />
