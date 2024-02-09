@@ -15,7 +15,7 @@ import { useKwilSigner } from "../kwil/useKwilSigner"
 export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const { writeKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
   const activeDatabaseContext = useAppSelector(selectDatabaseActiveContext)
 
@@ -25,7 +25,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
   ) => {
     e.stopPropagation() // To prevent triggering openSchema
 
-    if (!writeKwilProvider || !kwilSigner || !databaseObject) return
+    if (!kwilProvider || !kwilSigner || !databaseObject) return
 
     const c = confirm(`Are you sure you want to delete '${database}'?`)
 
@@ -41,11 +41,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
         const dropBody: KwilTypes.DropBody = {
           dbid: databaseObject.dbid,
         }
-        const deleted = await writeKwilProvider?.drop(
-          dropBody,
-          kwilSigner,
-          true,
-        )
+        const deleted = await kwilProvider.drop(dropBody, kwilSigner, true)
 
         if (deleted) {
           dispatch(removeDatabase(database))

@@ -13,11 +13,11 @@ import { IDatasetInfoStringOwner } from "@/utils/database-types"
 export default function useDatabaseSchema() {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const { readOnlyKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
 
   const getSchema = useCallback(
     async (database: IDatasetInfoStringOwner, show?: "tables" | "actions") => {
-      if (!readOnlyKwilProvider || !dispatch || !router) return
+      if (!kwilProvider || !dispatch || !router) return
 
       console.log("getSchema", database, show)
 
@@ -29,7 +29,7 @@ export default function useDatabaseSchema() {
           }),
         )
 
-        const schemaRes = await readOnlyKwilProvider.getSchema(database.dbid)
+        const schemaRes = await kwilProvider.getSchema(database.dbid)
 
         if (!schemaRes.data) {
           throw new Error(
@@ -81,7 +81,7 @@ export default function useDatabaseSchema() {
         router.push("/databases")
       }
     },
-    [readOnlyKwilProvider, dispatch, router],
+    [kwilProvider, dispatch, router],
   )
 
   return {

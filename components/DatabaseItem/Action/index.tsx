@@ -25,7 +25,7 @@ export default function Action({ database, actionName }: IActionProps) {
   const action = useAppSelector((state) =>
     selectAction(state, database, actionName),
   )
-  const { writeKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
   const databaseObject = useAppSelector((state) =>
     selectDatabaseObject(state, database),
@@ -35,7 +35,7 @@ export default function Action({ database, actionName }: IActionProps) {
     async (
       formValues: Record<string, string>,
     ): Promise<boolean | undefined> => {
-      if (!writeKwilProvider || !databaseObject) {
+      if (!kwilProvider || !databaseObject) {
         alert("writeKwilProvider or databaseObject is undefined")
         return false
       }
@@ -63,13 +63,9 @@ export default function Action({ database, actionName }: IActionProps) {
           | undefined
 
         if (mutability === "view") {
-          response = await writeKwilProvider.call(actionBody)
+          response = await kwilProvider.call(actionBody)
         } else if (mutability === "update" && kwilSigner) {
-          response = await writeKwilProvider.execute(
-            actionBody,
-            kwilSigner,
-            true,
-          )
+          response = await kwilProvider.execute(actionBody, kwilSigner, true)
         } else {
           dispatch(setReadOnlyMode(false))
           return
@@ -115,14 +111,7 @@ export default function Action({ database, actionName }: IActionProps) {
         return false
       }
     },
-    [
-      writeKwilProvider,
-      kwilSigner,
-      databaseObject,
-      action,
-      actionName,
-      dispatch,
-    ],
+    [kwilProvider, kwilSigner, databaseObject, action, actionName, dispatch],
   )
 
   const statements = action?.statements

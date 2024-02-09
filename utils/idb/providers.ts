@@ -4,6 +4,7 @@ import { StoreNames } from "./init"
 export interface IProvider {
   name: string
   url: string
+  chainId?: string
 }
 
 export const getProviders = async (
@@ -47,13 +48,16 @@ export const deleteProvider = async (
 }
 
 export const setupProviders = async (idb: IDBPDatabase<unknown>) => {
-  await idb.put(StoreNames.PROVIDER, {
+  const testnetProvider: IProvider = {
     name: "Testnet",
     url: "https://testnet.kwil.com",
-  })
+    chainId: "kwil-chain-testnet-0.6",
+  }
+  await idb.put(StoreNames.PROVIDER, testnetProvider)
 
-  await idb.put(StoreNames.PROVIDER, {
+  const localhostProvider: IProvider = {
     name: "Localhost",
     url: "http://localhost:8080",
-  })
+  }
+  await idb.put(StoreNames.PROVIDER, localhostProvider)
 }

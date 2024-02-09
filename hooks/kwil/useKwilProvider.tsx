@@ -1,24 +1,17 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { WebKwil } from "@kwilteam/kwil-js"
 import {
   IKwilProvider,
   selectActiveProvider,
   selectProviders,
 } from "@/store/providers"
-import { WebKwil } from "@kwilteam/kwil-js" // or NodeKwil
-import { setDatabases } from "@/store/database"
 
-export const useKwilProvider = (): {
-  readOnlyKwilProvider: WebKwil | undefined
-  writeKwilProvider: WebKwil | undefined
-} => {
+const logging = true
+
+export const useKwilProvider = (): WebKwil | undefined => {
   const dispatch = useAppDispatch()
-  const [writeKwilProvider, setWriteKwilProvider] = useState<
-    WebKwil | undefined
-  >()
-  const [readOnlyKwilProvider, setReadOnlyKwilProvider] = useState<
-    WebKwil | undefined
-  >()
+  const [kwilProvider, setKwilProvider] = useState<WebKwil | undefined>()
   const activeProvider = useAppSelector(selectActiveProvider)
   const providers = useAppSelector(selectProviders)
   const [providerObject, setProviderObject] = useState<
@@ -36,47 +29,58 @@ export const useKwilProvider = (): {
     setProviderObject(_provider)
   }, [activeProvider, providers, dispatch])
 
-  // Once we have the provider object, initialize the kwil providers
+  const initKwilProvider = useCallback(async () => {
+    if (!providerObject) return
+
+    if (!providerObject.chainId) {
+      const readOnlyKwilProvider = new WebKwil({
+        kwilProvider: providerObject.url,
+        chainId: "",
+        logging,
+      })
+
+      const { data } = await readOnlyKwilProvider.chainInfo()
+
+      const chainId = data?.chain_id
+
+      // Only initialize the write provider if we have a chainId
+      if (chainId) {
+        const writeKwilProvider = new WebKwil({
+          kwilProvider: providerObject.url,
+          chainId,
+          logging, // enable logging, default false
+        })
+
+        setKwilProvider(writeKwilProvider)
+      } else {
+        setKwilProvider(readOnlyKwilProvider)
+      }
+    } else {
+      const _kwilProvider = new WebKwil({
+        kwilProvider: providerObject.url,
+        chainId: providerObject.chainId,
+        logging,
+      })
+
+      setKwilProvider(_kwilProvider)
+    }
+  }, [providerObject])
+
   useEffect(() => {
     if (!providerObject) return
 
     const init = async () => {
       try {
-        let chainId
-
-        const _readOnlyKwilProvider = new WebKwil({
-          kwilProvider: providerObject.url,
-          chainId: "",
-          logging: true, // TODO: enable logging, default false
-        })
-
-        setReadOnlyKwilProvider(_readOnlyKwilProvider)
-
-        // TODO: Check if chainId set in indexedDB
-        // TODO: Improve performance
-        const { data } = await _readOnlyKwilProvider.chainInfo()
-
-        chainId = data?.chain_id
-
-        // Only initialize the write provider if we have a chainId
-        if (chainId) {
-          const _writeKwilProvider = new WebKwil({
-            kwilProvider: providerObject.url,
-            chainId,
-            logging: true, // enable logging, default false
-          })
-
-          setWriteKwilProvider(_writeKwilProvider)
-        }
+        await initKwilProvider()
       } catch (error) {
-        console.log("Failed to initialize kwil provider", error)
-        setReadOnlyKwilProvider(undefined)
-        setWriteKwilProvider(undefined)
+        setKwilProvider(undefined)
+
+        console.error("Failed to initialize kwil provider", error)
       }
     }
 
     init()
-  }, [providerObject])
+  }, [providerObject, initKwilProvider])
 
-  return { readOnlyKwilProvider, writeKwilProvider }
+  return kwilProvider
 }

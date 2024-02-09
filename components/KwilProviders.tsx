@@ -1,6 +1,7 @@
 "use client"
 
 import { Fragment, useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 import { Menu, Transition } from "@headlessui/react"
 import {
   ChevronDownIcon,
@@ -17,7 +18,6 @@ import {
   selectProviders,
 } from "@/store/providers"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
-import Link from "next/link"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -28,15 +28,20 @@ export default function KwilProviders({
   ...props
 }: IKwilProvidersProps) {
   const providers = useAppSelector(selectProviders)
-  const { readOnlyKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const [status, setStatus] = useState<KwilProviderStatus>(
     KwilProviderStatus.Unknown,
   )
 
   // TODO: Doesn't ping if provider is offline on first load
   const pingProvider = useCallback(async () => {
+    // if (!kwilProvider) {
+    //   setStatus(KwilProviderStatus.Offline)
+    //   return
+    // }
+
     try {
-      const res = await readOnlyKwilProvider?.ping()
+      const res = await kwilProvider?.ping()
 
       if (res?.status === 200) {
         setStatus(KwilProviderStatus.Online)
@@ -46,7 +51,7 @@ export default function KwilProviders({
     } catch (error) {
       setStatus(KwilProviderStatus.Offline)
     }
-  }, [readOnlyKwilProvider])
+  }, [kwilProvider])
 
   useEffect(() => {
     if (!activeProvider) return
@@ -59,7 +64,7 @@ export default function KwilProviders({
 
     const interval = setInterval(() => {
       pingProvider()
-    }, 30000)
+    }, 10000)
 
     return () => clearInterval(interval)
   }, [pingProvider])

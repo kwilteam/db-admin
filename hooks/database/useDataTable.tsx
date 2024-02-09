@@ -14,7 +14,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
   const [totalCount, setTotalCount] = useState<number | undefined>()
   const [columns, setColumns] = useState<string[] | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { readOnlyKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const tableQueryParams = useAppSelector((state) =>
     selectTableQueryParams(state, database, table),
   )
@@ -23,7 +23,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
   )
 
   useEffect(() => {
-    if (!database || !table || !readOnlyKwilProvider || !databaseObject) return
+    if (!database || !table || !kwilProvider || !databaseObject) return
 
     const fetchTableData = async () => {
       try {
@@ -32,7 +32,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
         const tableDataQuery = buildQuery(table, tableQueryParams)
         const dbid = databaseObject?.dbid
 
-        const queryResponse = await readOnlyKwilProvider.selectQuery(
+        const queryResponse = await kwilProvider.selectQuery(
           dbid,
           tableDataQuery,
         )
@@ -44,10 +44,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
         }
 
         const tableCountQuery = `SELECT count(*) as count FROM ${table}`
-        const response = await readOnlyKwilProvider.selectQuery(
-          dbid,
-          tableCountQuery,
-        )
+        const response = await kwilProvider.selectQuery(dbid, tableCountQuery)
 
         const countData = response.data?.[0] as { count: number }
 
@@ -60,7 +57,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
     }
 
     fetchTableData()
-  }, [database, table, tableQueryParams, readOnlyKwilProvider, databaseObject])
+  }, [database, table, tableQueryParams, kwilProvider, databaseObject])
 
   return { tableData, totalCount, columns, isLoading }
 }

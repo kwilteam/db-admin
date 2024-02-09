@@ -11,11 +11,11 @@ export default function useDeployDatabase(
 ) {
   const dispatch = useAppDispatch()
   const [isDeploying, setIsDeploying] = useState(false)
-  const { writeKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
 
   const deploy = useCallback(async () => {
-    if (!editorRef.current || !writeKwilProvider) return
+    if (!editorRef.current || !kwilProvider) return
 
     // If no Kwil Signer then we will show the modal to connect the wallet
     if (!kwilSigner) {
@@ -41,7 +41,7 @@ export default function useDeployDatabase(
           description: "Deployed from Kwil Browser",
         }
 
-        await writeKwilProvider.deploy(deployBody, kwilSigner, true)
+        await kwilProvider.deploy(deployBody, kwilSigner, true)
 
         dispatch(
           setAlert({
@@ -63,7 +63,7 @@ export default function useDeployDatabase(
     } finally {
       setIsDeploying(false)
     }
-  }, [editorRef, dispatch, writeKwilProvider, kwilSigner])
+  }, [editorRef, dispatch, kwilProvider, kwilSigner])
 
   return { deploy, isDeploying }
 }

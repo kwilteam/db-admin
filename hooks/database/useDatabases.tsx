@@ -12,24 +12,23 @@ import { useKwilProvider } from "../kwil/useKwilProvider"
 
 export default function useDatabases() {
   const dispatch = useAppDispatch()
-  const { readOnlyKwilProvider } = useKwilProvider()
+  const kwilProvider = useKwilProvider()
   const databases = useAppSelector(selectDatabases)
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
 
   useEffect(() => {
-    if (!readOnlyKwilProvider || !databaseFilters) return
+    if (!kwilProvider || !databaseFilters) return
 
     const fetchDatabases = async () => {
       try {
         let databasesResponse
         if (databaseFilters.showAll) {
-          databasesResponse = await readOnlyKwilProvider.listDatabases()
+          databasesResponse = await kwilProvider.listDatabases()
         } else if (activeAccount) {
-          databasesResponse =
-            await readOnlyKwilProvider.listDatabases(activeAccount)
+          databasesResponse = await kwilProvider.listDatabases(activeAccount)
         } else {
-          databasesResponse = await readOnlyKwilProvider.listDatabases()
+          databasesResponse = await kwilProvider.listDatabases()
         }
 
         const _databases = databasesResponse?.data
@@ -63,7 +62,7 @@ export default function useDatabases() {
       }
     }
     fetchDatabases()
-  }, [dispatch, readOnlyKwilProvider, databaseFilters, activeAccount])
+  }, [dispatch, kwilProvider, databaseFilters, activeAccount])
 
   return { databases }
 }
