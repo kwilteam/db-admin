@@ -10,6 +10,7 @@ import {
   selectDatabaseFilters,
   setDataFilterSearch,
   setDataFilterShowAll,
+  setDatabases,
 } from "@/store/database"
 import useDatabases from "@/hooks/database/useDatabases"
 import DatabaseName from "./DatabaseName"
@@ -18,31 +19,44 @@ import Loading from "../Loading"
 
 export default function DatabasesExplorer() {
   const alert = useAppSelector(selectAlert)
-  const { databases, count } = useDatabases()
+  const { databases } = useDatabases()
   const activeAccount = useAppSelector(selectActiveAccount)
   const databaseFilters = useAppSelector(selectDatabaseFilters)
+  const count = databases?.length
 
-  const myDatabases = useMemo(
-    () =>
-      databases.filter((db) => {
+  const myDatabases = useMemo(() => {
+    if (activeAccount === undefined) return []
+
+    return databases
+      ?.filter((db) => {
         return (
           `0x${db.owner}` === activeAccount &&
           db.name.includes(databaseFilters.search)
         )
-      }),
-    [databases, activeAccount, databaseFilters.search],
-  )
+      })
+      .sort((a, b) => {
+        if (a.name < b.name) return -1
+        if (a.name > b.name) return 1
+        return 0
+      })
+  }, [databases, activeAccount, databaseFilters.search])
 
-  const sharedDatabases = useMemo(
-    () =>
-      databases.filter((db) => {
+  const sharedDatabases = useMemo(() => {
+    if (databaseFilters.showAll === false) return []
+
+    return databases
+      ?.filter((db) => {
         return (
           `0x${db.owner}` !== activeAccount &&
           db.name.includes(databaseFilters.search)
         )
-      }),
-    [databases, activeAccount, databaseFilters.search],
-  )
+      })
+      .sort((a, b) => {
+        if (a.name < b.name) return -1
+        if (a.name > b.name) return 1
+        return 0
+      })
+  }, [databases, activeAccount, databaseFilters])
 
   return (
     <div
@@ -50,14 +64,16 @@ export default function DatabasesExplorer() {
       className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll"
     >
       <ul className="mt-2 flex flex-col">
+        <DatabaseFilters />
+
         {count === undefined && alert === undefined && (
           <Loading className="mt-4 flex justify-center" />
         )}
 
-        {count !== undefined && <DatabaseFilters />}
-
         {(count === 0 ||
-          (myDatabases.length === 0 &&
+          (myDatabases &&
+            myDatabases.length === 0 &&
+            sharedDatabases &&
             sharedDatabases.length === 0 &&
             count !== undefined)) && (
           <div className="flex h-full flex-col items-center justify-center">
@@ -82,10 +98,10 @@ function DatabaseList({
   databases,
   myDatabase,
 }: {
-  databases: IDatasetInfoStringOwner[]
+  databases: IDatasetInfoStringOwner[] | undefined
   myDatabase?: boolean
 }) {
-  return databases.map((database, index) => (
+  return databases?.map((database, index) => (
     <div key={index} className="">
       <DatabaseName database={database} myDatabase={myDatabase} />
       <DatabaseSchema database={database} />
@@ -98,6 +114,7 @@ function DatabaseFilters() {
   const databaseFilters = useAppSelector(selectDatabaseFilters)
 
   const handleToggleShowAll = () => {
+    dispatch(setDatabases(undefined))
     dispatch(setDataFilterShowAll(!databaseFilters.showAll))
   }
 

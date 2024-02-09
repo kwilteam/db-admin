@@ -23,7 +23,7 @@ export interface IDatabaseFilters {
 }
 
 interface IDatabaseState {
-  databases: IDatasetInfoStringOwner[]
+  databases: IDatasetInfoStringOwner[] | undefined
   databaseFilters: IDatabaseFilters
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
@@ -32,7 +32,7 @@ interface IDatabaseState {
 }
 
 const initialState: IDatabaseState = {
-  databases: [],
+  databases: undefined,
   databaseFilters: {
     showAll: true,
     search: "",
@@ -49,7 +49,7 @@ export const databaseSlice = createSlice({
   reducers: {
     setDatabases: (
       state: IDatabaseState,
-      action: PayloadAction<IDatasetInfoStringOwner[]>,
+      action: PayloadAction<IDatasetInfoStringOwner[] | undefined>,
     ) => {
       state.databases = action.payload
     },
@@ -121,7 +121,7 @@ export const databaseSlice = createSlice({
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
       const database = action.payload
 
-      state.databases = state.databases.filter((db) => db.name !== database)
+      state.databases = state.databases?.filter((db) => db.name !== database)
       delete state.schemaDict[database]
       delete state.visibilityDict[database]
       delete state.tableQueryParamsDict[database]
@@ -260,7 +260,7 @@ export const selectDatabaseObject = (
   state: { database: IDatabaseState },
   database: string,
 ): IDatasetInfoStringOwner | undefined => {
-  return state.database.databases.find((db) => db.name === database)
+  return state.database.databases?.find((db) => db.name === database)
 }
 
 export default databaseSlice.reducer

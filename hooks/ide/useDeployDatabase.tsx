@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import * as monaco from "monaco-editor"
 import { compileSchema } from "@/utils/server-actions"
 import { useAppDispatch } from "@/store/hooks"
-import { setAlert } from "@/store/global"
+import { setAlert, setReadOnlyMode } from "@/store/global"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 
@@ -15,7 +15,13 @@ export default function useDeployDatabase(
   const kwilSigner = useKwilSigner()
 
   const deploy = useCallback(async () => {
-    if (!editorRef.current || !kwilSigner || !writeKwilProvider) return
+    if (!editorRef.current || !writeKwilProvider) return
+
+    // If no Kwil Signer then we will show the modal to connect the wallet
+    if (!kwilSigner) {
+      dispatch(setReadOnlyMode(false))
+      return
+    }
 
     setIsDeploying(true)
 

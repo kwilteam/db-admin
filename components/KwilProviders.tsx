@@ -2,7 +2,12 @@
 
 import { Fragment, useCallback, useEffect, useState } from "react"
 import { Menu, Transition } from "@headlessui/react"
-import { ChevronDownIcon, PlusIcon, ProviderIcon } from "@/utils/icons"
+import {
+  ChevronDownIcon,
+  EditIcon,
+  PlusIcon,
+  ProviderIcon,
+} from "@/utils/icons"
 import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
@@ -12,6 +17,7 @@ import {
   selectProviders,
 } from "@/store/providers"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
+import Link from "next/link"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -51,12 +57,11 @@ export default function KwilProviders({
   useEffect(() => {
     pingProvider()
 
-    // TODO: Removed this for now during testing
-    // const interval = setInterval(() => {
-    //   pingProvider()
-    // }, 5000)
+    const interval = setInterval(() => {
+      pingProvider()
+    }, 30000)
 
-    // return () => clearInterval(interval)
+    return () => clearInterval(interval)
   }, [pingProvider])
 
   if (!providers) return null
@@ -112,6 +117,16 @@ export default function KwilProviders({
                   Add Provider
                 </span>
               </button>
+            </Menu.Item>
+            <Menu.Item>
+              <Link href="/settings/providers">
+                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none">
+                  <EditIcon className="h-3 w-3 text-slate-800" />
+                  <span className="flex text-xs font-medium text-slate-800">
+                    Manage Providers
+                  </span>
+                </button>
+              </Link>
             </Menu.Item>
           </div>
         </Menu.Items>

@@ -10,14 +10,9 @@ interface IAlert {
   position?: "top" | "bottom"
 }
 
-// interface ISettings {
-//   provider: string | undefined
-//   account: string | undefined
-// }
-
 interface IGlobalState {
   isMenuOpen: boolean
-  // settings: ISettings
+  readOnlyMode: boolean
   activeAccount: string | undefined
   settingsLoaded: boolean
   alert: IAlert | undefined
@@ -25,24 +20,11 @@ interface IGlobalState {
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  // settings: {
-  //   provider: undefined,
-  //   account: undefined,
-  // },
+  readOnlyMode: false,
   activeAccount: undefined,
   settingsLoaded: false,
   alert: undefined,
 }
-
-// export const loadSettings = createAsyncThunk("ide/loadSettings", async () => {
-//   const db = await initIdb()
-//   if (!db) return
-
-//   const providerSetting = await getSetting(db, SettingsKeys.PROVIDER)
-//   const accountSetting = await getSetting(db, SettingsKeys.ACCOUNT)
-
-//   return { provider: providerSetting?.value, account: accountSetting?.value }
-// })
 
 export const loadActiveAccount = createAsyncThunk(
   "ide/loadActiveAccount",
@@ -75,6 +57,9 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
+    setReadOnlyMode: (state, action: PayloadAction<boolean>) => {
+      state.readOnlyMode = action.payload
+    },
     setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
       state.settingsLoaded = action.payload
     },
@@ -96,10 +81,14 @@ export const globalSlice = createSlice({
   },
 })
 
-export const { setIsMenuOpen, setSettingsLoaded } = globalSlice.actions
+export const { setIsMenuOpen, setReadOnlyMode, setSettingsLoaded } =
+  globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
+
+export const selectReadOnlyMode = (state: { global: IGlobalState }) =>
+  state.global.readOnlyMode
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount

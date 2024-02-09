@@ -16,20 +16,20 @@ export default function useDatabases() {
   const databases = useAppSelector(selectDatabases)
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
-  const [count, setCount] = useState<number | undefined>()
 
   useEffect(() => {
     if (!readOnlyKwilProvider || !databaseFilters) return
 
     const fetchDatabases = async () => {
       try {
-        // TODO: If show only mine then include the current account address as a param
         let databasesResponse
         if (databaseFilters.showAll) {
           databasesResponse = await readOnlyKwilProvider.listDatabases()
-        } else {
+        } else if (activeAccount) {
           databasesResponse =
             await readOnlyKwilProvider.listDatabases(activeAccount)
+        } else {
+          databasesResponse = await readOnlyKwilProvider.listDatabases()
         }
 
         const _databases = databasesResponse?.data
@@ -39,7 +39,6 @@ export default function useDatabases() {
           _databases === undefined ||
           _databases.length === 0
         ) {
-          setCount(0)
           dispatch(setDatabases([]))
           return
         }
@@ -50,20 +49,14 @@ export default function useDatabases() {
           },
         )
 
-        console.log("databases", databases)
-
-        setCount(_databases.length)
         dispatch(setDatabases(databases))
       } catch (error) {
         dispatch(
-          setAlert(
-            {
-              type: "error",
-              text: "Failed to connect to Kwil Provider",
-              position: "top",
-            },
-            false,
-          ),
+          setAlert({
+            type: "error",
+            text: "Failed to load databases. Please try again.",
+            position: "top",
+          }),
         )
 
         console.error(error)
@@ -72,5 +65,5 @@ export default function useDatabases() {
     fetchDatabases()
   }, [dispatch, readOnlyKwilProvider, databaseFilters, activeAccount])
 
-  return { databases, count }
+  return { databases }
 }

@@ -30,21 +30,14 @@ export default function DashboardLayout({ children }: IProps) {
     dispatch(loadProviders())
   }, [dispatch])
 
-  // Set document title to current provider
-  useEffect(() => {
-    if (activeProvider) {
-      document.title = `KwilDB Admin | ${activeProvider}`
-    }
-  }, [activeProvider])
-
   return (
     <>
       <>
-        {activeAccount && <MobileNavigation />}
+        <MobileNavigation />
         <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
           <DesktopNavigation />
 
-          {activeAccount && activeProvider && (
+          {settingsLoaded && activeProvider && (
             <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
               {children}
               <GlobalAlert />

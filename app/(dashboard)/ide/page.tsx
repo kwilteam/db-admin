@@ -55,7 +55,7 @@ export default function IdePage() {
           )}
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
-        <div className="fixed bottom-0 z-20 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
+        <div className="fixed bottom-0 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
           <ActionPanel deploy={deploy} isLoading={isDeploying || isSaving} />
         </div>
       )}

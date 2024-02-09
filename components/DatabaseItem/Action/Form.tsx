@@ -10,7 +10,9 @@ import Loading from "@/components/Loading"
 
 interface IActionFormProps {
   action: KwilTypes.ActionSchema | undefined
-  executeAction: (formValues: Record<string, string>) => Promise<boolean>
+  executeAction: (
+    formValues: Record<string, string>,
+  ) => Promise<boolean | undefined>
 }
 
 export default function ActionForm({

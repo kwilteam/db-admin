@@ -25,6 +25,7 @@ import {
   HiOutlineCheckBadge,
   HiOutlineXMark,
   HiServerStack,
+  HiOutlinePencil,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
@@ -57,6 +58,7 @@ export {
   HiOutlineXMark as CloseIcon,
   HiServerStack as ProviderIcon,
   HiOutlineUser as UserIcon,
+  HiOutlinePencil as EditIcon,
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,

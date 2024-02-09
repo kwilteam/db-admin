@@ -45,7 +45,7 @@ export const buildQuery = (
 
     query += ` LIMIT ${(currentPage - 1) * perPage},  ${perPage}`
   } else {
-    query += ` LIMIT 0, 10`
+    query += ` LIMIT 0, 50`
   }
 
   console.log("Query", query)

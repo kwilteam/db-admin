@@ -1,9 +1,13 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
-import { saveActiveAccount } from "@/store/global"
+import {
+  saveActiveAccount,
+  selectReadOnlyMode,
+  setReadOnlyMode,
+} from "@/store/global"
 import { getAddress } from "@/utils/wallet"
-import { useAppDispatch } from "@/store/hooks"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "./Button"
 
 export default function ConnectWalletDialog({
@@ -13,14 +17,21 @@ export default function ConnectWalletDialog({
   activeAccount: string | undefined
   settingsLoaded: boolean
 }) {
+  const dispatch = useAppDispatch()
+  const readOnlyAccess = useAppSelector(selectReadOnlyMode)
+
+  const continueReadOnly = () => {
+    dispatch(setReadOnlyMode(true))
+  }
+
   return (
     <>
       <Transition
         appear
-        show={!activeAccount && settingsLoaded ? true : false}
+        show={settingsLoaded && !readOnlyAccess && !activeAccount}
         as={Fragment}
       >
-        <Dialog as="div" className="relative z-10" onClose={() => {}}>
+        <Dialog as="div" className="relative z-10" onClose={continueReadOnly}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -60,7 +71,10 @@ export default function ConnectWalletDialog({
 
                       <div className="flex flex-1 flex-col rounded-b-md border border-slate-200 bg-white p-3">
                         <div className="flex flex-col justify-center gap-3">
-                          Connect your wallet to get started
+                          <div className="text-sm">
+                            Connect your wallet to make changes
+                          </div>
+
                           <ConnectWallet />
                         </div>
                       </div>
@@ -84,16 +98,24 @@ function ConnectWallet() {
       const address = await getAddress()
 
       dispatch(saveActiveAccount(address))
+      continueReadOnly()
     } catch (e) {
       console.log(e)
     }
   }
 
+  const continueReadOnly = () => {
+    dispatch(setReadOnlyMode(true))
+  }
+
   return (
     <div className="flex flex-col justify-center gap-2">
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-1">
         <Button context="primary" size="md" onClick={connectWallet}>
           Connect Wallet
+        </Button>
+        <Button context="secondary" size="md" onClick={continueReadOnly}>
+          Read Only
         </Button>
       </div>
     </div>

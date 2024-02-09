@@ -3,8 +3,9 @@
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
-import { saveActiveAccount } from "@/store/global"
+import { saveActiveAccount, setReadOnlyMode } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
+import Button from "./Button"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -21,6 +22,12 @@ export default function UserAccount({
 
   const disconnectWallet = () => {
     dispatch(saveActiveAccount(undefined))
+    // Will show Connect modal after disconnecting
+    dispatch(setReadOnlyMode(false))
+  }
+
+  const openConnectWalletDialog = () => {
+    dispatch(setReadOnlyMode(false))
   }
 
   useEffect(() => {
@@ -42,7 +49,12 @@ export default function UserAccount({
     }
   }, [dispatch])
 
-  if (!activeAccount) return null
+  if (!activeAccount)
+    return (
+      <>
+        <Button onClick={openConnectWalletDialog}>Connect</Button>
+      </>
+    )
 
   return (
     <Menu as="div" className="relative inline-block text-left">

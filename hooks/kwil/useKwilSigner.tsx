@@ -6,9 +6,16 @@ import { selectActiveAccount } from "@/store/global"
 
 export const useKwilSigner = (): KwilSigner | undefined => {
   const activeAccount = useAppSelector(selectActiveAccount)
-  const [kwilSigner, setKwilSigner] = useState<KwilSigner>()
+  const [kwilSigner, setKwilSigner] = useState<KwilSigner | undefined>(
+    undefined,
+  )
 
   useEffect(() => {
+    if (!activeAccount) {
+      setKwilSigner(undefined)
+      return
+    }
+
     const initKwilSigner = async () => {
       try {
         const signer = await getSigner()

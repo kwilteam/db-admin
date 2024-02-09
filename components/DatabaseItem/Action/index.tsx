@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAction, selectDatabaseObject } from "@/store/database"
-import { setAlert } from "@/store/global"
+import { setAlert, setReadOnlyMode } from "@/store/global"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
@@ -32,8 +32,13 @@ export default function Action({ database, actionName }: IActionProps) {
   )
 
   const executeAction = useCallback(
-    async (formValues: Record<string, string>): Promise<boolean> => {
-      if (!writeKwilProvider || !kwilSigner || !databaseObject) return false
+    async (
+      formValues: Record<string, string>,
+    ): Promise<boolean | undefined> => {
+      if (!writeKwilProvider || !databaseObject) {
+        alert("writeKwilProvider or databaseObject is undefined")
+        return false
+      }
 
       try {
         setData(undefined)
@@ -52,14 +57,25 @@ export default function Action({ database, actionName }: IActionProps) {
           inputs: [actionInputs],
         }
 
-        const response =
-          mutability === "view"
-            ? await writeKwilProvider.call(actionBody, kwilSigner)
-            : await writeKwilProvider.execute(actionBody, kwilSigner, true)
+        let response:
+          | KwilTypes.GenericResponse<KwilTypes.MsgReceipt>
+          | KwilTypes.GenericResponse<KwilTypes.TxReceipt>
+          | undefined
 
-        console.log("executeAction result", response)
+        if (mutability === "view") {
+          response = await writeKwilProvider.call(actionBody)
+        } else if (mutability === "update" && kwilSigner) {
+          response = await writeKwilProvider.execute(
+            actionBody,
+            kwilSigner,
+            true,
+          )
+        } else {
+          dispatch(setReadOnlyMode(false))
+          return
+        }
 
-        if (response.status !== 200) {
+        if (response && response.status !== 200) {
           dispatch(
             setAlert({
               text: "There was a problem executing this action.",
