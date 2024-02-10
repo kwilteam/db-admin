@@ -3,9 +3,8 @@
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
-import { saveActiveAccount, setReadOnlyMode } from "@/store/global"
+import { saveActiveAccount, setDisplayConnectModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
-import Button from "./Button"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -23,11 +22,11 @@ export default function UserAccount({
   const disconnectWallet = () => {
     dispatch(saveActiveAccount(undefined))
     // Will show Connect modal after disconnecting
-    dispatch(setReadOnlyMode(false))
+    dispatch(setDisplayConnectModal(true))
   }
 
   const openConnectWalletDialog = () => {
-    dispatch(setReadOnlyMode(false))
+    dispatch(setDisplayConnectModal(true))
   }
 
   useEffect(() => {
@@ -82,11 +81,11 @@ export default function UserAccount({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-3 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-1 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
           <div className="px-1 py-1 ">
             <Menu.Item>
               <div
-                className="group flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-2 text-xs hover:bg-kwil-light/10"
+                className="group flex w-full cursor-pointer items-center gap-2 rounded-md p-1 text-xs hover:bg-kwil-light/10"
                 onClick={disconnectWallet}
               >
                 <SignOutIcon className="h-4 w-4" />

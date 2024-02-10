@@ -12,7 +12,7 @@ interface IAlert {
 
 interface IGlobalState {
   isMenuOpen: boolean
-  readOnlyMode: boolean
+  displayConnectModal: boolean
   activeAccount: string | undefined
   settingsLoaded: boolean
   alert: IAlert | undefined
@@ -20,7 +20,7 @@ interface IGlobalState {
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  readOnlyMode: false,
+  displayConnectModal: true,
   activeAccount: undefined,
   settingsLoaded: false,
   alert: undefined,
@@ -57,8 +57,8 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setReadOnlyMode: (state, action: PayloadAction<boolean>) => {
-      state.readOnlyMode = action.payload
+    setDisplayConnectModal: (state, action: PayloadAction<boolean>) => {
+      state.displayConnectModal = action.payload
     },
     setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
       state.settingsLoaded = action.payload
@@ -81,14 +81,14 @@ export const globalSlice = createSlice({
   },
 })
 
-export const { setIsMenuOpen, setReadOnlyMode, setSettingsLoaded } =
+export const { setIsMenuOpen, setDisplayConnectModal, setSettingsLoaded } =
   globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectReadOnlyMode = (state: { global: IGlobalState }) =>
-  state.global.readOnlyMode
+export const selectDisplayConnectModal = (state: { global: IGlobalState }) =>
+  state.global.displayConnectModal
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount

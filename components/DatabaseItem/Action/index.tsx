@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAction, selectDatabaseObject } from "@/store/database"
-import { setAlert, setReadOnlyMode } from "@/store/global"
+import { setAlert, setDisplayConnectModal } from "@/store/global"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
@@ -67,7 +67,7 @@ export default function Action({ dbid, actionName }: IActionProps) {
         } else if (mutability === "update" && kwilSigner) {
           response = await kwilProvider.execute(actionBody, kwilSigner, true)
         } else {
-          dispatch(setReadOnlyMode(false))
+          dispatch(setDisplayConnectModal(true))
           return
         }
 

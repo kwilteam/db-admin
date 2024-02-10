@@ -3,8 +3,8 @@ import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
 import {
   saveActiveAccount,
-  selectReadOnlyMode,
-  setReadOnlyMode,
+  selectDisplayConnectModal,
+  setDisplayConnectModal,
 } from "@/store/global"
 import { getAddress } from "@/utils/wallet"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -18,17 +18,17 @@ export default function ConnectWalletDialog({
   settingsLoaded: boolean
 }) {
   const dispatch = useAppDispatch()
-  const readOnlyAccess = useAppSelector(selectReadOnlyMode)
+  const displayConnectModal = useAppSelector(selectDisplayConnectModal)
 
   const continueReadOnly = () => {
-    dispatch(setReadOnlyMode(true))
+    dispatch(setDisplayConnectModal(false))
   }
 
   return (
     <>
       <Transition
         appear
-        show={settingsLoaded && !readOnlyAccess && !activeAccount}
+        show={settingsLoaded && displayConnectModal && !activeAccount}
         as={Fragment}
       >
         <Dialog as="div" className="relative z-10" onClose={continueReadOnly}>
@@ -105,7 +105,7 @@ function ConnectWallet() {
   }
 
   const continueReadOnly = () => {
-    dispatch(setReadOnlyMode(true))
+    dispatch(setDisplayConnectModal(false))
   }
 
   return (

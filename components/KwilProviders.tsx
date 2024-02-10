@@ -102,7 +102,7 @@ export default function KwilProviders({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-3 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
           <div className="px-1 pb-1">
             {providers &&
               providers.map((provider) => (
@@ -127,7 +127,7 @@ export default function KwilProviders({
               <Link href="/settings/providers">
                 <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none">
                   <EditIcon className="h-3 w-3 text-slate-800" />
-                  <span className="flex text-xs font-medium text-slate-800">
+                  <span className="ml-1 flex text-xs font-medium text-slate-800">
                     Manage Providers
                   </span>
                 </button>
@@ -154,7 +154,7 @@ const ProviderItem = ({
     <Menu.Item key={name}>
       <button
         className={classNames({
-          "group my-1 flex w-full items-center gap-2 overflow-clip rounded-md px-2 py-3 text-sm hover:bg-kwil-light/10 focus:outline-none":
+          "group my-1 flex w-full items-center gap-2 overflow-clip rounded-md p-2 text-sm hover:bg-kwil-light/10 focus:outline-none":
             true,
           "bg-kwil-light/10": isCurrent,
         })}
