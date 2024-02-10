@@ -7,14 +7,14 @@ import useTableFilters from "@/hooks/database/useTableFilters"
 import Button from "@/components/Button"
 
 interface IFiltersProps {
-  database: string
+  dbid: string
   table: string
   columns: string[]
 }
 
 const operators = ["=", "!=", ">=", "<=", ">", "<", "is"]
 
-export default function Filters({ database, table, columns }: IFiltersProps) {
+export default function Filters({ dbid, table, columns }: IFiltersProps) {
   const {
     tempFilters,
     activeFilters,
@@ -25,7 +25,7 @@ export default function Filters({ database, table, columns }: IFiltersProps) {
     setFilterValue,
     filterBtnText,
   } = useTableFilters({
-    database,
+    dbid,
     table,
     columns,
     operators,

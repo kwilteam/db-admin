@@ -7,12 +7,12 @@ import useTableSort from "@/hooks/database/useTableSort"
 import Button from "@/components/Button"
 
 interface ISortingProps {
-  database: string
+  dbid: string
   table: string
   columns: string[]
 }
 
-export default function Sorting({ database, table, columns }: ISortingProps) {
+export default function Sorting({ dbid, table, columns }: ISortingProps) {
   const {
     tempSort,
     activeSort,
@@ -23,7 +23,7 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
     setSortValue,
     sortBtnText,
   } = useTableSort({
-    database,
+    dbid,
     table,
   })
 

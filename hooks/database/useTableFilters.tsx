@@ -4,14 +4,14 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ITableFilter } from "@/utils/database-types"
 
 interface IUseFiltersProps {
-  database: string
+  dbid: string
   table: string
   columns: string[]
   operators: string[]
 }
 
 export default function useTableFilters({
-  database,
+  dbid,
   table,
   columns,
   operators,
@@ -20,7 +20,7 @@ export default function useTableFilters({
   const [tempFilters, setTempFilters] = useState<ITableFilter[]>([]) // Used to store filters before they are applied
 
   const activeFilters = useAppSelector((state) =>
-    selectTableQueryParams(state, database, table),
+    selectTableQueryParams(state, dbid, table),
   )?.filters
 
   const copyActiveFilters = () => {
@@ -39,7 +39,7 @@ export default function useTableFilters({
   }
 
   const applyFilters = (close: () => void) => {
-    dispatch(setTableFilters({ database, table, filters: tempFilters }))
+    dispatch(setTableFilters({ dbid, table, filters: tempFilters }))
     close()
   }
 

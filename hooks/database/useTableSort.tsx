@@ -4,16 +4,16 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ITableSort } from "@/utils/database-types"
 
 interface IUseTableSortProps {
-  database: string
+  dbid: string
   table: string
 }
 
-export default function useTableSort({ database, table }: IUseTableSortProps) {
+export default function useTableSort({ dbid, table }: IUseTableSortProps) {
   const dispatch = useAppDispatch()
   const [tempSort, setTempSort] = useState<ITableSort[]>([]) // Used to store Sorts before they are applied
 
   const activeSort = useAppSelector((state) =>
-    selectTableQueryParams(state, database, table),
+    selectTableQueryParams(state, dbid, table),
   )?.sort
 
   const copyActiveSort = () => {
@@ -29,7 +29,7 @@ export default function useTableSort({ database, table }: IUseTableSortProps) {
   }
 
   const applySort = (close: () => void) => {
-    dispatch(setTableSort({ database, table, sort: tempSort }))
+    dispatch(setTableSort({ dbid, table, sort: tempSort }))
     close()
   }
 
