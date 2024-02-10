@@ -12,7 +12,7 @@ export default function DatabasesPage() {
 
   if (activePage?.name === "Databases" && databaseContext) {
     redirect(
-      `/databases/${databaseContext.database}/${databaseContext.type}/${databaseContext.name}`,
+      `/databases/${databaseContext.dbid}/${databaseContext.type}/${databaseContext.name}`,
     )
   }
 
