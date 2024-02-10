@@ -12,12 +12,12 @@ import {
 import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
-  IKwilProvider,
   KwilProviderStatus,
   saveActiveProvider,
   selectProviders,
 } from "@/store/providers"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
+import { IProvider } from "@/utils/idb/providers"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -64,7 +64,7 @@ export default function KwilProviders({
 
     const interval = setInterval(() => {
       pingProvider()
-    }, 10000)
+    }, 30000)
 
     return () => clearInterval(interval)
   }, [pingProvider])
@@ -113,15 +113,14 @@ export default function KwilProviders({
               ))}
             <hr className="m-1 border-slate-100" />
             <Menu.Item>
-              <button
-                className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none"
-                onClick={() => console.log("add provider")}
-              >
-                <PlusIcon className="h-4 w-4 text-slate-800" />
-                <span className="flex text-xs font-medium text-slate-800">
-                  Add Provider
-                </span>
-              </button>
+              <Link href="/settings/providers/create">
+                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none">
+                  <PlusIcon className="h-4 w-4 text-slate-800" />
+                  <span className="flex text-xs font-medium text-slate-800">
+                    Add Provider
+                  </span>
+                </button>
+              </Link>
             </Menu.Item>
             <Menu.Item>
               <Link href="/settings/providers">
@@ -145,9 +144,9 @@ const ProviderItem = ({
   provider,
 }: {
   isCurrent: boolean
-  provider: IKwilProvider
+  provider: IProvider
 }) => {
-  const { name, status, url } = provider
+  const { name, url } = provider
   const dispatch = useAppDispatch()
 
   return (

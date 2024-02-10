@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useState } from "react"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { WebKwil } from "@kwilteam/kwil-js"
-import {
-  IKwilProvider,
-  selectActiveProvider,
-  selectProviders,
-} from "@/store/providers"
+import { IProvider } from "@/utils/idb/providers"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { selectActiveProvider, selectProviders } from "@/store/providers"
 
 const logging = true
 
@@ -14,9 +11,7 @@ export const useKwilProvider = (): WebKwil | undefined => {
   const [kwilProvider, setKwilProvider] = useState<WebKwil | undefined>()
   const activeProvider = useAppSelector(selectActiveProvider)
   const providers = useAppSelector(selectProviders)
-  const [providerObject, setProviderObject] = useState<
-    IKwilProvider | undefined
-  >()
+  const [providerObject, setProviderObject] = useState<IProvider | undefined>()
 
   // Use the active provider to find the provider object from the list of providers in the LocalStorage
   useEffect(() => {
@@ -24,7 +19,10 @@ export const useKwilProvider = (): WebKwil | undefined => {
 
     const _provider = providers?.find((p) => p.name === activeProvider)
 
-    if (!_provider) throw new Error("Failed to find provider")
+    if (!_provider) {
+      setProviderObject(undefined)
+      return
+    }
 
     setProviderObject(_provider)
   }, [activeProvider, providers, dispatch])

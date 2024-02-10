@@ -22,13 +22,20 @@ export const getProvider = async (
 
 export const setProvider = async (
   idb: IDBPDatabase<unknown>,
-  name: string,
-  url: string,
+  provider: IProvider,
 ): Promise<void> => {
   try {
+    let { name, url, chainId } = provider
+
+    // Strip / if it's at the end of the URL
+    if (url.endsWith("/")) {
+      url = url.slice(0, -1)
+    }
+
     await idb.put(StoreNames.PROVIDER, {
       name,
       url,
+      chainId,
     })
   } catch (error) {
     console.error("Error while setting provider", error)
@@ -53,11 +60,12 @@ export const setupProviders = async (idb: IDBPDatabase<unknown>) => {
     url: "https://testnet.kwil.com",
     chainId: "kwil-chain-testnet-0.6",
   }
-  await idb.put(StoreNames.PROVIDER, testnetProvider)
+  await setProvider(idb, testnetProvider)
 
   const localhostProvider: IProvider = {
     name: "Localhost",
     url: "http://localhost:8080",
+    chainId: undefined,
   }
-  await idb.put(StoreNames.PROVIDER, localhostProvider)
+  await setProvider(idb, localhostProvider)
 }
