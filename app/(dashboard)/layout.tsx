@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: IProps) {
             <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
               {children}
               <GlobalAlert />
-              <div className="absolute right-0 top-0 z-50 hidden gap-2 rounded-bl-md border border-t-0 border-kwil/20 bg-white p-2 drop-shadow-md md:flex">
+              <div className="absolute right-1 top-1 hidden gap-1 md:flex">
                 <KwilProviders
                   activeProvider={activeProvider}
                   className="hidden lg:flex"

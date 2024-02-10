@@ -1,4 +1,3 @@
-import { useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
@@ -21,18 +20,19 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
 
   const triggerDeleteDb = async (
     e: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    database: string,
   ) => {
     e.stopPropagation() // To prevent triggering openSchema
 
     if (!kwilProvider || !kwilSigner || !databaseObject) return
 
-    const c = confirm(`Are you sure you want to delete '${database}'?`)
+    const c = confirm(
+      `Are you sure you want to delete '${databaseObject.name}'?`,
+    )
 
     if (c) {
       dispatch(
         setDatabaseLoading({
-          database,
+          dbid: databaseObject.dbid,
           loading: true,
         }),
       )
@@ -44,11 +44,11 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
         const deleted = await kwilProvider.drop(dropBody, kwilSigner, true)
 
         if (deleted) {
-          dispatch(removeDatabase(database))
+          dispatch(removeDatabase(databaseObject.dbid))
           dispatch(
             setAlert({
               type: "success",
-              text: `Database "${database}" has now been deleted.`,
+              text: `Database "${databaseObject.name}" has now been deleted.`,
               position: "top",
             }),
           )
@@ -56,7 +56,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
           // If we delete the active database, we need navigate away from this database view
           if (
             activeDatabaseContext &&
-            database === activeDatabaseContext.database
+            databaseObject.dbid === activeDatabaseContext.dbid
           ) {
             dispatch(setDatabaseActiveContext(undefined))
             router.push("/databases")
@@ -75,7 +75,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
 
       dispatch(
         setDatabaseLoading({
-          database,
+          dbid: databaseObject.dbid,
           loading: false,
         }),
       )

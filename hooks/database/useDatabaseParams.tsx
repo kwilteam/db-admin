@@ -1,7 +1,7 @@
 import { useParams } from "next/navigation"
 
 interface IDatabaseParams {
-  db?: string
+  dbid?: string
   table?: string
   action?: string
 }
@@ -9,7 +9,7 @@ interface IDatabaseParams {
 export default function useDatabaseParams(): IDatabaseParams {
   const params: IDatabaseParams = useParams()
 
-  const { db, table, action } = params
+  const { dbid, table, action } = params
 
-  return { db, table, action }
+  return { dbid, table, action }
 }

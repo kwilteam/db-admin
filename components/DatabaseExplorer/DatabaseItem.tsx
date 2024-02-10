@@ -31,9 +31,9 @@ const DatabaseItem = ({
   const databaseSchemas = useAppSelector(selectDatabaseSchemas)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 
-  const visible = databaseVisibility[database.name]?.[itemType]
+  const visible = databaseVisibility[database.dbid]?.[itemType]
   const databaseSchemaItems =
-    databaseSchemas && databaseSchemas[database.name]?.[itemType]
+    databaseSchemas && databaseSchemas[database.dbid]?.[itemType]
 
   return (
     <>
@@ -48,7 +48,7 @@ const DatabaseItem = ({
         onClick={() =>
           dispatch(
             setDatabaseVisibility({
-              database: database.name,
+              dbid: database.dbid,
               key: itemType,
             }),
           )
@@ -94,7 +94,7 @@ const DatabaseItem = ({
             ) => (
               <DatabaseItemLink
                 key={index}
-                databaseName={database.name}
+                dbid={database.dbid}
                 itemName={objectItem.name}
                 itemType={itemType}
               />
@@ -110,39 +110,35 @@ const DatabaseItem = ({
 }
 
 const DatabaseItemLink = ({
-  databaseName,
+  dbid,
   itemName,
   itemType,
 }: {
-  databaseName: string
+  dbid: string
   itemName: string
   itemType: IItemTypes[string]
 }) => {
   const dispatch = useAppDispatch()
   const singularItemType = itemType.slice(0, -1)
   const {
-    db: dbParam,
+    dbid: dbidParam,
     table: activeTable,
     action: activeAction,
   } = useDatabaseParams()
 
   // For direct links, we need to check if the current item is active
   const active =
-    (dbParam === databaseName &&
-      itemType === "tables" &&
-      activeTable === itemName) ||
-    (dbParam === databaseName &&
-      itemType === "actions" &&
-      activeAction === itemName)
+    (dbidParam === dbid && itemType === "tables" && activeTable === itemName) ||
+    (dbidParam === dbid && itemType === "actions" && activeAction === itemName)
 
   return (
     <div
-      test-id={`database-item-${databaseName}-${itemType}-${itemName}`}
-      key={`${databaseName}-${itemType}-${itemName}`}
+      test-id={`database-item-${dbid}-${itemType}-${itemName}`}
+      key={`${dbid}-${itemType}-${itemName}`}
       className="ml-6 overflow-hidden text-sm"
     >
       <Link
-        href={`/databases/${databaseName}/${singularItemType}/${itemName}`}
+        href={`/databases/${dbid}/${singularItemType}/${itemName}`}
         className={classNames({
           "flex select-none flex-row items-center gap-1 hover:text-slate-900":
             true,

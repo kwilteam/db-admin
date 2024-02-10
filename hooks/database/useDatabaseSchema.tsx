@@ -24,7 +24,7 @@ export default function useDatabaseSchema() {
       try {
         dispatch(
           setDatabaseLoading({
-            database: database.name,
+            dbid: database.dbid,
             loading: true,
           }),
         )
@@ -44,21 +44,21 @@ export default function useDatabaseSchema() {
 
         dispatch(
           setDatabaseSchema({
-            database: database.name,
+            dbid: database.dbid,
             schema: schemaRes.data,
           }),
         )
 
         dispatch(
           setDatabaseLoading({
-            database: database.name,
+            dbid: database.dbid,
             loading: false,
           }),
         )
 
         dispatch(
           setDatabaseVisibility({
-            database: database.name,
+            dbid: database.dbid,
             key: "isVisible",
             isVisible: true,
           }),
@@ -67,7 +67,7 @@ export default function useDatabaseSchema() {
         if (show) {
           dispatch(
             setDatabaseVisibility({
-              database: database.name,
+              dbid: database.dbid,
               key: show,
               isVisible: true,
             }),

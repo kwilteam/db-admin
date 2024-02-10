@@ -18,6 +18,7 @@ import {
 } from "@/store/providers"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 import { IProvider } from "@/utils/idb/providers"
+import { setDatabaseActiveContext } from "@/store/database"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -74,8 +75,8 @@ export default function KwilProviders({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 px-4 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-          <ProviderIcon className="h-5 w-5" />
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+          <ProviderIcon className="h-4 w-4" />
           <div
             className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
               "border bg-lime-500": status === KwilProviderStatus.Online,
@@ -87,7 +88,7 @@ export default function KwilProviders({
           />
           <span>{activeProvider}</span>
           <ChevronDownIcon
-            className="-mr-1 ml-2 h-5 w-5 text-white hover:text-slate-100"
+            className="h-4 w-4 text-white hover:text-slate-100"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -157,7 +158,10 @@ const ProviderItem = ({
             true,
           "bg-kwil-light/10": isCurrent,
         })}
-        onClick={() => dispatch(saveActiveProvider(name))}
+        onClick={() => {
+          dispatch(saveActiveProvider(name))
+          dispatch(setDatabaseActiveContext(undefined))
+        }}
       >
         <span className="flex flex-shrink-0 text-xs font-medium text-slate-800">
           {name}

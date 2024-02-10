@@ -11,18 +11,18 @@ export default function DatabasesLayout({
   children,
 }: React.PropsWithChildren<{}>) {
   const { getSchema } = useDatabaseSchema()
-  const { db, table, action } = useDatabaseParams()
+  const { dbid, table, action } = useDatabaseParams()
   const databaseObject = useAppSelector((state) =>
-    selectDatabaseObject(state, db || ""),
+    selectDatabaseObject(state, dbid || ""),
   )
 
   useEffect(() => {
-    if (db && databaseObject) {
+    if (dbid && databaseObject) {
       const show = table ? "tables" : action ? "actions" : undefined
       getSchema(databaseObject, show)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [db, databaseObject])
+  }, [dbid, databaseObject])
 
   return (
     <div className="flex flex-row">

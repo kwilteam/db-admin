@@ -26,13 +26,13 @@ const DatabaseName = ({
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
   const triggerDeleteDb = useDeleteDb(database)
 
-  const isVisible = databaseVisibility[database.name]?.isVisible
+  const isVisible = databaseVisibility[database.dbid]?.isVisible
 
   const getSchemaOrHide = (database: IDatasetInfoStringOwner) => {
     if (isVisible) {
       dispatch(
         setDatabaseVisibility({
-          database: database.name,
+          dbid: database.dbid,
           key: "isVisible",
           isVisible: false,
         }),
@@ -96,7 +96,7 @@ const DatabaseName = ({
             hidden: !myDatabase,
           },
         )}
-        onClick={(e) => triggerDeleteDb(e, database.name)}
+        onClick={(e) => triggerDeleteDb(e)}
         test-id={`database-item-${database}-delete`}
       >
         x

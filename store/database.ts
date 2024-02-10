@@ -12,7 +12,7 @@ import {
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
-  database: string
+  dbid: string
   type: "table" | "action"
   name: string
 }
@@ -71,27 +71,27 @@ export const databaseSlice = createSlice({
     setDatabaseSchema: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         schema: KwilTypes.Database
       }>,
     ) => {
-      const { database, schema } = action.payload
-      state.schemaDict[database] = schema
+      const { dbid, schema } = action.payload
+      state.schemaDict[dbid] = schema
     },
 
     setDatabaseVisibility: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         key: keyof IDatabaseVisibilityDict[string]
         isVisible?: boolean
       }>,
     ) => {
-      const { database, key, isVisible } = action.payload
-      const currentVisibility = state.visibilityDict[database]?.[key]
+      const { dbid, key, isVisible } = action.payload
+      const currentVisibility = state.visibilityDict[dbid]?.[key]
 
-      state.visibilityDict[database] = {
-        ...state.visibilityDict[database],
+      state.visibilityDict[dbid] = {
+        ...state.visibilityDict[dbid],
         [key]: isVisible !== undefined ? isVisible : !currentVisibility,
       }
     },
@@ -99,14 +99,14 @@ export const databaseSlice = createSlice({
     setDatabaseLoading: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         loading: boolean
       }>,
     ) => {
-      const { database, loading } = action.payload
+      const { dbid, loading } = action.payload
 
-      state.visibilityDict[database] = {
-        ...state.visibilityDict[database],
+      state.visibilityDict[dbid] = {
+        ...state.visibilityDict[dbid],
         loading,
       }
     },
@@ -119,36 +119,29 @@ export const databaseSlice = createSlice({
     },
 
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
-      const database = action.payload
+      const dbid = action.payload
 
-      state.databases = state.databases?.filter((db) => db.name !== database)
-      delete state.schemaDict[database]
-      delete state.visibilityDict[database]
-      delete state.tableQueryParamsDict[database]
-    },
+      state.databases = state.databases?.filter((db) => db.dbid !== dbid)
 
-    addDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
-      const database = action.payload
-
-      if (!state.schemaDict) return
-
-      state.schemaDict[database] = null
+      delete state.schemaDict[dbid]
+      delete state.visibilityDict[dbid]
+      delete state.tableQueryParamsDict[dbid]
     },
 
     setTablePagination: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
         pagination: ITablePagination
       }>,
     ) => {
-      const { database, table, pagination } = action.payload
+      const { dbid, table, pagination } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           pagination,
         },
       }
@@ -157,18 +150,18 @@ export const databaseSlice = createSlice({
     setTableFilters: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
 
         filters: ITableFilter[]
       }>,
     ) => {
-      const { database, table, filters } = action.payload
+      const { dbid, table, filters } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           filters,
         },
       }
@@ -177,18 +170,18 @@ export const databaseSlice = createSlice({
     setTableSort: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
 
         sort: ITableSort[]
       }>,
     ) => {
-      const { database, table, sort } = action.payload
+      const { dbid, table, sort } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           sort,
         },
       }
@@ -205,7 +198,6 @@ export const {
   setDatabaseLoading,
   setDatabaseActiveContext,
   removeDatabase,
-  addDatabase,
   setTablePagination,
   setTableFilters,
   setTableSort,
@@ -235,10 +227,10 @@ export const selectDatabaseActiveContext = (state: {
 
 export const selectAction = (
   state: { database: IDatabaseState },
-  database: string,
+  dbid: string,
   actionName: string,
 ) => {
-  const actions = state.database.schemaDict?.[database]?.actions
+  const actions = state.database.schemaDict?.[dbid]?.actions
 
   if (!actions) return undefined
 
@@ -247,20 +239,19 @@ export const selectAction = (
 
 export const selectTableQueryParams = (
   state: { database: IDatabaseState },
-  database: string,
+  dbid: string,
   table: string,
 ): ITableQueryParams | undefined => {
-  const tableQueryParams =
-    state.database.tableQueryParamsDict?.[database]?.[table]
+  const tableQueryParams = state.database.tableQueryParamsDict?.[dbid]?.[table]
 
   return tableQueryParams
 }
 
 export const selectDatabaseObject = (
   state: { database: IDatabaseState },
-  database: string,
+  dbid: string,
 ): IDatasetInfoStringOwner | undefined => {
-  return state.database.databases?.find((db) => db.name === database)
+  return state.database.databases?.find((db) => db.dbid === dbid)
 }
 
 export default databaseSlice.reducer

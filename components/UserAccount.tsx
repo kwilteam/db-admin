@@ -52,18 +52,23 @@ export default function UserAccount({
   if (!activeAccount)
     return (
       <>
-        <Button onClick={openConnectWalletDialog}>Connect</Button>
+        <button
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 px-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          onClick={openConnectWalletDialog}
+        >
+          Connect
+        </button>
       </>
     )
 
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-2 rounded-md bg-kwil/70 px-2 py-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-          <ProfileIcon className="h-5 w-5" />
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+          <ProfileIcon className="h-4 w-4" />
           <span>{abbreviatedAccount}</span>
           <ChevronDownIcon
-            className="-mr-1 ml-2 h-5 w-5 text-white hover:text-slate-100"
+            className="h-4 w-4 text-white hover:text-slate-100"
             aria-hidden="true"
           />
         </Menu.Button>

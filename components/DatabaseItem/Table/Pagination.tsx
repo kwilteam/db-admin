@@ -6,20 +6,20 @@ import { ITablePagination } from "@/utils/database-types"
 import { ChevronLeftIcon, ChevronRightIcon } from "@/utils/icons"
 
 interface IPaginationProps {
-  database: string
+  dbid: string
   table: string
   totalCount: number | undefined
   isLoading: boolean
 }
 
 export default function Pagination({
-  database,
+  dbid,
   table,
   totalCount,
   isLoading,
 }: IPaginationProps) {
   const tableQueryParams = useAppSelector((state) =>
-    selectTableQueryParams(state, database, table),
+    selectTableQueryParams(state, dbid, table),
   )
   const dispatch = useAppDispatch()
   const count = totalCount || 0
@@ -32,7 +32,7 @@ export default function Pagination({
   const setPagination = (pagination: ITablePagination) => {
     dispatch(
       setTablePagination({
-        database,
+        dbid,
         table,
         pagination,
       }),

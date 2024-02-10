@@ -5,25 +5,25 @@ import { useKwilProvider } from "../kwil/useKwilProvider"
 import { buildQuery } from "@/utils/build-query"
 
 interface IDataTableProps {
-  database: string
+  dbid: string
   table: string
 }
 
-export default function useDataTable({ database, table }: IDataTableProps) {
+export default function useDataTable({ dbid, table }: IDataTableProps) {
   const [tableData, setTableData] = useState<Object[] | undefined>()
   const [totalCount, setTotalCount] = useState<number | undefined>()
   const [columns, setColumns] = useState<string[] | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const kwilProvider = useKwilProvider()
   const tableQueryParams = useAppSelector((state) =>
-    selectTableQueryParams(state, database, table),
+    selectTableQueryParams(state, dbid, table),
   )
   const databaseObject = useAppSelector((state) =>
-    selectDatabaseObject(state, database),
+    selectDatabaseObject(state, dbid),
   )
 
   useEffect(() => {
-    if (!database || !table || !kwilProvider || !databaseObject) return
+    if (!dbid || !table || !kwilProvider || !databaseObject) return
 
     const fetchTableData = async () => {
       try {
@@ -57,7 +57,7 @@ export default function useDataTable({ database, table }: IDataTableProps) {
     }
 
     fetchTableData()
-  }, [database, table, tableQueryParams, kwilProvider, databaseObject])
+  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject])
 
   return { tableData, totalCount, columns, isLoading }
 }

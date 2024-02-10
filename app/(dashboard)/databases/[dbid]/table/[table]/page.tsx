@@ -1,8 +1,11 @@
 "use client"
 
 import { useEffect } from "react"
-import { useAppDispatch } from "@/store/hooks"
-import { setDatabaseActiveContext } from "@/store/database"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import {
+  selectDatabaseObject,
+  setDatabaseActiveContext,
+} from "@/store/database"
 import useDataTable from "@/hooks/database/useDataTable"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import Pagination from "@/components/DatabaseItem/Table/Pagination"
@@ -12,31 +15,46 @@ import Sorting from "@/components/DatabaseItem/Table/Sorting"
 
 interface IProps {
   params: {
-    db: string
+    dbid: string
     table: string
   }
 }
 
 export default function DatabaseTablePage({ params }: IProps) {
-  const { db: database, table } = params
+  const { dbid, table } = params
   const dispatch = useAppDispatch()
   const { tableData, totalCount, columns, isLoading } = useDataTable({
-    database,
+    dbid,
     table,
   })
+  const databaseObject = useAppSelector((state) =>
+    selectDatabaseObject(state, dbid),
+  )
 
   useEffect(() => {
-    dispatch(setDatabaseActiveContext({ database, type: "table", name: table }))
-  }, [database, table, dispatch])
+    if (!databaseObject) return
+
+    dispatch(setDatabaseActiveContext({ dbid, type: "table", name: table }))
+  }, [dbid, table, dispatch, databaseObject])
+
+  if (!databaseObject) return null
 
   return (
     <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
-      <Header database={database} type="table" name={table} />
+      <Header database={databaseObject.name} type="table" name={table} />
 
       {columns && (
         <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
-          <Filters database={database} table={table} columns={columns} />
-          <Sorting database={database} table={table} columns={columns} />
+          <Filters
+            database={databaseObject.name}
+            table={table}
+            columns={columns}
+          />
+          <Sorting
+            database={databaseObject.name}
+            table={table}
+            columns={columns}
+          />
         </div>
       )}
 
@@ -52,7 +70,7 @@ export default function DatabaseTablePage({ params }: IProps) {
       {columns && (
         <div className="flex">
           <Pagination
-            database={database}
+            dbid={dbid}
             table={table}
             totalCount={totalCount}
             isLoading={isLoading}

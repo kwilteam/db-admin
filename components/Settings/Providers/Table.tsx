@@ -3,6 +3,7 @@ import { IProvider } from "@/utils/idb/providers"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { saveActiveProvider, selectActiveProvider } from "@/store/providers"
 import { CheckIcon } from "@/utils/icons"
+import { setDatabaseActiveContext } from "@/store/database"
 interface IProvidersTableProps {
   providers: IProvider[]
   confirmDeleteProvider: (name: string) => void
@@ -95,9 +96,10 @@ export default function ProvidersTable({
                     <>
                       |
                       <span
-                        onClick={() =>
+                        onClick={() => {
                           dispatch(saveActiveProvider(provider.name))
-                        }
+                          dispatch(setDatabaseActiveContext(undefined))
+                        }}
                         className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
                       >
                         Set Active

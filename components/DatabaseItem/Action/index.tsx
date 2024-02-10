@@ -14,21 +14,21 @@ import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { Utils } from "@kwilteam/kwil-js"
 
 interface IActionProps {
-  database: string
+  dbid: string
   actionName: string
 }
 
-export default function Action({ database, actionName }: IActionProps) {
+export default function Action({ dbid, actionName }: IActionProps) {
   const dispatch = useAppDispatch()
   const [data, setData] = useState<Object[] | undefined>(undefined)
   const [columns, setColumns] = useState<string[] | undefined>(undefined)
   const action = useAppSelector((state) =>
-    selectAction(state, database, actionName),
+    selectAction(state, dbid, actionName),
   )
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
   const databaseObject = useAppSelector((state) =>
-    selectDatabaseObject(state, database),
+    selectDatabaseObject(state, dbid),
   )
 
   const executeAction = useCallback(
