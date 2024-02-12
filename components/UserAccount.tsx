@@ -52,7 +52,7 @@ export default function UserAccount({
     return (
       <>
         <button
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 px-2 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           onClick={openConnectWalletDialog}
         >
           Connect
@@ -63,11 +63,11 @@ export default function UserAccount({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProfileIcon className="h-4 w-4" />
           <span>{abbreviatedAccount}</span>
           <ChevronDownIcon
-            className="h-4 w-4 text-white hover:text-slate-100"
+            className="h-4 w-4 text-slate-800"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -85,7 +85,7 @@ export default function UserAccount({
           <div className="px-1 py-1 ">
             <Menu.Item>
               <div
-                className="group flex w-full cursor-pointer items-center gap-2 rounded-md p-1 text-xs hover:bg-kwil-light/10"
+                className="group flex w-full cursor-pointer items-center gap-2 rounded-md p-1 text-xs hover:bg-slate-50"
                 onClick={disconnectWallet}
               >
                 <SignOutIcon className="h-4 w-4" />

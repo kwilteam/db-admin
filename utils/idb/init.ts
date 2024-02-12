@@ -5,8 +5,9 @@ import { setupProviders } from "./providers"
 
 export enum StoreNames {
   SCHEMA = "schema",
-  PROVIDER = "provider",
+  PROVIDERS = "providers",
   SETTINGS = "settings",
+  QUERIES = "queries",
 }
 
 export enum SettingsKeys {
@@ -14,8 +15,12 @@ export enum SettingsKeys {
   ACCOUNT = "account",
 }
 
-const createStore = (db: IDBPDatabase<unknown>, storeName: StoreNames) => {
-  db.createObjectStore(storeName, { keyPath: "name" })
+const createStore = (
+  db: IDBPDatabase<unknown>,
+  storeName: StoreNames,
+  keyPath: string | string[] = "name",
+) => {
+  db.createObjectStore(storeName, { keyPath })
 }
 
 export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
@@ -34,10 +39,13 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
         createStore(db, StoreNames.SCHEMA)
 
         // Creating the provider store
-        createStore(db, StoreNames.PROVIDER)
+        createStore(db, StoreNames.PROVIDERS)
 
         // Create the settings store
         createStore(db, StoreNames.SETTINGS)
+
+        // Create the queries store
+        createStore(db, StoreNames.QUERIES, ["dbid", "name"])
       },
     })
 
@@ -56,7 +64,7 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
 
     // Inserting default providers after the upgrade has finished
     // Only if the provider store is empty
-    const providers = await db.getAll(StoreNames.PROVIDER)
+    const providers = await db.getAll(StoreNames.PROVIDERS)
     if (!providers.length) {
       await setupProviders(db)
     }

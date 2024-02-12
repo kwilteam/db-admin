@@ -20,6 +20,7 @@ const DatabaseSchema = ({
         <>
           <DatabaseItem database={database} itemType="tables" />
           <DatabaseItem database={database} itemType="actions" />
+          <DatabaseItem database={database} itemType="queries" />
         </>
       )}
     </div>

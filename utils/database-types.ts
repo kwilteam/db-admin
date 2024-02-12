@@ -1,4 +1,5 @@
 import { Types as KwilTypes } from "@kwilteam/kwil-js"
+import { IQuery } from "./idb/queries"
 
 // Types from the Kwil library
 export type { KwilTypes }
@@ -8,11 +9,16 @@ export interface IDatabaseSchemaDict {
   [key: string]: KwilTypes.Database | null
 }
 
+export interface IDatabaseQueryDict {
+  [dbid: string]: IQuery[]
+}
+
 // Whether a database is visible, and whether its tables and actions are visible
 interface IDatabaseVisibility {
   isVisible: boolean
   tables: boolean
   actions: boolean
+  queries: boolean
   loading: boolean
 }
 

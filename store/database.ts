@@ -8,12 +8,15 @@ import {
   ITableSort,
   KwilTypes,
   IDatasetInfoStringOwner,
+  IDatabaseQueryDict,
 } from "@/utils/database-types"
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { initIdb } from "@/utils/idb/init"
+import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
   dbid: string
-  type: "table" | "action"
+  type: "table" | "action" | "query"
   name: string
 }
 
@@ -28,6 +31,7 @@ interface IDatabaseState {
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
+  queryDict: IDatabaseQueryDict
   activeContext: IDatabaseActiveContext | undefined
 }
 
@@ -40,8 +44,49 @@ const initialState: IDatabaseState = {
   schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
+  queryDict: {},
   activeContext: undefined,
 }
+
+export const loadQueries = createAsyncThunk(
+  "database/loadQueries",
+  async (dbid: string) => {
+    const db = await initIdb()
+    if (!db) return
+
+    console.log("Loading queries for dbid", dbid)
+
+    const queries = await getQueries(db, dbid)
+
+    console.log("Queries loaded", queries)
+
+    return { dbid, queries }
+  },
+)
+
+export const deleteQueryFromStores = createAsyncThunk(
+  "providers/deleteQueryFromStores",
+  async ({ dbid, name }: { dbid: string; name: string }) => {
+    const db = await initIdb()
+    if (!db) return
+
+    await deleteQuery(db, dbid, name)
+
+    return { dbid, name }
+  },
+)
+
+export const saveQueryToStores = createAsyncThunk(
+  "providers/saveQueryToStores",
+  async ({ dbid, name, sql }: { dbid: string; name: string; sql: string }) => {
+    const db = await initIdb()
+    if (!db) return
+
+    await setQuery(db, dbid, name, sql)
+
+    return { dbid, name, sql }
+  },
+)
 
 export const databaseSlice = createSlice({
   name: "database",
@@ -187,6 +232,23 @@ export const databaseSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(loadQueries.fulfilled, (state, action) => {
+      if (!action.payload) return
+      const { dbid, queries } = action.payload
+
+      state.queryDict[dbid] = queries
+    }),
+      builder.addCase(saveQueryToStores.fulfilled, (state, action) => {
+        if (!action.payload) return
+        const { dbid, name, sql } = action.payload
+
+        state.queryDict[dbid] = {
+          ...state.queryDict[dbid],
+          [name]: sql,
+        }
+      })
+  },
 })
 
 export const {
@@ -252,6 +314,13 @@ export const selectDatabaseObject = (
   dbid: string,
 ): IDatasetInfoStringOwner | undefined => {
   return state.database.databases?.find((db) => db.dbid === dbid)
+}
+
+export const selectQueries = (
+  state: { database: IDatabaseState },
+  dbid: string,
+) => {
+  return state.database.queryDict[dbid]
 }
 
 export default databaseSlice.reducer

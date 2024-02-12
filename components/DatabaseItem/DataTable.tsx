@@ -4,7 +4,7 @@ import Loading from "@/components/Loading"
 interface IProps {
   columns?: string[] | undefined
   data: Object[] | undefined
-  type: "table" | "action"
+  type: "table" | "action" | "query"
   isLoading?: boolean
 }
 interface IDataItem {

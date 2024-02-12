@@ -35,7 +35,7 @@ export default function DatabasesExplorer() {
       })
   }, [databases, activeAccount, databaseFilters.search])
 
-  const sharedDatabases = useMemo(() => {
+  const otherDatabases = useMemo(() => {
     if (databaseFilters.showAll === false) return []
 
     return databases
@@ -67,8 +67,8 @@ export default function DatabasesExplorer() {
         {(count === 0 ||
           (myDatabases &&
             myDatabases.length === 0 &&
-            sharedDatabases &&
-            sharedDatabases.length === 0 &&
+            otherDatabases &&
+            otherDatabases.length === 0 &&
             count !== undefined)) && (
           <div className="flex h-full flex-col items-center justify-center">
             <p className="text-sm font-semibold text-slate-500">
@@ -80,7 +80,7 @@ export default function DatabasesExplorer() {
         {count !== undefined && count > 0 && (
           <>
             <DatabaseList databases={myDatabases} myDatabase />
-            <DatabaseList databases={sharedDatabases} />
+            <DatabaseList databases={otherDatabases} />
           </>
         )}
       </ul>

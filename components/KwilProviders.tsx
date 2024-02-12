@@ -75,7 +75,7 @@ export default function KwilProviders({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-kwil/70 p-1 text-sm font-thin text-white hover:bg-kwil/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProviderIcon className="h-4 w-4" />
           <div
             className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
@@ -88,7 +88,7 @@ export default function KwilProviders({
           />
           <span>{activeProvider}</span>
           <ChevronDownIcon
-            className="h-4 w-4 text-white hover:text-slate-100"
+            className="h-4 w-4 text-slate-800"
             aria-hidden="true"
           />
         </Menu.Button>
@@ -115,7 +115,7 @@ export default function KwilProviders({
             <hr className="m-1 border-slate-100" />
             <Menu.Item>
               <Link href="/settings/providers/create">
-                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none">
+                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-slate-50 focus:outline-none">
                   <PlusIcon className="h-4 w-4 text-slate-800" />
                   <span className="flex text-xs font-medium text-slate-800">
                     Add Provider
@@ -125,7 +125,7 @@ export default function KwilProviders({
             </Menu.Item>
             <Menu.Item>
               <Link href="/settings/providers">
-                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-kwil-light/10 focus:outline-none">
+                <button className="group flex w-full items-center gap-1 overflow-clip rounded-md px-2 py-2 text-sm hover:bg-slate-50 focus:outline-none">
                   <EditIcon className="h-3 w-3 text-slate-800" />
                   <span className="ml-1 flex text-xs font-medium text-slate-800">
                     Manage Providers
@@ -154,9 +154,9 @@ const ProviderItem = ({
     <Menu.Item key={name}>
       <button
         className={classNames({
-          "group my-1 flex w-full items-center gap-2 overflow-clip rounded-md p-2 text-sm hover:bg-kwil-light/10 focus:outline-none":
+          "group my-1 flex w-full items-center gap-2 overflow-clip rounded-md p-2 text-sm hover:bg-slate-50 focus:outline-none":
             true,
-          "bg-kwil-light/10": isCurrent,
+          "bg-slate-50": isCurrent,
         })}
         onClick={() => {
           dispatch(saveActiveProvider(name))

@@ -10,14 +10,14 @@ export interface IProvider {
 export const getProviders = async (
   idb: IDBPDatabase<unknown>,
 ): Promise<IProvider[]> => {
-  return idb.getAll(StoreNames.PROVIDER)
+  return idb.getAll(StoreNames.PROVIDERS)
 }
 
 export const getProvider = async (
   idb: IDBPDatabase<unknown>,
   key: string,
 ): Promise<IProvider> => {
-  return await idb.get(StoreNames.PROVIDER, key)
+  return await idb.get(StoreNames.PROVIDERS, key)
 }
 
 export const setProvider = async (
@@ -32,7 +32,7 @@ export const setProvider = async (
       url = url.slice(0, -1)
     }
 
-    await idb.put(StoreNames.PROVIDER, {
+    await idb.put(StoreNames.PROVIDERS, {
       name,
       url,
       chainId,
@@ -48,7 +48,7 @@ export const deleteProvider = async (
   name: string,
 ): Promise<void> => {
   try {
-    await idb.delete(StoreNames.PROVIDER, name)
+    await idb.delete(StoreNames.PROVIDERS, name)
   } catch (error) {
     throw error
   }

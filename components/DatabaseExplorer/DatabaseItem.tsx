@@ -1,23 +1,24 @@
-import { IDatasetInfoStringOwner, KwilTypes } from "@/utils/database-types"
+import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  QueryIcon,
   TableIcon,
 } from "@/utils/icons"
-import Link from "next/link"
+
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   setDatabaseVisibility,
   selectDatabaseSchemas,
   selectDatabaseVisibility,
 } from "@/store/database"
-import useDatabaseParams from "@/hooks/database/useDatabaseParams"
-import { setIsMenuOpen } from "@/store/global"
+import { TablesActionsList } from "./TablesActionsList"
+import QueriesList from "./QueriesList"
 
-interface IItemTypes {
-  [key: string]: "tables" | "actions"
+export interface IItemTypes {
+  [key: string]: "tables" | "actions" | "queries"
 }
 
 const DatabaseItem = ({
@@ -33,126 +34,102 @@ const DatabaseItem = ({
 
   const visible = databaseVisibility[database.dbid]?.[itemType]
   const databaseSchemaItems =
-    databaseSchemas && databaseSchemas[database.dbid]?.[itemType]
+    databaseSchemas &&
+    itemType !== "queries" &&
+    databaseSchemas[database.dbid]?.[itemType]
+
+  const setVisibility = () => {
+    dispatch(
+      setDatabaseVisibility({
+        dbid: database.dbid,
+        key: itemType,
+      }),
+    )
+  }
 
   return (
     <>
       <div
         test-id={`database-item-${database}-${itemType}`}
-        className={classNames({
-          "flex cursor-pointer select-none flex-row items-center gap-1 text-sm":
-            true,
-          "text-slate-500 hover:text-slate-900": !visible,
-          "text-slate-900": visible,
-        })}
-        onClick={() =>
-          dispatch(
-            setDatabaseVisibility({
-              dbid: database.dbid,
-              key: itemType,
-            }),
-          )
-        }
+        className={classNames(
+          "flex cursor-pointer select-none flex-row items-center gap-1 text-sm",
+          {
+            "text-slate-500 hover:text-slate-900": !visible,
+            "text-slate-900": visible,
+          },
+        )}
+        onClick={setVisibility}
       >
-        <ChevronDownIcon
-          className={classNames({
-            "h-4 w-4": true,
-            hidden: !visible,
-          })}
-        />
-        <ChevronRightIcon
-          className={classNames({
-            "h-4 w-4": true,
-            hidden: visible,
-          })}
-        />
-        {itemType === "tables" && (
-          <TableIcon
-            className={classNames({
-              "h-4 w-4": true,
-              "text-kwil-light": visible,
-            })}
-          />
-        )}
-        {itemType === "actions" && (
-          <ActionIcon
-            className={classNames({
-              "h-4 w-4": true,
-              "text-kwil-light": visible,
-            })}
-          />
-        )}
+        <ItemIcons itemType={itemType} visible={visible} />
+
         <span className="capitalize">{itemType}</span>
       </div>
       <div className="mb-1">
         {visible &&
-          databaseSchemaItems &&
-          databaseSchemaItems.map(
-            (
-              objectItem: KwilTypes.Table | KwilTypes.ActionSchema,
-              index: number,
-            ) => (
-              <DatabaseItemLink
-                key={index}
-                dbid={database.dbid}
-                itemName={objectItem.name}
-                itemType={itemType}
-              />
-            ),
+          (itemType === "actions" || itemType === "tables") &&
+          databaseSchemaItems && (
+            <TablesActionsList
+              dbid={database.dbid}
+              items={databaseSchemaItems}
+              itemType={itemType}
+              visible={visible}
+            />
           )}
 
-        {visible && databaseSchemaItems && databaseSchemaItems?.length == 0 && (
-          <div className="ml-10 text-xs">No {itemType} found</div>
+        {visible && itemType === "queries" && (
+          <QueriesList dbid={database.dbid} />
         )}
       </div>
     </>
   )
 }
 
-const DatabaseItemLink = ({
-  dbid,
-  itemName,
+const ItemIcons = ({
   itemType,
+  visible,
 }: {
-  dbid: string
-  itemName: string
   itemType: IItemTypes[string]
+  visible: boolean
 }) => {
-  const dispatch = useAppDispatch()
-  const singularItemType = itemType.slice(0, -1)
-  const {
-    dbid: dbidParam,
-    table: activeTable,
-    action: activeAction,
-  } = useDatabaseParams()
-
-  // For direct links, we need to check if the current item is active
-  const active =
-    (dbidParam === dbid && itemType === "tables" && activeTable === itemName) ||
-    (dbidParam === dbid && itemType === "actions" && activeAction === itemName)
-
   return (
-    <div
-      test-id={`database-item-${dbid}-${itemType}-${itemName}`}
-      key={`${dbid}-${itemType}-${itemName}`}
-      className="ml-6 overflow-hidden text-sm"
-    >
-      <Link
-        href={`/databases/${dbid}/${singularItemType}/${itemName}`}
+    <>
+      <ChevronDownIcon
         className={classNames({
-          "flex select-none flex-row items-center gap-1 hover:text-slate-900":
-            true,
-          "text-slate-500 ": !active,
-          "font-semibold text-slate-900": active,
+          "h-4 w-4": true,
+          hidden: !visible,
         })}
-        onClick={() => {
-          dispatch(setIsMenuOpen(false))
-        }}
-      >
-        <ChevronRightIcon className="h-3 w-3" />
-        <span className="max-w-[80%]">{itemName}</span>
-      </Link>
-    </div>
+      />
+      <ChevronRightIcon
+        className={classNames({
+          "h-4 w-4": true,
+          hidden: visible,
+        })}
+      />
+      {itemType === "tables" && (
+        <TableIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": visible,
+          })}
+        />
+      )}
+      {itemType === "actions" && (
+        <ActionIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": visible,
+          })}
+        />
+      )}
+      {itemType === "queries" && (
+        <QueryIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": visible,
+          })}
+        />
+      )}
+    </>
   )
 }
 

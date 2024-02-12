@@ -3,7 +3,7 @@ import { ProviderIcon } from "@/utils/icons"
 
 export default function Header({ providerName }: { providerName?: string }) {
   return (
-    <div className="max-w-screen lg:text-md flex select-none flex-row items-center gap-2 border-b border-slate-200 bg-slate-50 p-2 text-sm">
+    <div className="max-w-screen lg:text-md flex h-10 select-none flex-row items-center gap-2 border-b border-slate-200 bg-slate-50 p-2 text-sm">
       <Link
         href="/settings/providers"
         className="flex items-center gap-2 hover:underline"
