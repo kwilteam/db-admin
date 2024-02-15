@@ -3,13 +3,13 @@
 import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAction, selectDatabaseObject } from "@/store/database"
-import { setAlert, setDisplayConnectModal } from "@/store/global"
+import { ModalEnum, setAlert, setModal } from "@/store/global"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
 import ActionStatements from "./Statements"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { Utils } from "@kwilteam/kwil-js"
 
@@ -67,7 +67,7 @@ export default function Action({ dbid, actionName }: IActionProps) {
         } else if (mutability === "update" && kwilSigner) {
           response = await kwilProvider.execute(actionBody, kwilSigner, true)
         } else {
-          dispatch(setDisplayConnectModal(true))
+          dispatch(setModal(ModalEnum.CONNECT))
           return
         }
 
@@ -125,7 +125,9 @@ export default function Action({ dbid, actionName }: IActionProps) {
         <ActionForm action={action} executeAction={executeAction} />
       </div>
       <div className="mt-2">
-        {data && <DataTable data={data} type="action" columns={columns} />}
+        {data && (
+          <DataTable data={data} type={ItemType.ACTION} columns={columns} />
+        )}
       </div>
     </div>
   )

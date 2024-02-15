@@ -7,6 +7,7 @@ import {
   setDatabaseActiveContext,
 } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { ItemType } from "@/utils/database-types"
 import { useEffect } from "react"
 interface IProps {
   params: {
@@ -17,7 +18,7 @@ interface IProps {
 
 export default function DatabaseActionPage({ params }: IProps) {
   const { dbid, action: name } = params
-  const type = "action"
+  const type = ItemType.ACTION
   const dispatch = useAppDispatch()
 
   const databaseObject = useAppSelector((state) =>
@@ -27,8 +28,8 @@ export default function DatabaseActionPage({ params }: IProps) {
   useEffect(() => {
     if (!databaseObject) return
 
-    dispatch(setDatabaseActiveContext({ dbid, type: "action", name }))
-  }, [dbid, name, dispatch, databaseObject])
+    dispatch(setDatabaseActiveContext({ dbid, type, name }))
+  }, [dbid, name, type, dispatch, databaseObject])
 
   if (!databaseObject) return null
 

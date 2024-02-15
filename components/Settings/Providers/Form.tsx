@@ -2,6 +2,7 @@ import classNames from "classnames"
 import { IProvider } from "@/utils/idb/providers"
 import { useAppSelector } from "@/store/hooks"
 import { selectActiveProvider } from "@/store/providers"
+import Input from "@/components/Input"
 
 interface IFormProps {
   originalProviderName: string | undefined
@@ -38,18 +39,12 @@ export default function Form({
         </label>
         <div className="m-1">
           <div className="flex sm:max-w-md">
-            <input
+            <Input
               type="text"
               id="name"
               test-id="provider-name-input"
               autoComplete="name"
-              className={classNames(
-                "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6",
-                {
-                  "border-slate-300": !invalidFields.includes("name"),
-                  "border-red-500": invalidFields.includes("name"),
-                },
-              )}
+              error={invalidFields.includes("name")}
               placeholder="Testnet"
               value={provider?.name ?? ""}
               onChange={(e) =>
@@ -68,19 +63,13 @@ export default function Form({
           </label>
           <div className="m-1">
             <div className="flex sm:max-w-md">
-              <input
+              <Input
                 type="text"
                 id="url"
                 test-id="provider-url-input"
                 autoComplete="url"
                 placeholder="https://testnet.kwil.com"
-                className={classNames(
-                  "block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6",
-                  {
-                    "border-slate-300": !invalidFields.includes("url"),
-                    "border-red-500": invalidFields.includes("url"),
-                  },
-                )}
+                error={invalidFields.includes("url")}
                 value={provider?.url ?? ""}
                 onChange={(e) =>
                   setProvider({ ...provider, url: e.target.value })
@@ -99,13 +88,12 @@ export default function Form({
           </label>
           <div className="m-1">
             <div className="flex sm:max-w-md">
-              <input
+              <Input
                 type="text"
                 id="chainId"
                 test-id="provider-chainId-input"
                 autoComplete="chainId"
                 placeholder="kwil-chain-testnet-0.6"
-                className="block flex-1 rounded-md border bg-transparent p-2 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:leading-6"
                 value={provider?.chainId ?? ""}
                 onChange={(e) =>
                   setProvider({ ...provider, chainId: e.target.value })

@@ -1,14 +1,15 @@
 import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
+import { ItemType } from "@/utils/database-types"
 
 interface IProps {
   columns?: string[] | undefined
   data: Object[] | undefined
-  type: "table" | "action" | "query"
+  type: ItemType
   isLoading?: boolean
 }
 interface IDataItem {
-  [key: string]: string
+  [key: string]: ItemType | undefined
 }
 
 export default function DataTable({ columns, data, type, isLoading }: IProps) {

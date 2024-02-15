@@ -8,7 +8,7 @@ import {
 } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
 import { useKwilProvider } from "../kwil/useKwilProvider"
-import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
 
 export default function useDatabaseSchema() {
   const dispatch = useAppDispatch()
@@ -16,10 +16,8 @@ export default function useDatabaseSchema() {
   const kwilProvider = useKwilProvider()
 
   const getSchema = useCallback(
-    async (database: IDatasetInfoStringOwner, show?: "tables" | "actions") => {
+    async (database: IDatasetInfoStringOwner, show?: ItemTypes) => {
       if (!kwilProvider || !dispatch || !router) return
-
-      console.log("getSchema", database, show)
 
       try {
         dispatch(

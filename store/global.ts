@@ -10,9 +10,14 @@ interface IAlert {
   position?: "top" | "bottom"
 }
 
+export enum ModalEnum {
+  CONNECT = "connect",
+  SAVE_QUERY = "save_query",
+}
+
 interface IGlobalState {
   isMenuOpen: boolean
-  displayConnectModal: boolean
+  modal: ModalEnum | undefined
   activeAccount: string | undefined
   settingsLoaded: boolean
   alert: IAlert | undefined
@@ -20,7 +25,7 @@ interface IGlobalState {
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  displayConnectModal: true,
+  modal: ModalEnum.CONNECT,
   activeAccount: undefined,
   settingsLoaded: false,
   alert: undefined,
@@ -57,8 +62,8 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setDisplayConnectModal: (state, action: PayloadAction<boolean>) => {
-      state.displayConnectModal = action.payload
+    setModal: (state, action: PayloadAction<ModalEnum | undefined>) => {
+      state.modal = action.payload
     },
     setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
       state.settingsLoaded = action.payload
@@ -81,14 +86,14 @@ export const globalSlice = createSlice({
   },
 })
 
-export const { setIsMenuOpen, setDisplayConnectModal, setSettingsLoaded } =
+export const { setIsMenuOpen, setModal, setSettingsLoaded } =
   globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectDisplayConnectModal = (state: { global: IGlobalState }) =>
-  state.global.displayConnectModal
+export const selectModal = (state: { global: IGlobalState }) =>
+  state.global.modal
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount

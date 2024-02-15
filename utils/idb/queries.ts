@@ -11,15 +11,25 @@ export const getQueries = async (
   idb: IDBPDatabase<unknown>,
   dbid: string,
 ): Promise<IQuery[]> => {
-  const queries: IQuery[] = []
-  let cursor = await idb.transaction(StoreNames.QUERIES).store.openCursor()
-  while (cursor) {
-    if (cursor.value.dbid === dbid) {
-      queries.push(cursor.value)
+  try {
+    const queries: IQuery[] = []
+    const transaction = await idb.transaction(StoreNames.QUERIES)
+    const store = transaction.store
+    let cursor = await store.openCursor()
+    while (cursor) {
+      if (cursor.value.dbid === dbid) {
+        queries.push(cursor.value)
+      }
+      cursor = await cursor.continue()
     }
-    await cursor.continue()
+
+    await transaction.done
+
+    return queries
+  } catch (error) {
+    console.error("Error fetching queries", error)
+    throw error
   }
-  return queries
 }
 
 export const getQuery = async (
@@ -27,7 +37,13 @@ export const getQuery = async (
   dbid: string,
   name: string,
 ): Promise<IQuery | undefined> => {
-  return await idb.get(StoreNames.QUERIES, [dbid, name])
+  try {
+    const query = await idb.get(StoreNames.QUERIES, [dbid, name])
+    return query
+  } catch (error) {
+    console.error("Error fetching query", error)
+    throw error
+  }
 }
 
 export const setQuery = async (

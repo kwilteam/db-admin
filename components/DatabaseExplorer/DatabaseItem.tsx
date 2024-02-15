@@ -1,4 +1,4 @@
-import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
@@ -18,7 +18,7 @@ import { TablesActionsList } from "./TablesActionsList"
 import QueriesList from "./QueriesList"
 
 export interface IItemTypes {
-  [key: string]: "tables" | "actions" | "queries"
+  [key: string]: ItemTypes
 }
 
 const DatabaseItem = ({
@@ -35,7 +35,7 @@ const DatabaseItem = ({
   const visible = databaseVisibility[database.dbid]?.[itemType]
   const databaseSchemaItems =
     databaseSchemas &&
-    itemType !== "queries" &&
+    itemType !== ItemTypes.QUERIES &&
     databaseSchemas[database.dbid]?.[itemType]
 
   const setVisibility = () => {
@@ -66,7 +66,7 @@ const DatabaseItem = ({
       </div>
       <div className="mb-1">
         {visible &&
-          (itemType === "actions" || itemType === "tables") &&
+          (itemType === ItemTypes.ACTIONS || itemType === ItemTypes.TABLES) &&
           databaseSchemaItems && (
             <TablesActionsList
               dbid={database.dbid}
@@ -76,7 +76,7 @@ const DatabaseItem = ({
             />
           )}
 
-        {visible && itemType === "queries" && (
+        {visible && itemType === ItemTypes.QUERIES && (
           <QueriesList dbid={database.dbid} />
         )}
       </div>
@@ -105,7 +105,7 @@ const ItemIcons = ({
           hidden: visible,
         })}
       />
-      {itemType === "tables" && (
+      {itemType === ItemTypes.TABLES && (
         <TableIcon
           className={classNames({
             "h-4 w-4": true,
@@ -113,7 +113,7 @@ const ItemIcons = ({
           })}
         />
       )}
-      {itemType === "actions" && (
+      {itemType === ItemTypes.ACTIONS && (
         <ActionIcon
           className={classNames({
             "h-4 w-4": true,
@@ -121,7 +121,7 @@ const ItemIcons = ({
           })}
         />
       )}
-      {itemType === "queries" && (
+      {itemType === ItemTypes.QUERIES && (
         <QueryIcon
           className={classNames({
             "h-4 w-4": true,

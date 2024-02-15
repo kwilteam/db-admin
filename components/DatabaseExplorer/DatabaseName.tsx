@@ -91,9 +91,9 @@ const DatabaseName = ({
       />
       <span
         className={classNames(
-          "visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible",
+          "ml-auto px-2 text-slate-400 hover:text-slate-700 md:hidden",
           {
-            hidden: !myDatabase,
+            "group-hover:flex": myDatabase,
           },
         )}
         onClick={(e) => triggerDeleteDb(e)}

@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseObject } from "@/store/database"
+import { ItemTypes } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
 import useDatabaseParams from "@/hooks/database/useDatabaseParams"
 import DatabaseExplorer from "@/components/DatabaseExplorer"
@@ -11,14 +12,23 @@ export default function DatabasesLayout({
   children,
 }: React.PropsWithChildren<{}>) {
   const { getSchema } = useDatabaseSchema()
-  const { dbid, table, action } = useDatabaseParams()
+  const { dbid, table, action, query } = useDatabaseParams()
   const databaseObject = useAppSelector((state) =>
     selectDatabaseObject(state, dbid || ""),
   )
 
   useEffect(() => {
     if (dbid && databaseObject) {
-      const show = table ? "tables" : action ? "actions" : undefined
+      let show: ItemTypes | undefined
+
+      if (table) {
+        show = ItemTypes.TABLES
+      } else if (action) {
+        show = ItemTypes.ACTIONS
+      } else if (query) {
+        show = ItemTypes.QUERIES
+      }
+
       getSchema(databaseObject, show)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

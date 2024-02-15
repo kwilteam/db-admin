@@ -1,19 +1,20 @@
 "use client"
 
+import { useEffect } from "react"
 import {
   loadActiveAccount,
   selectActiveAccount,
   selectSettingsLoaded,
 } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { loadProviders, selectActiveProvider } from "@/store/providers"
 import MobileNavigation from "@/components/Navigation/Mobile"
 import DesktopNavigation from "@/components/Navigation/Desktop"
 import GlobalAlert from "@/components/GlobalAlert"
 import UserAccount from "@/components/UserAccount"
 import KwilProviders from "@/components/KwilProviders"
-import ConnectWalletDialog from "@/components/ConnectWalletDialog"
-import { useEffect } from "react"
-import { loadProviders, selectActiveProvider } from "@/store/providers"
+import ConnectWalletModal from "@/components/Modal/ConnectWallet"
+import Loading from "@/components/Loading"
 
 interface IProps {
   children: React.ReactNode
@@ -37,6 +38,12 @@ export default function DashboardLayout({ children }: IProps) {
         <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
           <DesktopNavigation />
 
+          {(!settingsLoaded || !activeProvider) && (
+            <div className="flex w-full justify-center pt-4">
+              <Loading />
+            </div>
+          )}
+
           {settingsLoaded && activeProvider && (
             <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
               {children}
@@ -56,7 +63,7 @@ export default function DashboardLayout({ children }: IProps) {
         </div>
       </>
 
-      <ConnectWalletDialog
+      <ConnectWalletModal
         activeAccount={activeAccount}
         settingsLoaded={settingsLoaded}
       />

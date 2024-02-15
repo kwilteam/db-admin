@@ -3,7 +3,7 @@
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
-import { saveActiveAccount, setDisplayConnectModal } from "@/store/global"
+import { ModalEnum, saveActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -22,11 +22,11 @@ export default function UserAccount({
   const disconnectWallet = () => {
     dispatch(saveActiveAccount(undefined))
     // Will show Connect modal after disconnecting
-    dispatch(setDisplayConnectModal(true))
+    dispatch(setModal(ModalEnum.CONNECT))
   }
 
   const openConnectWalletDialog = () => {
-    dispatch(setDisplayConnectModal(true))
+    dispatch(setModal(ModalEnum.CONNECT))
   }
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import classNames from "classnames"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemTypes, KwilTypes } from "@/utils/database-types"
 import { ChevronRightIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
@@ -85,5 +85,5 @@ const isTableOrActionActive = (
   objectItemName: string,
 ) =>
   dbidParam === dbid &&
-  ((itemType === "tables" && activeTable === objectItemName) ||
-    (itemType === "actions" && activeAction === objectItemName))
+  ((itemType === ItemTypes.TABLES && activeTable === objectItemName) ||
+    (itemType === ItemTypes.ACTIONS && activeAction === objectItemName))

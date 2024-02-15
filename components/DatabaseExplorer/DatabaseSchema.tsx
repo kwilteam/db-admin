@@ -1,4 +1,4 @@
-import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseVisibility } from "@/store/database"
 import DatabaseItem from "./DatabaseItem"
@@ -18,9 +18,9 @@ const DatabaseSchema = ({
       )}
       {databaseVisibility[database.dbid]?.isVisible && (
         <>
-          <DatabaseItem database={database} itemType="tables" />
-          <DatabaseItem database={database} itemType="actions" />
-          <DatabaseItem database={database} itemType="queries" />
+          <DatabaseItem database={database} itemType={ItemTypes.TABLES} />
+          <DatabaseItem database={database} itemType={ItemTypes.ACTIONS} />
+          <DatabaseItem database={database} itemType={ItemTypes.QUERIES} />
         </>
       )}
     </div>

@@ -13,6 +13,18 @@ export interface IDatabaseQueryDict {
   [dbid: string]: IQuery[]
 }
 
+export enum ItemType {
+  TABLE = "table",
+  ACTION = "action",
+  QUERY = "query",
+}
+
+export enum ItemTypes {
+  TABLES = "tables",
+  ACTIONS = "actions",
+  QUERIES = "queries",
+}
+
 // Whether a database is visible, and whether its tables and actions are visible
 interface IDatabaseVisibility {
   isVisible: boolean

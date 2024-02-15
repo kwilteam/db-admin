@@ -9,6 +9,7 @@ import {
   KwilTypes,
   IDatasetInfoStringOwner,
   IDatabaseQueryDict,
+  ItemType,
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
 import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
@@ -16,7 +17,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
   dbid: string
-  type: "table" | "action" | "query"
+  type: ItemType
   name: string
 }
 
@@ -50,41 +51,62 @@ const initialState: IDatabaseState = {
 
 export const loadQueries = createAsyncThunk(
   "database/loadQueries",
-  async (dbid: string) => {
-    const db = await initIdb()
-    if (!db) return
+  async (dbid: string, { rejectWithValue }) => {
+    try {
+      const db = await initIdb()
+      if (!db) return rejectWithValue("Database initialization failed")
 
-    console.log("Loading queries for dbid", dbid)
+      const queries = await getQueries(db, dbid)
 
-    const queries = await getQueries(db, dbid)
-
-    console.log("Queries loaded", queries)
-
-    return { dbid, queries }
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to load queries", error)
+      return rejectWithValue("Failed to load queries")
+    }
   },
 )
 
 export const deleteQueryFromStores = createAsyncThunk(
   "providers/deleteQueryFromStores",
-  async ({ dbid, name }: { dbid: string; name: string }) => {
-    const db = await initIdb()
-    if (!db) return
+  async (
+    { dbid, name }: { dbid: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const db = await initIdb()
+      if (!db) throw new Error("Database initialization failed")
 
-    await deleteQuery(db, dbid, name)
+      await deleteQuery(db, dbid, name)
 
-    return { dbid, name }
+      const queries = await getQueries(db, dbid)
+
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to delete query", error)
+      return rejectWithValue("Failed to delete query")
+    }
   },
 )
 
 export const saveQueryToStores = createAsyncThunk(
   "providers/saveQueryToStores",
-  async ({ dbid, name, sql }: { dbid: string; name: string; sql: string }) => {
-    const db = await initIdb()
-    if (!db) return
+  async (
+    { dbid, name, sql }: { dbid: string; name: string; sql: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const db = await initIdb()
+      if (!db) throw new Error("Database initialization failed")
 
-    await setQuery(db, dbid, name, sql)
+      await setQuery(db, dbid, name, sql)
 
-    return { dbid, name, sql }
+      const queries = await getQueries(db, dbid)
+
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to save query", error)
+      return rejectWithValue("Failed to save query")
+    }
   },
 )
 
@@ -241,12 +263,15 @@ export const databaseSlice = createSlice({
     }),
       builder.addCase(saveQueryToStores.fulfilled, (state, action) => {
         if (!action.payload) return
-        const { dbid, name, sql } = action.payload
+        const { dbid, queries } = action.payload
 
-        state.queryDict[dbid] = {
-          ...state.queryDict[dbid],
-          [name]: sql,
-        }
+        state.queryDict[dbid] = queries
+      }),
+      builder.addCase(deleteQueryFromStores.fulfilled, (state, action) => {
+        if (!action.payload) return
+        const { dbid, queries } = action.payload
+
+        state.queryDict[dbid] = queries
       })
   },
 })
@@ -321,6 +346,14 @@ export const selectQueries = (
   dbid: string,
 ) => {
   return state.database.queryDict[dbid]
+}
+
+export const selectQuery = (
+  state: { database: IDatabaseState },
+  dbid: string,
+  name: string,
+) => {
+  return state.database.queryDict[dbid]?.find((query) => query.name === name)
 }
 
 export default databaseSlice.reducer
