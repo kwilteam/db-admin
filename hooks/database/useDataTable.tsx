@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { selectDatabaseObject, selectTableQueryParams } from "@/store/database"
 import { useAppSelector } from "@/store/hooks"
-import { useKwilProvider } from "../kwil/useKwilProvider"
 import { buildQuery } from "@/utils/build-query"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 interface IDataTableProps {
   dbid: string

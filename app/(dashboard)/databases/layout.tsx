@@ -17,8 +17,6 @@ export default function DatabasesLayout({
     selectDatabaseObject(state, dbid || ""),
   )
 
-  console.log("DATABASE LAYOUT")
-
   // This will load the schema for the selected database for direct routing
   useEffect(() => {
     if (dbid && databaseObject) {

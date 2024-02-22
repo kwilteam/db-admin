@@ -4,6 +4,7 @@ import { Manrope } from "next/font/google"
 import { ReduxProvider } from "@/providers/StoreProvider"
 import "./globals.css"
 import { IdbProvider } from "@/providers/IdbProvider"
+import { WebKwilProvider } from "@/providers/WebKwilProvider"
 
 const manrope = Manrope({ subsets: ["latin"] })
 
@@ -29,7 +30,9 @@ export default function RootLayout({
         })}
       >
         <ReduxProvider>
-          <IdbProvider>{children}</IdbProvider>
+          <WebKwilProvider>
+            <IdbProvider>{children}</IdbProvider>
+          </WebKwilProvider>
         </ReduxProvider>
       </body>
     </html>

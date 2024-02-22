@@ -8,10 +8,10 @@ import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
 import ActionStatements from "./Statements"
-import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 import { ItemType, KwilTypes } from "@/utils/database-types"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { Utils } from "@kwilteam/kwil-js"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 interface IActionProps {
   dbid: string

@@ -20,8 +20,6 @@ export default function DatabasesExplorer() {
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const count = databases?.length
 
-  console.log("DATABASE EXPLORER")
-
   const myDatabases = useMemo(() => {
     if (activeAccount === undefined) return []
 

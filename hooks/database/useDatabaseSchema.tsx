@@ -7,8 +7,8 @@ import {
   setDatabaseVisibility,
 } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
-import { useKwilProvider } from "../kwil/useKwilProvider"
 import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useDatabaseSchema() {
   const dispatch = useAppDispatch()

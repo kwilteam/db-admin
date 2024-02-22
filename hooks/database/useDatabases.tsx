@@ -8,7 +8,7 @@ import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
-import { useKwilProvider } from "../kwil/useKwilProvider"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useDatabases() {
   const dispatch = useAppDispatch()

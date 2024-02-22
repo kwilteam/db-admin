@@ -9,8 +9,8 @@ import {
   setModal,
 } from "@/store/global"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
-import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 import { KwilProviderStatus } from "@/store/providers"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useDeployDatabase(
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor | undefined>,

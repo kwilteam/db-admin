@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { useAppDispatch } from "@/store/hooks"
-import { useKwilProvider } from "../kwil/useKwilProvider"
 import { setAlert } from "@/store/global"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useExecuteTableQuery(dbid: string) {
   const dispatch = useAppDispatch()
