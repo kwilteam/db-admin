@@ -14,7 +14,7 @@ export default function GlobalAlert() {
   return (
     <div
       className={classNames({
-        "absolute left-1/2 z-50 w-full -translate-x-1/2 transform p-2 md:w-auto":
+        "absolute left-1/2 z-50 w-full max-w-[80%] -translate-x-1/2 transform p-2 md:w-auto":
           true,
         "bottom-0": alert.position === "bottom",
         "top-0": alert.position === "top" && isMenuOpen,

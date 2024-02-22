@@ -16,10 +16,11 @@ import useDeleteDb from "@/hooks/database/useDeleteDb"
 
 const DatabaseName = ({
   database,
-  myDatabase,
+  myDatabase, // getSchema,
 }: {
   database: IDatasetInfoStringOwner
   myDatabase?: boolean
+  // getSchema: (database: IDatasetInfoStringOwner) => void
 }) => {
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()

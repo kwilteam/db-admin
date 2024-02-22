@@ -1,10 +1,16 @@
 import { useCallback, useState } from "react"
 import * as monaco from "monaco-editor"
 import { compileSchema } from "@/utils/server-actions"
-import { useAppDispatch } from "@/store/hooks"
-import { ModalEnum, setAlert, setModal } from "@/store/global"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import {
+  ModalEnum,
+  selectProviderStatus,
+  setAlert,
+  setModal,
+} from "@/store/global"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
+import { KwilProviderStatus } from "@/store/providers"
 
 export default function useDeployDatabase(
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor | undefined>,
@@ -13,9 +19,16 @@ export default function useDeployDatabase(
   const [isDeploying, setIsDeploying] = useState(false)
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
+  const providerStatus = useAppSelector(selectProviderStatus)
 
   const deploy = useCallback(async () => {
-    if (!editorRef.current || !kwilProvider) return
+    if (!editorRef.current) return
+
+    // If the provider is offline then we will show Provider offline modal
+    if (providerStatus === KwilProviderStatus.Offline) {
+      dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+      return
+    }
 
     // If no Kwil Signer then we will show the modal to connect the wallet
     if (!kwilSigner) {
@@ -41,7 +54,7 @@ export default function useDeployDatabase(
           description: "Deployed from Kwil Browser",
         }
 
-        await kwilProvider.deploy(deployBody, kwilSigner, true)
+        await kwilProvider?.deploy(deployBody, kwilSigner, true)
 
         dispatch(
           setAlert({
@@ -63,7 +76,7 @@ export default function useDeployDatabase(
     } finally {
       setIsDeploying(false)
     }
-  }, [editorRef, dispatch, kwilProvider, kwilSigner])
+  }, [editorRef, dispatch, kwilProvider, kwilSigner, providerStatus])
 
   return { deploy, isDeploying }
 }

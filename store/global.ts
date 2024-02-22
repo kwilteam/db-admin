@@ -3,6 +3,7 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { AppDispatch } from "."
 import { SettingsKeys, initIdb } from "@/utils/idb/init"
 import { getSetting, setSetting } from "@/utils/idb/settings"
+import { KwilProviderStatus } from "./providers"
 
 interface IAlert {
   text: string
@@ -11,6 +12,7 @@ interface IAlert {
 }
 
 export enum ModalEnum {
+  PROVIDER_OFFLINE = "provider_offline",
   CONNECT = "connect",
   SAVE_QUERY = "save_query",
 }
@@ -19,6 +21,7 @@ interface IGlobalState {
   isMenuOpen: boolean
   modal: ModalEnum | undefined
   activeAccount: string | undefined
+  providerStatus: KwilProviderStatus | undefined
   settingsLoaded: boolean
   alert: IAlert | undefined
 }
@@ -27,6 +30,7 @@ const initialState: IGlobalState = {
   isMenuOpen: true,
   modal: ModalEnum.CONNECT,
   activeAccount: undefined,
+  providerStatus: KwilProviderStatus.Unknown,
   settingsLoaded: false,
   alert: undefined,
 }
@@ -65,6 +69,9 @@ export const globalSlice = createSlice({
     setModal: (state, action: PayloadAction<ModalEnum | undefined>) => {
       state.modal = action.payload
     },
+    setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
+      state.providerStatus = action.payload
+    },
     setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
       state.settingsLoaded = action.payload
     },
@@ -86,7 +93,7 @@ export const globalSlice = createSlice({
   },
 })
 
-export const { setIsMenuOpen, setModal, setSettingsLoaded } =
+export const { setIsMenuOpen, setModal, setProviderStatus, setSettingsLoaded } =
   globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
@@ -97,6 +104,9 @@ export const selectModal = (state: { global: IGlobalState }) =>
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount
+
+export const selectProviderStatus = (state: { global: IGlobalState }) =>
+  state.global.providerStatus
 
 export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
   state.global.settingsLoaded

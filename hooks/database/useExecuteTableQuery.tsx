@@ -22,10 +22,12 @@ export default function useExecuteTableQuery(dbid: string) {
 
         return { queryData, columns }
       } catch (error) {
+        const err = error as Error
+
         dispatch(
           setAlert({
             type: "error",
-            text: "There was an error executing this query.",
+            text: "There was an error executing this query: " + err.message,
           }),
         )
         console.log(error)

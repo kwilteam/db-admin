@@ -14,6 +14,7 @@ import GlobalAlert from "@/components/GlobalAlert"
 import UserAccount from "@/components/UserAccount"
 import KwilProviders from "@/components/KwilProviders"
 import ConnectWalletModal from "@/components/Modal/ConnectWallet"
+import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 
 interface IProps {
@@ -67,6 +68,8 @@ export default function DashboardLayout({ children }: IProps) {
         activeAccount={activeAccount}
         settingsLoaded={settingsLoaded}
       />
+
+      <ProviderOfflineModal settingsLoaded={settingsLoaded} />
     </>
   )
 }

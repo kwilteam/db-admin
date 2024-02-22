@@ -100,10 +100,6 @@ export default function ProviderPage({ params }: IProviderPageProps) {
     }
     if (newInvalidFields.length > 0) {
       setInvalidFields(newInvalidFields)
-      console.error(
-        "Errors in the following fields: ",
-        newInvalidFields.join(", "),
-      )
       return false
     }
 

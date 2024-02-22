@@ -2,7 +2,12 @@ import { useCallback, useEffect, useState } from "react"
 import { WebKwil } from "@kwilteam/kwil-js"
 import { IProvider } from "@/utils/idb/providers"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectActiveProvider, selectProviders } from "@/store/providers"
+import {
+  KwilProviderStatus,
+  selectActiveProvider,
+  selectProviders,
+} from "@/store/providers"
+import { ModalEnum, setModal, setProviderStatus } from "@/store/global"
 
 const logging = true
 
@@ -30,39 +35,55 @@ export const useKwilProvider = (): WebKwil | undefined => {
   const initKwilProvider = useCallback(async () => {
     if (!providerObject) return
 
-    if (!providerObject.chainId) {
-      const readOnlyKwilProvider = new WebKwil({
-        kwilProvider: providerObject.url,
-        chainId: "",
-        logging,
-      })
+    console.log(
+      "providerObject.url: " +
+        providerObject.url +
+        " providerObject.chainId: " +
+        providerObject.chainId,
+    )
 
-      const { data } = await readOnlyKwilProvider.chainInfo()
-
-      const chainId = data?.chain_id
-
-      // Only initialize the write provider if we have a chainId
-      if (chainId) {
-        const writeKwilProvider = new WebKwil({
+    try {
+      if (!providerObject.chainId) {
+        const readOnlyKwilProvider = new WebKwil({
           kwilProvider: providerObject.url,
-          chainId,
-          logging, // enable logging, default false
+          chainId: "",
+          logging,
         })
 
-        setKwilProvider(writeKwilProvider)
-      } else {
-        setKwilProvider(readOnlyKwilProvider)
-      }
-    } else {
-      const _kwilProvider = new WebKwil({
-        kwilProvider: providerObject.url,
-        chainId: providerObject.chainId,
-        logging,
-      })
+        const { data } = await readOnlyKwilProvider.chainInfo()
 
-      setKwilProvider(_kwilProvider)
+        const chainId = data?.chain_id
+
+        // Only initialize the write provider if we have a chainId
+        if (chainId) {
+          const writeKwilProvider = new WebKwil({
+            kwilProvider: providerObject.url,
+            chainId,
+            logging, // enable logging, default false
+          })
+
+          setKwilProvider(writeKwilProvider)
+        } else {
+          setKwilProvider(readOnlyKwilProvider)
+        }
+
+        dispatch(setProviderStatus(KwilProviderStatus.Online))
+      } else {
+        const _kwilProvider = new WebKwil({
+          kwilProvider: providerObject.url,
+          chainId: providerObject.chainId,
+          logging,
+        })
+
+        setKwilProvider(_kwilProvider)
+        dispatch(setProviderStatus(KwilProviderStatus.Online))
+      }
+    } catch (error) {
+      dispatch(setProviderStatus(KwilProviderStatus.Offline))
+      dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+      console.error("Failed to initialize kwil provider", error)
     }
-  }, [providerObject])
+  }, [dispatch, providerObject])
 
   useEffect(() => {
     if (!providerObject) return

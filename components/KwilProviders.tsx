@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useCallback, useEffect, useState } from "react"
+import { Fragment } from "react"
 import Link from "next/link"
 import { Menu, Transition } from "@headlessui/react"
 import {
@@ -16,59 +16,17 @@ import {
   saveActiveProvider,
   selectProviders,
 } from "@/store/providers"
-import { useKwilProvider } from "@/hooks/kwil/useKwilProvider"
 import { IProvider } from "@/utils/idb/providers"
-import { setDatabaseActiveContext } from "@/store/database"
+import { setDatabaseActiveContext, setDatabases } from "@/store/database"
+import { selectProviderStatus } from "@/store/global"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
 }
 
-export default function KwilProviders({
-  activeProvider,
-  ...props
-}: IKwilProvidersProps) {
+export default function KwilProviders({ activeProvider }: IKwilProvidersProps) {
   const providers = useAppSelector(selectProviders)
-  const kwilProvider = useKwilProvider()
-  const [status, setStatus] = useState<KwilProviderStatus>(
-    KwilProviderStatus.Unknown,
-  )
-
-  // TODO: Doesn't ping if provider is offline on first load
-  const pingProvider = useCallback(async () => {
-    // if (!kwilProvider) {
-    //   setStatus(KwilProviderStatus.Offline)
-    //   return
-    // }
-
-    try {
-      const res = await kwilProvider?.ping()
-
-      if (res?.status === 200) {
-        setStatus(KwilProviderStatus.Online)
-      } else {
-        setStatus(KwilProviderStatus.Offline)
-      }
-    } catch (error) {
-      setStatus(KwilProviderStatus.Offline)
-    }
-  }, [kwilProvider])
-
-  useEffect(() => {
-    if (!activeProvider) return
-
-    setStatus(KwilProviderStatus.Unknown)
-  }, [activeProvider])
-
-  useEffect(() => {
-    pingProvider()
-
-    const interval = setInterval(() => {
-      pingProvider()
-    }, 30000)
-
-    return () => clearInterval(interval)
-  }, [pingProvider])
+  const providerStatus = useAppSelector(selectProviderStatus)
 
   if (!providers) return null
 
@@ -79,11 +37,13 @@ export default function KwilProviders({
           <ProviderIcon className="h-4 w-4" />
           <div
             className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
-              "border bg-lime-500": status === KwilProviderStatus.Online,
-              "border bg-red-500": status === KwilProviderStatus.Offline,
+              "border bg-lime-500":
+                providerStatus === KwilProviderStatus.Online,
+              "border bg-red-500":
+                providerStatus === KwilProviderStatus.Offline,
               "animate-pulse bg-amber-500":
-                status !== KwilProviderStatus.Online &&
-                status !== KwilProviderStatus.Offline,
+                providerStatus !== KwilProviderStatus.Online &&
+                providerStatus !== KwilProviderStatus.Offline,
             })}
           />
           <span>{activeProvider}</span>
@@ -160,6 +120,7 @@ const ProviderItem = ({
         })}
         onClick={() => {
           dispatch(saveActiveProvider(name))
+          dispatch(setDatabases(undefined))
           dispatch(setDatabaseActiveContext(undefined))
         }}
       >

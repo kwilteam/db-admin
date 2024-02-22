@@ -18,26 +18,25 @@ export default function useDatabases() {
   const activeAccount = useAppSelector(selectActiveAccount)
 
   useEffect(() => {
-    if (!kwilProvider || !databaseFilters) return
-
     const fetchDatabases = async () => {
       try {
         let databasesResponse
         if (databaseFilters.showAll) {
-          databasesResponse = await kwilProvider.listDatabases()
+          databasesResponse = await kwilProvider?.listDatabases()
         } else if (activeAccount) {
-          databasesResponse = await kwilProvider.listDatabases(activeAccount)
+          databasesResponse = await kwilProvider?.listDatabases(activeAccount)
         } else {
-          databasesResponse = await kwilProvider.listDatabases()
+          databasesResponse = await kwilProvider?.listDatabases()
         }
 
         const _databases = databasesResponse?.data
 
-        if (
-          databasesResponse === undefined ||
-          _databases === undefined ||
-          _databases.length === 0
-        ) {
+        if (databasesResponse === undefined || _databases === undefined) {
+          dispatch(setDatabases(undefined))
+          return
+        }
+
+        if (_databases && _databases.length === 0) {
           dispatch(setDatabases([]))
           return
         }

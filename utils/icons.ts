@@ -26,10 +26,10 @@ import {
   HiOutlineXMark,
   HiServerStack,
   HiOutlinePencil,
+  HiOutlineQuestionMarkCircle,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
-import { PiFileSql } from "react-icons/pi"
 import { TbSql } from "react-icons/tb"
 
 export {
@@ -61,6 +61,7 @@ export {
   HiServerStack as ProviderIcon,
   HiOutlineUser as UserIcon,
   HiOutlinePencil as EditIcon,
+  HiOutlineQuestionMarkCircle as HelpIcon,
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
