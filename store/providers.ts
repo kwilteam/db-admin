@@ -63,17 +63,19 @@ export const deleteProviderFromStores = createAsyncThunk(
   },
 )
 
+interface ISaveProviderToStores {
+  originalProviderName: string | undefined
+  provider: IProvider
+  connectNow: boolean
+}
+
 export const saveProviderToStores = createAsyncThunk(
   "providers/saveProvider",
   async ({
     originalProviderName,
     provider,
     connectNow,
-  }: {
-    originalProviderName: string | undefined
-    provider: IProvider
-    connectNow: boolean
-  }) => {
+  }: ISaveProviderToStores) => {
     let setActiveProvider = false
     const db = await initIdb()
     if (!db) return
