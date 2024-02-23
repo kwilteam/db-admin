@@ -31,6 +31,7 @@ import {
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
+import { PiAsteriskLight } from "react-icons/pi"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -66,4 +67,5 @@ export {
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
   TbSql as QueryIcon,
+  PiAsteriskLight as OtherIcon,
 }

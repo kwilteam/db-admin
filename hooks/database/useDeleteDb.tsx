@@ -67,7 +67,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
         dispatch(
           setAlert({
             type: "error",
-            text: "Database could not be deleted. Please refresh and try again.",
+            text: "Database was not be deleted. Please try again.",
             position: "top",
           }),
         )

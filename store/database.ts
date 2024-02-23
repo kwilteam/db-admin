@@ -13,12 +13,7 @@ import {
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
 import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
-import {
-  PayloadAction,
-  createAsyncThunk,
-  createSlice,
-  createSelector,
-} from "@reduxjs/toolkit"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
   dbid: string
@@ -27,7 +22,7 @@ export interface IDatabaseActiveContext {
 }
 
 export interface IDatabaseFilters {
-  showAll: boolean
+  includeAll: boolean
   search: string
 }
 
@@ -44,7 +39,7 @@ interface IDatabaseState {
 const initialState: IDatabaseState = {
   databases: undefined,
   databaseFilters: {
-    showAll: true,
+    includeAll: true,
     search: "",
   },
   schemaDict: {},
@@ -133,11 +128,11 @@ export const databaseSlice = createSlice({
       state.databaseFilters.search = action.payload
     },
 
-    setDataFilterShowAll: (
+    setDataFilterIncludeAll: (
       state: IDatabaseState,
       action: PayloadAction<boolean>,
     ) => {
-      state.databaseFilters.showAll = action.payload
+      state.databaseFilters.includeAll = action.payload
     },
 
     setDatabaseSchema: (
@@ -284,7 +279,7 @@ export const databaseSlice = createSlice({
 export const {
   setDatabases,
   setDataFilterSearch,
-  setDataFilterShowAll,
+  setDataFilterIncludeAll,
   setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseLoading,

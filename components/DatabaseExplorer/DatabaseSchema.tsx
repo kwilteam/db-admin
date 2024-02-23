@@ -12,7 +12,7 @@ const DatabaseSchema = ({
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
 
   return (
-    <div key={`${database}-structure`} className="ml-8 flex flex-1 flex-col">
+    <div key={`${database}-structure`} className="ml-11 flex flex-1 flex-col">
       {databaseVisibility[database.dbid]?.isVisible && (
         <>
           <DatabaseItem database={database} itemType={ItemTypes.TABLES} />

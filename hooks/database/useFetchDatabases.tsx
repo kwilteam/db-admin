@@ -1,9 +1,5 @@
 import { useCallback } from "react"
-import {
-  selectDatabaseFilters,
-  selectDatabases,
-  setDatabases,
-} from "@/store/database"
+import { selectDatabaseFilters, setDatabases } from "@/store/database"
 import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
@@ -13,14 +9,13 @@ import { useKwilProvider } from "@/providers/WebKwilProvider"
 export default function useDatabases() {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
-  const databases = useAppSelector(selectDatabases)
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
 
   const fetchDatabases = useCallback(async () => {
     try {
       let databasesResponse
-      if (databaseFilters.showAll) {
+      if (databaseFilters.includeAll) {
         databasesResponse = await kwilProvider?.listDatabases()
       } else if (activeAccount) {
         databasesResponse = await kwilProvider?.listDatabases(activeAccount)
