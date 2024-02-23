@@ -25,7 +25,6 @@ const DatabaseName = ({
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
-  const triggerDeleteDb = useDeleteDb(database)
 
   const isVisible = databaseVisibility[database.dbid]?.isVisible
 
@@ -68,7 +67,7 @@ const DatabaseName = ({
 
       <span
         className="overflow-hidden text-ellipsis whitespace-nowrap"
-        style={{ maxWidth: "calc(100% - 60px)" }}
+        style={{ maxWidth: "calc(100% - 55px)" }}
       >
         {database.name}
       </span>
@@ -78,23 +77,37 @@ const DatabaseName = ({
       )}
 
       {!databaseVisibility[database.dbid]?.loading && (
-        <span
-          className={classNames(
-            "absolute right-0 ml-auto bg-white px-2 text-slate-400 hover:text-slate-700",
-            {
-              hidden: !myDatabase,
-              "flex md:hidden": myDatabase,
-              "md:group-hover:flex": myDatabase,
-            },
-          )}
-          onClick={(e) => triggerDeleteDb(e)}
-          test-id={`database-item-${database}-delete`}
-        >
-          x
-        </span>
+        <DeleteDatabase myDatabase={myDatabase} database={database} />
       )}
     </li>
   )
 }
 
 export default DatabaseName
+
+function DeleteDatabase({
+  myDatabase,
+  database,
+}: {
+  myDatabase?: boolean
+  database: IDatasetInfoStringOwner
+}) {
+  const triggerDeleteDb = useDeleteDb(database)
+
+  return (
+    <span
+      className={classNames(
+        "absolute right-0 ml-auto bg-white px-2 text-slate-400 hover:text-slate-700",
+        {
+          hidden: !myDatabase,
+          "flex md:hidden": myDatabase,
+          "md:group-hover:flex": myDatabase,
+        },
+      )}
+      onClick={(e) => triggerDeleteDb(e)}
+      test-id={`database-item-${database.dbid}-delete`}
+    >
+      x
+    </span>
+  )
+}

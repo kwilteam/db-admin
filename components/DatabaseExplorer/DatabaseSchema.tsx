@@ -2,7 +2,6 @@ import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseVisibility } from "@/store/database"
 import DatabaseItem from "./DatabaseItem"
-import Loading from "../Loading"
 
 const DatabaseSchema = ({
   database,

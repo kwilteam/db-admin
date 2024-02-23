@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { selectDatabaseFilters, setDatabases } from "@/store/database"
 import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -6,14 +6,16 @@ import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useDatabases() {
+export default function useFetchDatabases() {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const fetchDatabases = useCallback(async () => {
     try {
+      setLoading(true)
       let databasesResponse
       if (databaseFilters.includeAll) {
         databasesResponse = await kwilProvider?.listDatabases()
@@ -27,11 +29,13 @@ export default function useDatabases() {
 
       if (databasesResponse === undefined || _databases === undefined) {
         dispatch(setDatabases(undefined))
+        setLoading(false)
         return
       }
 
       if (_databases && _databases.length === 0) {
         dispatch(setDatabases([]))
+        setLoading(false)
         return
       }
 
@@ -42,6 +46,7 @@ export default function useDatabases() {
       )
 
       dispatch(setDatabases(databases))
+      setLoading(false)
     } catch (error) {
       dispatch(
         setAlert({
@@ -51,9 +56,11 @@ export default function useDatabases() {
         }),
       )
 
+      setLoading(false)
+
       console.error(error)
     }
   }, [dispatch, kwilProvider, databaseFilters, activeAccount])
 
-  return fetchDatabases
+  return { fetchDatabases, loading }
 }
