@@ -40,9 +40,9 @@ export default function DatabaseList({
             <span>OTHER DATABASES</span>
 
             <input
-              id="comments"
-              aria-describedby="comments-description"
-              name="comments"
+              id="include-all"
+              aria-describedby="include-all-description"
+              name="include-all"
               type="checkbox"
               checked={includeOtherDatabases}
               onChange={setIncludeOtherDatabases}

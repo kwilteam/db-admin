@@ -19,7 +19,7 @@ export default function DatabasesExplorer() {
     >
       <ul className="flex flex-col">
         {providerStatus === KwilProviderStatus.Offline && (
-          <div className="flex h-full flex-col items-center justify-center text-center">
+          <div className="mt-2 flex h-full flex-col items-center justify-center text-center">
             <p className="text-sm text-red-500">Kwil Provider is offline</p>
           </div>
         )}

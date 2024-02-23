@@ -60,9 +60,18 @@ export const WebKwilProvider = ({
         kwilInstance = new WebKwil(kwilProviderOptions)
       }
 
-      setKwilProvider(kwilInstance)
-      dispatch(setProviderStatus(KwilProviderStatus.Online))
+      const ping = await kwilInstance.ping()
+
+      if (ping.status === 200) {
+        setKwilProvider(kwilInstance)
+        dispatch(setProviderStatus(KwilProviderStatus.Online))
+      } else {
+        setKwilProvider(undefined)
+        dispatch(setProviderStatus(KwilProviderStatus.Offline))
+        dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+      }
     } catch (error) {
+      setKwilProvider(undefined)
       dispatch(setProviderStatus(KwilProviderStatus.Offline))
       dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
       console.error("Failed to initialize kwil provider", error)

@@ -125,6 +125,7 @@ export default function Form({
                   id="connectNow"
                   checked={connectNow}
                   onChange={(e) => setConnectNow(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-kwil focus:ring-kwil"
                 />
               </div>
             </div>
