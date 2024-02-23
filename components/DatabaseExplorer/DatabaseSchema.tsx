@@ -13,9 +13,6 @@ const DatabaseSchema = ({
 
   return (
     <div key={`${database}-structure`} className="ml-8 flex flex-1 flex-col">
-      {databaseVisibility[database.dbid]?.loading && (
-        <Loading className="mb-1 ml-6" />
-      )}
       {databaseVisibility[database.dbid]?.isVisible && (
         <>
           <DatabaseItem database={database} itemType={ItemTypes.TABLES} />

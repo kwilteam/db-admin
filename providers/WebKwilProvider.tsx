@@ -7,6 +7,7 @@ import {
   createContext,
   useContext,
 } from "react"
+import { usePathname } from "next/navigation"
 import { WebKwil } from "@kwilteam/kwil-js"
 import { IProvider } from "@/utils/idb/providers"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -27,6 +28,7 @@ export const WebKwilProvider = ({
   children: React.ReactNode
 }) => {
   const dispatch = useAppDispatch()
+  const pathname = usePathname()
   const [kwilProvider, setKwilProvider] = useState<WebKwil | undefined>()
   const activeProvider = useAppSelector(selectActiveProvider)
   const providers = useAppSelector(selectProviders)
@@ -38,7 +40,7 @@ export const WebKwilProvider = ({
     const _provider = providers?.find((p) => p.name === activeProvider)
 
     setProviderObject(_provider || undefined)
-  }, [activeProvider, providers])
+  }, [activeProvider, providers, pathname])
 
   const initKwilProvider = useCallback(async () => {
     if (!providerObject) return
@@ -67,6 +69,9 @@ export const WebKwilProvider = ({
     }
   }, [dispatch, providerObject])
 
+  // By including the pathname we re-evaluate the Kwil provider whenever the route changes
+  // This makes it possible to test the provider status whenever there is a significant user action
+  // Allowing us to notify the user when the provider is offline
   useEffect(() => {
     initKwilProvider()
   }, [initKwilProvider])

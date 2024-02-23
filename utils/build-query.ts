@@ -48,7 +48,5 @@ export const buildQuery = (
     query += ` LIMIT 0, 50`
   }
 
-  console.log("Query", query)
-
   return query
 }

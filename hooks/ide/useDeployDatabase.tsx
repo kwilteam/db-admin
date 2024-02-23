@@ -41,14 +41,10 @@ export default function useDeployDatabase(
     const schema = editorRef.current.getValue()
 
     try {
-      // 1. Compile the code
+      // Compile the code
       const compiledSchema = await compileSchema(schema)
 
       if (compiledSchema) {
-        // 2. Sign compiled code using Kwil Browser Node
-        console.log("Compiled Schema", compiledSchema)
-
-        // 3. Deploy the signed code using Kwil Browser Node
         const deployBody = {
           schema: compiledSchema,
           description: "Deployed from Kwil Browser",

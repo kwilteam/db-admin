@@ -27,9 +27,10 @@ export default function Header({ database, type, name }: IProps) {
       {type === "action" && <ActionIcon className="h-4 w-4" />}
       {type === "query" && <QueryIcon className="h-4 w-4" />}
 
-      {name === "new" && <span>New query</span>}
+      {type !== "query" && <span>{name}</span>}
 
-      {name !== "new" && (
+      {type === "query" && name === "new" && <span>New query</span>}
+      {type === "query" && name !== "new" && (
         <div
           className="flex max-h-10 cursor-pointer flex-row items-center gap-1 overflow-clip"
           onClick={() => dispatch(setModal(ModalEnum.SAVE_QUERY))}

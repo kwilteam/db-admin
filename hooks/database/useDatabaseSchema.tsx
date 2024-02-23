@@ -40,6 +40,8 @@ export default function useDatabaseSchema() {
         // Remove owner from schema as Uint8Array cannot be serialized in redux
         delete (schemaRes.data as { [key: string]: any })["owner"]
 
+        console.log("schemaRes.data", schemaRes.data)
+
         dispatch(
           setDatabaseSchema({
             dbid: database.dbid,

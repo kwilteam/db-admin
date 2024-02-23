@@ -14,9 +14,7 @@ interface IDataItem {
 
 export default function DataTable({ columns, data, type, isLoading }: IProps) {
   if (isLoading) {
-    return (
-      <Loading className="flex h-screen justify-center bg-slate-50 pt-10" />
-    )
+    return <Loading className="flex justify-center bg-slate-50 pt-10" />
   }
 
   if (type === "table" && !isLoading && !data?.length) {

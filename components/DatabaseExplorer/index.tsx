@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo } from "react"
 import { selectActiveAccount, selectProviderStatus } from "@/store/global"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { useAppSelector } from "@/store/hooks"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
-import { selectDatabaseFilters, setDatabases } from "@/store/database"
-import useDatabases from "@/hooks/database/useDatabases"
+import { selectDatabaseFilters, selectDatabases } from "@/store/database"
+import useFetchDatabases from "@/hooks/database/useFetchDatabases"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
 import DatabaseFilters from "./DatabaseFilters"
@@ -13,11 +13,11 @@ import Loading from "../Loading"
 import { KwilProviderStatus } from "@/store/providers"
 
 export default function DatabasesExplorer() {
-  const dispatch = useAppDispatch()
-  const { databases } = useDatabases()
+  const fetchDatabases = useFetchDatabases()
   const providerStatus = useAppSelector(selectProviderStatus)
   const activeAccount = useAppSelector(selectActiveAccount)
   const databaseFilters = useAppSelector(selectDatabaseFilters)
+  const databases = useAppSelector(selectDatabases)
   const count = databases?.length
 
   const myDatabases = useMemo(() => {
@@ -54,13 +54,9 @@ export default function DatabasesExplorer() {
       })
   }, [databases, activeAccount, databaseFilters])
 
-  // Clear the databases when the component is unmounted
-  // This forces the component to reload the databases when it is mounted again
   useEffect(() => {
-    return () => {
-      dispatch(setDatabases(undefined))
-    }
-  }, [dispatch])
+    fetchDatabases()
+  }, [fetchDatabases])
 
   return (
     <div

@@ -13,6 +13,7 @@ import {
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
 import useDeleteDb from "@/hooks/database/useDeleteDb"
+import Loading from "../Loading"
 
 const DatabaseName = ({
   database,
@@ -90,11 +91,18 @@ const DatabaseName = ({
           flex: myDatabase,
         })}
       />
+
+      {databaseVisibility[database.dbid]?.loading && (
+        <Loading className="ml-2" />
+      )}
+
       <span
         className={classNames(
-          "ml-auto px-2 text-slate-400 hover:text-slate-700 md:hidden",
+          "ml-auto px-2 text-slate-400 hover:text-slate-700",
           {
-            "group-hover:flex": myDatabase,
+            hidden: !myDatabase,
+            "flex md:hidden": myDatabase,
+            "md:group-hover:flex": myDatabase,
           },
         )}
         onClick={(e) => triggerDeleteDb(e)}
