@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
+import classNames from "classnames"
 
 interface IDatabaseListProps {
   databases: IDatasetInfoStringOwner[] | undefined
@@ -63,8 +64,13 @@ export default function DatabaseList({
         databases &&
         databases.length === 0 && (
           <div className="ml-7 flex justify-start">
-            <p className="text-sm italic text-slate-500">
-              {!loading && "No databases were found"}
+            <p
+              className={classNames("text-sm italic text-slate-500", {
+                visible: !loading,
+                invisible: loading,
+              })}
+            >
+              {!loading ? "No databases were found" : "&nbsp;"}
             </p>
           </div>
         )}

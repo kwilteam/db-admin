@@ -1,41 +1,39 @@
 "use client"
 
-import { selectTableQueryParams, setTablePagination } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { selectQueryPagination, setQueryPagination } from "@/store/database"
 import { IPagination } from "@/utils/database-types"
 import PaginationButton from "../Pagination/PaginationButton"
-import PaginationPage from "../Pagination/PaginationPage"
 import PaginationPerPage from "../Pagination/PaginationPerPage"
+import PaginationPage from "../Pagination/PaginationPage"
 
 interface IPaginationProps {
   dbid: string
-  table: string
+  queryName: string
   totalCount: number | undefined
   isLoading: boolean
 }
 
 export default function Pagination({
   dbid,
-  table,
+  queryName,
   totalCount,
   isLoading,
 }: IPaginationProps) {
-  const tableQueryParams = useAppSelector((state) =>
-    selectTableQueryParams(state, dbid, table),
-  )
   const dispatch = useAppDispatch()
+  const pagination = useAppSelector((state) =>
+    selectQueryPagination(state, dbid, queryName),
+  )
   const count = totalCount || 0
-
-  const pagination = tableQueryParams?.pagination
   const currentPage = pagination?.currentPage || 1
-  const perPage = pagination?.perPage || 50
+  const perPage = pagination?.perPage || 1
   const totalPages = Math.ceil(count / perPage)
 
   const setPagination = (pagination: IPagination) => {
     dispatch(
-      setTablePagination({
+      setQueryPagination({
         dbid,
-        table,
+        queryName,
         pagination,
       }),
     )

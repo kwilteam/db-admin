@@ -1,22 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { ModalEnum, setAlert, setModal } from "@/store/global"
 import {
-  saveQueryToStores,
   selectDatabaseObject,
-  selectQuery,
   setDatabaseActiveContext,
 } from "@/store/database"
+import { ItemType } from "@/utils/database-types"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import Header from "@/components/DatabaseItem/Header"
-import useExecuteTableQuery from "@/hooks/database/useExecuteTableQuery"
-import Button from "@/components/Button"
 import SaveQueryModal from "@/components/Modal/SaveQuery"
-import { ItemType } from "@/utils/database-types"
 import QueryEditor from "@/components/DatabaseItem/Query/QueryEditor"
 import useQueryEditor from "@/hooks/database/useQueryEditor"
+import Pagination from "@/components/DatabaseItem/Query/Pagination"
 
 interface IProps {
   params: {
@@ -39,6 +35,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
     loading,
     columns,
     queryData,
+    totalCount,
     runQuery,
     triggerSaveQueryModal,
   } = useQueryEditor(dbid, queryName)
@@ -71,6 +68,17 @@ export default function DatabaseQueryPage({ params }: IProps) {
             isLoading={loading}
           />
         </div>
+
+        {columns && (
+          <div className="flex">
+            <Pagination
+              dbid={dbid}
+              queryName={queryName}
+              totalCount={totalCount}
+              isLoading={loading}
+            />
+          </div>
+        )}
       </div>
 
       <SaveQueryModal

@@ -34,11 +34,11 @@ export default function NavigationItem({ item }: IProps) {
         }}
       >
         <item.icon className="h-6 w-6" />
-        <NavTooltip
+        {/* <NavTooltip
           item={item}
           pathname={pathname}
           className="hidden lg:visible"
-        />
+        /> */}
       </Link>
     </li>
   )
@@ -53,13 +53,14 @@ function NavTooltip({ pathname, item, ...props }: INavTooltipProps) {
   return (
     <span
       {...props}
-      className={classNames({
-        "absolute left-[52px] top-2 hidden w-auto rounded-lg bg-black/75 p-2 text-xs text-white":
-          true,
-        hidden: pathname.startsWith(item.href),
-        "group-hover:block": !pathname.startsWith(item.href),
-        [props.className as string]: props.className !== undefined,
-      })}
+      className={classNames(
+        "absolute left-[52px] top-2 hidden w-auto rounded-lg bg-black/75 p-2 text-xs text-white",
+        {
+          hidden: pathname.startsWith(item.href),
+          "group-hover:block": !pathname.startsWith(item.href),
+          [props.className as string]: props.className !== undefined,
+        },
+      )}
     >
       {item.name}
     </span>

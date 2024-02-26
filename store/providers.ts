@@ -64,40 +64,16 @@ export const deleteProviderFromStores = createAsyncThunk(
 )
 
 interface ISaveProviderToStores {
-  originalProviderName: string | undefined
   provider: IProvider
   connectNow: boolean
 }
 
 export const saveProviderToStores = createAsyncThunk(
   "providers/saveProvider",
-  async ({
-    originalProviderName,
-    provider,
-    connectNow,
-  }: ISaveProviderToStores) => {
+  async ({ provider, connectNow }: ISaveProviderToStores) => {
     let setActiveProvider = false
     const db = await initIdb()
     if (!db) return
-
-    // If we are updating an existing provider, we need to delete the old provider from the IDB if the provider name has changed
-    // This is because if we change the name we will duplicate the provider as the name is the key for the IDB table
-    if (originalProviderName && originalProviderName !== provider.name) {
-      const existingProvider = await getProvider(db, originalProviderName)
-
-      // If the name has been changed
-      if (existingProvider && existingProvider.name !== provider.name) {
-        // Delete the old version
-        await deleteProvider(db, existingProvider.name)
-
-        // And if the provider was the active provider, we need to update the active provider in the settings
-        const activeProvider = await getSetting(db, SettingsKeys.PROVIDER)
-        if (activeProvider && activeProvider.value === existingProvider.name) {
-          setActiveProvider = true
-          await setSetting(db, SettingsKeys.PROVIDER, provider.name)
-        }
-      }
-    }
 
     await setProvider(db, provider)
 

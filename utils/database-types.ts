@@ -40,7 +40,7 @@ export interface IDatabaseVisibilityDict {
 }
 
 export interface ITableQueryParams {
-  pagination: ITablePagination
+  pagination: IPagination
   filters: ITableFilter[]
   sort: ITableSort[]
 }
@@ -51,7 +51,7 @@ export interface ITableQueryParamsDict {
   }
 }
 
-export interface ITablePagination {
+export interface IPagination {
   currentPage: number
   perPage: number
 }
@@ -71,4 +71,10 @@ export interface IDatasetInfoStringOwner {
   name: string
   owner: string
   dbid: string
+}
+
+export interface IDatabaseQueryPaginationDict {
+  [dbid: string]: {
+    [queryName: string]: IPagination
+  }
 }

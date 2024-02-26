@@ -10,7 +10,14 @@ import DatabaseList from "./DatabaseList"
 
 export default function DatabasesExplorer() {
   const providerStatus = useAppSelector(selectProviderStatus)
-  const { myDatabases, otherDatabases, count, loading } = useDatabases()
+  const {
+    fetchDatabasesLoading,
+    myDbs,
+    otherDbs,
+    myDbsLoading,
+    otherDbsLoading,
+    count,
+  } = useDatabases()
 
   return (
     <div
@@ -28,20 +35,20 @@ export default function DatabasesExplorer() {
           <DatabaseFilterSearch />
         )}
 
-        {providerStatus === KwilProviderStatus.Online && loading && (
-          <Loading className="absolute right-0 top-12 mt-1 flex justify-center" />
-        )}
+        {providerStatus === KwilProviderStatus.Online &&
+          fetchDatabasesLoading && (
+            <Loading className="absolute right-0 top-12 mt-1 flex justify-center" />
+          )}
 
         {providerStatus === KwilProviderStatus.Online &&
-          count !== undefined &&
-          !loading && (
+          count !== undefined && (
             <>
               <DatabaseList
-                databases={myDatabases}
-                loading={loading}
+                databases={myDbs}
+                loading={myDbsLoading}
                 myDatabase
               />
-              <DatabaseList databases={otherDatabases} loading={loading} />
+              <DatabaseList databases={otherDbs} loading={otherDbsLoading} />
             </>
           )}
       </ul>

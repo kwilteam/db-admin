@@ -141,14 +141,14 @@ function Tooltip({ ...props }: React.HTMLAttributes<HTMLSpanElement>) {
     <span
       {...props}
       className={classNames(
-        "absolute hidden w-auto rounded-lg bg-slate-50 p-2 text-xs text-slate-900 group-hover:block",
+        "absolute hidden w-auto rounded-lg bg-black/75 p-2 text-xs text-white group-hover:block",
         {
           [props.className as string]: props.className !== undefined,
         },
       )}
     >
-      The chain Id is a unique identifier for the kwil network. <br />
-      For example, the chain id for the kwil testnet is &quot;
+      The chain Id is a unique identifier for the Kwil network. <br />
+      For example, the chain id for the Kwil testnet is &quot;
       <em>kwil-chain-testnet-0.6&quot;.</em>
       <br />
       If you do not know the chain Id, you can leave this field blank.

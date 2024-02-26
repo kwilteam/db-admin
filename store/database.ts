@@ -3,13 +3,14 @@ import {
   IDatabaseVisibilityDict,
   ITableQueryParamsDict,
   ITableQueryParams,
-  ITablePagination,
+  IPagination,
   ITableFilter,
   ITableSort,
   KwilTypes,
   IDatasetInfoStringOwner,
   IDatabaseQueryDict,
   ItemType,
+  IDatabaseQueryPaginationDict,
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
 import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
@@ -33,6 +34,7 @@ interface IDatabaseState {
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
   queryDict: IDatabaseQueryDict
+  queryPaginationDict: IDatabaseQueryPaginationDict
   activeContext: IDatabaseActiveContext | undefined
 }
 
@@ -46,6 +48,7 @@ const initialState: IDatabaseState = {
   visibilityDict: {},
   tableQueryParamsDict: {},
   queryDict: {},
+  queryPaginationDict: {},
   activeContext: undefined,
 }
 
@@ -200,7 +203,7 @@ export const databaseSlice = createSlice({
       action: PayloadAction<{
         dbid: string
         table: string
-        pagination: ITablePagination
+        pagination: IPagination
       }>,
     ) => {
       const { dbid, table, pagination } = action.payload
@@ -253,6 +256,21 @@ export const databaseSlice = createSlice({
         },
       }
     },
+    setQueryPagination: (
+      state: IDatabaseState,
+      action: PayloadAction<{
+        dbid: string
+        queryName: string
+        pagination: IPagination
+      }>,
+    ) => {
+      const { dbid, queryName, pagination } = action.payload
+
+      state.queryPaginationDict[dbid] = {
+        ...state.queryPaginationDict[dbid],
+        [queryName]: pagination,
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loadQueries.fulfilled, (state, action) => {
@@ -288,6 +306,7 @@ export const {
   setTablePagination,
   setTableFilters,
   setTableSort,
+  setQueryPagination,
 } = databaseSlice.actions
 
 export const selectDatabases = (state: { database: IDatabaseState }) =>
@@ -354,6 +373,14 @@ export const selectQuery = (
   name: string,
 ) => {
   return state.database.queryDict[dbid]?.find((query) => query.name === name)
+}
+
+export const selectQueryPagination = (
+  state: { database: IDatabaseState },
+  dbid: string,
+  queryName: string,
+) => {
+  return state.database.queryPaginationDict[dbid]?.[queryName]
 }
 
 export default databaseSlice.reducer

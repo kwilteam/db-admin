@@ -3,7 +3,11 @@ import { useRouter } from "next/navigation"
 import { IProvider } from "@/utils/idb/providers"
 import { setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { saveProviderToStores, selectProviders } from "@/store/providers"
+import {
+  deleteProviderFromStores,
+  saveProviderToStores,
+  selectProviders,
+} from "@/store/providers"
 
 export default function useSaveProvider(name: string) {
   const dispatch = useAppDispatch()
@@ -11,7 +15,6 @@ export default function useSaveProvider(name: string) {
   const [invalidFields, setInvalidFields] = useState<string[]>([])
   // This is to make sure that we don't have a provider name when we are creating a new provider
   const isNewProvider = name === "create"
-  const providerName = isNewProvider ? undefined : name
   const providers = useAppSelector(selectProviders)
   const [provider, setProvider] = useState<IProvider>({
     name: "",
@@ -21,13 +24,13 @@ export default function useSaveProvider(name: string) {
   const [connectNow, setConnectNow] = useState(false)
   const [originalProviderName, setOriginalProviderName] = useState<
     string | undefined
-  >(undefined)
+  >(isNewProvider ? undefined : name)
 
   // Use the provider name to find the provider object from the list of providers in the LocalStorage
   useEffect(() => {
-    if (!providerName) return
+    if (!originalProviderName) return
 
-    const _provider = providers?.find((p) => p.name === providerName)
+    const _provider = providers?.find((p) => p.name === originalProviderName)
 
     if (!_provider) {
       router.push("/settings/providers")
@@ -36,16 +39,24 @@ export default function useSaveProvider(name: string) {
 
     setProvider(_provider)
     setOriginalProviderName(_provider.name)
-  }, [providerName, providers, router])
+  }, [providers, router, originalProviderName])
 
   const saveProvider = () => {
     if (!provider || !validateForm()) return
 
+    let hasProviderNameChanged = false
+
+    // If we are updating an existing provider, we need to delete the old provider from the IDB if the provider name has changed
+    // This is because the name is the key for the IDB table
+    if (originalProviderName && originalProviderName !== provider.name) {
+      dispatch(deleteProviderFromStores(originalProviderName))
+      hasProviderNameChanged = true
+    }
+
     dispatch(
       saveProviderToStores({
-        originalProviderName,
         provider,
-        connectNow,
+        connectNow: hasProviderNameChanged || connectNow,
       }),
     )
 

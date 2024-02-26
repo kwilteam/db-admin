@@ -3,11 +3,11 @@ import { useAppDispatch } from "@/store/hooks"
 import { setAlert } from "@/store/global"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useExecuteTableQuery(dbid: string) {
+export default function useExecuteQuery(dbid: string) {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
 
-  const executeTableQuery = useCallback(
+  const executeQuery = useCallback(
     async (sql: string) => {
       if (!dbid || !sql || !kwilProvider) return
 
@@ -36,5 +36,5 @@ export default function useExecuteTableQuery(dbid: string) {
     [kwilProvider, dbid, dispatch],
   )
 
-  return executeTableQuery
+  return executeQuery
 }
