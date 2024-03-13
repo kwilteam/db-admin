@@ -126,7 +126,12 @@ export default function Action({ dbid, actionName }: IActionProps) {
       </div>
       <div className="mt-2">
         {data && (
-          <DataTable data={data} type={ItemType.ACTION} columns={columns} />
+          <DataTable
+            data={data}
+            totalCount={data?.length}
+            type={ItemType.ACTION}
+            columns={columns}
+          />
         )}
       </div>
     </div>

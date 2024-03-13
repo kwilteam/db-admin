@@ -57,6 +57,7 @@ export default function DatabaseTablePage({ params }: IProps) {
         <DataTable
           columns={columns}
           data={tableData}
+          totalCount={totalCount}
           type={type}
           isLoading={isLoading}
         />
