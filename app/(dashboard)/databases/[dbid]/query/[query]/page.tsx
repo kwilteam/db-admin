@@ -65,6 +65,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
           <DataTable
             columns={columns}
             data={queryData}
+            totalCount={totalCount}
             type={type}
             isLoading={loading}
           />

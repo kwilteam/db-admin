@@ -5,6 +5,7 @@ import { ItemType } from "@/utils/database-types"
 interface IProps {
   columns?: string[] | undefined
   data: Object[] | undefined
+  totalCount: number | undefined
   type: ItemType
   isLoading?: boolean
 }
@@ -12,12 +13,22 @@ interface IDataItem {
   [key: string]: ItemType | undefined
 }
 
-export default function DataTable({ columns, data, type, isLoading }: IProps) {
+export default function DataTable({
+  columns,
+  data,
+  totalCount,
+  type,
+  isLoading,
+}: IProps) {
   if (isLoading) {
     return <Loading className="flex justify-center bg-slate-50 pt-10" />
   }
 
-  if ((type === "table" || type === "query") && !isLoading && !data?.length) {
+  if (
+    (type === "table" || type === "query") &&
+    !isLoading &&
+    totalCount === 0
+  ) {
     return <Alert text="No data found" type="info" className="m-2" />
   }
 

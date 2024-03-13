@@ -4,7 +4,6 @@ import {
   saveQueryToStores,
   selectQuery,
   selectQueryPagination,
-  setQueryPagination,
 } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
@@ -79,6 +78,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
       } else {
         setQueryData(undefined)
         setColumns(undefined)
+        setTotalCount(undefined)
       }
       setLoading(false)
     },
