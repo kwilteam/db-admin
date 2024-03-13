@@ -13,7 +13,7 @@ const PaginationPerPage = ({
 
   return (
     <select
-      className="m-1 cursor-pointer rounded-md border border-slate-200 bg-white px-1 text-slate-500"
+      className="m-1 h-8 w-12 cursor-pointer rounded-md border border-slate-200 p-1 text-xs outline-none hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
       onChange={(e) =>
         setPagination({
           currentPage: 1,

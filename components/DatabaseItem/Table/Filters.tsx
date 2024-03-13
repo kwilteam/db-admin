@@ -126,7 +126,7 @@ function Filter({
   return (
     <div className="flex flex-row gap-1">
       <select
-        className="w-1/2 rounded-md border border-slate-100 p-1 text-xs hover:bg-slate-50"
+        className="w-1/2 rounded-md border border-slate-100 p-1 text-xs hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
         value={tempFilters[index].column}
         onChange={(e) => setFilterValue(index, "column", e.target.value)}
       >
@@ -137,7 +137,7 @@ function Filter({
         ))}
       </select>
       <select
-        className="w-1/4 rounded-md border border-slate-100 p-1 text-xs hover:bg-slate-50"
+        className="w-1/4 rounded-md border border-slate-100 p-1 text-xs hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
         value={tempFilters[index].operator}
         onChange={(e) => setFilterValue(index, "operator", e.target.value)}
       >
@@ -148,7 +148,7 @@ function Filter({
         ))}
       </select>
       <input
-        className="w-1/4 rounded-md border border-slate-100 p-1 text-xs placeholder-slate-300 hover:bg-slate-50"
+        className="w-1/4 rounded-md border border-slate-100 p-1 text-xs placeholder-slate-300 hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
         type="text"
         placeholder={"value"}
         value={tempFilters[index].value}
