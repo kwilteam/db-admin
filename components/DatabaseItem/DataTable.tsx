@@ -17,7 +17,7 @@ export default function DataTable({ columns, data, type, isLoading }: IProps) {
     return <Loading className="flex justify-center bg-slate-50 pt-10" />
   }
 
-  if (type === "table" && !isLoading && !data?.length) {
+  if ((type === "table" || type === "query") && !isLoading && !data?.length) {
     return <Alert text="No data found" type="info" className="m-2" />
   }
 

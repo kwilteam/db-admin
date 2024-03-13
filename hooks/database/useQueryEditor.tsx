@@ -28,14 +28,6 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   const [loading, setLoading] = useState<boolean>(false)
   const [isNewQuery, setIsNewQuery] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (queryObject) {
-      setSql(queryObject.sql)
-    } else {
-      setIsNewQuery(true)
-    }
-  }, [queryObject])
-
   const appendPagination = useCallback(
     (sql: string, pagination: IPagination) => {
       // We don't want to append pagination if it's not active
@@ -92,6 +84,15 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     },
     [executeQuery, appendPagination, pagination],
   )
+
+  useEffect(() => {
+    if (queryObject) {
+      setSql(queryObject.sql)
+      runQuery(queryObject.sql)
+    } else {
+      setIsNewQuery(true)
+    }
+  }, [queryObject, runQuery])
 
   // Whenever the pagination changes we need to run the query again
   // But we don't want to run the query each time the sql changes
