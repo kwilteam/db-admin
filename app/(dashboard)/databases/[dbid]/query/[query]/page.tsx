@@ -32,6 +32,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
     isNewQuery,
     sql,
     setSql,
+    paginationDisabled,
     loading,
     columns,
     queryData,
@@ -69,7 +70,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
           />
         </div>
 
-        {columns && (
+        {columns && !paginationDisabled && (
           <div className="flex">
             <Pagination
               dbid={dbid}

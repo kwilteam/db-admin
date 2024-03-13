@@ -1,13 +1,14 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
+import { IPagination } from "@/utils/database-types"
 import {
   saveQueryToStores,
   selectQuery,
   selectQueryPagination,
+  setQueryPagination,
 } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./useExecuteQuery"
-import { IPagination } from "@/utils/database-types"
 
 export default function useQueryEditor(dbid: string, queryName: string) {
   const dispatch = useAppDispatch()
@@ -17,7 +18,8 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   const pagination = useAppSelector((state) =>
     selectQueryPagination(state, dbid, queryName),
   )
-
+  const paginationRef = useRef(pagination)
+  const [paginationDisabled, setPaginationDisabled] = useState<boolean>(false)
   const executeQuery = useExecuteQuery(dbid)
   const [sql, setSql] = useState<string>("")
   const [queryData, setQueryData] = useState<Object[] | undefined>(undefined)
@@ -34,37 +36,77 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     }
   }, [queryObject])
 
-  const runQuery = useCallback(async () => {
-    setLoading(true)
+  const appendPagination = useCallback(
+    (sql: string, pagination: IPagination) => {
+      // We don't want to append pagination if it's not active
+      if (pagination && paginationDisabled) return sql
 
-    // Append the pagination to the SQL query
-    const cleanSql = sql.replace(/;/g, "")
-    // TODO: This does not work but should check if the query already has a limit by clause
-    const query = /limit by/i.test(cleanSql.toLowerCase())
-      ? cleanSql
-      : appendPagination(cleanSql, pagination)
-    const response = await executeQuery(query)
+      if (pagination) {
+        const { currentPage, perPage } = pagination
 
-    if (response) {
-      setQueryData(response.queryData)
-      setColumns(response.columns)
+        sql += ` LIMIT ${(currentPage - 1) * perPage}, ${perPage}`
+      } else {
+        sql += ` LIMIT 0, 1`
+      }
 
-      // Get the total count of the query
-      const countSql = `SELECT count(*) as count FROM (${cleanSql}) as subQuery`
-      const countResponse = await executeQuery(countSql)
-      const countData = countResponse?.queryData?.[0] as { count: number }
+      return sql
+    },
+    [paginationDisabled],
+  )
 
-      setTotalCount(countData?.count)
-    } else {
-      setQueryData(undefined)
-      setColumns(undefined)
-    }
-    setLoading(false)
-  }, [sql, pagination, executeQuery])
+  const runQuery = useCallback(
+    async (sql: string) => {
+      setLoading(true)
 
+      // Remove ; from SQL
+      const cleanSql = sql.replace(/;/g, "")
+      let response
+
+      // Check if the query already has a limit, if not add pagination
+      if (/limit /i.test(cleanSql.toLowerCase())) {
+        setPaginationDisabled(true)
+        console.log(cleanSql)
+        response = await executeQuery(cleanSql)
+      } else {
+        setPaginationDisabled(false)
+        const paginatedSql = appendPagination(cleanSql, pagination)
+        console.log(paginatedSql)
+        response = await executeQuery(paginatedSql)
+      }
+
+      if (response) {
+        setQueryData(response.queryData)
+        setColumns(response.columns)
+
+        // Get the total count of the query
+        const countSql = `SELECT count(*) as count FROM (${cleanSql}) as subQuery`
+        const countResponse = await executeQuery(countSql)
+        const countData = countResponse?.queryData?.[0] as { count: number }
+
+        setTotalCount(countData?.count)
+      } else {
+        setQueryData(undefined)
+        setColumns(undefined)
+      }
+      setLoading(false)
+    },
+    [executeQuery, appendPagination, pagination],
+  )
+
+  // Whenever the pagination changes we need to run the query again
+  // But we don't want to run the query each time the sql changes
   useEffect(() => {
-    runQuery()
-  }, [runQuery, pagination])
+    // Compare the current pagination with the previous one
+    // Only run the query if there's a change
+    if (
+      !paginationDisabled &&
+      JSON.stringify(pagination) !== JSON.stringify(paginationRef.current)
+    ) {
+      runQuery(sql)
+    }
+    // Update the ref to the current pagination in any case
+    paginationRef.current = pagination
+  }, [sql, pagination, paginationDisabled, runQuery])
 
   const triggerSaveQueryModal = () => {
     if (!sql || sql.length === 0) return
@@ -81,6 +123,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     isNewQuery,
     sql,
     setSql,
+    paginationDisabled,
     loading,
     columns,
     queryData,
@@ -88,16 +131,4 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     runQuery,
     triggerSaveQueryModal,
   }
-}
-
-const appendPagination = (query: string, pagination: IPagination) => {
-  if (pagination) {
-    const { currentPage, perPage } = pagination
-
-    query += ` LIMIT ${(currentPage - 1) * perPage},  ${perPage}`
-  } else {
-    query += ` LIMIT 0, 1`
-  }
-
-  return query
 }

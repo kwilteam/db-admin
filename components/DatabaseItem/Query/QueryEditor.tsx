@@ -1,9 +1,10 @@
+import { useEffect } from "react"
 import Button from "@/components/Button"
 
 interface QueryEditorProps {
   sql: string
   setSql: (sql: string) => void
-  runQuery: () => void
+  runQuery: (sql: string) => void
   triggerSaveQueryModal: () => void
 }
 
@@ -13,6 +14,20 @@ export default function QueryEditor({
   runQuery,
   triggerSaveQueryModal,
 }: QueryEditorProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        runQuery(sql)
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [sql, runQuery])
+
   return (
     <div className="flex h-40 flex-col gap-2 overflow-scroll bg-slate-50 p-2">
       <textarea
@@ -26,7 +41,7 @@ export default function QueryEditor({
           Save
         </Button>
 
-        <Button onClick={runQuery} context="primary">
+        <Button onClick={() => runQuery(sql)} context="primary">
           Execute
         </Button>
       </div>

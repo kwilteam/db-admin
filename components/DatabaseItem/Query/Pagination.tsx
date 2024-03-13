@@ -26,7 +26,7 @@ export default function Pagination({
   )
   const count = totalCount || 0
   const currentPage = pagination?.currentPage || 1
-  const perPage = pagination?.perPage || 1
+  const perPage = pagination?.perPage || 50
   const totalPages = Math.ceil(count / perPage)
 
   const setPagination = (pagination: IPagination) => {
