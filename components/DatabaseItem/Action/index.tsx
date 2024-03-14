@@ -4,14 +4,14 @@ import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAction, selectDatabaseObject } from "@/store/database"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
+import { Utils } from "@kwilteam/kwil-js"
+import { ItemType, KwilTypes } from "@/utils/database-types"
+import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
 import ActionStatements from "./Statements"
-import { ItemType, KwilTypes } from "@/utils/database-types"
-import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
-import { Utils } from "@kwilteam/kwil-js"
-import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 interface IActionProps {
   dbid: string

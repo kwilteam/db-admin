@@ -28,14 +28,15 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   const [loading, setLoading] = useState<boolean>(false)
   const [isNewQuery, setIsNewQuery] = useState<boolean>(false)
 
-  useMount(() => {
+  useEffect(() => {
     if (queryObject) {
       setSql(queryObject.sql)
       runQuery(queryObject.sql)
     } else {
       setIsNewQuery(true)
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryObject]) // We only want to render this onload of the queryObject from the store
 
   const appendPagination = useCallback(
     (sql: string, pagination: IPagination) => {

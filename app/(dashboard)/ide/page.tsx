@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
 import useDeployDatabase from "@/hooks/ide/useDeployDatabase"
@@ -14,7 +15,6 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
-import { useEffect } from "react"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"

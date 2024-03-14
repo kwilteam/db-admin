@@ -5,15 +5,17 @@ import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
 import { ModalEnum, saveActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
+import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
 }
 
-export default function UserAccount({
-  activeAccount,
-  ...props
-}: IUserInfoProps) {
+export default function UserAccount({ activeAccount }: IUserInfoProps) {
+  const kwilProvider = useKwilProvider()
+  const [accountBalance, setAccountBalance] = useState<string | undefined>(
+    undefined,
+  )
   const dispatch = useAppDispatch()
   const [abbreviatedAccount, setAbbreviatedAccount] = useState<
     string | undefined
@@ -48,6 +50,21 @@ export default function UserAccount({
     }
   }, [dispatch])
 
+  useEffect(() => {
+    const getAccount = async () => {
+      if (activeAccount && kwilProvider) {
+        const kwilAccount = await kwilProvider.getAccount(activeAccount)
+
+        if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {
+          const _balance = parseFloat(kwilAccount.data.balance).toFixed(2)
+          setAccountBalance(_balance)
+        }
+      }
+    }
+
+    getAccount()
+  }, [activeAccount, kwilProvider])
+
   if (!activeAccount)
     return (
       <>
@@ -63,9 +80,14 @@ export default function UserAccount({
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+        <Menu.Button className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProfileIcon className="h-4 w-4" />
           <span>{abbreviatedAccount}</span>
+          {accountBalance && (
+            <span className="text-xs font-thin text-slate-500">
+              ({accountBalance})
+            </span>
+          )}
           <ChevronDownIcon
             className="h-4 w-4 text-slate-800"
             aria-hidden="true"
