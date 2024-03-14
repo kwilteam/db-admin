@@ -14,6 +14,7 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
+import { useEffect } from "react"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -25,6 +26,16 @@ export default function IdePage() {
   const { handleEditorDidMount, editorRef } = useEditorMount()
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
+
+  // When the active schema changes, focus the editor
+  // Helpful when creating a new schema
+  useEffect(() => {
+    if (editorRef.current && Object.hasOwn(schemaContentDict, activeSchema)) {
+      setTimeout(() => {
+        editorRef.current?.focus() // Focus the editor
+      }, 500)
+    }
+  }, [activeSchema, editorRef, schemaContentDict])
 
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-col">

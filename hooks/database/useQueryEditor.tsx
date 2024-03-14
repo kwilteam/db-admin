@@ -8,6 +8,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./useExecuteQuery"
+import useMount from "../useMount"
 
 export default function useQueryEditor(dbid: string, queryName: string) {
   const dispatch = useAppDispatch()
@@ -27,8 +28,19 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   const [loading, setLoading] = useState<boolean>(false)
   const [isNewQuery, setIsNewQuery] = useState<boolean>(false)
 
+  useMount(() => {
+    if (queryObject) {
+      setSql(queryObject.sql)
+      runQuery(queryObject.sql)
+    } else {
+      setIsNewQuery(true)
+    }
+  })
+
   const appendPagination = useCallback(
     (sql: string, pagination: IPagination) => {
+      if (!sql || sql.length === 0) return undefined
+
       // We don't want to append pagination if it's not active
       if (pagination && paginationDisabled) return sql
 
@@ -37,7 +49,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
 
         sql += ` LIMIT ${(currentPage - 1) * perPage}, ${perPage}`
       } else {
-        sql += ` LIMIT 0, 1`
+        sql += ` LIMIT 0, 50`
       }
 
       return sql
@@ -46,11 +58,11 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   )
 
   const runQuery = useCallback(
-    async (sql: string) => {
+    async (sqlString: string) => {
       setLoading(true)
 
       // Remove ; from SQL
-      const cleanSql = sql.replace(/;/g, "")
+      const cleanSql = sqlString.replace(/;/g, "")
       let response
 
       // Check if the query already has a limit, if not add pagination
@@ -61,8 +73,10 @@ export default function useQueryEditor(dbid: string, queryName: string) {
       } else {
         setPaginationDisabled(false)
         const paginatedSql = appendPagination(cleanSql, pagination)
-        console.log(paginatedSql)
-        response = await executeQuery(paginatedSql)
+        if (paginatedSql) {
+          console.log(paginatedSql)
+          response = await executeQuery(paginatedSql)
+        }
       }
 
       if (response) {
@@ -84,15 +98,6 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     },
     [executeQuery, appendPagination, pagination],
   )
-
-  useEffect(() => {
-    if (queryObject) {
-      setSql(queryObject.sql)
-      runQuery(queryObject.sql)
-    } else {
-      setIsNewQuery(true)
-    }
-  }, [queryObject, runQuery])
 
   // Whenever the pagination changes we need to run the query again
   // But we don't want to run the query each time the sql changes

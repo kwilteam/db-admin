@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useState, useEffect } from "react"
 import Button from "@/components/Button"
 
 interface QueryEditorProps {

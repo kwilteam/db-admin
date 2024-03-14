@@ -52,11 +52,14 @@ export default function SchemaExplorer() {
               <input
                 ref={newSchemaInputRef}
                 value={newSchemaName ?? ""}
-                className={classNames({
-                  "w-full rounded-md p-1 outline-none hover:bg-slate-50": true,
-                  "border border-red-400":
-                    savedSchemas && savedSchemas.includes(newSchemaName ?? ""),
-                })}
+                className={classNames(
+                  "w-full rounded-md p-1 text-xs outline-none hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0 ",
+                  {
+                    "border border-red-400":
+                      savedSchemas &&
+                      savedSchemas.includes(newSchemaName ?? ""),
+                  },
+                )}
                 type="text"
                 onChange={newSchemaNameChange}
                 onKeyDown={newSchemaNameSubmit}

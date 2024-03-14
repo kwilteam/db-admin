@@ -96,7 +96,7 @@ export default function Sorting({ dbid, table, columns }: ISortingProps) {
                     {remainingColumns.length > 0 && (
                       <div className="flex">
                         <select
-                          className="rounded-md p-1 text-xs outline-none hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
+                          className="w-44 rounded-md p-1 text-xs outline-none hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
                           onChange={(e) => {
                             addSort(e.target.value)
                           }}
