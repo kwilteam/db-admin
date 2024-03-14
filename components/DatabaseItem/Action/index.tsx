@@ -6,7 +6,7 @@ import { selectAction, selectDatabaseObject } from "@/store/database"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import { Utils } from "@kwilteam/kwil-js"
 import { ItemType, KwilTypes } from "@/utils/database-types"
-import { getErrorMessage } from "@/utils/error-message"
+import { getDetailsErrorMessage } from "@/utils/error-message"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import Loading from "@/components/Loading"
@@ -100,7 +100,7 @@ export default function Action({ dbid, actionName }: IActionProps) {
 
         return true
       } catch (error) {
-        const errorMessage = getErrorMessage(error as Error)
+        const errorMessage = getDetailsErrorMessage(error as Error)
 
         dispatch(
           setAlert({
