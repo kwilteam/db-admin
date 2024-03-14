@@ -69,13 +69,11 @@ export default function useQueryEditor(dbid: string, queryName: string) {
       // Check if the query already has a limit, if not add pagination
       if (/limit /i.test(cleanSql.toLowerCase())) {
         setPaginationDisabled(true)
-        console.log(cleanSql)
         response = await executeQuery(cleanSql)
       } else {
         setPaginationDisabled(false)
         const paginatedSql = appendPagination(cleanSql, pagination)
         if (paginatedSql) {
-          console.log(paginatedSql)
           response = await executeQuery(paginatedSql)
         }
       }
