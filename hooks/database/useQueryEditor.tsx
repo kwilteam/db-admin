@@ -8,7 +8,6 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./useExecuteQuery"
-import useMount from "../useMount"
 
 export default function useQueryEditor(dbid: string, queryName: string) {
   const dispatch = useAppDispatch()

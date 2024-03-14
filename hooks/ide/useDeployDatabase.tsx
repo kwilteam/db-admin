@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react"
 import * as monaco from "monaco-editor"
 import { compileSchema } from "@/utils/server-actions"
+import { getDetailsErrorMessage } from "@/utils/error-message"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   ModalEnum,
@@ -60,13 +61,12 @@ export default function useDeployDatabase(
         )
       }
     } catch (error) {
-      const err = error as Error
+      const errorMessage = getDetailsErrorMessage(error as Error)
 
-      console.log("Deploy Error Msg", err.message)
       dispatch(
         setAlert({
           type: "error",
-          text: `The database could not be deployed due to: ${err.message}`,
+          text: errorMessage || "An error occurred",
         }),
       )
     } finally {

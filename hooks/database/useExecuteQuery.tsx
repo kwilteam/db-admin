@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { getErrorMessage } from "@/utils/error-message"
 import { useAppDispatch } from "@/store/hooks"
 import { setAlert } from "@/store/global"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
@@ -22,15 +23,14 @@ export default function useExecuteQuery(dbid: string) {
 
         return { queryData, columns }
       } catch (error) {
-        const err = error as Error
+        const errorMessage = getErrorMessage(error as Error)
 
         dispatch(
           setAlert({
             type: "error",
-            text: "There was an error executing this query: " + err.message,
+            text: errorMessage || "An error occurred",
           }),
         )
-        console.log(error)
       }
     },
     [kwilProvider, dbid, dispatch],

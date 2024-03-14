@@ -63,7 +63,6 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
           }
         }
       } catch (error) {
-        console.error(error)
         dispatch(
           setAlert({
             type: "error",

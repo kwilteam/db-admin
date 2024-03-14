@@ -6,6 +6,7 @@ import { selectAction, selectDatabaseObject } from "@/store/database"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import { Utils } from "@kwilteam/kwil-js"
 import { ItemType, KwilTypes } from "@/utils/database-types"
+import { getErrorMessage } from "@/utils/error-message"
 import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import Loading from "@/components/Loading"
@@ -99,13 +100,12 @@ export default function Action({ dbid, actionName }: IActionProps) {
 
         return true
       } catch (error) {
-        const err = error as Error
-        console.error("executeAction error", err.message)
-        console.error(err)
+        const errorMessage = getErrorMessage(error as Error)
+
         dispatch(
           setAlert({
-            text: "There was a problem executing this action: " + err.message,
             type: "error",
+            text: errorMessage || "An error occurred",
           }),
         )
         return false
