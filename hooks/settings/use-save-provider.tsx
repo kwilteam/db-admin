@@ -24,13 +24,15 @@ export default function useSaveProvider(name: string) {
   const [connectNow, setConnectNow] = useState(false)
   const [originalProviderName, setOriginalProviderName] = useState<
     string | undefined
-  >(isNewProvider ? undefined : name)
+  >(isNewProvider ? undefined : decodeURIComponent(name))
 
   // Use the provider name to find the provider object from the list of providers in the LocalStorage
   useEffect(() => {
     if (!originalProviderName) return
 
     const _provider = providers?.find((p) => p.name === originalProviderName)
+
+    console.log("providers", providers, originalProviderName, _provider)
 
     if (!_provider) {
       router.push("/settings/providers")
@@ -52,6 +54,9 @@ export default function useSaveProvider(name: string) {
       dispatch(deleteProviderFromStores(originalProviderName))
       hasProviderNameChanged = true
     }
+
+    // Required to remove any leading/trailing whitespace
+    provider.name = provider.name.trim()
 
     dispatch(
       saveProviderToStores({
