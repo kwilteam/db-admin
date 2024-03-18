@@ -6,16 +6,13 @@ import { useAppDispatch } from "@/store/hooks"
 import { ModalEnum, saveActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
+import { usePathname } from "next/navigation"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
 }
 
 export default function UserAccount({ activeAccount }: IUserInfoProps) {
-  const kwilProvider = useKwilProvider()
-  const [accountBalance, setAccountBalance] = useState<string | undefined>(
-    undefined,
-  )
   const dispatch = useAppDispatch()
   const [abbreviatedAccount, setAbbreviatedAccount] = useState<
     string | undefined
@@ -50,21 +47,6 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
     }
   }, [dispatch])
 
-  useEffect(() => {
-    const getAccount = async () => {
-      if (activeAccount && kwilProvider) {
-        const kwilAccount = await kwilProvider.getAccount(activeAccount)
-
-        if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {
-          const _balance = parseFloat(kwilAccount.data.balance).toFixed(2)
-          setAccountBalance(_balance)
-        }
-      }
-    }
-
-    getAccount()
-  }, [activeAccount, kwilProvider])
-
   if (!activeAccount)
     return (
       <>
@@ -83,11 +65,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
         <Menu.Button className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProfileIcon className="h-4 w-4" />
           <span>{abbreviatedAccount}</span>
-          {accountBalance && (
-            <span className="text-xs font-thin text-slate-500">
-              ({accountBalance})
-            </span>
-          )}
+          <AccountBalance activeAccount={activeAccount} />
           <ChevronDownIcon
             className="h-4 w-4 text-slate-800"
             aria-hidden="true"
@@ -118,5 +96,39 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
         </Menu.Items>
       </Transition>
     </Menu>
+  )
+}
+
+const AccountBalance = ({ activeAccount }: { activeAccount: string }) => {
+  const pathname = usePathname()
+  const kwilProvider = useKwilProvider()
+  const [accountBalance, setAccountBalance] = useState<string | undefined>(
+    undefined,
+  )
+
+  // Balance will be updated when the account changes or the user navigates to a different page
+  useEffect(() => {
+    if (!activeAccount || !kwilProvider) return
+
+    const getAccount = async () => {
+      const kwilAccount = await kwilProvider.getAccount(activeAccount)
+
+      if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {
+        const _balance = parseFloat(kwilAccount.data.balance).toFixed(2)
+        setAccountBalance(_balance)
+      }
+    }
+
+    getAccount()
+  }, [activeAccount, kwilProvider, pathname])
+
+  return (
+    <>
+      {accountBalance && (
+        <span className="text-xs font-thin text-slate-500">
+          ({accountBalance})
+        </span>
+      )}
+    </>
   )
 }
