@@ -1,23 +1,31 @@
 "use client"
 
-import { Dialog, Transition } from "@headlessui/react"
 import { Fragment } from "react"
+import { usePathname } from "next/navigation"
+import classNames from "classnames"
+import { Dialog, Transition } from "@headlessui/react"
 import { HiOutlineBars3, HiOutlineXMark } from "react-icons/hi2"
-import UserInfo from "../UserAccount"
-import useActivePage from "@/hooks/use-active-page"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectIsMenuOpen, setIsMenuOpen } from "@/store/global"
+import { selectActiveProvider } from "@/store/providers"
+import {
+  selectActiveAccount,
+  selectIsMenuOpen,
+  setIsMenuOpen,
+} from "@/store/global"
+import useActivePage from "@/hooks/use-active-page"
 import Main from "./Main"
 import SchemaExplorer from "../Ide/SchemaExplorer"
-import { usePathname } from "next/navigation"
 import DatabaseExplorer from "../DatabaseExplorer"
-import classNames from "classnames"
 import SettingsNavigation from "../Settings/Navigation"
 import ExtensionFilters from "../Extensions/Filters"
+import KwilProviders from "../KwilProviders"
+import UserAccount from "../UserAccount"
 
 export default function MobileNavigation() {
   const dispatch = useAppDispatch()
   const isMenuOpen = useAppSelector(selectIsMenuOpen)
+  const activeAccount = useAppSelector(selectActiveAccount)
+  const activeProvider = useAppSelector(selectActiveProvider)
   const activePage = useActivePage()
   const pathname = usePathname()
 
@@ -87,7 +95,17 @@ export default function MobileNavigation() {
         >
           <HiOutlineBars3 className="h-6 w-6 text-slate-100" />
         </button>
-        <div className="text-slate-100">{activePage?.name}</div>
+
+        <div className="flex gap-1">
+          <KwilProviders
+            activeProvider={activeProvider}
+            className="hidden lg:flex"
+          />
+          <UserAccount
+            activeAccount={activeAccount}
+            className="hidden lg:flex"
+          />
+        </div>
       </div>
     </>
   )

@@ -3,13 +3,13 @@
 import { Fragment } from "react"
 import Link from "next/link"
 import { Menu, Transition } from "@headlessui/react"
+import classNames from "classnames"
 import {
   ChevronDownIcon,
   EditIcon,
   PlusIcon,
   ProviderIcon,
 } from "@/utils/icons"
-import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   KwilProviderStatus,

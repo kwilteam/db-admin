@@ -17,6 +17,9 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
   const [abbreviatedAccount, setAbbreviatedAccount] = useState<
     string | undefined
   >()
+  const [abbreviatedMobileAccount, setAbbreviatedMobileAccount] = useState<
+    string | undefined
+  >()
 
   const disconnectWallet = () => {
     dispatch(saveActiveAccount(undefined))
@@ -33,7 +36,11 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
       const _abbreviatedUser =
         activeAccount.slice(0, 5) + "..." + activeAccount.slice(-5)
 
+      const _abbreviatedMobileUser =
+        activeAccount.slice(0, 3) + "..." + activeAccount.slice(-3)
+
       setAbbreviatedAccount(_abbreviatedUser)
+      setAbbreviatedMobileAccount(_abbreviatedMobileUser)
     } else setAbbreviatedAccount(undefined)
   }, [activeAccount])
 
@@ -64,7 +71,8 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
       <div>
         <Menu.Button className="inline-flex w-full items-center justify-center gap-1 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProfileIcon className="h-4 w-4" />
-          <span>{abbreviatedAccount}</span>
+          <span className="hidden md:flex">{abbreviatedAccount}</span>
+          <span className="flex md:hidden">{abbreviatedMobileAccount}</span>
           <AccountBalance activeAccount={activeAccount} />
           <ChevronDownIcon
             className="h-4 w-4 text-slate-800"
