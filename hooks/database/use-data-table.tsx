@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 import { selectDatabaseObject, selectTableQueryParams } from "@/store/database"
-import { useAppSelector } from "@/store/hooks"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { setAlert } from "@/store/global"
 import { buildQuery } from "@/utils/build-query"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
+import { getErrorMessage } from "@/utils/error-message"
 
 interface IDataTableProps {
   dbid: string
@@ -10,6 +12,7 @@ interface IDataTableProps {
 }
 
 export default function useDataTable({ dbid, table }: IDataTableProps) {
+  const dispatch = useAppDispatch()
   const [tableData, setTableData] = useState<Object[] | undefined>()
   const [totalCount, setTotalCount] = useState<number | undefined>()
   const [columns, setColumns] = useState<string[] | undefined>()
@@ -52,12 +55,21 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
 
         setIsLoading(false)
       } catch (error) {
-        console.log(error)
+        const errorMessage = getErrorMessage(error as Error)
+
+        dispatch(
+          setAlert({
+            type: "error",
+            text: errorMessage || "An error occurred",
+          }),
+        )
+
+        setIsLoading(false)
       }
     }
 
     fetchTableData()
-  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject])
+  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject, dispatch])
 
   return { tableData, totalCount, columns, isLoading }
 }
