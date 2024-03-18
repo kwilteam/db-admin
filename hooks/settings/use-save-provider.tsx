@@ -32,8 +32,6 @@ export default function useSaveProvider(name: string) {
 
     const _provider = providers?.find((p) => p.name === originalProviderName)
 
-    console.log("providers", providers, originalProviderName, _provider)
-
     if (!_provider) {
       router.push("/settings/providers")
       return
