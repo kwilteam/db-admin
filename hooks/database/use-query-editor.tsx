@@ -47,9 +47,9 @@ export default function useQueryEditor(dbid: string, queryName: string) {
       if (pagination) {
         const { currentPage, perPage } = pagination
 
-        sql += ` LIMIT ${(currentPage - 1) * perPage}, ${perPage}`
+        sql += ` LIMIT ${perPage} OFFSET ${(currentPage - 1) * perPage}`
       } else {
-        sql += ` LIMIT 0, 50`
+        sql += ` LIMIT 50 OFFSET 0`
       }
 
       return sql

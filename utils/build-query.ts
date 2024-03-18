@@ -43,9 +43,9 @@ export const buildQuery = (
   if (queryParams?.pagination) {
     const { currentPage, perPage } = queryParams.pagination
 
-    query += ` LIMIT ${(currentPage - 1) * perPage},  ${perPage}`
+    query += ` LIMIT ${perPage} OFFSET ${(currentPage - 1) * perPage}`
   } else {
-    query += ` LIMIT 0, 50`
+    query += ` LIMIT 50 OFFSET 0`
   }
 
   return query
