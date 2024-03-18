@@ -2,7 +2,7 @@
 
 import { selectProviderStatus } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
-import useDatabases from "@/hooks/database/useDatabases"
+import useDatabases from "@/hooks/database/use-databases"
 import { KwilProviderStatus } from "@/store/providers"
 import DatabaseFilterSearch from "./DatabaseFilterSearch"
 import Loading from "../Loading"

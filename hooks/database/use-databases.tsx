@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { selectActiveAccount } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseFilters, selectDatabases } from "@/store/database"
-import useFetchDatabases from "@/hooks/database/useFetchDatabases"
+import useFetchDatabases from "@/hooks/database/use-fetch-databases"
 
 // Delay update of loading state to avoid flickering
 const loadingDelay = 1000

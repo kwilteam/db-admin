@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import classNames from "classnames"
-import useCreateNewSchema from "@/hooks/ide/useCreateNewSchema"
+import useCreateNewSchema from "@/hooks/ide/use-create-new-schema"
 import { FileCreateIcon, FileIcon } from "@/utils/icons"
 import { selectSavedSchemas, loadSavedSchemas } from "@/store/ide"
 import Loading from "../Loading"

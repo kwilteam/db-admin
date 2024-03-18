@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { CloseIcon, PlusIcon } from "@/utils/icons"
-import useSaveProvider from "@/hooks/settings/useSaveProvider"
+import useSaveProvider from "@/hooks/settings/use-save-provider"
 import Header from "@/components/Settings/Providers/Header"
 import Button from "@/components/Button"
 import ActionPanel from "@/components/Settings/Providers/ActionPanel"

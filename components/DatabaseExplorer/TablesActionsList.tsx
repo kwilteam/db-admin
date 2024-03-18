@@ -4,7 +4,7 @@ import { ItemTypes, KwilTypes } from "@/utils/database-types"
 import { ChevronRightIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
-import useDatabaseParams from "@/hooks/database/useDatabaseParams"
+import useDatabaseParams from "@/hooks/database/use-database-params"
 import { IItemTypes } from "./DatabaseItem"
 
 interface ITablesActionsList {

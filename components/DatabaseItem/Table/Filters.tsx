@@ -3,7 +3,7 @@ import { Popover, Transition } from "@headlessui/react"
 import { FilterIcon, PlusIcon } from "@/utils/icons"
 import { ITableFilter } from "@/utils/database-types"
 import classNames from "classnames"
-import useTableFilters from "@/hooks/database/useTableFilters"
+import useTableFilters from "@/hooks/database/use-table-filters"
 import Button from "@/components/Button"
 
 interface IFiltersProps {

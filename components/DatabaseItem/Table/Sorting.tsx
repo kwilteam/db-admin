@@ -3,7 +3,7 @@ import { Popover, Switch, Transition } from "@headlessui/react"
 import { Fragment, useMemo } from "react"
 import classNames from "classnames"
 import { ITableSort } from "@/utils/database-types"
-import useTableSort from "@/hooks/database/useTableSort"
+import useTableSort from "@/hooks/database/use-table-sort"
 import Button from "@/components/Button"
 
 interface ISortingProps {

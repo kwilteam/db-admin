@@ -2,7 +2,7 @@ import { useAppDispatch } from "@/store/hooks"
 import { removeSchema } from "@/store/ide"
 import { deleteSchema } from "@/utils/idb/ide"
 import React, { useCallback } from "react"
-import useIdb from "../useIdb"
+import useIdb from "../use-idb"
 import { setAlert } from "@/store/global"
 
 export default function useDeleteSchema() {

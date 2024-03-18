@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Input from "../Input"
 import Base from "./Base"
-import useSaveQuery from "@/hooks/database/useSaveQuery"
+import useSaveQuery from "@/hooks/database/use-save-query"
 
 interface ISaveQueryModal {
   dbid: string

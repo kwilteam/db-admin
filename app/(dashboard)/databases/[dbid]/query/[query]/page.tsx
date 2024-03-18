@@ -7,11 +7,11 @@ import {
   setDatabaseActiveContext,
 } from "@/store/database"
 import { ItemType } from "@/utils/database-types"
+import useQueryEditor from "@/hooks/database/use-query-editor"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import Header from "@/components/DatabaseItem/Header"
 import SaveQueryModal from "@/components/Modal/SaveQuery"
 import QueryEditor from "@/components/DatabaseItem/Query/QueryEditor"
-import useQueryEditor from "@/hooks/database/useQueryEditor"
 import Pagination from "@/components/DatabaseItem/Query/Pagination"
 
 interface IProps {

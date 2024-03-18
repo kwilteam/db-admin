@@ -3,9 +3,9 @@
 import { useEffect } from "react"
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
-import useDeployDatabase from "@/hooks/ide/useDeployDatabase"
-import useEditorMount from "@/hooks/ide/useEditorMount"
-import useSaveSchema from "@/hooks/ide/useSaveSchema"
+import useDeployDatabase from "@/hooks/ide/use-deploy-database"
+import useEditorMount from "@/hooks/ide/use-editor-mount"
+import useSaveSchema from "@/hooks/ide/use-save-schema"
 import { useAppSelector } from "@/store/hooks"
 import {
   selectActiveSchema,

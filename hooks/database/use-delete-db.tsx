@@ -8,7 +8,7 @@ import {
 } from "@/store/database"
 import { setAlert } from "@/store/global"
 import { IDatasetInfoStringOwner, KwilTypes } from "@/utils/database-types"
-import { useKwilSigner } from "../kwil/useKwilSigner"
+import { useKwilSigner } from "../use-kwil-signer"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {

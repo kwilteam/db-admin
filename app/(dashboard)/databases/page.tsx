@@ -1,6 +1,6 @@
 "use client"
 
-import useActivePage from "@/hooks/useActivePage"
+import useActivePage from "@/hooks/use-active-page"
 import { selectDatabaseActiveContext } from "@/store/database"
 import { useAppSelector } from "@/store/hooks"
 import { redirect } from "next/navigation"

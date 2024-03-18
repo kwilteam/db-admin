@@ -7,7 +7,7 @@ import {
   setDatabaseActiveContext,
 } from "@/store/database"
 import { ItemType } from "@/utils/database-types"
-import useDataTable from "@/hooks/database/useDataTable"
+import useDataTable from "@/hooks/database/use-data-table"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import Pagination from "@/components/DatabaseItem/Table/Pagination"
 import Header from "@/components/DatabaseItem/Header"

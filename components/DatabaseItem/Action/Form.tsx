@@ -3,7 +3,7 @@
 import { useState } from "react"
 import classNames from "classnames"
 import { KwilTypes } from "@/utils/database-types"
-import useActionForm from "@/hooks/useActionForm"
+import useActionForm from "@/hooks/use-action-form"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"

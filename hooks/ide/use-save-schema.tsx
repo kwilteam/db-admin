@@ -4,7 +4,7 @@ import { setSchema } from "@/utils/idb/ide"
 import { useAppDispatch } from "@/store/hooks"
 import { setSchemaContent } from "@/store/ide"
 import { setAlert } from "@/store/global"
-import useIdb from "../useIdb"
+import useIdb from "../use-idb"
 
 export default function useSaveSchema() {
   const dispatch = useAppDispatch()

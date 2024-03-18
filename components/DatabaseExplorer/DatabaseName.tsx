@@ -1,18 +1,13 @@
 import classNames from "classnames"
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  DatabaseIcon,
-  UserIcon,
-} from "@/utils/icons"
+import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/utils/icons"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   selectDatabaseVisibility,
   setDatabaseVisibility,
 } from "@/store/database"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
-import useDatabaseSchema from "@/hooks/database/useDatabaseSchema"
-import useDeleteDb from "@/hooks/database/useDeleteDb"
+import useDatabaseSchema from "@/hooks/database/use-database-schema"
+import useDeleteDb from "@/hooks/database/use-delete-db"
 import Loading from "../Loading"
 
 const DatabaseName = ({

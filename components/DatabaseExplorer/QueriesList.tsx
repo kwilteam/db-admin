@@ -14,7 +14,7 @@ import {
   setDatabaseActiveContext,
 } from "@/store/database"
 import { setAlert, setIsMenuOpen } from "@/store/global"
-import useDatabaseParams from "@/hooks/database/useDatabaseParams"
+import useDatabaseParams from "@/hooks/database/use-database-params"
 
 export default function QueriesList({ dbid }: { dbid: string }) {
   const { dbid: dbidParam, query: activeQuery } = useDatabaseParams()

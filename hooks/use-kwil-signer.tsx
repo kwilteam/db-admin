@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { KwilSigner } from "@kwilteam/kwil-js" // or NodeKwil
-import { getAddress, getSigner } from "../../utils/wallet"
+import { getAddress, getSigner } from "../utils/wallet"
 import { useAppSelector } from "@/store/hooks"
 import { selectActiveAccount } from "@/store/global"
 

@@ -9,7 +9,7 @@ import {
   setAlert,
   setModal,
 } from "@/store/global"
-import { useKwilSigner } from "@/hooks/kwil/useKwilSigner"
+import { useKwilSigner } from "@/hooks/use-kwil-signer"
 import { KwilProviderStatus } from "@/store/providers"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
