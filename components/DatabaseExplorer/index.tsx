@@ -1,6 +1,6 @@
 "use client"
 
-import { selectProviderStatus } from "@/store/global"
+import { selectActiveAccount, selectProviderStatus } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
 import useDatabases from "@/hooks/database/use-databases"
 import { KwilProviderStatus } from "@/store/providers"
@@ -9,6 +9,7 @@ import Loading from "../Loading"
 import DatabaseList from "./DatabaseList"
 
 export default function DatabasesExplorer() {
+  const activeAccount = useAppSelector(selectActiveAccount)
   const providerStatus = useAppSelector(selectProviderStatus)
   const {
     fetchDatabasesLoading,
@@ -43,12 +44,18 @@ export default function DatabasesExplorer() {
         {providerStatus === KwilProviderStatus.Online &&
           count !== undefined && (
             <>
+              {activeAccount && (
+                <DatabaseList
+                  databases={myDbs}
+                  loading={myDbsLoading}
+                  isMyDatabase
+                />
+              )}
               <DatabaseList
-                databases={myDbs}
-                loading={myDbsLoading}
-                myDatabase
+                databases={otherDbs}
+                loading={otherDbsLoading}
+                activeAccount={activeAccount}
               />
-              <DatabaseList databases={otherDbs} loading={otherDbsLoading} />
             </>
           )}
       </ul>

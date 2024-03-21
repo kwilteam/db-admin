@@ -12,10 +12,10 @@ import Loading from "../Loading"
 
 const DatabaseName = ({
   database,
-  myDatabase,
+  isMyDatabase,
 }: {
   database: IDatasetInfoStringOwner
-  myDatabase?: boolean
+  isMyDatabase?: boolean
 }) => {
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
@@ -72,7 +72,7 @@ const DatabaseName = ({
       )}
 
       {!databaseVisibility[database.dbid]?.loading && (
-        <DeleteDatabase myDatabase={myDatabase} database={database} />
+        <DeleteDatabase isMyDatabase={isMyDatabase} database={database} />
       )}
     </li>
   )
@@ -81,10 +81,10 @@ const DatabaseName = ({
 export default DatabaseName
 
 function DeleteDatabase({
-  myDatabase,
+  isMyDatabase,
   database,
 }: {
-  myDatabase?: boolean
+  isMyDatabase?: boolean
   database: IDatasetInfoStringOwner
 }) {
   const triggerDeleteDb = useDeleteDb(database)
@@ -94,9 +94,9 @@ function DeleteDatabase({
       className={classNames(
         "absolute right-0 ml-auto bg-white px-2 text-slate-400 hover:text-slate-700",
         {
-          hidden: !myDatabase,
-          "flex md:hidden": myDatabase,
-          "md:group-hover:flex": myDatabase,
+          hidden: !isMyDatabase,
+          "flex md:hidden": isMyDatabase,
+          "md:group-hover:flex": isMyDatabase,
         },
       )}
       onClick={(e) => triggerDeleteDb(e)}
