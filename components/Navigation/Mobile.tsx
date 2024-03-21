@@ -20,6 +20,7 @@ import SettingsNavigation from "../Settings/Navigation"
 import ExtensionFilters from "../Extensions/Filters"
 import KwilProviders from "../KwilProviders"
 import UserAccount from "../UserAccount"
+import { KwilFaucet } from "../KwilFaucet"
 
 export default function MobileNavigation() {
   const dispatch = useAppDispatch()
@@ -97,6 +98,7 @@ export default function MobileNavigation() {
         </button>
 
         <div className="flex gap-1">
+          <KwilFaucet />
           <KwilProviders
             activeProvider={activeProvider}
             className="hidden lg:flex"

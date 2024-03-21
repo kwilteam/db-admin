@@ -27,7 +27,7 @@ export default function useDatabases() {
     const _myDbs = databases
       ?.filter((db) => {
         return (
-          `0x${db.owner}` === activeAccount &&
+          `0x${db.owner.toLowerCase()}` === activeAccount?.toLowerCase() &&
           db.name.includes(databaseFilters.search)
         )
       })
@@ -54,7 +54,7 @@ export default function useDatabases() {
     const _otherDbs = databases
       .filter((db) => {
         return (
-          `0x${db.owner}` !== activeAccount &&
+          `0x${db.owner.toLowerCase()}` !== activeAccount?.toLowerCase() &&
           db.name.includes(databaseFilters.search)
         )
       })

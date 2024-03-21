@@ -27,7 +27,7 @@ export default function ConnectWalletModal({
   const connectWallet = async () => {
     try {
       const address = await getAddress()
-      dispatch(saveActiveAccount(address))
+      dispatch(saveActiveAccount(address.toLowerCase()))
       continueReadOnly()
     } catch (e) {
       console.log(e)

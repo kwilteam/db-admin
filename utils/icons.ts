@@ -27,6 +27,7 @@ import {
   HiServerStack,
   HiOutlinePencil,
   HiOutlineQuestionMarkCircle,
+  HiOutlineArrowTopRightOnSquare,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
@@ -63,6 +64,7 @@ export {
   HiOutlineUser as UserIcon,
   HiOutlinePencil as EditIcon,
   HiOutlineQuestionMarkCircle as HelpIcon,
+  HiOutlineArrowTopRightOnSquare as FaucetIcon,
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,

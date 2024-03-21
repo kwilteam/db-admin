@@ -7,6 +7,7 @@ import { ModalEnum, saveActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
+import { ethers, formatEther } from "ethers"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -46,7 +47,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
-      dispatch(saveActiveAccount(accounts[0]))
+      dispatch(saveActiveAccount(accounts[0].toLowerCase()))
     })
 
     return () => {
@@ -122,8 +123,11 @@ const AccountBalance = ({ activeAccount }: { activeAccount: string }) => {
       const kwilAccount = await kwilProvider.getAccount(activeAccount)
 
       if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {
-        const _balance = parseFloat(kwilAccount.data.balance).toFixed(2)
-        setAccountBalance(_balance)
+        // Use formatEther to convert the balance from Wei to Ether
+        const _balance = formatEther(kwilAccount.data.balance)
+        // Format the balance to a fixed number of decimal places
+        const formattedBalance = parseFloat(_balance).toFixed(3)
+        setAccountBalance(formattedBalance)
       }
     }
 

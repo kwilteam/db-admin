@@ -16,6 +16,7 @@ import KwilProviders from "@/components/KwilProviders"
 import ConnectWalletModal from "@/components/Modal/ConnectWallet"
 import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
+import { KwilFaucet } from "@/components/KwilFaucet"
 
 interface IProps {
   children: React.ReactNode
@@ -50,6 +51,7 @@ export default function DashboardLayout({ children }: IProps) {
               {children}
               <GlobalAlert />
               <div className="absolute right-1 top-1 hidden gap-1 md:flex">
+                <KwilFaucet />
                 <KwilProviders
                   activeProvider={activeProvider}
                   className="hidden lg:flex"
