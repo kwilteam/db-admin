@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { navigationItems } from "@/utils/navigation"
 import NavigationItem from "./NavigationItem"
-import UserInfo from "../UserAccount"
 
 export default function Main() {
   return (

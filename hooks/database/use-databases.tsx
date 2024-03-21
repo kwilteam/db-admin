@@ -34,7 +34,9 @@ export default function useDatabases() {
       .sort((a, b) => {
         if (a.name < b.name) return -1
         if (a.name > b.name) return 1
-        return 0
+
+        // If names are equal, sort by database ID
+        return a.dbid < b.dbid ? -1 : a.dbid > b.dbid ? 1 : 0
       })
 
     setMyDbsLoading(false)
@@ -61,7 +63,9 @@ export default function useDatabases() {
       .sort((a, b) => {
         if (a.name < b.name) return -1
         if (a.name > b.name) return 1
-        return 0
+
+        // If names are equal, sort by database ID
+        return a.dbid < b.dbid ? -1 : a.dbid > b.dbid ? 1 : 0
       })
 
     setTimeout(() => {
