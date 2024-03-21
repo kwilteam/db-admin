@@ -46,7 +46,7 @@ export default function KwilProviders({ activeProvider }: IKwilProvidersProps) {
                 providerStatus !== KwilProviderStatus.Offline,
             })}
           />
-          <span>{activeProvider}</span>
+          <span className="max-w-[120px] truncate">{activeProvider}</span>
           <ChevronDownIcon
             className="h-4 w-4 text-slate-800"
             aria-hidden="true"
@@ -119,6 +119,8 @@ const ProviderItem = ({
           "bg-slate-50": isCurrent,
         })}
         onClick={() => {
+          if (isCurrent) return
+
           dispatch(saveActiveProvider(name))
           dispatch(setDatabases(undefined))
           dispatch(setDatabaseActiveContext(undefined))

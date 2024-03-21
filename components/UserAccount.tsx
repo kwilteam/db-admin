@@ -47,7 +47,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
-      dispatch(saveActiveAccount(accounts[0].toLowerCase()))
+      dispatch(saveActiveAccount(accounts[0]?.toLowerCase()))
     })
 
     return () => {
