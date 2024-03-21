@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { OtherIcon, UserIcon } from "@/utils/icons"
 import {
@@ -7,11 +8,11 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
-import classNames from "classnames"
 
 interface IDatabaseListProps {
   databases: IDatasetInfoStringOwner[] | undefined
   loading: boolean
+  isMobile: boolean
   isMyDatabase?: boolean
   activeAccount?: string | undefined
 }
@@ -19,6 +20,7 @@ interface IDatabaseListProps {
 export default function DatabaseList({
   databases,
   loading,
+  isMobile,
   isMyDatabase,
   activeAccount,
 }: IDatabaseListProps): JSX.Element {
@@ -46,9 +48,8 @@ export default function DatabaseList({
               <>
                 <span>OTHER DATABASES</span>
                 <input
-                  id="include-all"
                   aria-describedby="include-all-description"
-                  name="include-all"
+                  name={`include-all-${isMobile ? "mobile" : "desktop"}`} // To avoid duplicate id as Element IDs should be unique
                   type="checkbox"
                   checked={includeOtherDatabases}
                   onChange={setIncludeOtherDatabases}

@@ -8,7 +8,7 @@ import DatabaseFilterSearch from "./DatabaseFilterSearch"
 import Loading from "../Loading"
 import DatabaseList from "./DatabaseList"
 
-export default function DatabasesExplorer() {
+export default function DatabasesExplorer({ isMobile = false }) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const providerStatus = useAppSelector(selectProviderStatus)
   const {
@@ -33,7 +33,7 @@ export default function DatabasesExplorer() {
         )}
 
         {providerStatus === KwilProviderStatus.Online && (
-          <DatabaseFilterSearch />
+          <DatabaseFilterSearch isMobile={isMobile} />
         )}
 
         {providerStatus === KwilProviderStatus.Online &&
@@ -48,12 +48,14 @@ export default function DatabasesExplorer() {
                 <DatabaseList
                   databases={myDbs}
                   loading={myDbsLoading}
+                  isMobile={isMobile}
                   isMyDatabase
                 />
               )}
               <DatabaseList
                 databases={otherDbs}
                 loading={otherDbsLoading}
+                isMobile={isMobile}
                 activeAccount={activeAccount}
               />
             </>

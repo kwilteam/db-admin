@@ -68,7 +68,9 @@ export default function MobileNavigation() {
                   hidden: !secondaryMobileMenu,
                 })}
               >
-                {pathname.startsWith("/databases") && <DatabaseExplorer />}
+                {pathname.startsWith("/databases") && (
+                  <DatabaseExplorer isMobile={true} />
+                )}
                 {pathname.startsWith("/ide") && <SchemaExplorer />}
                 {pathname.startsWith("/settings") && <SettingsNavigation />}
                 {pathname.startsWith("/extensions") && <ExtensionFilters />}

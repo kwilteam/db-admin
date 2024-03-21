@@ -2,7 +2,7 @@ import { useState } from "react"
 import { selectDatabaseFilters, setDataFilterSearch } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
-export default function DatabaseFilterSearch() {
+export default function DatabaseFilterSearch({ isMobile = false }) {
   const dispatch = useAppDispatch()
   const databaseFilters = useAppSelector(selectDatabaseFilters)
   const [currentSearch, setCurrentSearch] = useState(databaseFilters.search)
@@ -34,6 +34,7 @@ export default function DatabaseFilterSearch() {
         type="text"
         value={currentSearch}
         onChange={handleSearchChange}
+        name={`search-${isMobile ? "mobile" : "desktop"}`} // To avoid duplicate id as Element IDs should be unique
         className="h-9 w-full border-none pl-2 text-sm focus:outline-none focus:ring-0"
         placeholder="Filter databases..."
       />
