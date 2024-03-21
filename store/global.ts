@@ -1,8 +1,6 @@
 import { IAlertType } from "@/components/Alert"
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { AppDispatch } from "."
-import { SettingsKeys, initIdb } from "@/utils/idb/init"
-import { getSetting, setSetting } from "@/utils/idb/settings"
 import { KwilProviderStatus } from "./providers"
 
 interface IAlert {
@@ -28,36 +26,12 @@ interface IGlobalState {
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  modal: ModalEnum.CONNECT,
+  modal: undefined,
   activeAccount: undefined,
   providerStatus: KwilProviderStatus.Unknown,
   settingsLoaded: false,
   alert: undefined,
 }
-
-export const loadActiveAccount = createAsyncThunk(
-  "ide/loadActiveAccount",
-  async () => {
-    const db = await initIdb()
-    if (!db) return
-
-    const accountSetting = await getSetting(db, SettingsKeys.ACCOUNT)
-
-    return accountSetting?.value
-  },
-)
-
-export const saveActiveAccount = createAsyncThunk(
-  "ide/saveActiveAccount",
-  async (account: string | undefined) => {
-    const db = await initIdb()
-    if (!db) return
-
-    await setSetting(db, SettingsKeys.ACCOUNT, account)
-
-    return account
-  },
-)
 
 export const globalSlice = createSlice({
   name: "global",
@@ -72,6 +46,13 @@ export const globalSlice = createSlice({
     setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
       state.providerStatus = action.payload
     },
+    setActiveAccount: (state, action: PayloadAction<string | undefined>) => {
+      if (action.payload) {
+        state.activeAccount = action.payload.toLowerCase()
+      } else {
+        state.activeAccount = undefined
+      }
+    },
     setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
       state.settingsLoaded = action.payload
     },
@@ -82,19 +63,15 @@ export const globalSlice = createSlice({
       state.alert = undefined
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(loadActiveAccount.fulfilled, (state, action) => {
-      state.activeAccount = action.payload
-      state.settingsLoaded = true
-    }),
-      builder.addCase(saveActiveAccount.fulfilled, (state, action) => {
-        state.activeAccount = action.payload
-      })
-  },
 })
 
-export const { setIsMenuOpen, setModal, setProviderStatus, setSettingsLoaded } =
-  globalSlice.actions
+export const {
+  setIsMenuOpen,
+  setModal,
+  setProviderStatus,
+  setActiveAccount,
+  setSettingsLoaded,
+} = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen

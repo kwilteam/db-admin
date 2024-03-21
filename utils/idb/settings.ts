@@ -31,5 +31,4 @@ export const setSetting = async (
 
 export const setupSettings = async (db: IDBPDatabase<unknown>) => {
   await setSetting(db, SettingsKeys.PROVIDER, "Testnet")
-  await setSetting(db, SettingsKeys.ACCOUNT, undefined)
 }

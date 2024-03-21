@@ -1,21 +1,18 @@
-import Image from "next/image"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   ModalEnum,
-  saveActiveAccount,
   selectModal,
+  setActiveAccount,
   setModal,
 } from "@/store/global"
 import { getAddress } from "@/utils/wallet"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Base from "./Base"
 
 export default function ConnectWalletModal({
   activeAccount,
-  settingsLoaded,
 }: {
   activeAccount: string | undefined
-  settingsLoaded: boolean
 }) {
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
@@ -27,7 +24,7 @@ export default function ConnectWalletModal({
   const connectWallet = async () => {
     try {
       const address = await getAddress()
-      dispatch(saveActiveAccount(address.toLowerCase()))
+      dispatch(setActiveAccount(address))
       continueReadOnly()
     } catch (e) {
       console.log(e)
@@ -37,7 +34,13 @@ export default function ConnectWalletModal({
   const modalBody = (
     <div className="flex flex-1 flex-col bg-white p-3">
       <div className="flex flex-col justify-center">
-        <div className="text-sm">Connect your wallet to make changes</div>
+        <div className="flex flex-col gap-2 text-sm">
+          <p>You are currently in read only mode.</p>
+          <p>
+            You will need to connect your wallet to <br />
+            deploy schemas and execute mutating actions.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -45,7 +48,7 @@ export default function ConnectWalletModal({
   const modalFooter = (
     <div className="flex justify-center gap-2">
       <Button context="secondary" size="md" onClick={continueReadOnly}>
-        Read Only
+        Continue
       </Button>
       <Button context="primary" size="md" onClick={connectWallet}>
         Connect Wallet
@@ -55,7 +58,7 @@ export default function ConnectWalletModal({
 
   return (
     <Base
-      show={settingsLoaded && modal === ModalEnum.CONNECT && !activeAccount}
+      show={modal === ModalEnum.CONNECT && !activeAccount}
       closeModal={continueReadOnly}
       footer={modalFooter}
     >

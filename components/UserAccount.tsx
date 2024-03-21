@@ -3,11 +3,11 @@
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
-import { ModalEnum, saveActiveAccount, setModal } from "@/store/global"
+import { ModalEnum, setActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
-import { ethers, formatEther } from "ethers"
+import { formatEther } from "ethers"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -23,9 +23,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
   >()
 
   const disconnectWallet = () => {
-    dispatch(saveActiveAccount(undefined))
-    // Will show Connect modal after disconnecting
-    dispatch(setModal(ModalEnum.CONNECT))
+    dispatch(setActiveAccount(undefined))
   }
 
   const openConnectWalletDialog = () => {
@@ -47,7 +45,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
 
   useEffect(() => {
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
-      dispatch(saveActiveAccount(accounts[0]?.toLowerCase()))
+      dispatch(setActiveAccount(accounts[0]))
     })
 
     return () => {

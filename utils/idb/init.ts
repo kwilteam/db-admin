@@ -12,7 +12,6 @@ export enum StoreNames {
 
 export enum SettingsKeys {
   PROVIDER = "provider",
-  ACCOUNT = "account",
 }
 
 const createStore = (

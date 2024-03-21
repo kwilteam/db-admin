@@ -1,11 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import {
-  loadActiveAccount,
-  selectActiveAccount,
-  selectSettingsLoaded,
-} from "@/store/global"
+import { selectActiveAccount, selectSettingsLoaded } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loadProviders, selectActiveProvider } from "@/store/providers"
 import MobileNavigation from "@/components/Navigation/Mobile"
@@ -26,10 +22,8 @@ export default function DashboardLayout({ children }: IProps) {
   const dispatch = useAppDispatch()
   const activeAccount = useAppSelector(selectActiveAccount)
   const activeProvider = useAppSelector(selectActiveProvider)
-  const settingsLoaded = useAppSelector(selectSettingsLoaded)
 
   useEffect(() => {
-    dispatch(loadActiveAccount())
     dispatch(loadProviders())
   }, [dispatch])
 
@@ -40,13 +34,13 @@ export default function DashboardLayout({ children }: IProps) {
         <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
           <DesktopNavigation />
 
-          {(!settingsLoaded || !activeProvider) && (
+          {!activeProvider && (
             <div className="flex w-full justify-center pt-4">
               <Loading />
             </div>
           )}
 
-          {settingsLoaded && activeProvider && (
+          {activeProvider && (
             <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
               {children}
               <GlobalAlert />
@@ -66,12 +60,9 @@ export default function DashboardLayout({ children }: IProps) {
         </div>
       </>
 
-      <ConnectWalletModal
-        activeAccount={activeAccount}
-        settingsLoaded={settingsLoaded}
-      />
+      <ConnectWalletModal activeAccount={activeAccount} />
 
-      <ProviderOfflineModal settingsLoaded={settingsLoaded} />
+      <ProviderOfflineModal />
     </>
   )
 }

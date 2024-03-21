@@ -3,11 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Base from "./Base"
 
-export default function ProfileOfflineModal({
-  settingsLoaded,
-}: {
-  settingsLoaded: boolean
-}) {
+export default function ProfileOfflineModal() {
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
 
@@ -36,7 +32,7 @@ export default function ProfileOfflineModal({
 
   return (
     <Base
-      show={settingsLoaded && modal === ModalEnum.PROVIDER_OFFLINE}
+      show={modal === ModalEnum.PROVIDER_OFFLINE}
       closeModal={close}
       footer={modalFooter}
     >
