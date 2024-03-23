@@ -48,6 +48,7 @@
     "@types/nodemailer": "^6.4.13",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-react-swc": "^3.4.0",
+    "fake-indexeddb": "^5.0.2",
     "happy-dom": "^12.8.0",
     "jsdom": "^24.0.0",
     "next-router-mock": "^0.9.12",

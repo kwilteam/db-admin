@@ -22,7 +22,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
 
   return (
     <div
-      test-id="database-explorer"
+      data-testid="database-explorer"
       className="relative w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll"
     >
       <ul className="flex flex-col">

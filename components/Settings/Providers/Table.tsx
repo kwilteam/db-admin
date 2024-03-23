@@ -18,7 +18,7 @@ export default function ProvidersTable({
 
   return (
     <div
-      test-id="accounts-table"
+      data-testid="accounts-table"
       className="m-1 overflow-scroll border border-slate-200 lg:m-2"
     >
       <table
@@ -60,7 +60,7 @@ export default function ProvidersTable({
               <tr
                 className="divide-x divide-slate-200"
                 key={index}
-                test-id={`provider-item-${provider.name}`}
+                data-testid={`provider-item-${provider.name}`}
               >
                 <td className="flex whitespace-nowrap p-2 text-sm text-slate-500">
                   {provider.name}
@@ -86,7 +86,7 @@ export default function ProvidersTable({
                   </Link>
                   |
                   <span
-                    test-id={`delete-account-${provider.name}`}
+                    data-testid={`delete-account-${provider.name}`}
                     onClick={() => confirmDeleteProvider(provider.name)}
                     className="mx-2 cursor-pointer text-kwil visited:text-kwil hover:text-kwil-dark"
                   >

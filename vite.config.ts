@@ -6,9 +6,10 @@ import tsconfigPaths from "vite-tsconfig-paths"
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   test: {
-    include: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+    include: ["**/__tests__/**/*.(test).[jt]sx"],
     globals: true,
     environment: "happy-dom",
     mockReset: true,
+    setupFiles: ["./__tests__/setup.ts"],
   },
 })

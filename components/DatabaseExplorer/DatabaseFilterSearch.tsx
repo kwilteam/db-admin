@@ -32,6 +32,7 @@ export default function DatabaseFilterSearch({ isMobile = false }) {
     <div className="mb-2 flex  h-10 items-center  border-b ">
       <input
         type="text"
+        data-testid="database-filter-search"
         value={currentSearch}
         onChange={handleSearchChange}
         name={`search-${isMobile ? "mobile" : "desktop"}`} // To avoid duplicate id as Element IDs should be unique

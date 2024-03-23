@@ -32,7 +32,7 @@ export default function DatabaseList({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" data-testid="database-list">
       <div className="mb-1 mt-2 flex px-2 text-xs text-kwil">
         {isMyDatabase ? (
           <div className="flex items-center gap-1">

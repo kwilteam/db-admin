@@ -5,7 +5,6 @@ import {
   getProviders,
   deleteProvider,
   setProvider,
-  getProvider,
 } from "@/utils/idb/providers"
 import { getSetting, setSetting } from "@/utils/idb/settings"
 

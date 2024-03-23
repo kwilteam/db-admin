@@ -33,7 +33,7 @@ export default function SchemaExplorer() {
         Schemas
         {savedSchemas && (
           <FileCreateIcon
-            test-id="create-new-schema"
+            data-testid="create-new-schema"
             className="m-auto mr-2 h-5 w-5 cursor-pointer"
             onClick={() => setIsCreatingNewSchema(true)}
           />
@@ -47,7 +47,10 @@ export default function SchemaExplorer() {
               <SchemaItem key={schema} schema={schema} />
             ))}
           {isCreatingNewSchema && (
-            <li className="flex h-10 cursor-pointer select-none flex-row items-center p-2 pl-3 pr-2 text-xs hover:bg-slate-50">
+            <li
+              data-testid="new-schema-input"
+              className="flex h-10 cursor-pointer select-none flex-row items-center p-2 pl-3 pr-2 text-xs hover:bg-slate-50"
+            >
               <FileIcon className="h-4 w-4" />
               <input
                 ref={newSchemaInputRef}

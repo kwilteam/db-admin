@@ -28,7 +28,7 @@ export default function Form({
 
   return (
     <form
-      test-id="providers-form"
+      data-testid="providers-form"
       className="m-1 overflow-scroll border border-slate-200 bg-white p-2 lg:m-2"
     >
       <div className="">
@@ -43,7 +43,7 @@ export default function Form({
             <Input
               type="text"
               id="name"
-              test-id="provider-name-input"
+              data-testid="provider-name-input"
               autoComplete="name"
               error={invalidFields.includes("name")}
               placeholder="Testnet"
@@ -67,7 +67,7 @@ export default function Form({
               <Input
                 type="text"
                 id="url"
-                test-id="provider-url-input"
+                data-testid="provider-url-input"
                 autoComplete="url"
                 placeholder="https://testnet.kwil.com"
                 error={invalidFields.includes("url")}
@@ -96,7 +96,7 @@ export default function Form({
               <Input
                 type="text"
                 id="chainId"
-                test-id="provider-chainId-input"
+                data-testid="provider-chainId-input"
                 autoComplete="chainId"
                 placeholder="kwil-chain-testnet-0.6"
                 value={provider?.chainId ?? ""}
