@@ -3,8 +3,8 @@ import { usePathname } from "next/navigation"
 
 const useActivePage = (): INavigationItem | undefined => {
   const pathname = usePathname()
-  const activePage = navigationItems.find((item) =>
-    pathname.startsWith(item.href),
+  const activePage = navigationItems.find(
+    (item) => pathname?.startsWith(item.href),
   )
 
   if (!activePage) return undefined

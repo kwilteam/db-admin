@@ -34,7 +34,7 @@ export const getDetailsErrorMessage = (error: Error) => {
             // Assuming we want to append the first detail's message
             const detailMessage = errorObj.details[0].message
             if (detailMessage) {
-              errorMessage += ` - Detail: ${detailMessage}`
+              errorMessage += ` - ${detailMessage}`
             }
           }
         }
