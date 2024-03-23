@@ -16,6 +16,12 @@ const storeData = mockStore({
   },
 })
 
+const mockNewProvider = {
+  name: "New Provider",
+  url: "http://newprovider.com",
+  chainId: "3",
+}
+
 describe("Providers Component", () => {
   describe("ProvidersTable Component", () => {
     beforeEach(async () => {
@@ -48,11 +54,7 @@ describe("Providers Component", () => {
           <Provider store={storeData}>
             <ProviderForm
               originalProviderName={undefined}
-              provider={{
-                name: "New Provider",
-                url: "http://newprovider.com",
-                chainId: "3",
-              }} // Mock provider object
+              provider={mockNewProvider} // Mock provider object
               setProvider={() => {}}
               connectNow={false}
               setConnectNow={() => {}}
@@ -72,16 +74,16 @@ describe("Providers Component", () => {
       const urlInput = await screen.findByTestId("provider-url-input")
       const chainIdInput = await screen.findByTestId("provider-chainId-input")
 
-      fireEvent.change(nameInput, { target: { value: "New Provider" } })
+      fireEvent.change(nameInput, { target: { value: mockNewProvider.name } })
       fireEvent.change(urlInput, {
-        target: { value: "http://newprovider.com" },
+        target: { value: mockNewProvider.url },
       })
       fireEvent.change(chainIdInput, { target: { value: "3" } })
 
       await waitFor(() => {
-        expect(nameInput).toHaveValue("New Provider")
-        expect(urlInput).toHaveValue("http://newprovider.com")
-        expect(chainIdInput).toHaveValue("3")
+        expect(nameInput).toHaveValue(mockNewProvider.name)
+        expect(urlInput).toHaveValue(mockNewProvider.url)
+        expect(chainIdInput).toHaveValue(mockNewProvider.chainId)
       })
     })
   })

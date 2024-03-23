@@ -52,11 +52,8 @@ describe("SchemaExplorer Component", () => {
     fireEvent.change(input, { target: { value: "New Schema" } })
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" })
 
-    await waitFor(
-      () => {
-        expect(screen.queryByTestId("new-schema-input")).not.toBeInTheDocument()
-      },
-      { timeout: 5000 },
-    ) // Adjust the timeout based on expected delay
+    await waitFor(() => {
+      expect(screen.queryByTestId("new-schema-input")).not.toBeInTheDocument()
+    })
   })
 })
