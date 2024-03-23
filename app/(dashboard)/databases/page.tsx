@@ -1,6 +1,6 @@
 "use client"
 
-import useActivePage from "@/hooks/useActivePage"
+import useActivePage from "@/hooks/use-active-page"
 import { selectDatabaseActiveContext } from "@/store/database"
 import { useAppSelector } from "@/store/hooks"
 import { redirect } from "next/navigation"
@@ -12,7 +12,7 @@ export default function DatabasesPage() {
 
   if (activePage?.name === "Databases" && databaseContext) {
     redirect(
-      `/databases/${databaseContext.database}/${databaseContext.type}/${databaseContext.name}`,
+      `/databases/${databaseContext.dbid}/${databaseContext.type}/${databaseContext.name}`,
     )
   }
 

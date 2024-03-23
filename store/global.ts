@@ -1,6 +1,7 @@
 import { IAlertType } from "@/components/Alert"
-import { IAccountJwt } from "@/utils/admin/token"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { AppDispatch } from "."
+import { KwilProviderStatus } from "./providers"
 
 interface IAlert {
   text: string
@@ -8,15 +9,27 @@ interface IAlert {
   position?: "top" | "bottom"
 }
 
+export enum ModalEnum {
+  PROVIDER_OFFLINE = "provider_offline",
+  CONNECT = "connect",
+  SAVE_QUERY = "save_query",
+}
+
 interface IGlobalState {
   isMenuOpen: boolean
-  currentUser: IAccountJwt | undefined
+  modal: ModalEnum | undefined
+  activeAccount: string | undefined
+  providerStatus: KwilProviderStatus | undefined
+  settingsLoaded: boolean
   alert: IAlert | undefined
 }
 
 const initialState: IGlobalState = {
   isMenuOpen: true,
-  currentUser: undefined,
+  modal: undefined,
+  activeAccount: undefined,
+  providerStatus: KwilProviderStatus.Unknown,
+  settingsLoaded: false,
   alert: undefined,
 }
 
@@ -27,24 +40,77 @@ export const globalSlice = createSlice({
     setIsMenuOpen: (state, action: PayloadAction<boolean>) => {
       state.isMenuOpen = action.payload
     },
-    setCurrentUser: (state, action: PayloadAction<IAccountJwt>) => {
-      state.currentUser = action.payload
+    setModal: (state, action: PayloadAction<ModalEnum | undefined>) => {
+      state.modal = action.payload
     },
-    setAlert: (state, action: PayloadAction<IAlert | undefined>) => {
+    setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
+      state.providerStatus = action.payload
+    },
+    setActiveAccount: (state, action: PayloadAction<string | undefined>) => {
+      if (action.payload) {
+        state.activeAccount = action.payload.toLowerCase()
+      } else {
+        state.activeAccount = undefined
+      }
+    },
+    setSettingsLoaded: (state, action: PayloadAction<boolean>) => {
+      state.settingsLoaded = action.payload
+    },
+    setAlertStart: (state, action: PayloadAction<IAlert>) => {
       state.alert = action.payload
+    },
+    setAlertEnd: (state) => {
+      state.alert = undefined
     },
   },
 })
 
-export const { setIsMenuOpen, setCurrentUser, setAlert } = globalSlice.actions
+export const {
+  setIsMenuOpen,
+  setModal,
+  setProviderStatus,
+  setActiveAccount,
+  setSettingsLoaded,
+} = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
   state.global.isMenuOpen
 
-export const selectCurrentUser = (state: { global: IGlobalState }) =>
-  state.global.currentUser
+export const selectModal = (state: { global: IGlobalState }) =>
+  state.global.modal
+
+export const selectActiveAccount = (state: { global: IGlobalState }) =>
+  state.global.activeAccount
+
+export const selectProviderStatus = (state: { global: IGlobalState }) =>
+  state.global.providerStatus
+
+export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
+  state.global.settingsLoaded
 
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
 
 export default globalSlice.reducer
+
+export const setAlert =
+  (alert: IAlert, autoHide: boolean = true) =>
+  (dispatch: AppDispatch) => {
+    dispatch(setAlertStart(alert))
+
+    if (autoHide) {
+      setTimeout(() => {
+        dispatch(setAlertEnd())
+      }, 5000)
+    }
+  }
+
+const setAlertStart = (alert: IAlert): PayloadAction<IAlert> => ({
+  type: "global/setAlertStart",
+  payload: alert,
+})
+
+const setAlertEnd = (): PayloadAction<undefined> => ({
+  type: "global/setAlertEnd",
+  payload: undefined,
+})

@@ -1,57 +1,65 @@
 "use client"
-import { useEffect } from "react"
-import DatabaseName from "./DatabaseName"
-import DatabaseStructure from "./DatabaseStructure"
-import useDatabaseStructures from "@/hooks/useDatabaseStructures"
-import Loading from "../Loading"
-import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
-import useDatabaseParams from "@/hooks/useDatabaseParams"
-import Alert from "../Alert"
-import { selectAlert } from "@/store/global"
+
+import { selectActiveAccount, selectProviderStatus } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
+import useDatabases from "@/hooks/database/use-databases"
+import { KwilProviderStatus } from "@/store/providers"
+import DatabaseFilterSearch from "./DatabaseFilterSearch"
+import Loading from "../Loading"
+import DatabaseList from "./DatabaseList"
 
-export default function DatabasesExplorer() {
-  const { databaseStructures, databaseCount } = useDatabaseStructures()
-  const { getDbStructure } = useGetDbStructure()
-  const { db, table, action } = useDatabaseParams()
-  const alert = useAppSelector(selectAlert)
-
-  console.log("databaseStructures", databaseStructures)
-
-  useEffect(() => {
-    if (db) {
-      const show = table ? "tables" : action ? "actions" : undefined
-      getDbStructure(db, show)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [db])
+export default function DatabasesExplorer({ isMobile = false }) {
+  const activeAccount = useAppSelector(selectActiveAccount)
+  const providerStatus = useAppSelector(selectProviderStatus)
+  const {
+    fetchDatabasesLoading,
+    myDbs,
+    otherDbs,
+    myDbsLoading,
+    otherDbsLoading,
+    count,
+  } = useDatabases()
 
   return (
     <div
-      test-id="database-explorer"
-      className="w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll"
+      data-testid="database-explorer"
+      className="relative w-full bg-white lg:max-h-screen lg:min-h-screen lg:overflow-scroll"
     >
-      <ul className="mt-2 flex flex-col">
-        {databaseStructures &&
-          Object.keys(databaseStructures).map((database, index) => (
-            <div key={index} className="">
-              <DatabaseName database={database} />
-              <DatabaseStructure database={database} />
-            </div>
-          ))}
-        {databaseCount === 0 && (
-          <div className="flex h-full flex-col items-center justify-center">
-            <p className="text-md font-bold text-slate-500">
-              No databases found
-            </p>
-            <p className="text-sm text-slate-400">
-              Add a database to get started
-            </p>
+      <ul className="flex flex-col">
+        {providerStatus === KwilProviderStatus.Offline && (
+          <div className="mt-2 flex h-full flex-col items-center justify-center text-center">
+            <p className="text-sm text-red-500">Kwil Provider is offline</p>
           </div>
         )}
-        {databaseCount === undefined && alert === undefined && (
-          <Loading className="mt-4 flex justify-center" />
+
+        {providerStatus === KwilProviderStatus.Online && (
+          <DatabaseFilterSearch isMobile={isMobile} />
         )}
+
+        {providerStatus === KwilProviderStatus.Online &&
+          fetchDatabasesLoading && (
+            <Loading className="absolute right-0 top-12 mt-1 flex justify-center" />
+          )}
+
+        {providerStatus === KwilProviderStatus.Online &&
+          count !== undefined && (
+            <>
+              {activeAccount && (
+                <DatabaseList
+                  databases={myDbs}
+                  loading={myDbsLoading}
+                  isMobile={isMobile}
+                  isMyDatabase
+                />
+              )}
+              <DatabaseList
+                databases={otherDbs}
+                loading={otherDbsLoading}
+                isMobile={isMobile}
+                activeAccount={activeAccount}
+              />
+            </>
+          )}
       </ul>
     </div>
   )

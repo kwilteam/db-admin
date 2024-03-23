@@ -1,66 +1,24 @@
 "use client"
-
-import { useState } from "react"
-import { executeAction as executeActionApi } from "@/utils/api"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectAction } from "@/store/database"
-import { setAlert } from "@/store/global"
+import { ItemType } from "@/utils/database-types"
+import { useDatabaseAction } from "@/hooks/database/use-database-action"
 import Loading from "@/components/Loading"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import ActionForm from "./Form"
 import ActionStatements from "./Statements"
 
 interface IActionProps {
-  database: string
+  dbid: string
   actionName: string
 }
 
-export default function Action({ database, actionName }: IActionProps) {
-  const dispatch = useAppDispatch()
-  const [data, setData] = useState<Object[] | undefined>(undefined)
-  const [columns, setColumns] = useState<string[] | undefined>(undefined)
-  const action = useAppSelector((state) =>
-    selectAction(state, database, actionName),
-  )
+export default function Action({ dbid, actionName }: IActionProps) {
+  const { action, data, columns, executeAction } = useDatabaseAction({
+    dbid,
+    actionName,
+  })
+  const statements = action?.statements
 
   if (!action) return <Loading className="flex justify-center pt-4" />
-
-  const executeAction = async (
-    formValues: Record<string, string>,
-  ): Promise<boolean> => {
-    setData(undefined)
-    setColumns(undefined)
-
-    const result = await executeActionApi(database, actionName, formValues)
-
-    if (result.outcome === "error") {
-      dispatch(setAlert({ text: result.data as string, type: "error" }))
-      setTimeout(() => {
-        dispatch(setAlert(undefined))
-      }, 3000)
-
-      return false
-    }
-
-    // If the action was successful, show a success message
-    dispatch(
-      setAlert({ text: "Action executed successfully!", type: "success" }),
-    )
-
-    // If the action returned data, show it in a table
-    if (typeof result.data === "object" && result.data.length > 0) {
-      setData(result.data)
-      setColumns(Object.keys(result.data[0]))
-    }
-
-    setTimeout(() => {
-      dispatch(setAlert(undefined))
-    }, 3000)
-
-    return true
-  }
-
-  const statements = action?.statements
 
   return (
     <div className="flex flex-col">
@@ -69,7 +27,14 @@ export default function Action({ database, actionName }: IActionProps) {
         <ActionForm action={action} executeAction={executeAction} />
       </div>
       <div className="mt-2">
-        {data && <DataTable data={data} type="action" columns={columns} />}
+        {data && (
+          <DataTable
+            data={data}
+            totalCount={data?.length}
+            type={ItemType.ACTION}
+            columns={columns}
+          />
+        )}
       </div>
     </div>
   )

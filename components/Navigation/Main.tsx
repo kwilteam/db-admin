@@ -2,7 +2,6 @@ import Image from "next/image"
 import Link from "next/link"
 import { navigationItems } from "@/utils/navigation"
 import NavigationItem from "./NavigationItem"
-import UserInfo from "../UserInfo"
 
 export default function Main() {
   return (
@@ -25,8 +24,6 @@ export default function Main() {
             ))}
           </ul>
         </nav>
-
-        <UserInfo className="hidden lg:block" />
       </div>
     </>
   )

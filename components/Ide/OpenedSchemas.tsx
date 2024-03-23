@@ -138,6 +138,7 @@ function DesktopOpenedSchemas({
       {openedSchemas.map((schema) => (
         <div
           key={schema}
+          data-testid={`${schema}-schema-tab`}
           className={classNames({
             "bg-slate-50": schema === activeSchema,
             "items-bottom flex cursor-pointer select-none rounded-md rounded-b-none pb-0 text-sm hover:bg-slate-50":

@@ -2,24 +2,26 @@
 
 import { selectTableQueryParams, setTablePagination } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { ITablePagination } from "@/utils/database-types"
-import { ChevronLeftIcon, ChevronRightIcon } from "@/utils/icons"
+import { IPagination } from "@/utils/database-types"
+import PaginationButton from "../Pagination/PaginationButton"
+import PaginationPage from "../Pagination/PaginationPage"
+import PaginationPerPage from "../Pagination/PaginationPerPage"
 
 interface IPaginationProps {
-  database: string
+  dbid: string
   table: string
   totalCount: number | undefined
   isLoading: boolean
 }
 
 export default function Pagination({
-  database,
+  dbid,
   table,
   totalCount,
   isLoading,
 }: IPaginationProps) {
   const tableQueryParams = useAppSelector((state) =>
-    selectTableQueryParams(state, database, table),
+    selectTableQueryParams(state, dbid, table),
   )
   const dispatch = useAppDispatch()
   const count = totalCount || 0
@@ -29,10 +31,10 @@ export default function Pagination({
   const perPage = pagination?.perPage || 50
   const totalPages = Math.ceil(count / perPage)
 
-  const setPagination = (pagination: ITablePagination) => {
+  const setPagination = (pagination: IPagination) => {
     dispatch(
       setTablePagination({
-        database,
+        dbid,
         table,
         pagination,
       }),
@@ -46,116 +48,13 @@ export default function Pagination({
       <PaginationButton
         {...{ perPage, currentPage, setPagination, totalPages, type: "prev" }}
       />
-      <SelectPage {...{ perPage, currentPage, totalPages, setPagination }} />
+      <PaginationPage
+        {...{ perPage, currentPage, totalPages, setPagination }}
+      />
       <PaginationButton
         {...{ perPage, currentPage, setPagination, totalPages, type: "next" }}
       />
-      <SelectPerPage {...{ perPage, setPagination }} />
+      <PaginationPerPage {...{ perPage, setPagination }} />
     </div>
-  )
-}
-
-interface ISelectPageProps {
-  perPage: number
-  currentPage: number
-  totalPages: number
-  setPagination: (pagination: ITablePagination) => void
-}
-
-const SelectPage = ({
-  perPage,
-  currentPage,
-  totalPages,
-  setPagination,
-}: ISelectPageProps) => {
-  return (
-    <div className="text-slate-500">
-      Page
-      <select
-        className="m-1 cursor-pointer rounded-md border border-slate-200 bg-white px-1 text-slate-500"
-        onChange={(e) =>
-          setPagination({
-            currentPage: parseInt(e.currentTarget.value),
-            perPage,
-          })
-        }
-        value={currentPage}
-      >
-        {Array.from(Array(totalPages).keys()).map((page) => (
-          <option value={page + 1} key={page + 1}>
-            {page + 1}
-          </option>
-        ))}
-      </select>
-      of {totalPages}
-    </div>
-  )
-}
-
-interface ISelectPerPageProps {
-  perPage: number
-  setPagination: (pagination: ITablePagination) => void
-}
-
-const SelectPerPage = ({ perPage, setPagination }: ISelectPerPageProps) => {
-  const paginationOptions = [50, 100, 500]
-
-  return (
-    <select
-      className="m-1 cursor-pointer rounded-md border border-slate-200 bg-white px-1 text-slate-500"
-      onChange={(e) =>
-        setPagination({
-          currentPage: 1,
-          perPage: parseInt(e.currentTarget.value),
-        })
-      }
-      value={perPage}
-    >
-      {paginationOptions.map((option) => (
-        <option value={option} key={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  )
-}
-
-interface IPaginationButtonProps {
-  perPage: number
-  currentPage: number
-  setPagination: (pagination: ITablePagination) => void
-  totalPages: number
-  type: "next" | "prev"
-}
-
-const PaginationButton = ({
-  perPage,
-  currentPage,
-  setPagination,
-  totalPages,
-  type,
-}: IPaginationButtonProps) => {
-  const isDisabled =
-    type === "prev" ? currentPage === 1 : currentPage === totalPages
-
-  return (
-    <button
-      className="m-1 cursor-pointer rounded-md border border-slate-200 bg-white px-1 text-slate-500"
-      disabled={isDisabled}
-      onClick={() => {
-        const newPage = type === "next" ? currentPage + 1 : currentPage - 1
-
-        setPagination({
-          currentPage: newPage,
-          perPage,
-        })
-      }}
-    >
-      {type === "next" ? (
-        <ChevronRightIcon className="h-4 w-4" />
-      ) : (
-        <ChevronLeftIcon className="h-4 w-4" />
-      )}
-    </button>
   )
 }

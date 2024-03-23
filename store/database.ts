@@ -1,34 +1,117 @@
 import {
-  IDatabaseStructureDict,
+  IDatabaseSchemaDict,
   IDatabaseVisibilityDict,
   ITableQueryParamsDict,
   ITableQueryParams,
-  ITablePagination,
+  IPagination,
   ITableFilter,
   ITableSort,
   KwilTypes,
+  IDatasetInfoStringOwner,
+  IDatabaseQueryDict,
+  ItemType,
+  IDatabaseQueryPaginationDict,
 } from "@/utils/database-types"
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { initIdb } from "@/utils/idb/init"
+import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
-  database: string
-  type: "table" | "action"
+  dbid: string
+  type: ItemType
   name: string
 }
 
+export interface IDatabaseFilters {
+  includeAll: boolean
+  search: string
+}
+
 interface IDatabaseState {
-  structureDict: IDatabaseStructureDict | undefined
+  databases: IDatasetInfoStringOwner[] | undefined
+  databaseFilters: IDatabaseFilters
+  schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
+  queryDict: IDatabaseQueryDict
+  queryPaginationDict: IDatabaseQueryPaginationDict
   activeContext: IDatabaseActiveContext | undefined
 }
 
 const initialState: IDatabaseState = {
-  structureDict: undefined,
+  databases: undefined,
+  databaseFilters: {
+    includeAll: true,
+    search: "",
+  },
+  schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
+  queryDict: {},
+  queryPaginationDict: {},
   activeContext: undefined,
 }
+
+export const loadQueries = createAsyncThunk(
+  "database/loadQueries",
+  async (dbid: string, { rejectWithValue }) => {
+    try {
+      const db = await initIdb()
+      if (!db) return rejectWithValue("Database initialization failed")
+
+      const queries = await getQueries(db, dbid)
+
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to load queries", error)
+      return rejectWithValue("Failed to load queries")
+    }
+  },
+)
+
+export const deleteQueryFromStores = createAsyncThunk(
+  "providers/deleteQueryFromStores",
+  async (
+    { dbid, name }: { dbid: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const db = await initIdb()
+      if (!db) throw new Error("Database initialization failed")
+
+      await deleteQuery(db, dbid, name)
+
+      const queries = await getQueries(db, dbid)
+
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to delete query", error)
+      return rejectWithValue("Failed to delete query")
+    }
+  },
+)
+
+export const saveQueryToStores = createAsyncThunk(
+  "providers/saveQueryToStores",
+  async (
+    { dbid, name, sql }: { dbid: string; name: string; sql: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const db = await initIdb()
+      if (!db) throw new Error("Database initialization failed")
+
+      await setQuery(db, dbid, name, sql)
+
+      const queries = await getQueries(db, dbid)
+
+      return { dbid, queries }
+    } catch (error) {
+      console.error("Failed to save query", error)
+      return rejectWithValue("Failed to save query")
+    }
+  },
+)
 
 export const databaseSlice = createSlice({
   name: "database",
@@ -36,36 +119,49 @@ export const databaseSlice = createSlice({
   reducers: {
     setDatabases: (
       state: IDatabaseState,
-      action: PayloadAction<IDatabaseStructureDict>,
+      action: PayloadAction<IDatasetInfoStringOwner[] | undefined>,
     ) => {
-      state.structureDict = action.payload
+      state.databases = action.payload
     },
 
-    setDatabaseObject: (
+    setDataFilterSearch: (
+      state: IDatabaseState,
+      action: PayloadAction<string>,
+    ) => {
+      state.databaseFilters.search = action.payload
+    },
+
+    setDataFilterIncludeAll: (
+      state: IDatabaseState,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.databaseFilters.includeAll = action.payload
+    },
+
+    setDatabaseSchema: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
-        structure: KwilTypes.Database
+        dbid: string
+        schema: KwilTypes.Database
       }>,
     ) => {
-      if (!state.structureDict) state.structureDict = {}
-
-      state.structureDict[action.payload.database] = action.payload.structure
+      const { dbid, schema } = action.payload
+      state.schemaDict[dbid] = schema
     },
 
     setDatabaseVisibility: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         key: keyof IDatabaseVisibilityDict[string]
         isVisible?: boolean
       }>,
     ) => {
-      const { database, key, isVisible } = action.payload
-      const currentVisibility = state.visibilityDict[database]?.[key]
+      const { dbid, key, isVisible } = action.payload
+      const currentVisibility = state.visibilityDict[dbid]?.[key]
 
-      state.visibilityDict[database] = {
-        ...state.visibilityDict[database],
+      state.visibilityDict[dbid] = {
+        ...state.visibilityDict[dbid],
         [key]: isVisible !== undefined ? isVisible : !currentVisibility,
       }
     },
@@ -73,14 +169,14 @@ export const databaseSlice = createSlice({
     setDatabaseLoading: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         loading: boolean
       }>,
     ) => {
-      const { database, loading } = action.payload
+      const { dbid, loading } = action.payload
 
-      state.visibilityDict[database] = {
-        ...state.visibilityDict[database],
+      state.visibilityDict[dbid] = {
+        ...state.visibilityDict[dbid],
         loading,
       }
     },
@@ -93,37 +189,29 @@ export const databaseSlice = createSlice({
     },
 
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
-      const database = action.payload
+      const dbid = action.payload
 
-      if (!state.structureDict) return
+      state.databases = state.databases?.filter((db) => db.dbid !== dbid)
 
-      delete state.structureDict[database]
-      delete state.visibilityDict[database]
-      delete state.tableQueryParamsDict[database]
-    },
-
-    addDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
-      const database = action.payload
-
-      if (!state.structureDict) return
-
-      state.structureDict[database] = null
+      delete state.schemaDict[dbid]
+      delete state.visibilityDict[dbid]
+      delete state.tableQueryParamsDict[dbid]
     },
 
     setTablePagination: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
-        pagination: ITablePagination
+        pagination: IPagination
       }>,
     ) => {
-      const { database, table, pagination } = action.payload
+      const { dbid, table, pagination } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           pagination,
         },
       }
@@ -132,18 +220,18 @@ export const databaseSlice = createSlice({
     setTableFilters: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
 
         filters: ITableFilter[]
       }>,
     ) => {
-      const { database, table, filters } = action.payload
+      const { dbid, table, filters } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           filters,
         },
       }
@@ -152,40 +240,83 @@ export const databaseSlice = createSlice({
     setTableSort: (
       state: IDatabaseState,
       action: PayloadAction<{
-        database: string
+        dbid: string
         table: string
 
         sort: ITableSort[]
       }>,
     ) => {
-      const { database, table, sort } = action.payload
+      const { dbid, table, sort } = action.payload
 
-      state.tableQueryParamsDict[database] = {
-        ...state.tableQueryParamsDict[database],
+      state.tableQueryParamsDict[dbid] = {
+        ...state.tableQueryParamsDict[dbid],
         [table]: {
-          ...state.tableQueryParamsDict[database]?.[table],
+          ...state.tableQueryParamsDict[dbid]?.[table],
           sort,
         },
       }
     },
+    setQueryPagination: (
+      state: IDatabaseState,
+      action: PayloadAction<{
+        dbid: string
+        queryName: string
+        pagination: IPagination
+      }>,
+    ) => {
+      const { dbid, queryName, pagination } = action.payload
+
+      state.queryPaginationDict[dbid] = {
+        ...state.queryPaginationDict[dbid],
+        [queryName]: pagination,
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loadQueries.fulfilled, (state, action) => {
+      if (!action.payload) return
+      const { dbid, queries } = action.payload
+
+      state.queryDict[dbid] = queries
+    }),
+      builder.addCase(saveQueryToStores.fulfilled, (state, action) => {
+        if (!action.payload) return
+        const { dbid, queries } = action.payload
+
+        state.queryDict[dbid] = queries
+      }),
+      builder.addCase(deleteQueryFromStores.fulfilled, (state, action) => {
+        if (!action.payload) return
+        const { dbid, queries } = action.payload
+
+        state.queryDict[dbid] = queries
+      })
   },
 })
 
 export const {
   setDatabases,
-  setDatabaseObject,
+  setDataFilterSearch,
+  setDataFilterIncludeAll,
+  setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseLoading,
   setDatabaseActiveContext,
   removeDatabase,
-  addDatabase,
   setTablePagination,
   setTableFilters,
   setTableSort,
+  setQueryPagination,
 } = databaseSlice.actions
 
-export const selectDatabaseStructures = (state: { database: IDatabaseState }) =>
-  state.database.structureDict
+export const selectDatabases = (state: { database: IDatabaseState }) =>
+  state.database.databases
+
+export const selectDatabaseFilters = (state: { database: IDatabaseState }) =>
+  state.database.databaseFilters
+
+export const selectDatabaseSchemas = (state: { database: IDatabaseState }) =>
+  state.database.schemaDict
 
 export const selectDatabaseVisibility = (state: { database: IDatabaseState }) =>
   state.database.visibilityDict
@@ -202,10 +333,10 @@ export const selectDatabaseActiveContext = (state: {
 
 export const selectAction = (
   state: { database: IDatabaseState },
-  database: string,
+  dbid: string,
   actionName: string,
 ) => {
-  const actions = state.database.structureDict?.[database]?.actions
+  const actions = state.database.schemaDict?.[dbid]?.actions
 
   if (!actions) return undefined
 
@@ -214,14 +345,42 @@ export const selectAction = (
 
 export const selectTableQueryParams = (
   state: { database: IDatabaseState },
-  database: string,
+  dbid: string,
   table: string,
 ): ITableQueryParams | undefined => {
-  const tableQueryParams =
-    state.database.tableQueryParamsDict?.[database]?.[table]
-  if (!tableQueryParams) return undefined
+  const tableQueryParams = state.database.tableQueryParamsDict?.[dbid]?.[table]
 
   return tableQueryParams
+}
+
+export const selectDatabaseObject = (
+  state: { database: IDatabaseState },
+  dbid: string,
+): IDatasetInfoStringOwner | undefined => {
+  return state.database.databases?.find((db) => db.dbid === dbid)
+}
+
+export const selectQueries = (
+  state: { database: IDatabaseState },
+  dbid: string,
+) => {
+  return state.database.queryDict[dbid]
+}
+
+export const selectQuery = (
+  state: { database: IDatabaseState },
+  dbid: string,
+  name: string,
+) => {
+  return state.database.queryDict[dbid]?.find((query) => query.name === name)
+}
+
+export const selectQueryPagination = (
+  state: { database: IDatabaseState },
+  dbid: string,
+  queryName: string,
+) => {
+  return state.database.queryPaginationDict[dbid]?.[queryName]
 }
 
 export default databaseSlice.reducer

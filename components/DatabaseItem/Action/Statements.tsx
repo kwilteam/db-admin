@@ -11,9 +11,9 @@ export default function ActionStatements({
       <div className="flex flex-col gap-2">
         {statements && (
           <code className="flex flex-col gap-2 rounded-md bg-white p-2 text-xs">
-            {statements.map((statement) => {
+            {statements.map((statement, index) => {
               return (
-                <span key={statement}>
+                <span key={index}>
                   {statement}
                   <br />
                 </span>

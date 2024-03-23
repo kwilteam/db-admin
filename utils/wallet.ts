@@ -1,4 +1,4 @@
-import { ethers } from "ethers"
+import { BrowserProvider, JsonRpcProvider } from "ethers"
 
 declare global {
   interface Window {
@@ -8,9 +8,9 @@ declare global {
 
 export const getProvider = async () => {
   if (window.ethereum) {
-    return new ethers.BrowserProvider(window.ethereum)
+    return new BrowserProvider(window.ethereum)
   }
-  return new ethers.JsonRpcProvider()
+  return new JsonRpcProvider()
 }
 
 export const getSigner = async () => {
@@ -21,14 +21,4 @@ export const getSigner = async () => {
 export const getAddress = async () => {
   const signer = await getSigner()
   return await signer.getAddress()
-}
-
-export const signMessage = async (message: string) => {
-  const signer = await getSigner()
-  const signedMessage = await signer.signMessage(message)
-  return signedMessage
-}
-
-export const buildMessage = (accessCode: string, expiryDate: string) => {
-  return `Ethereum Signed Message:\nSign into Kwil Admin\n\nAccess Code: ${accessCode}\nExpiry Date: ${expiryDate}`
 }

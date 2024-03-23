@@ -1,5 +1,6 @@
-import { getSchemaContent, getSavedSchemas } from "@/utils/api"
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { initIdb } from "@/utils/idb/init"
+import { getSchema, getSchemas } from "@/utils/idb/ide"
 
 interface IIdeState {
   savedSchemas: string[] | undefined
@@ -18,7 +19,11 @@ const initialState: IIdeState = {
 export const loadSchema = createAsyncThunk(
   "ide/loadSchema",
   async (schemaName: string) => {
-    const schemaContent = await getSchemaContent(schemaName)
+    const db = await initIdb()
+    if (!db) return
+    const schema = await getSchema(db, schemaName)
+
+    const schemaContent = schema?.content || ""
 
     return { schemaName, schemaContent }
   },
@@ -27,7 +32,10 @@ export const loadSchema = createAsyncThunk(
 export const loadSavedSchemas = createAsyncThunk(
   "ide/loadSavedSchemas",
   async () => {
-    const savedSchemas = await getSavedSchemas()
+    const db = await initIdb()
+    if (!db) return
+
+    const savedSchemas = await getSchemas(db)
 
     return { savedSchemas }
   },
@@ -112,17 +120,19 @@ export const ideSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(loadSchema.fulfilled, (state, action) => {
+      if (!action.payload) return
       if (state.schemaContentDict[action.payload.schemaName]) return
 
       state.schemaContentDict[action.payload.schemaName] =
         action.payload.schemaContent
     }),
       builder.addCase(loadSavedSchemas.fulfilled, (state, action) => {
+        if (!action.payload) return
         const { savedSchemas } = action.payload
-        if ((state.savedSchemas && state.savedSchemas.length) || !savedSchemas)
-          return
 
-        state.savedSchemas = savedSchemas
+        if (!savedSchemas) return
+
+        state.savedSchemas = savedSchemas as string[]
       })
   },
 })

@@ -5,71 +5,104 @@ import {
   selectDatabaseVisibility,
   setDatabaseVisibility,
 } from "@/store/database"
-import useGetDbStructure from "@/hooks/useGetDatabaseStructure"
-import useDeleteDb from "@/hooks/useDeleteDb"
+import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import useDatabaseSchema from "@/hooks/database/use-database-schema"
+import useDeleteDb from "@/hooks/database/use-delete-db"
+import Loading from "../Loading"
 
-const DatabaseName = ({ database }: { database: string }) => {
-  const { getDbStructure } = useGetDbStructure()
+const DatabaseName = ({
+  database,
+  isMyDatabase,
+}: {
+  database: IDatasetInfoStringOwner
+  isMyDatabase?: boolean
+}) => {
+  const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
-  const triggerDeleteDb = useDeleteDb()
 
-  const isVisible = databaseVisibility[database]?.isVisible
+  const isVisible = databaseVisibility[database.dbid]?.isVisible
 
-  const getSchemaOrHide = (database: string) => {
+  const getSchemaOrHide = (database: IDatasetInfoStringOwner) => {
     if (isVisible) {
       dispatch(
         setDatabaseVisibility({
-          database,
+          dbid: database.dbid,
           key: "isVisible",
           isVisible: false,
         }),
       )
     } else {
-      getDbStructure(database)
+      getSchema(database)
     }
   }
 
   return (
     <li
-      test-id={`database-item-${database}`}
-      key={database}
-      className={classNames({
-        "group ml-2 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm":
-          true,
-        "text-slate-500 hover:text-slate-900": !isVisible,
-        "text-slate-900": isVisible,
-      })}
+      test-id={`database-item-${database.dbid}`}
+      key={database.dbid}
+      className={classNames(
+        "group relative ml-5 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm",
+        {
+          "text-slate-500 hover:text-slate-900": !isVisible,
+          "text-slate-900": isVisible,
+        },
+      )}
       onClick={() => getSchemaOrHide(database)}
     >
       <ChevronDownIcon
-        className={classNames({
-          "h-4 w-4": true,
-          hidden: !isVisible,
-        })}
+        className={classNames("h-4 w-4", { hidden: !isVisible })}
       />
       <ChevronRightIcon
-        className={classNames({
-          "h-4 w-4": true,
-          hidden: isVisible,
-        })}
+        className={classNames("h-4 w-4", { hidden: isVisible })}
       />
       <DatabaseIcon
-        className={classNames({
-          "h-4 w-4": true,
-          "text-amber-500": isVisible,
-        })}
+        className={classNames("h-4 w-4", { "text-amber-500": isVisible })}
       />
-      <span>{database}</span>
+
       <span
-        className="visible ml-auto px-2 text-slate-400 hover:text-slate-700 group-hover:visible md:invisible"
-        onClick={(e) => triggerDeleteDb(e, database)}
-        test-id={`database-item-${database}-delete`}
+        className="overflow-hidden text-ellipsis whitespace-nowrap"
+        style={{ maxWidth: "calc(100% - 55px)" }}
       >
-        x
+        {database.name}
       </span>
+
+      {databaseVisibility[database.dbid]?.loading && (
+        <Loading className="absolute right-0 ml-2" />
+      )}
+
+      {!databaseVisibility[database.dbid]?.loading && (
+        <DeleteDatabase isMyDatabase={isMyDatabase} database={database} />
+      )}
     </li>
   )
 }
 
 export default DatabaseName
+
+function DeleteDatabase({
+  isMyDatabase,
+  database,
+}: {
+  isMyDatabase?: boolean
+  database: IDatasetInfoStringOwner
+}) {
+  const triggerDeleteDb = useDeleteDb(database)
+
+  return (
+    <span
+      className={classNames(
+        "absolute right-0 ml-auto bg-white px-2 text-slate-400 hover:text-slate-700",
+        {
+          hidden: !isMyDatabase,
+          "flex md:hidden": isMyDatabase,
+          "md:group-hover:flex": isMyDatabase,
+        },
+      )}
+      onClick={(e) => triggerDeleteDb(e)}
+      test-id={`database-item-${database.dbid}-delete`}
+    >
+      x
+    </span>
+  )
+}

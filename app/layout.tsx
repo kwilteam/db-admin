@@ -1,7 +1,10 @@
 import type { Metadata } from "next"
 import classNames from "classnames"
 import { Manrope } from "next/font/google"
+import { ReduxProvider } from "@/providers/StoreProvider"
 import "./globals.css"
+import { IdbProvider } from "@/providers/IdbProvider"
+import { WebKwilProvider } from "@/providers/WebKwilProvider"
 
 const manrope = Manrope({ subsets: ["latin"] })
 
@@ -26,7 +29,11 @@ export default function RootLayout({
           "text-slate-700": true,
         })}
       >
-        {children}
+        <ReduxProvider>
+          <WebKwilProvider>
+            <IdbProvider>{children}</IdbProvider>
+          </WebKwilProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

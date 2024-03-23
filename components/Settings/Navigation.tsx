@@ -3,7 +3,7 @@
 import classNames from "classnames"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { AccountsIcon, SettingsIcon } from "@/utils/icons"
+import { ProviderIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
 
@@ -15,14 +15,9 @@ interface ISettingsItem {
 
 const settingsItems: ISettingsItem[] = [
   {
-    name: "General",
-    href: "/settings/general",
-    icon: SettingsIcon,
-  },
-  {
-    name: "Accounts",
-    href: "/settings/accounts",
-    icon: AccountsIcon,
+    name: "Providers",
+    href: "/settings/providers",
+    icon: ProviderIcon,
   },
 ]
 

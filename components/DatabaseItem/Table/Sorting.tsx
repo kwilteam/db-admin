@@ -1,18 +1,18 @@
 import { SortIcon } from "@/utils/icons"
 import { Popover, Switch, Transition } from "@headlessui/react"
 import { Fragment, useMemo } from "react"
-import Button from "@/components/Button"
-import useTableSort from "@/hooks/useTableSort"
-import { ITableSort } from "@/utils/database-types"
 import classNames from "classnames"
+import { ITableSort } from "@/utils/database-types"
+import useTableSort from "@/hooks/database/use-table-sort"
+import Button from "@/components/Button"
 
 interface ISortingProps {
-  database: string
+  dbid: string
   table: string
   columns: string[]
 }
 
-export default function Sorting({ database, table, columns }: ISortingProps) {
+export default function Sorting({ dbid, table, columns }: ISortingProps) {
   const {
     tempSort,
     activeSort,
@@ -23,7 +23,7 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
     setSortValue,
     sortBtnText,
   } = useTableSort({
-    database,
+    dbid,
     table,
   })
 
@@ -94,9 +94,9 @@ export default function Sorting({ database, table, columns }: ISortingProps) {
                     )}
 
                     {remainingColumns.length > 0 && (
-                      <div className="flex flex-row gap-2">
+                      <div className="flex">
                         <select
-                          className="rounded-md p-1 text-xs outline-none hover:bg-slate-50"
+                          className="w-44 rounded-md p-1 text-xs outline-none hover:bg-slate-50 focus:border-kwil focus:outline-none focus:ring-0"
                           onChange={(e) => {
                             addSort(e.target.value)
                           }}

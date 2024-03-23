@@ -1,4 +1,4 @@
-import useDeleteSchema from "@/hooks/useDeleteSchema"
+import useDeleteSchema from "@/hooks/ide/use-delete-schema"
 import { setIsMenuOpen } from "@/store/global"
 import { useAppDispatch } from "@/store/hooks"
 import { loadSchema, openSchema } from "@/store/ide"

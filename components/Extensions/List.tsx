@@ -51,10 +51,6 @@ export default function ExtensionList() {
     }
 
     fetchExtensions()
-
-    return () => {
-      dispatch(setAlert(undefined))
-    }
   }, [dispatch, filters])
 
   if (loading) return <Loading className="mt-4 flex w-full justify-center" />

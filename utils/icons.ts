@@ -4,6 +4,7 @@ import {
   HiOutlinePencilSquare,
   HiOutlineBolt,
   HiOutlineUserCircle,
+  HiOutlineUser,
   HiOutlineCodeBracket,
   HiOutlineTableCells,
   HiOutlineChevronDown,
@@ -23,10 +24,15 @@ import {
   HiOutlineCheck,
   HiOutlineCheckBadge,
   HiOutlineXMark,
-  HiOutlineUserPlus,
+  HiServerStack,
+  HiOutlinePencil,
+  HiOutlineQuestionMarkCircle,
+  HiOutlineArrowTopRightOnSquare,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
+import { TbSql } from "react-icons/tb"
+import { PiAsteriskLight } from "react-icons/pi"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -51,12 +57,17 @@ export {
   HiOutlinePlus as PlusIcon,
   HiOutlineChevronUpDown as ChevronUpDownIcon,
   HiOutlineCheck as CheckIcon,
-  HiOutlineUserCircle as AccountsIcon,
   HiOutlineCheckBadge as VerifiedIcon,
   HiOutlineUserCircle as PublisherIcon,
   HiOutlineXMark as CloseIcon,
-  HiOutlineUserPlus as AccountPlusIcon,
+  HiServerStack as ProviderIcon,
+  HiOutlineUser as UserIcon,
+  HiOutlinePencil as EditIcon,
+  HiOutlineQuestionMarkCircle as HelpIcon,
+  HiOutlineArrowTopRightOnSquare as FaucetIcon,
   FaGithub as GitIcon,
   FaDocker as DockerIcon,
   CiLogout as SignOutIcon,
+  TbSql as QueryIcon,
+  PiAsteriskLight as OtherIcon,
 }
