@@ -38,3 +38,9 @@ At this stage I have completed the above commands so the DB Admin is available f
 `docker run -p 3000:3000 martinopensky/db-admin`
 
 `docker tag db-admin:latest docker.io/martinopensky/db-admin:latest && docker push docker.io/martinopensky/db-admin:latest`
+
+## Testing
+
+Unit tests exist in the **tests** directory and can be run using the following command:
+
+`yarn test`
