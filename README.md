@@ -41,6 +41,6 @@ At this stage I have completed the above commands so the DB Admin is available f
 
 ## Testing
 
-Unit tests exist in the **tests** directory and can be run using the following command:
+Unit tests can be run using the following command:
 
 `yarn test`
