@@ -57,8 +57,8 @@ export const deleteProvider = async (
 export const setupProviders = async (idb: IDBPDatabase<unknown>) => {
   const testnetProvider: IProvider = {
     name: "Testnet",
-    url: "https://testnet.kwil.com",
-    chainId: "kwil-chain-testnet-0.6",
+    url: "https://longhorn.kwil.com",
+    chainId: "longhorn",
   }
   await setProvider(idb, testnetProvider)
 

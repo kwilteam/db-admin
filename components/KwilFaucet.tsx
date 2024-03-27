@@ -6,10 +6,10 @@ export const KwilFaucet = () => {
       href="https://faucet.kwil.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="mr-1 flex items-center text-sm text-white hover:underline md:text-kwil"
+      className="mr-1 flex items-center text-sm text-white hover:underline lg:text-kwil"
     >
       <FaucetIcon className="mr-1 h-4 w-4" />
-      <span className="hidden md:flex">Faucet</span>
+      <span className="hidden lg:flex">Faucet</span>
     </a>
   )
 }
