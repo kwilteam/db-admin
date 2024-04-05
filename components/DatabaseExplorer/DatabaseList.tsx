@@ -1,10 +1,7 @@
 import classNames from "classnames"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { OtherIcon, UserIcon } from "@/utils/icons"
-import {
-  selectDatabaseFilters,
-  setDataFilterIncludeAll,
-} from "@/store/database"
+import { selectFilters, setIncludeAll } from "@/store/filters"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
@@ -13,7 +10,7 @@ interface IDatabaseListProps {
   databases: IDatasetInfoStringOwner[] | undefined
   loading: boolean
   isMobile: boolean
-  isMyDatabase?: boolean
+  isMyDatabase: boolean
   activeAccount?: string | undefined
 }
 
@@ -24,12 +21,7 @@ export default function DatabaseList({
   isMyDatabase,
   activeAccount,
 }: IDatabaseListProps): JSX.Element {
-  const dispatch = useAppDispatch()
-  const includeOtherDatabases = useAppSelector(selectDatabaseFilters).includeAll
-
-  const setIncludeOtherDatabases = () => {
-    dispatch(setDataFilterIncludeAll(!includeOtherDatabases))
-  }
+  const includeOtherDatabases = useAppSelector(selectFilters).includeAll
 
   return (
     <div className="flex flex-col" data-testid="database-list">
@@ -42,25 +34,16 @@ export default function DatabaseList({
         ) : (
           <div className="flex items-center gap-1">
             <OtherIcon className="h-4 w-4" />
-            {!activeAccount ? (
-              <span>DATABASES</span>
-            ) : (
-              <>
-                <span>OTHER DATABASES</span>
-                <input
-                  aria-describedby="include-all-description"
-                  name={`include-all-${isMobile ? "mobile" : "desktop"}`} // To avoid duplicate id as Element IDs should be unique
-                  type="checkbox"
-                  checked={includeOtherDatabases}
-                  onChange={setIncludeOtherDatabases}
-                  className="ml-1 h-4 w-4 rounded border-gray-300 text-kwil focus:ring-kwil"
-                />
-              </>
-            )}
+            <IncludeOtherDatabasesCheckbox
+              activeAccount={activeAccount}
+              isMobile={isMobile}
+              includeOtherDatabases={includeOtherDatabases}
+            />
           </div>
         )}
       </div>
 
+      {/* When DBs are found for this list */}
       {databases &&
         databases.map((database, index) => (
           <div key={index} className="">
@@ -69,6 +52,7 @@ export default function DatabaseList({
           </div>
         ))}
 
+      {/* When No DBs are found for this list */}
       {(isMyDatabase || (!isMyDatabase && includeOtherDatabases)) &&
         databases &&
         databases.length === 0 && (
@@ -84,5 +68,41 @@ export default function DatabaseList({
           </div>
         )}
     </div>
+  )
+}
+
+function IncludeOtherDatabasesCheckbox({
+  activeAccount,
+  isMobile,
+  includeOtherDatabases,
+}: {
+  activeAccount: string | undefined
+  isMobile: boolean
+  includeOtherDatabases: boolean
+}): JSX.Element {
+  const dispatch = useAppDispatch()
+
+  const setIncludeOtherDatabases = () => {
+    dispatch(setIncludeAll(!includeOtherDatabases))
+  }
+
+  return (
+    <>
+      {!activeAccount ? (
+        <span>DATABASES</span>
+      ) : (
+        <>
+          <span>OTHER DATABASES</span>
+          <input
+            aria-describedby="include-all-description"
+            name={`include-all-${isMobile ? "mobile" : "desktop"}`} // To avoid duplicate id as Element IDs should be unique
+            type="checkbox"
+            checked={includeOtherDatabases}
+            onChange={setIncludeOtherDatabases}
+            className="ml-1 h-4 w-4 rounded border-gray-300 text-kwil focus:ring-kwil"
+          />
+        </>
+      )}
+    </>
   )
 }

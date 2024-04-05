@@ -16,7 +16,7 @@ export default function useDatabaseSchema() {
   const kwilProvider = useKwilProvider()
 
   const getSchema = useCallback(
-    async (database: IDatasetInfoStringOwner, show?: ItemTypes) => {
+    async (database: IDatasetInfoStringOwner, showItem?: ItemTypes) => {
       if (!kwilProvider || !dispatch || !router) return
 
       try {
@@ -62,17 +62,17 @@ export default function useDatabaseSchema() {
           }),
         )
 
-        if (show) {
+        if (showItem) {
           dispatch(
             setDatabaseVisibility({
               dbid: database.dbid,
-              key: show,
+              key: showItem,
               value: true,
             }),
           )
         }
       } catch (error) {
-        // TODO: show error alert when schema could not be fetched
+        // Show error alert when schema could not be fetched?
         console.error(error)
 
         dispatch(setDatabaseActiveContext(undefined))

@@ -56,6 +56,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
                 databases={otherDbs}
                 loading={otherDbsLoading}
                 isMobile={isMobile}
+                isMyDatabase={false}
                 activeAccount={activeAccount}
               />
             </>

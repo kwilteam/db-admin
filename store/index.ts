@@ -4,6 +4,7 @@ import ideReducer from "./ide"
 import globalReducer from "./global"
 import extensionsReducer from "./extensions"
 import providersReducer from "./providers"
+import filtersReducer from "./filters"
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     ide: ideReducer,
     extensions: extensionsReducer,
     providers: providersReducer,
+    filters: filtersReducer,
   },
 })
 

@@ -22,14 +22,8 @@ export interface IDatabaseActiveContext {
   name: string
 }
 
-export interface IDatabaseFilters {
-  includeAll: boolean
-  search: string
-}
-
 interface IDatabaseState {
   databases: IDatasetInfoStringOwner[] | undefined
-  databaseFilters: IDatabaseFilters
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
@@ -40,10 +34,6 @@ interface IDatabaseState {
 
 const initialState: IDatabaseState = {
   databases: undefined,
-  databaseFilters: {
-    includeAll: true,
-    search: "",
-  },
   schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
@@ -122,20 +112,6 @@ export const databaseSlice = createSlice({
       action: PayloadAction<IDatasetInfoStringOwner[] | undefined>,
     ) => {
       state.databases = action.payload
-    },
-
-    setDataFilterSearch: (
-      state: IDatabaseState,
-      action: PayloadAction<string>,
-    ) => {
-      state.databaseFilters.search = action.payload
-    },
-
-    setDataFilterIncludeAll: (
-      state: IDatabaseState,
-      action: PayloadAction<boolean>,
-    ) => {
-      state.databaseFilters.includeAll = action.payload
     },
 
     setDatabaseSchema: (
@@ -313,8 +289,6 @@ export const databaseSlice = createSlice({
 
 export const {
   setDatabases,
-  setDataFilterSearch,
-  setDataFilterIncludeAll,
   setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseClosed,
@@ -329,9 +303,6 @@ export const {
 
 export const selectDatabases = (state: { database: IDatabaseState }) =>
   state.database.databases
-
-export const selectDatabaseFilters = (state: { database: IDatabaseState }) =>
-  state.database.databaseFilters
 
 export const selectDatabaseSchemas = (state: { database: IDatabaseState }) =>
   state.database.schemaDict
