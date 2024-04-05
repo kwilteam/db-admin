@@ -1,11 +1,11 @@
 import { useState } from "react"
-import { selectFilters, setSearch } from "@/store/filters"
+import { selectSearch, setSearch } from "@/store/filters"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 
 export default function DatabaseFilterSearch({ isMobile = false }) {
   const dispatch = useAppDispatch()
-  const filters = useAppSelector(selectFilters)
-  const [currentSearch, setCurrentSearch] = useState(filters.search)
+  const search = useAppSelector(selectSearch)
+  const [currentSearch, setCurrentSearch] = useState(search)
   const [debounceTimer, setDebounceTimer] = useState<
     NodeJS.Timeout | undefined
   >(undefined)
@@ -29,7 +29,7 @@ export default function DatabaseFilterSearch({ isMobile = false }) {
   }
 
   return (
-    <div className="mb-2 flex  h-10 items-center  border-b ">
+    <div className="mb-2 flex  h-10 items-center border-b">
       <input
         type="text"
         data-testid="database-filter-search"
@@ -39,7 +39,7 @@ export default function DatabaseFilterSearch({ isMobile = false }) {
         className="h-9 w-full border-none pl-2 text-sm focus:outline-none focus:ring-0"
         placeholder="Filter databases..."
       />
-      {filters.search && (
+      {search && (
         <button
           onClick={clearSearch}
           className="pr-2 text-sm text-slate-400 hover:text-slate-600 "

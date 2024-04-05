@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { OtherIcon, UserIcon } from "@/utils/icons"
-import { selectFilters, setIncludeAll } from "@/store/filters"
+import { selectIncludeAll, selectSearch, setIncludeAll } from "@/store/filters"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
@@ -21,7 +21,12 @@ export default function DatabaseList({
   isMyDatabase,
   activeAccount,
 }: IDatabaseListProps): JSX.Element {
-  const includeOtherDatabases = useAppSelector(selectFilters).includeAll
+  const includeOtherDatabases = useAppSelector(selectIncludeAll)
+  const search = useAppSelector(selectSearch)
+
+  const filteredDatabases = databases?.filter((db) => {
+    return db.name.includes(search)
+  })
 
   return (
     <div className="flex flex-col" data-testid="database-list">
@@ -44,8 +49,8 @@ export default function DatabaseList({
       </div>
 
       {/* When DBs are found for this list */}
-      {databases &&
-        databases.map((database, index) => (
+      {filteredDatabases &&
+        filteredDatabases.map((database, index) => (
           <div key={index} className="">
             <DatabaseName database={database} isMyDatabase={isMyDatabase} />
             <DatabaseSchema database={database} />
@@ -54,8 +59,8 @@ export default function DatabaseList({
 
       {/* When No DBs are found for this list */}
       {(isMyDatabase || (!isMyDatabase && includeOtherDatabases)) &&
-        databases &&
-        databases.length === 0 && (
+        filteredDatabases &&
+        filteredDatabases.length === 0 && (
           <div className="ml-7 flex justify-start">
             <p
               className={classNames("text-sm italic text-slate-500", {

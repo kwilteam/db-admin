@@ -29,7 +29,10 @@ export const filtersSlice = createSlice({
 
 export const { setSearch, setIncludeAll } = filtersSlice.actions
 
-export const selectFilters = (state: { filters: IDatabaseFilters }) =>
-  state.filters
+export const selectSearch = (state: { filters: IDatabaseFilters }) =>
+  state.filters.search
+
+export const selectIncludeAll = (state: { filters: IDatabaseFilters }) =>
+  state.filters.includeAll
 
 export default filtersSlice.reducer

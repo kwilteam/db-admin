@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { selectActiveAccount } from "@/store/global"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabases } from "@/store/database"
-import { selectFilters } from "@/store/filters"
+// import { selectFilters } from "@/store/filters"
 import useFetchDatabases from "@/hooks/database/use-fetch-databases"
 
 // Delay update of loading state to avoid flickering
@@ -11,7 +11,6 @@ const loadingDelay = 1000
 export default function useDatabases() {
   const { fetchDatabases, loading: fetchDatabasesLoading } = useFetchDatabases()
   const activeAccount = useAppSelector(selectActiveAccount)
-  const filters = useAppSelector(selectFilters)
   const databases = useAppSelector(selectDatabases)
   const [myDbsLoading, setMyDbsLoading] = useState(true)
   const [otherDbsLoading, setOtherDbsLoading] = useState(true)
@@ -27,10 +26,7 @@ export default function useDatabases() {
 
     const _myDbs = databases
       ?.filter((db) => {
-        return (
-          `0x${db.owner.toLowerCase()}` === activeAccount?.toLowerCase() &&
-          db.name.includes(filters.search)
-        )
+        return `0x${db.owner.toLowerCase()}` === activeAccount?.toLowerCase()
       })
       .sort((a, b) => {
         if (a.name < b.name) return -1
@@ -42,27 +38,20 @@ export default function useDatabases() {
 
     setMyDbsLoading(false)
     return _myDbs
-  }, [databases, activeAccount, filters.search])
+  }, [databases, activeAccount])
 
   const otherDbs = useMemo(() => {
     setOtherDbsLoading(true)
 
-    if (
-      (filters.includeAll === false && activeAccount) ||
-      databases === undefined
-    ) {
-      setTimeout(() => {
-        setOtherDbsLoading(false)
-      }, loadingDelay)
+    if (databases === undefined) {
+      setOtherDbsLoading(false)
+
       return undefined
     }
 
     const _otherDbs = databases
       .filter((db) => {
-        return (
-          `0x${db.owner.toLowerCase()}` !== activeAccount?.toLowerCase() &&
-          db.name.includes(filters.search)
-        )
+        return `0x${db.owner.toLowerCase()}` !== activeAccount?.toLowerCase()
       })
       .sort((a, b) => {
         if (a.name < b.name) return -1
@@ -77,7 +66,7 @@ export default function useDatabases() {
     }, loadingDelay)
 
     return _otherDbs
-  }, [databases, activeAccount, filters])
+  }, [databases, activeAccount])
 
   useEffect(() => {
     fetchDatabases()
