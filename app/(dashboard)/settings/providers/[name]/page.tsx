@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { CloseIcon, PlusIcon } from "@/utils/icons"
+import { CheckIcon, CloseIcon } from "@/utils/icons"
 import useSaveProvider from "@/hooks/settings/use-save-provider"
 import Header from "@/components/Settings/Providers/Header"
 import Button from "@/components/Button"
@@ -58,7 +58,7 @@ export default function ProviderPage({ params }: IProviderPageProps) {
           onClick={() => saveProvider()}
           test-id="submit-account-btn"
         >
-          <PlusIcon className="mr-1 h-4 w-4" />
+          <CheckIcon className="mr-1 h-4 w-4" />
           Save
         </Button>
       </ActionPanel>

@@ -31,7 +31,6 @@ const DatabaseItem = ({
   const dispatch = useAppDispatch()
   const databaseSchemas = useAppSelector(selectDatabaseSchemas)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
-
   const visible = databaseVisibility[database.dbid]?.[itemType]
   const databaseSchemaItems =
     databaseSchemas &&

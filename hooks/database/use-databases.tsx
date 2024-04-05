@@ -46,7 +46,10 @@ export default function useDatabases() {
   const otherDbs = useMemo(() => {
     setOtherDbsLoading(true)
 
-    if (databaseFilters.includeAll === false || databases === undefined) {
+    if (
+      (databaseFilters.includeAll === false && activeAccount) ||
+      databases === undefined
+    ) {
       setTimeout(() => {
         setOtherDbsLoading(false)
       }, loadingDelay)

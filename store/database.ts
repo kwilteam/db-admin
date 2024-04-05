@@ -154,15 +154,32 @@ export const databaseSlice = createSlice({
       action: PayloadAction<{
         dbid: string
         key: keyof IDatabaseVisibilityDict[string]
-        isVisible?: boolean
+        value?: boolean
       }>,
     ) => {
-      const { dbid, key, isVisible } = action.payload
+      const { dbid, key, value } = action.payload
       const currentVisibility = state.visibilityDict[dbid]?.[key]
 
       state.visibilityDict[dbid] = {
         ...state.visibilityDict[dbid],
-        [key]: isVisible !== undefined ? isVisible : !currentVisibility,
+        [key]: value !== undefined ? value : !currentVisibility,
+      }
+    },
+
+    setDatabaseClosed: (
+      state: IDatabaseState,
+      action: PayloadAction<{
+        dbid: string
+      }>,
+    ) => {
+      const { dbid } = action.payload
+
+      state.visibilityDict[dbid] = {
+        open: false,
+        tables: false,
+        actions: false,
+        queries: false,
+        loading: false,
       }
     },
 
@@ -300,6 +317,7 @@ export const {
   setDataFilterIncludeAll,
   setDatabaseSchema,
   setDatabaseVisibility,
+  setDatabaseClosed,
   setDatabaseLoading,
   setDatabaseActiveContext,
   removeDatabase,
@@ -326,7 +344,7 @@ export const selectDatabaseActiveContext = (state: {
 }) => {
   const activeContext = state.database.activeContext
 
-  if (!activeContext) return false
+  if (!activeContext) return undefined
 
   return activeContext
 }

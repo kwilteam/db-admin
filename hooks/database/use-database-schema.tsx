@@ -57,8 +57,8 @@ export default function useDatabaseSchema() {
         dispatch(
           setDatabaseVisibility({
             dbid: database.dbid,
-            key: "isVisible",
-            isVisible: true,
+            key: "open",
+            value: true,
           }),
         )
 
@@ -67,7 +67,7 @@ export default function useDatabaseSchema() {
             setDatabaseVisibility({
               dbid: database.dbid,
               key: show,
-              isVisible: true,
+              value: true,
             }),
           )
         }

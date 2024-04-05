@@ -60,7 +60,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
           className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
           onClick={openConnectWalletDialog}
         >
-          Connect
+          <ProfileIcon className="h-4 w-4" /> Connect
         </button>
       </>
     )

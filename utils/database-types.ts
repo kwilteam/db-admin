@@ -27,7 +27,7 @@ export enum ItemTypes {
 
 // Whether a database is visible, and whether its tables and actions are visible
 interface IDatabaseVisibility {
-  isVisible: boolean
+  open: boolean
   tables: boolean
   actions: boolean
   queries: boolean

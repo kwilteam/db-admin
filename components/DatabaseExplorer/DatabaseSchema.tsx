@@ -12,7 +12,7 @@ const DatabaseSchema = ({
 
   return (
     <div key={`${database}-structure`} className="ml-11 flex flex-1 flex-col">
-      {databaseVisibility[database.dbid]?.isVisible && (
+      {databaseVisibility[database.dbid]?.open && (
         <>
           <DatabaseItem database={database} itemType={ItemTypes.TABLES} />
           <DatabaseItem database={database} itemType={ItemTypes.ACTIONS} />
