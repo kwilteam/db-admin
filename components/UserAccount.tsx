@@ -44,6 +44,8 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
   }, [activeAccount])
 
   useEffect(() => {
+    if (!window.ethereum) return
+    
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
       dispatch(setActiveAccount(accounts[0]))
     })
