@@ -22,8 +22,17 @@ export interface IDatabaseActiveContext {
   name: string
 }
 
+export interface IDatabaseFilters {
+  includeAll: boolean
+  search: string
+}
+
+// Define a type that maps keys to their respective value types
+type FilterValueType<K extends keyof IDatabaseFilters> = IDatabaseFilters[K]
+
 interface IDatabaseState {
   databases: IDatasetInfoStringOwner[] | undefined
+  filters: IDatabaseFilters
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
   tableQueryParamsDict: ITableQueryParamsDict
@@ -34,6 +43,10 @@ interface IDatabaseState {
 
 const initialState: IDatabaseState = {
   databases: undefined,
+  filters: {
+    includeAll: true,
+    search: "",
+  },
   schemaDict: {},
   visibilityDict: {},
   tableQueryParamsDict: {},
@@ -112,6 +125,17 @@ export const databaseSlice = createSlice({
       action: PayloadAction<IDatasetInfoStringOwner[] | undefined>,
     ) => {
       state.databases = action.payload
+    },
+
+    setFilter: <K extends keyof IDatabaseFilters>(
+      state: IDatabaseState,
+      action: PayloadAction<{
+        key: K
+        value: FilterValueType<K>
+      }>,
+    ) => {
+      const { key, value } = action.payload
+      state.filters[key] = value
     },
 
     setDatabaseSchema: (
@@ -289,6 +313,7 @@ export const databaseSlice = createSlice({
 
 export const {
   setDatabases,
+  setFilter,
   setDatabaseSchema,
   setDatabaseVisibility,
   setDatabaseClosed,
@@ -303,6 +328,9 @@ export const {
 
 export const selectDatabases = (state: { database: IDatabaseState }) =>
   state.database.databases
+
+export const selectDatabaseFilters = (state: { database: IDatabaseState }) =>
+  state.database.filters
 
 export const selectDatabaseSchemas = (state: { database: IDatabaseState }) =>
   state.database.schemaDict

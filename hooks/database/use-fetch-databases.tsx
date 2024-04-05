@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react"
-import { setDatabases } from "@/store/database"
-import { selectIncludeAll } from "@/store/filters"
+import { selectDatabaseFilters, setDatabases } from "@/store/database"
 import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
@@ -10,7 +9,7 @@ import { useKwilProvider } from "@/providers/WebKwilProvider"
 export default function useFetchDatabases() {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
-  const includeAll = useAppSelector(selectIncludeAll)
+  const filters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -18,7 +17,7 @@ export default function useFetchDatabases() {
     try {
       setLoading(true)
       let databasesResponse
-      if (includeAll) {
+      if (filters.includeAll) {
         databasesResponse = await kwilProvider?.listDatabases()
       } else if (activeAccount) {
         databasesResponse = await kwilProvider?.listDatabases(activeAccount)
@@ -61,7 +60,7 @@ export default function useFetchDatabases() {
 
       console.error(error)
     }
-  }, [dispatch, kwilProvider, includeAll, activeAccount])
+  }, [dispatch, kwilProvider, filters.includeAll, activeAccount])
 
   return { fetchDatabases, loading }
 }

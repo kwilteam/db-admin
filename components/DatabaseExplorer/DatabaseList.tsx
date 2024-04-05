@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { OtherIcon, UserIcon } from "@/utils/icons"
-import { selectIncludeAll, selectSearch, setIncludeAll } from "@/store/filters"
+import { selectDatabaseFilters, setFilter } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
 import DatabaseSchema from "./DatabaseSchema"
@@ -21,8 +21,9 @@ export default function DatabaseList({
   isMyDatabase,
   activeAccount,
 }: IDatabaseListProps): JSX.Element {
-  const includeOtherDatabases = useAppSelector(selectIncludeAll)
-  const search = useAppSelector(selectSearch)
+  const filters = useAppSelector(selectDatabaseFilters)
+  const includeOtherDatabases = filters.includeAll
+  const search = filters.search
 
   const filteredDatabases = databases?.filter((db) => {
     return db.name.includes(search)
@@ -88,7 +89,7 @@ function IncludeOtherDatabasesCheckbox({
   const dispatch = useAppDispatch()
 
   const setIncludeOtherDatabases = () => {
-    dispatch(setIncludeAll(!includeOtherDatabases))
+    dispatch(setFilter({ key: "includeAll", value: includeOtherDatabases }))
   }
 
   return (

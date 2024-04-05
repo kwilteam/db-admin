@@ -12,7 +12,7 @@ const storeData = mockStore({
       { dbid: "1", name: "Test Database 1", owner: "0x123" },
       { dbid: "2", name: "Test Database 2", owner: "0x456" },
     ],
-    databaseFilters: {
+    filters: {
       includeAll: true,
       search: "",
     },
