@@ -58,10 +58,6 @@ export default function DatabaseList({
           </div>
         ))}
 
-      <>
-        {filteredDatabases?.length} - {databases?.length}
-      </>
-
       {/* When No DBs are found for this list */}
       {(isMyDatabase || (!isMyDatabase && includeOtherDatabases)) &&
         filteredDatabases &&
