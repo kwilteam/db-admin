@@ -5,7 +5,7 @@ import {
   selectDatabaseActiveContext,
   selectDatabaseVisibility,
   setDatabaseActiveContext,
-  setDatabaseClosed,
+  setDatabaseVisibility,
 } from "@/store/database"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/use-database-schema"
@@ -29,8 +29,10 @@ const DatabaseName = ({
   const getSchemaOrHide = (database: IDatasetInfoStringOwner) => {
     if (isOpen) {
       dispatch(
-        setDatabaseClosed({
+        setDatabaseVisibility({
           dbid: database.dbid,
+          key: "open",
+          value: false,
         }),
       )
 
@@ -46,7 +48,7 @@ const DatabaseName = ({
 
   return (
     <li
-      test-id={`database-item-${database.dbid}`}
+      data-testid={`database-item-${database.dbid}`}
       key={database.dbid}
       className={classNames(
         "group relative ml-5 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm",
@@ -103,7 +105,7 @@ function DeleteDatabase({
         },
       )}
       onClick={(e) => triggerDeleteDb(e)}
-      test-id={`database-item-${database.dbid}-delete`}
+      data-testid={`database-item-${database.dbid}-delete`}
     >
       x
     </span>

@@ -41,6 +41,7 @@ export default function DatabaseFilterSearch({ isMobile = false }) {
       />
       {filters.search && (
         <button
+          data-testid="database-filter-search-clear"
           onClick={clearSearch}
           className="pr-2 text-sm text-slate-400 hover:text-slate-600 "
         >

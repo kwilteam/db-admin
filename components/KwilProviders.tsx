@@ -36,6 +36,7 @@ export default function KwilProviders({ activeProvider }: IKwilProvidersProps) {
         <Menu.Button className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
           <ProviderIcon className="h-4 w-4" />
           <div
+            data-testid="status-indicator"
             className={classNames("block h-2 w-2 flex-shrink-0 rounded-full", {
               "border bg-lime-500":
                 providerStatus === KwilProviderStatus.Online,

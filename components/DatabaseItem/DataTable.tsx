@@ -21,7 +21,12 @@ export default function DataTable({
   isLoading,
 }: IProps) {
   if (isLoading) {
-    return <Loading className="flex justify-center bg-slate-50 pt-10" />
+    return (
+      <Loading
+        data-testid="loading"
+        className="flex justify-center bg-slate-50 pt-10"
+      />
+    )
   }
 
   if (
@@ -38,7 +43,7 @@ export default function DataTable({
 
   return (
     <div
-      test-id="data-table"
+      data-testid="data-table"
       className="m-1 overflow-scroll border border-slate-200 lg:m-2"
     >
       <table className="min-w-full divide-y divide-slate-200">

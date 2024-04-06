@@ -8,7 +8,7 @@ interface IDatabaseParams {
 }
 
 export default function useDatabaseParams(): IDatabaseParams {
-  const params: IDatabaseParams = useParams()
+  const params: IDatabaseParams = useParams() || {}
 
   const { dbid, table, action, query } = params
 

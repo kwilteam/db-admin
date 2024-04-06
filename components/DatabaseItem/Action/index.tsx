@@ -18,7 +18,10 @@ export default function Action({ dbid, actionName }: IActionProps) {
   })
   const statements = action?.statements
 
-  if (!action) return <Loading className="flex justify-center pt-4" />
+  if (!action)
+    return (
+      <Loading data-testid="loading" className="flex justify-center pt-4" />
+    )
 
   return (
     <div className="flex flex-col">

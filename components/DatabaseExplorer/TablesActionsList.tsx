@@ -31,7 +31,7 @@ export const TablesActionsList = ({
     <>
       {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema) => (
         <div
-          test-id={`database-item-${dbid}-${itemType}-${objectItem.name}`}
+          data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
           key={`${dbid}-${itemType}-${objectItem.name}`}
           className="ml-6 overflow-hidden text-sm"
         >

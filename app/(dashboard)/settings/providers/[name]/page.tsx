@@ -53,11 +53,7 @@ export default function ProviderPage({ params }: IProviderPageProps) {
             Cancel
           </Link>
         </Button>
-        <Button
-          context="primary"
-          onClick={() => saveProvider()}
-          test-id="submit-account-btn"
-        >
+        <Button context="primary" onClick={() => saveProvider()}>
           <CheckIcon className="mr-1 h-4 w-4" />
           Save
         </Button>

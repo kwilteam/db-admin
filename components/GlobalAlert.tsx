@@ -22,7 +22,7 @@ export default function GlobalAlert() {
         "pl-[72px] md:pl-2": isMenuOpen,
       })}
     >
-      <Alert test-id="global-alert" type={alert.type} text={alert.text} />
+      <Alert type={alert.type} text={alert.text} />
     </div>
   )
 }

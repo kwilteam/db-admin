@@ -21,10 +21,7 @@ export default function ProvidersTable({
       data-testid="accounts-table"
       className="m-1 overflow-scroll border border-slate-200 lg:m-2"
     >
-      <table
-        className="min-w-full divide-y divide-slate-200"
-        test-id="accounts-table"
-      >
+      <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">
             <th

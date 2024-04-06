@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest"
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
-import { mockStore } from "./mocks/mock-store"
+import { mockStore } from "../../mocks/mock-store"
 import SchemaExplorer from "@/components/Ide/SchemaExplorer"
 
 const storeData = mockStore({

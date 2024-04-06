@@ -49,7 +49,7 @@ const DatabaseItem = ({
   return (
     <>
       <div
-        test-id={`database-item-${database}-${itemType}`}
+        data-testid={`database-item-${database.dbid}-${itemType}`}
         className={classNames(
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm",
           {

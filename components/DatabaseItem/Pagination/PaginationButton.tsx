@@ -21,6 +21,7 @@ const PaginationButton = ({
 
   return (
     <button
+      data-testid={`pagination-button-${type}`}
       className="m-1 cursor-pointer rounded-md border border-slate-200 bg-white p-0 px-1 text-slate-500"
       disabled={isDisabled}
       onClick={() => {

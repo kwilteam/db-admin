@@ -1,8 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, it } from "vitest"
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
-import { mockStore } from "./mocks/mock-store"
+import { mockStore } from "../../mocks/mock-store"
 import ProvidersTable from "@/components/Settings/Providers/Table"
 import ProviderForm from "@/components/Settings/Providers/Form"
 

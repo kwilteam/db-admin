@@ -58,7 +58,7 @@ export default function ActionForm({
                   {input}
                 </label>
                 <Input
-                  test-id={`action-input-${input}`}
+                  data-testid={`action-input-${input}`}
                   name={input}
                   className="m-1 flex-1 rounded-md border bg-white p-2"
                   error={errors[input] && isDirty}
@@ -74,7 +74,7 @@ export default function ActionForm({
 
         <div className="my-2">
           {!isExecuting && (
-            <Button test-id="execute-action" context="primary">
+            <Button data-testid="execute-action" context="primary">
               Execute Action
             </Button>
           )}

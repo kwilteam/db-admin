@@ -29,11 +29,7 @@ export default function ProvidersPage() {
 
       <ActionPanel>
         <Button context="primary">
-          <Link
-            href="/settings/providers/create"
-            className="flex"
-            test-id="new-provider-btn"
-          >
+          <Link href="/settings/providers/create" className="flex">
             <PlusIcon className="mr-1 h-4 w-4" />
             Add Provider
           </Link>
