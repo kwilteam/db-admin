@@ -9,7 +9,7 @@ import { getAddress } from "@/utils/wallet"
 import Button from "../Button"
 import Base from "./Base"
 
-export default function ConnectWalletModal({
+export default function ReadOnlyModal({
   activeAccount,
 }: {
   activeAccount: string | undefined
@@ -25,7 +25,7 @@ export default function ConnectWalletModal({
     try {
       const address = await getAddress()
       dispatch(setActiveAccount(address))
-      continueReadOnly()
+      dispatch(setModal(undefined))
     } catch (e) {
       console.log(e)
     }

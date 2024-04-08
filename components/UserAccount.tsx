@@ -8,6 +8,7 @@ import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
 import { formatEther } from "ethers"
+import { getAddress } from "@/utils/wallet"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -26,8 +27,14 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
     dispatch(setActiveAccount(undefined))
   }
 
-  const openConnectWalletDialog = () => {
-    dispatch(setModal(ModalEnum.CONNECT))
+  const connectWallet = async () => {
+    try {
+      const address = await getAddress()
+      dispatch(setActiveAccount(address))
+      dispatch(setModal(undefined))
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   useEffect(() => {
@@ -60,7 +67,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
       <>
         <button
           className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
-          onClick={openConnectWalletDialog}
+          onClick={connectWallet}
         >
           <ProfileIcon className="h-4 w-4" /> Connect
         </button>

@@ -26,7 +26,7 @@ export default function DatabaseList({
   const search = filters.search
 
   const filteredDatabases = databases?.filter((db) => {
-    return db.name.includes(search)
+    return db.name.toLowerCase().includes(search.toLowerCase())
   })
 
   return (

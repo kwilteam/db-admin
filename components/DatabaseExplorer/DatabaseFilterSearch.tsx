@@ -18,7 +18,7 @@ export default function DatabaseFilterSearch({ isMobile = false }) {
 
     setDebounceTimer(
       setTimeout(() => {
-        dispatch(setFilter({ key: "search", value: event.target.value }))
+        dispatch(setFilter({ key: "search", value: event.target.value.trim() }))
       }, 300),
     )
   }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { selectActiveAccount, selectSettingsLoaded } from "@/store/global"
+import { selectActiveAccount } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loadProviders, selectActiveProvider } from "@/store/providers"
 import MobileNavigation from "@/components/Navigation/Mobile"
@@ -9,7 +9,7 @@ import DesktopNavigation from "@/components/Navigation/Desktop"
 import GlobalAlert from "@/components/GlobalAlert"
 import UserAccount from "@/components/UserAccount"
 import KwilProviders from "@/components/KwilProviders"
-import ConnectWalletModal from "@/components/Modal/ConnectWallet"
+import ReadOnlyModal from "@/components/Modal/ReadOnlyModal"
 import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: IProps) {
         </div>
       </>
 
-      <ConnectWalletModal activeAccount={activeAccount} />
+      <ReadOnlyModal activeAccount={activeAccount} />
 
       <ProviderOfflineModal />
     </>
