@@ -20,6 +20,7 @@ interface IGlobalState {
   modal: ModalEnum | undefined
   activeAccount: string | undefined
   providerStatus: KwilProviderStatus | undefined
+  providerOfflineAcknowledged: boolean
   settingsLoaded: boolean
   alert: IAlert | undefined
 }
@@ -29,6 +30,7 @@ const initialState: IGlobalState = {
   modal: undefined,
   activeAccount: undefined,
   providerStatus: KwilProviderStatus.Unknown,
+  providerOfflineAcknowledged: false,
   settingsLoaded: false,
   alert: undefined,
 }
@@ -45,6 +47,9 @@ export const globalSlice = createSlice({
     },
     setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
       state.providerStatus = action.payload
+    },
+    setProviderOfflineAcknowledged: (state, action: PayloadAction<boolean>) => {
+      state.providerOfflineAcknowledged = action.payload
     },
     setActiveAccount: (state, action: PayloadAction<string | undefined>) => {
       if (action.payload) {
@@ -69,6 +74,7 @@ export const {
   setIsMenuOpen,
   setModal,
   setProviderStatus,
+  setProviderOfflineAcknowledged,
   setActiveAccount,
   setSettingsLoaded,
 } = globalSlice.actions
@@ -90,6 +96,9 @@ export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
 
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
+
+export const selectProviderOfflineAcknowledged = (state: { global: IGlobalState }) =>
+  state.global.providerOfflineAcknowledged
 
 export default globalSlice.reducer
 

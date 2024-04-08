@@ -16,7 +16,7 @@ import {
   selectActiveProvider,
   selectProviders,
 } from "@/store/providers"
-import { ModalEnum, setModal, setProviderStatus } from "@/store/global"
+import { ModalEnum, setModal, setProviderOfflineAcknowledged, setProviderStatus } from "@/store/global"
 
 const logging = true
 
@@ -65,10 +65,13 @@ export const WebKwilProvider = ({
       if (ping.status === 200) {
         setKwilProvider(kwilInstance)
         dispatch(setProviderStatus(KwilProviderStatus.Online))
+        dispatch(setModal(undefined))
+        dispatch(setProviderOfflineAcknowledged(false))
       } else {
         setKwilProvider(undefined)
         dispatch(setProviderStatus(KwilProviderStatus.Offline))
         dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+        
       }
     } catch (error) {
       setKwilProvider(undefined)
@@ -83,7 +86,7 @@ export const WebKwilProvider = ({
   // Allowing us to notify the user when the provider is offline
   useEffect(() => {
     initKwilProvider()
-  }, [initKwilProvider])
+  }, [initKwilProvider, pathname])
 
   return (
     <KwilContext.Provider value={kwilProvider}>{children}</KwilContext.Provider>
