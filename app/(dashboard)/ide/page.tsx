@@ -15,6 +15,7 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
+import { handleEditorChange } from "@/lib/kfParser"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -23,7 +24,7 @@ export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
-  const { handleEditorDidMount, editorRef } = useEditorMount()
+  const { handleEditorDidMount, editorRef, monacoInstance } = useEditorMount()
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
 
@@ -61,7 +62,10 @@ export default function IdePage() {
               loading={<Loading className="mt-4" />}
               className="min-h-screen rounded-md border-slate-200 bg-black"
               onMount={handleEditorDidMount}
-              onChange={(value) => save(activeSchema, value)}
+              onChange={(value) => {
+                save(activeSchema, value)
+                handleEditorChange(value, editorRef.current, monacoInstance)
+              }}
             />
           )}
       </div>

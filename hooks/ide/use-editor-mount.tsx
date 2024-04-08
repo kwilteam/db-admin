@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
 import { kfLanguage, customTheme } from "@/lib/kfLanguage"
@@ -7,6 +7,8 @@ export default function useEditorMount() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(
     undefined,
   )
+
+  const [monacoInstance, setMonacoInstance] = useState<Monaco | null>(null)
 
   const handleEditorDidMount = (
     editor: monaco.editor.IStandaloneCodeEditor,
@@ -27,7 +29,9 @@ export default function useEditorMount() {
     )
 
     monacoInstance.editor.setTheme("kuneiformTheme")
+
+    setMonacoInstance(monacoInstance)
   }
 
-  return { handleEditorDidMount, editorRef }
+  return { handleEditorDidMount, editorRef, monacoInstance }
 }
