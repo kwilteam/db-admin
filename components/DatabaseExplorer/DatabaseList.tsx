@@ -89,7 +89,7 @@ function IncludeOtherDatabasesCheckbox({
   const dispatch = useAppDispatch()
 
   const setIncludeOtherDatabases = () => {
-    dispatch(setFilter({ key: "includeAll", value: includeOtherDatabases }))
+    dispatch(setFilter({ key: "includeAll", value: !includeOtherDatabases }))
   }
 
   return (
