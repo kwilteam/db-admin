@@ -15,7 +15,7 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
-import { handleEditorChange } from "@/lib/kfParser"
+import useEditorHandlers from "@/hooks/ide/use-editor-handlers"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -24,9 +24,10 @@ export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
-  const { handleEditorDidMount, editorRef, monacoInstance } = useEditorMount()
+  const { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef } = useEditorMount()
   const { deploy, isDeploying } = useDeployDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
+  const { handleEditorFeatures } = useEditorHandlers();
 
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
@@ -64,7 +65,7 @@ export default function IdePage() {
               onMount={handleEditorDidMount}
               onChange={(value) => {
                 save(activeSchema, value)
-                handleEditorChange(value, editorRef.current, monacoInstance)
+                handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
               }}
             />
           )}

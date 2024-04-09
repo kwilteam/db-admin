@@ -1,4 +1,4 @@
-interface Error {
+export interface IKfError {
     startLineNumber: number;
     startColumn: number;
     endLineNumber: number;
@@ -9,7 +9,7 @@ interface Error {
 }
 
 export default class KuneiformErrorListener {
-    errors: Error[] = [];
+    errors: IKfError[] = [];
 
     syntaxError(recognizer: any, offendingSymbol: any, line: number, column: number, msg: string, e: any) {
         this.errors.push({
