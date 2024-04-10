@@ -2,7 +2,7 @@
 
 import fs from "fs"
 import path from "path"
-import '../public/wasm_exec.js'
+import '../wasm/wasm_exec.js'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 
 interface IParseRes {
@@ -23,7 +23,7 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmPath = path.join(process.cwd(), "public", "kl.wasm")
+  const wasmPath = path.join(process.cwd(), "wasm", "kl.wasm")
   const wasm = fs.readFileSync(wasmPath)
   const wasmBuffer = Buffer.from(wasm)
   const typedArray = new Uint8Array(wasmBuffer)
