@@ -2,7 +2,7 @@
 
 import fs from "fs"
 import path from "path"
-import '../public/wasm_exec.js/index.js'
+import '../public/wasm_exec.js'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 
 interface IParseRes {
