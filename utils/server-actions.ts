@@ -23,7 +23,8 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasm = fs.readFileSync("wasm/kl.wasm")
+  const wasmPath = path.join(process.cwd(), "wasm", "kl.wasm")
+  const wasm = fs.readFileSync(wasmPath)
   const wasmBuffer = Buffer.from(wasm)
   const typedArray = new Uint8Array(wasmBuffer)
 

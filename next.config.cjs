@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "standalone"
+  output: "standalone",
+  experimental: {
+    nftTracing: true
+  }
 }
 
 module.exports = nextConfig
