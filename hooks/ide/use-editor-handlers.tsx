@@ -2,7 +2,7 @@ import { Monaco } from "@monaco-editor/react";
 import { editor } from "monaco-editor";
 import { MutableRefObject } from "react";
 import { IAutoComplete } from "./use-editor-mount";
-import { CompletionHelper } from "@/lib/completionHelper";
+import { CompletionHelper } from "@/lib/kuneiform/completionHelper";
 
 export default function useEditorHandlers() {
     function handleEditorFeatures(code: string = "", editorRef: MutableRefObject<editor.IStandaloneCodeEditor> | MutableRefObject<undefined>, monacoInstance: Monaco | null, autoComplete: MutableRefObject<IAutoComplete>) {
@@ -30,7 +30,6 @@ export default function useEditorHandlers() {
             dbDeclaration: completionHelper.getDbDeclaration(offset),
             extensionList: completionHelper.getExtensions(),
         }
-
     }
 
     return { handleEditorFeatures }

@@ -1,21 +1,45 @@
 "use server"
 
-import { type KuneiformObject, NodeParser } from "kuneiform-parser"
+import fs from "fs"
+import path from "path"
+import '../public/wasm_exec.js'
+import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
+
+interface IParseRes {
+  json: string
+  error?: string
+}
+
+interface GlobalThis {
+  parseKuneiform: (schema: string) => Promise<IParseRes>
+  Go: any
+}
+
+declare const globalThis: GlobalThis
 
 export async function compileSchema(
   schema: string,
-): Promise<KuneiformObject | undefined> {
-  // 1. Convert string to object using
-  const parser = await NodeParser.load()
+): Promise<CompiledKuneiform | undefined> {
 
-  const kuneiformSchema = await parser.parse(schema)
+  // 1. Load the Go runtime
+  const go = new globalThis.Go()
+  const wasmPath = path.join(process.cwd(), "public", "kl.wasm")
+  const wasm = fs.readFileSync(wasmPath)
+  const wasmBuffer = Buffer.from(wasm)
+  const typedArray = new Uint8Array(wasmBuffer)
 
-  if (!kuneiformSchema.json) {
+  // 2. Instantiate the WebAssembly module
+  const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(typedArray, go.importObject);
+  go.run(result.instance)
+
+  // 3. Parse the schema
+  const kuneiformSchema = await globalThis.parseKuneiform(schema)
+
+  if(!kuneiformSchema.json) {
     throw new Error(
-      // @ts-ignore
-      kuneiformSchema.error || "Failed to parse database definition",
+      kuneiformSchema.error || "Failed to parse database definition"
     )
   }
 
-  return JSON.parse(kuneiformSchema.json) as KuneiformObject
+  return JSON.parse(kuneiformSchema.json) as CompiledKuneiform
 }

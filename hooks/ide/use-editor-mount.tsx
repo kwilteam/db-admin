@@ -1,8 +1,8 @@
 import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
-import { kfLanguage, customTheme } from "@/lib/kfLanguage"
-import { ICompletionItem } from "@/lib/completionHelper";
+import { kfLanguage, customTheme } from "@/lib/kuneiform/kfLanguage"
+import { ICompletionItem } from "@/lib/kuneiform/completionHelper";
 
 export interface IAutoComplete {
   tables: ICompletionItem[];

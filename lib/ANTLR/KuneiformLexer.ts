@@ -1,5 +1,6 @@
 // Generated from KuneiformLexer.g4 by ANTLR 4.13.1
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
+// @ts-ignore
 import {
 	ATN,
 	ATNDeserializer,
