@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
-import { kfLanguage, customTheme } from "@/lib/kuneiform/kfLanguage"
+import { kfLanguage, customTheme, autoClosingPairs } from "@/lib/kuneiform/kfLanguage"
 import { ICompletionItem } from "@/lib/kuneiform/completionHelper";
 
 export interface IAutoComplete {
@@ -54,6 +54,8 @@ export default function useEditorMount() {
     )
 
     monacoInstance.editor.setTheme("kuneiformTheme")
+
+    monacoInstance.languages.setLanguageConfiguration('kuneiformLang', autoClosingPairs);
 
     monacoInstance.languages.registerCompletionItemProvider("kuneiformLang", {
       provideCompletionItems: (model, position) => {

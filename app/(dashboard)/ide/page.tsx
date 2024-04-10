@@ -67,6 +67,13 @@ export default function IdePage() {
                 save(activeSchema, value)
                 handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
               }}
+              options={{
+                autoClosingBrackets: "always",
+                autoIndent: "brackets",
+                autoClosingQuotes: "always",
+                autoSurround: "languageDefined",
+                tabSize: 2,
+              }}
             />
           )}
       </div>

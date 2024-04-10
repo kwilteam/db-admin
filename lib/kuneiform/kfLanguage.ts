@@ -1,4 +1,5 @@
 import { sqlKeywords } from "./sqlKeywords"
+import type { languages } from "monaco-editor/esm/vs/editor/editor.api.d.ts"
 
 export const kfLanguage = {
   // Set defaultToken to invalid to see what you do not tokenize yet
@@ -390,3 +391,35 @@ export const customTheme = {
     "editor.background": "#F8FAFC", // Custom background color
   },
 }
+
+export const autoClosingPairs: languages.LanguageConfiguration = {
+  surroundingPairs: [
+    { open: '{', close: '}' },
+    { open: '(', close: ')' },
+    { open: "'", close: "'" },
+    { open: '"', close: '"' },
+  ],
+  autoClosingPairs: [
+    { open: '{', close: '}' },
+    { open: '(', close: ')' },
+    { open: "'", close: "'", notIn: ['string', 'comment'] },
+    { open: '"', close: '"', notIn: ['string', 'comment'] },
+  ],
+  comments: {
+    lineComment: '//',
+  },
+  brackets: [
+    ['{', '}'],
+    ['(', ')'],
+  ],
+  indentationRules: {
+    decreaseIndentPattern: /^\s*\}/,
+    increaseIndentPattern: /^\s*[\{\[\(]/,
+  },
+  colorizedBracketPairs: [
+    ['{',  'delimiter.curly'],
+    ['}',  'delimiter.curly'],
+    ['(', 'delimiter.parenthesis'],
+    [')', 'delimiter.parenthesis'],
+  ],
+};
