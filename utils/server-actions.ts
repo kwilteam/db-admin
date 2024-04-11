@@ -2,7 +2,7 @@
 
 import fs from "fs"
 import path from "path"
-import '../public/wasm/wasm_exec.js'
+import '../wasm/wasm_exec'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 import { headers } from "next/headers"
 
@@ -25,17 +25,17 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  // const wasmPath = path.resolve(process.cwd(), "public", "wasm", "kl.wasm")
-  // console.log('WASM PATH', wasmPath)
-  // const wasm = fs.readFileSync(wasmPath)
-  // const wasmBuffer = Buffer.from(wasm)
-  // const buffer = new Uint8Array(wasmBuffer)
+  const wasmPath = path.resolve(process.cwd(), "wasm", "kl.wasm")
+  console.log('WASM PATH', wasmPath)
+  const wasm = fs.readFileSync(wasmPath)
+  const wasmBuffer = Buffer.from(wasm)
+  const buffer = new Uint8Array(wasmBuffer)
 
-  const head = headers()
-  // local dev is http, prod is https
-  const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
-  const response = await fetch(url)
-  const buffer = await response.arrayBuffer()
+  // const head = headers()
+  // // local dev is http, prod is https
+  // const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
+  // const response = await fetch(url)
+  // const buffer = await response.arrayBuffer()
   // 2. Instantiate the WebAssembly module
   const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(buffer, go.importObject);
   go.run(result.instance)
