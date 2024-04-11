@@ -30,18 +30,14 @@ export async function compileSchema(
   // const wasmBuffer = Buffer.from(wasm)
   // const typedArray = new Uint8Array(wasmBuffer)
 
-  // //@ts-ignore
   const head = headers()
   console.log('HEADERS', head.get('host'))
   // local dev is http, prod is https
   console.log("ENVIRONMENT", process.env.NODE_ENV)
-  const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
+  // const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
+  const url = "https://db-admin-8rdj9wwt1-kwillukes-projects.vercel.app/wasm/kl.wasm"
   console.log('URL', url)
-  const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/wasm",
-    },
-  })
+  const response = await fetch(url)
   const buffer = await response.arrayBuffer()
   // 2. Instantiate the WebAssembly module
   const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(buffer, go.importObject);
