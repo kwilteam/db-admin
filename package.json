@@ -53,6 +53,7 @@
     "@types/testing-library__user-event": "^4.2.0",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-react-swc": "^3.4.0",
+    "decompress": "^4.2.1",
     "fake-indexeddb": "^5.0.2",
     "happy-dom": "^12.8.0",
     "jsdom": "^24.0.0",
