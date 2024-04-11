@@ -5,7 +5,7 @@ import path from "path"
 import '../public/wasm/wasm_exec.js'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 //@ts-ignore
-import wasm from "@/public/wasm/kl.wasm"
+import wasm from "../public/wasm/kl.wasm"
 
 interface IParseRes {
   json: string
@@ -25,11 +25,15 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmPath = path.resolve(process.cwd(), "public", "wasm", "kl.wasm")
+  const wasmPath = path.resolve(process.cwd(), "wasm", "kl.wasm")
   console.log('WASM PATH', wasmPath)
   const wasm = fs.readFileSync(wasmPath)
   const wasmBuffer = Buffer.from(wasm)
   const typedArray = new Uint8Array(wasmBuffer)
+
+  // //@ts-ignore
+  // const response = await import("../wasm/kl.wasm")
+  // const buffer = await response.arrayBuffer()
   // 2. Instantiate the WebAssembly module
   const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(typedArray, go.importObject);
   go.run(result.instance)
