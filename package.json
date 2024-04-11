@@ -19,6 +19,7 @@
     "@tailwindcss/forms": "^0.5.7",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
+    "@wasm-tool/wasm-pack-plugin": "^1.7.0",
     "antlr4": "^4.13.1-patch-1",
     "autoprefixer": "10.4.15",
     "classnames": "^2.3.2",
