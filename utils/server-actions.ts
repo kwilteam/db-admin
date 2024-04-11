@@ -25,7 +25,7 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmPath = path.resolve(process.cwd(), "wasm", "kl.wasm")
+  const wasmPath = path.resolve(process.cwd(), "app", "ide", "kl.wasm")
   console.log('WASM PATH', wasmPath)
   const wasm = fs.readFileSync(wasmPath)
   const wasmBuffer = Buffer.from(wasm)
