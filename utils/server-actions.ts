@@ -5,6 +5,7 @@ import path from "path"
 import '../wasm/wasm_exec'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 import { headers } from "next/headers"
+// @ts-ignore - string is built during the build process
 import { wasmb64 } from "../wasm/wasmString"
 
 interface IParseRes {

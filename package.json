@@ -5,7 +5,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "predev": "node scripts/wasm-gen.js",
     "dev": "next dev",
+    "prebuild": "node scripts/wasm-gen.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
