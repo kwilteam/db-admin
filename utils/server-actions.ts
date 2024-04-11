@@ -25,7 +25,14 @@ export async function compileSchema(
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmPath = path.resolve(process.cwd(), "wasm", "kl.wasm")
+  const wasmPath = path.resolve(process.cwd(), "public", "wasm")
+  fs.readdir(wasmPath, (err, files) => {
+    if (err) {
+      console.log('Unable to scan directory: ' + err);
+    } else {
+      console.log('Files:', files);
+    }
+  });
   console.log('WASM PATH', wasmPath)
   const wasm = fs.readFileSync(wasmPath)
   const wasmBuffer = Buffer.from(wasm)
