@@ -35,7 +35,9 @@ export async function compileSchema(
   console.log('HEADERS', head.get('host'))
   // local dev is http, prod is https
   console.log("ENVIRONMENT", process.env.NODE_ENV)
-  const response = await fetch(`http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`)
+  const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
+  console.log('URL', url)
+  const response = await fetch(url)
   const buffer = await response.arrayBuffer()
   // 2. Instantiate the WebAssembly module
   const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(buffer, go.importObject);
