@@ -3,7 +3,7 @@ const nextConfig = {
   output: "standalone",
   experimental: {
     outputFileTracingIncludes: {
-      '/ide': ['./wasm/*']
+      '/ide': ['./wasm/**/*']
     }
   }
 }
