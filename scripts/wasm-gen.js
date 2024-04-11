@@ -38,10 +38,10 @@ fetch(kfPath)
         const wasmBuffer = files[0].data;
 
         // Convert the buffer to a base64 string
-        const base64Wasm = wasmBuffer.toString('base64');
+        const wasmHex = wasmBuffer.toString('hex');
 
         // Write the base64 string to a TypeScript file
-        const tsContent = `export const wasmb64 = "${base64Wasm}";\n`;
+        const tsContent = `export const wasmHex = "${wasmHex}";\n`;
         fs.writeFileSync(outputTsFilePath, tsContent);
 
         console.log(`TypeScript file written to ${outputTsFilePath}`);

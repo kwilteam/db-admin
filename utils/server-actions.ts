@@ -3,7 +3,7 @@
 import '../wasm/wasm_exec'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 // @ts-ignore - string is built during the build process
-import { wasmb64 } from "../wasm/wasmString"
+import { wasmHex } from "../wasm/wasmString"
 
 interface IParseRes {
   json: string
@@ -24,7 +24,7 @@ export async function compileSchema(
 
   // // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmBuffer = Buffer.from(wasmb64, 'base64').buffer
+  const wasmBuffer = Buffer.from(wasmHex, 'hex').buffer
   const buffer = new Uint8Array(wasmBuffer)
 
   // // 2. Instantiate the WebAssembly module
