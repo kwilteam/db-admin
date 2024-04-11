@@ -5,6 +5,7 @@ import path from "path"
 import '../wasm/wasm_exec'
 import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
 import { headers } from "next/headers"
+import { wasmb64 } from "../wasm/wasmString"
 
 interface IParseRes {
   json: string
@@ -23,25 +24,35 @@ export async function compileSchema(
 ): Promise<CompiledKuneiform | undefined> {
   const startTime = Date.now()
 
-  // 1. Load the Go runtime
+  // // 1. Load the Go runtime
   const go = new globalThis.Go()
-  const wasmPath = path.resolve(process.cwd(), "app", "(dashboard)", "ide", "kl.wasm")
-  console.log('WASM PATH', wasmPath)
-  const wasm = fs.readFileSync(wasmPath)
-  const wasmBuffer = Buffer.from(wasm)
+  // const wasmPath = path.resolve(process.cwd(), "app", "(dashboard)", "ide", "kl.wasm")
+  // console.log('WASM PATH', wasmPath)
+  // const wasm = fs.readFileSync(wasmPath)
+  const wasmBuffer = Buffer.from(wasmb64, 'base64').buffer
   const buffer = new Uint8Array(wasmBuffer)
 
-  // const head = headers()
-  // // local dev is http, prod is https
-  // const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
-  // const response = await fetch(url)
-  // const buffer = await response.arrayBuffer()
-  // 2. Instantiate the WebAssembly module
+  // // const head = headers()
+  // // // local dev is http, prod is https
+  // // const url = `http${proceswasmetch(url)
+  // // const buffer = await response.arrayBuffer()
+  // // 2. Instantiate the WebAssembly module
   const result: WebAssembly.WebAssemblyInstantiatedSource = await WebAssembly.instantiate(buffer, go.importObject);
   go.run(result.instance)
 
-  // 3. Parse the schema
+  // // 3. Parse the schema
   const kuneiformSchema = await globalThis.parseKuneiform(schema)
+
+  // const request = await fetch(process.env.KUNEIFORM_URL + '/kuneiform'
+  //   , {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify({ code: schema })
+  // })
+
+  // const kuneiformSchema = await request.json()
 
   console.log("Compilation time:", Date.now() - startTime, "ms")
 
