@@ -21,22 +21,19 @@ declare const globalThis: GlobalThis
 export async function compileSchema(
   schema: string,
 ): Promise<CompiledKuneiform | undefined> {
+  const startTime = Date.now()
 
   // 1. Load the Go runtime
   const go = new globalThis.Go()
-  // const wasmPath = path.resolve(__dirname, "public", "wasm", "kl.wasm")
+  // const wasmPath = path.resolve(process.cwd(), "public", "wasm", "kl.wasm")
   // console.log('WASM PATH', wasmPath)
   // const wasm = fs.readFileSync(wasmPath)
   // const wasmBuffer = Buffer.from(wasm)
-  // const typedArray = new Uint8Array(wasmBuffer)
+  // const buffer = new Uint8Array(wasmBuffer)
 
   const head = headers()
-  console.log('HEADERS', head.get('host'))
   // local dev is http, prod is https
-  console.log("ENVIRONMENT", process.env.NODE_ENV)
-  // const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
-  const url = "https://db-admin-8rdj9wwt1-kwillukes-projects.vercel.app/wasm/kl.wasm"
-  console.log('URL', url)
+  const url = `http${process.env.NODE_ENV === 'production' ? 's' : ''}://${head.get('host')}/wasm/kl.wasm`
   const response = await fetch(url)
   const buffer = await response.arrayBuffer()
   // 2. Instantiate the WebAssembly module
@@ -45,6 +42,8 @@ export async function compileSchema(
 
   // 3. Parse the schema
   const kuneiformSchema = await globalThis.parseKuneiform(schema)
+
+  console.log("Compilation time:", Date.now() - startTime, "ms")
 
   if(!kuneiformSchema.json) {
     throw new Error(
