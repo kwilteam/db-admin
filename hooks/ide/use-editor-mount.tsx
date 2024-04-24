@@ -1,12 +1,39 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
-import { kfLanguage, customTheme } from "@/lib/kfLanguage"
+import { kfLanguage, customTheme, autoClosingPairs } from "@/lib/kuneiform/kfLanguage"
+import { ICompletionItem } from "@/lib/kuneiform/completionHelper";
+
+export interface IAutoComplete {
+  tables: ICompletionItem[];
+  actions: ICompletionItem[];
+  params: ICompletionItem[];
+  kfDefault: ICompletionItem[];
+  tableDefault: ICompletionItem[];
+  actionDefault: ICompletionItem[];
+  dbDeclaration: ICompletionItem[];
+  extensionList: ICompletionItem[];
+
+  [key: string]: any[];
+}
 
 export default function useEditorMount() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(
     undefined,
   )
+
+  const autoCompleteRef = useRef<IAutoComplete>({
+    tables: [],
+    actions: [],
+    params: [],
+    kfDefault: [],
+    tableDefault: [],
+    actionDefault: [],
+    dbDeclaration: [],
+    extensionList: [],
+  })
+
+  const [monacoInstance, setMonacoInstance] = useState<Monaco | null>(null)
 
   const handleEditorDidMount = (
     editor: monaco.editor.IStandaloneCodeEditor,
@@ -27,7 +54,41 @@ export default function useEditorMount() {
     )
 
     monacoInstance.editor.setTheme("kuneiformTheme")
+
+    monacoInstance.languages.setLanguageConfiguration('kuneiformLang', autoClosingPairs);
+
+    monacoInstance.languages.registerCompletionItemProvider("kuneiformLang", {
+      provideCompletionItems: (model, position) => {
+        const word = model.getWordUntilPosition(position);
+        const range = {
+          startLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endLineNumber: position.lineNumber,
+          endColumn: word.endColumn
+        };
+
+        const suggestionKeys = [
+          'tables',
+          'actions',
+          'params',
+          'kfDefault',
+          'tableDefault',
+          'actionDefault',
+          'dbDeclaration',
+          'extensionList'
+        ]
+
+        const suggestions = suggestionKeys.flatMap(key => {
+          return (autoCompleteRef.current[key] || []).map(suggestion => ({ ...suggestion, range }));
+        })
+
+        return { suggestions }
+      },
+      triggerCharacters: ["~"]
+    });
+
+    setMonacoInstance(monacoInstance)
   }
 
-  return { handleEditorDidMount, editorRef }
+  return { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef }
 }

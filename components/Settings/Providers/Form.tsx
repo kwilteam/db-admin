@@ -148,8 +148,8 @@ function Tooltip({ ...props }: React.HTMLAttributes<HTMLSpanElement>) {
       )}
     >
       The chain Id is a unique identifier for the Kwil network. <br />
-      For example, the chain id for the Kwil testnet is &quot;
-      <em>kwil-chain-testnet-0.6&quot;.</em>
+      For example, the chain id for the Kwil Longhorn testnet is &quot;
+      <em>longhorn&quot;.</em>
       <br />
       If you do not know the chain Id, you can leave this field blank.
     </span>

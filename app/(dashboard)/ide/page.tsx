@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
-import useDeployDatabase from "@/hooks/ide/use-deploy-database"
+import useCompileDatabase from "@/hooks/ide/use-compile-database"
 import useEditorMount from "@/hooks/ide/use-editor-mount"
 import useSaveSchema from "@/hooks/ide/use-save-schema"
 import { useAppSelector } from "@/store/hooks"
@@ -15,6 +15,7 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
+import useEditorHandlers from "@/hooks/ide/use-editor-handlers"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -23,9 +24,10 @@ export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
-  const { handleEditorDidMount, editorRef } = useEditorMount()
-  const { deploy, isDeploying } = useDeployDatabase(editorRef)
+  const { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef } = useEditorMount()
+  const { deploy, exportJson, isCompiling } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
+  const { handleEditorFeatures } = useEditorHandlers();
 
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
@@ -61,13 +63,23 @@ export default function IdePage() {
               loading={<Loading className="mt-4" />}
               className="min-h-screen rounded-md border-slate-200 bg-black"
               onMount={handleEditorDidMount}
-              onChange={(value) => save(activeSchema, value)}
+              onChange={(value) => {
+                save(activeSchema, value)
+                handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
+              }}
+              options={{
+                autoClosingBrackets: "always",
+                autoIndent: "brackets",
+                autoClosingQuotes: "always",
+                autoSurround: "languageDefined",
+                tabSize: 2,
+              }}
             />
           )}
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
         <div className="fixed bottom-0 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
-          <ActionPanel deploy={deploy} isLoading={isDeploying || isSaving} />
+          <ActionPanel deploy={deploy} exportJson={exportJson} isLoading={isCompiling || isSaving} />
         </div>
       )}
     </div>

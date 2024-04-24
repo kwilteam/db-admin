@@ -41,3 +41,5 @@ schemas/*.kf
 
 tests/.kwil-admin-ui/*
 mnemonic.txt
+
+wasm/wasmString.ts

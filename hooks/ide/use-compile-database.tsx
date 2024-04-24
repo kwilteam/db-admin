@@ -13,14 +13,53 @@ import { useKwilSigner } from "@/hooks/use-kwil-signer"
 import { KwilProviderStatus } from "@/store/providers"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useDeployDatabase(
+export default function useCompileDatabase(
   editorRef: React.RefObject<monaco.editor.IStandaloneCodeEditor | undefined>,
 ) {
   const dispatch = useAppDispatch()
-  const [isDeploying, setIsDeploying] = useState(false)
+  const [isCompiling, setIsCompiling] = useState(false)
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
   const providerStatus = useAppSelector(selectProviderStatus)
+
+  const exportJson = useCallback(async () => {
+    if(!editorRef.current) return
+
+    setIsCompiling(true)
+
+    const schema = editorRef.current.getValue()
+
+    try {
+      // Compile the code
+      const compiledSchema = await compileSchema(schema)
+      const blob = new Blob(
+        [JSON.stringify(compiledSchema)],
+        { type: "application/json" }
+      )
+
+      // Create a URL and download the file
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = compiledSchema.name + ".json"
+      a.click()
+
+      // Clean up
+      URL.revokeObjectURL(url)
+      a.remove()
+    } catch (error) {
+      const errorMessage = getDetailsErrorMessage(error as Error)
+
+      dispatch(
+        setAlert({
+          type: "error",
+          text: errorMessage || "An error occurred",
+        }),
+      )
+    } finally {
+      setIsCompiling(false)
+    }
+  }, [editorRef, dispatch]);
 
   const deploy = useCallback(async () => {
     if (!editorRef.current) return
@@ -37,7 +76,7 @@ export default function useDeployDatabase(
       return
     }
 
-    setIsDeploying(true)
+    setIsCompiling(true)
 
     const schema = editorRef.current.getValue()
 
@@ -70,9 +109,9 @@ export default function useDeployDatabase(
         }),
       )
     } finally {
-      setIsDeploying(false)
+      setIsCompiling(false)
     }
   }, [editorRef, dispatch, kwilProvider, kwilSigner, providerStatus])
 
-  return { deploy, isDeploying }
+  return { deploy, isCompiling, exportJson }
 }

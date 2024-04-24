@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import { Fragment, useRef } from "react"
 import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { Listbox, Transition } from "@headlessui/react"
@@ -9,6 +9,7 @@ import {
   setActiveSchema,
 } from "@/store/ide"
 import { CheckIcon, ChevronUpDownIcon } from "@/utils/icons"
+import useHorizontalScroll from "@/hooks/use-horizontal-scroll"
 
 export default function OpenedSchemas() {
   const dispatch = useAppDispatch()
@@ -82,8 +83,7 @@ function MobileOpenedSchemas({
                 <Listbox.Option
                   key={schema}
                   className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? "bg-kwil/10 text-slate-900" : "text-slate-600"
+                    `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-kwil/10 text-slate-900" : "text-slate-600"
                     }`
                   }
                   value={schema}
@@ -133,15 +133,27 @@ function DesktopOpenedSchemas({
   openedSchemas,
   activeSchema,
 }: IOpenedSchemasProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { onDragStart, onDragMove, onDragEnd, onWheel } = useHorizontalScroll(scrollContainerRef);
+
   return (
-    <div className="m-1 hidden h-10 flex-row gap-1 lg:flex">
+    // overflow to scroll max width 80% to prevent overflow
+    <div 
+      className="no-scrollbar m-1 hidden h-10 flex-row gap-1 lg:flex overflow-scroll overflow-x-auto max-w-[calc(100%-390px)] overflow-y-hidden"
+      ref={scrollContainerRef}
+      onMouseDown={onDragStart}
+      onMouseMove={onDragMove}
+      onMouseUp={onDragEnd}
+      onMouseLeave={onDragEnd}
+      onWheel={onWheel}
+    >
       {openedSchemas.map((schema) => (
         <div
           key={schema}
           data-testid={`${schema}-schema-tab`}
           className={classNames({
             "bg-slate-50": schema === activeSchema,
-            "items-bottom flex cursor-pointer select-none rounded-md rounded-b-none pb-0 text-sm hover:bg-slate-50":
+            "items-bottom flex cursor-pointer select-none rounded-md rounded-b-none pb-0 text-sm hover:bg-slate-50 no-scrollbar":
               true,
           })}
         >
