@@ -28,6 +28,7 @@ import {
   HiOutlinePencil,
   HiOutlineQuestionMarkCircle,
   HiOutlineArrowTopRightOnSquare,
+  HiArrowDownTray
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
@@ -70,4 +71,5 @@ export {
   CiLogout as SignOutIcon,
   TbSql as QueryIcon,
   PiAsteriskLight as OtherIcon,
+  HiArrowDownTray as DownloadIcon
 }

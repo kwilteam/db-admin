@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
-import useDeployDatabase from "@/hooks/ide/use-deploy-database"
+import useCompileDatabase from "@/hooks/ide/use-compile-database"
 import useEditorMount from "@/hooks/ide/use-editor-mount"
 import useSaveSchema from "@/hooks/ide/use-save-schema"
 import { useAppSelector } from "@/store/hooks"
@@ -25,7 +25,7 @@ export default function IdePage() {
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
   const { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef } = useEditorMount()
-  const { deploy, isDeploying } = useDeployDatabase(editorRef)
+  const { deploy, exportJson, isCompiling } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
   const { handleEditorFeatures } = useEditorHandlers();
 
@@ -79,7 +79,7 @@ export default function IdePage() {
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
         <div className="fixed bottom-0 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
-          <ActionPanel deploy={deploy} isLoading={isDeploying || isSaving} />
+          <ActionPanel deploy={deploy} exportJson={exportJson} isLoading={isCompiling || isSaving} />
         </div>
       )}
     </div>

@@ -19,7 +19,7 @@ declare const globalThis: GlobalThis
 
 export async function compileSchema(
   schema: string,
-): Promise<CompiledKuneiform | undefined> {
+): Promise<CompiledKuneiform> {
   const startTime = Date.now()
 
   // // 1. Load the Go runtime
