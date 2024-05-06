@@ -51,7 +51,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
 
   return (
     <>
-      <div className="flex  max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
+      <div className="flex flex-col max-h-mobile min-h-mobile bg-white lg:min-h-screen">
         <Header database={databaseObject.name} type={type} name={queryName} />
 
         <QueryEditor

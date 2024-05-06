@@ -36,11 +36,11 @@ export default function DatabasesLayout({
   }, [dbid, databaseObject])
 
   return (
-    <div className="flex flex-row">
+    <div className="flex">
       <div className="hidden border-r border-slate-100 lg:flex lg:w-72">
         <DatabaseExplorer />
       </div>
-      <div className="flex-1 overflow-hidden">{children}</div>
+      <div className="flex-1 flex-col flex ">{children}</div>
     </div>
   )
 }

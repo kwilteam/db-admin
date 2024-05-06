@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: IProps) {
           )}
 
           {activeProvider && (
-            <div className="flex flex-1 flex-col overflow-scroll lg:pl-16">
+            <div className="flex flex-1 flex-col overflow-y-scroll overflow-x-auto lg:pl-16">
               {children}
               <GlobalAlert />
               <div className="lg:absolute lg:flex right-5 top-1 hidden gap-1">
