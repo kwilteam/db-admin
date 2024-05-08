@@ -1,11 +1,7 @@
-// @ts-ignore
-import { CharStreams, CommonTokenStream } from "antlr4"
 import { KuneiformCollector } from "./kfCollector"
-import KuneiformErrorListener, { IKfError } from "./kfErrors"
 import { dbDeclaration, kuneiformActionSuggestions, kuneiformDefaults, kuneiformTableSuggestions } from "./kfSuggestions"
-import KuneiformLexer from "../ANTLR/KuneiformLexer"
-import KuneiformParser from "../ANTLR/KuneiformParser"
 import * as monaco from "monaco-editor"
+import { IParseRes } from "./types"
 
 export interface ICompletionItem {
     label: string;
@@ -13,49 +9,41 @@ export interface ICompletionItem {
     insertText: string;
     insertTextRules?: monaco.languages.CompletionItemInsertTextRule;
     detail: string;
-  }
-
-interface IActionLocations {
-    start: number;
-    end: number;
-    actionName: string;
 }
 
-interface ITableLocations {
+export interface IActionLocations {
     start: number;
     end: number;
+    name: string;
+    parameters: string[];
+}
+
+export interface IProcedureLocations extends IActionLocations {}
+
+export interface ITableLocations {
+    start: number;
+    end: number;
+}
+
+interface IKfError {
+    startLineNumber: number;
+    startColumn: number;
+    endLineNumber: number;
+    endColumn: number;
+    message: string;
+    severity: number;
+    code: string;
 }
 
 export class CompletionHelper {
-    private tables: string[]
-    private actions: string[]
-    private paramList: Map<string, string[]>
-    private actionLocations: IActionLocations[]
-    private tableLocations: ITableLocations[] 
-    private actionStatements: string[][] 
-    private extensionList: string[]
-    private isDbDefined: boolean
-    public errors: IKfError[]
+    private collector: KuneiformCollector;
 
-    constructor(code: string) {
-        const { ast, errors } = CompletionHelper.parse(code);
-        const collector = new KuneiformCollector();
-        collector.visitChildren(ast);
-
-        this.tables = collector.getTables();
-        this.actions = collector.getActions();
-        this.paramList = CompletionHelper.buildParamMap(collector);
-        this.actionLocations = collector.getActionLocations();
-        this.tableLocations = collector.getTableLocations();
-        this.actionStatements = collector.getActionStmtList();
-        this.extensionList = collector.getExtensionList();
-        this.isDbDefined = CompletionHelper.isDbDefined(code);
-
-        this.errors = errors;
+    constructor(parsedCode: IParseRes) {
+        this.collector = new KuneiformCollector(parsedCode);
     }
 
     public getTables(): ICompletionItem[] {
-        const tables = this.tables.map(t => {
+        const tables = this.collector.getTables().map(t => {
             return {
                 label: t,
                 kind: 4,
@@ -69,8 +57,7 @@ export class CompletionHelper {
     }
 
     public getActions(): ICompletionItem[] {
-        const actionsObj = this.actions;
-        const map = actionsObj.map(t => {
+        const actions = this.collector.getActions().map(t => {
             return {
                 label: t,
                 kind: 1,
@@ -80,12 +67,11 @@ export class CompletionHelper {
             }
         });
 
-        return map;
+        return actions;
     }
 
     public getExtensions(): ICompletionItem[] {
-        const extensions = this.extensionList;
-        const map = extensions.map(t => {
+        const extensions = this.collector.getExtensionList().map(t => {
             return {
                 label: t,
                 kind: 1,
@@ -95,65 +81,61 @@ export class CompletionHelper {
             }
         });
 
-        return map;
+        return extensions;
     }
 
     public getParams(offset: number): ICompletionItem[] {
-        const params = this.paramList;
-        const actionLocations = this.actionLocations;
-        const actionStatements = this.actionStatements;
+        // once for actions
+        const actionLocations = this.collector.getActionLocations();
 
-        const cleanActionLocations = actionLocations.map((act, i) => {
-            const stmt = actionStatements[i] ? this.spliceParams(actionStatements[i]) : [];
-            return {
-                act,
-                stmt
-            }
-        })
+        let params: ICompletionItem[] = [];
 
-        let currentAction = '';
-        let extParams: any[] = []
-
-        cleanActionLocations.length > 0 && cleanActionLocations.forEach((action) => {
-            if(action.act.start <= offset && action.act.end >= offset) {
-                currentAction = action.act.actionName;
-                extParams = action.stmt
-            }
-        })
-    
-        let map: ICompletionItem[] = [];
-    
-        if(currentAction !== '') {
-            const paramList = params.get(currentAction);
-            if (paramList && paramList.length > 0) {
-                map = paramList.map(t => {
+        for (const action of actionLocations) {
+            if (action.start <= offset && action.end >= offset) {
+                params.push(...action.parameters.map(t => {
                     return {
                         label: t,
                         kind: 4,
                         insertText: t,
                         detail: "Parameter",
                     }
-                });
+                }));
             }
         }
-    
-        if(currentAction !== '') {
-            extParams.forEach((param) => {
-                param && map.push({
-                    label: param,
-                    kind: 4,
-                    insertText: param,
-                    detail: "Extension Parameter",
-                })
-            })
+
+        // // once for procedures
+        const procedureLocations = this.collector.getProcedureLocations();
+        
+        for (const procedure of procedureLocations) {
+            if (procedure.start <= offset && procedure.end >= offset) {
+                params.push(...procedure.parameters.map(t => {
+                    if (typeof t === 'string') {
+                        return {
+                            label: t,
+                            kind: 4,
+                            insertText: t,
+                            detail: "Parameter",
+                        }
+                    }
+
+                    return {
+                        // @ts-ignore - types for procedures will be added in the future
+                        label: t.name,
+                        kind: 4,
+                        // @ts-ignore - types for procedures will be added in the future
+                        insertText: t.name,
+                        detail: "Parameter",
+                    }
+                }));
+            }
         }
-        return map;
+        return params;
     }
 
     public getKfDefault(offset: number): ICompletionItem[] {
         const isInAction = this.isWithinAction(offset);
         const isInTable = this.isWithinTable(offset);
-        const isDbDefined = this.isDbDefined;
+        const isDbDefined = this.collector.getDatabaseName() !== '';
 
         return !isInAction && !isInTable && isDbDefined ? kuneiformDefaults : [];
     }
@@ -170,85 +152,65 @@ export class CompletionHelper {
         return isInAction ? kuneiformActionSuggestions : [];
     }
 
-    public getDbDeclaration(offset: number): ICompletionItem[] {
-        const isDbDefined = this.isDbDefined;
-
+    public getDbDeclaration(): ICompletionItem[] {
+        const isDbDefined = this.collector.getDatabaseName() !== '';
         return !isDbDefined ? dbDeclaration : [];
     }
 
+    public getErrors(): IKfError[] {
+        const errors = this.collector.getErrors().map(e => {
+            return {
+                startLineNumber: e.node.start_line,
+                startColumn: e.node.start_col,
+                endLineNumber: e.node.end_line,
+                endColumn: e.node.end_col,
+                message: e.error,
+                severity: 8,
+                code: e.type
+            }
+
+
+        });
+
+        return errors;
+    }
+
     private isWithinAction(locationIndex: number): boolean {
-        const actionLocations = this.actionLocations;
+        const actionLocations = this.collector.getActionLocations();
         let isWithinAction = false;
-    
+
         actionLocations.length > 0 && actionLocations.forEach((action) => {
-            if(action.start <= locationIndex && action.end >= locationIndex) {
+            if (action.start <= locationIndex && action.end >= locationIndex) {
                 isWithinAction = true;
             }
         })
-    
+
         return isWithinAction;
     }
 
     private isWithinTable(locationIndex: number): boolean {
-        const tableLocations = this.tableLocations;
+        const tableLocations = this.collector.getTableLocations();
         let isWithinTable = false;
-    
+
         tableLocations.length > 0 && tableLocations.forEach((table) => {
-            if(table.start <= locationIndex && table.end >= locationIndex) {
+            if (table.start <= locationIndex && table.end >= locationIndex) {
                 isWithinTable = true;
             }
         })
-    
+
         return isWithinTable;
     }
 
-    private spliceParams(arr: string[]) {
-        let paramList: (string | null)[] = [];
-    
-        if (arr && arr.length > 0) {
-            arr.forEach((str) => {
-                if(str[0] === "$") {
-                    const params = str.split("=")
-                    const vars = params[0].match(/[$]\w+/g)
-                    paramList = paramList.concat(vars)
-                } 
-            })
-        }
-        return paramList
-    }
+    private isWithinProcedure(locationIndex: number): boolean {
+        const procedureLocations = this.collector.getProcedureLocations();
+        let isWithinProcedure = false;
 
-    private static parse(code: string) {
-        const inputStream = CharStreams.fromString(code)
-        const lexer = new KuneiformLexer(inputStream)
-        lexer.removeErrorListeners()
-        const kuneiformErrorListener = new KuneiformErrorListener()
-        lexer.addErrorListener(kuneiformErrorListener)
-        const tokenStream = new CommonTokenStream(lexer)
-        const parser = new KuneiformParser(tokenStream)
-        parser.removeErrorListeners()
-        parser.addErrorListener(kuneiformErrorListener)
+        procedureLocations.length > 0 && procedureLocations.forEach((procedure) => {
+            if (procedure.start <= locationIndex && procedure.end >= locationIndex) {
+                isWithinProcedure = true;
+            }
+        })
 
-        // get ast and errors
-        const ast = parser.source_unit()
-        const errors = kuneiformErrorListener.getErrors()
-
-        return { ast, errors }
-    }
-
-    private static buildParamMap<R>(collector: KuneiformCollector<R>): Map<any, any> {
-        const paramMap = new Map();
-        collector.paramList.length > 0 && collector.paramList.forEach((param, index) => {
-            paramMap.set(collector.actions[index], param);
-        });
-
-        return paramMap;
-    }
-
-    private static isDbDefined(code: string) {
-        const dbDirective = code.startsWith('database');
-        const regex = /database\s+\w+\s*;/;
-        const semicolon = regex.test(code);
-    
-        return dbDirective && semicolon;
+        return isWithinProcedure;
     }
 }

@@ -3,10 +3,11 @@ import { editor } from "monaco-editor";
 import { MutableRefObject } from "react";
 import { IAutoComplete } from "./use-editor-mount";
 import { CompletionHelper } from "@/lib/kuneiform/completionHelper";
+import { IParseKuneiform } from "@/lib/kuneiform/types";
 
-export default function useEditorHandlers() {
-    function handleEditorFeatures(code: string = "", editorRef: MutableRefObject<editor.IStandaloneCodeEditor> | MutableRefObject<undefined>, monacoInstance: Monaco | null, autoComplete: MutableRefObject<IAutoComplete>) {
-        if (!editorRef.current || !monacoInstance) return;
+export default function useEditorHandlers(parseKuneiform: IParseKuneiform | null) {
+    async function handleEditorFeatures(code: string = "", editorRef: MutableRefObject<editor.IStandaloneCodeEditor> | MutableRefObject<undefined>, monacoInstance: Monaco | null, autoComplete: MutableRefObject<IAutoComplete>) {
+        if (!editorRef.current || !monacoInstance || !parseKuneiform) return;
 
         const editor = editorRef.current;
         const position = editor.getPosition();
@@ -16,18 +17,28 @@ export default function useEditorHandlers() {
         const model = editor.getModel();
         if (!offset || !model) return;
 
-        const completionHelper = new CompletionHelper(code);
+        const parsed = await parseKuneiform(code);
 
-        monacoInstance.editor.setModelMarkers(model, "kuneiformLang", completionHelper.errors);
+        const completionHelper = new CompletionHelper(parsed);
+
+        monacoInstance.editor.setModelMarkers(model, "kuneiformLang", completionHelper.getErrors());
 
         autoComplete.current = {
+            // done
             tables: completionHelper.getTables(),
+            // done
             actions: completionHelper.getActions(),
+            // done
             params: completionHelper.getParams(offset),
+            // done
             kfDefault: completionHelper.getKfDefault(offset),
+            // done
             tableDefault: completionHelper.getTableDefault(offset),
+            // done
             actionDefault: completionHelper.getActionDefault(offset),
-            dbDeclaration: completionHelper.getDbDeclaration(offset),
+            // done
+            dbDeclaration: completionHelper.getDbDeclaration(),
+            //done
             extensionList: completionHelper.getExtensions(),
         }
     }

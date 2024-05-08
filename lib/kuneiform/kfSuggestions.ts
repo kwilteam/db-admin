@@ -20,9 +20,16 @@ export const kuneiformDefaults = [
     {
         label: 'action () {}',
         kind: 5,
-        insertText: 'action ${1:} () ${2:} {}',
+        insertText: 'action ${1:} () {}',
         insertTextRules: 4,
         detail: 'New Action',
+    },
+    {
+        label: 'procedure () returns () {}',
+        kind: 5,
+        insertText: 'procedure ${1:} () returns () {}',
+        insertTextRules: 4,
+        detail: 'New Procedure',
     }
 ]
 

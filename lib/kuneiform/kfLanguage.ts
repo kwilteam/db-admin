@@ -3,363 +3,265 @@ import type { languages } from "monaco-editor/esm/vs/editor/editor.api.d.ts"
 
 export const kfLanguage = {
   // Set defaultToken to invalid to see what you do not tokenize yet
-  defaultToken: "",
-  keywords: ["table", "action", "use"],
-  typeKeywords: ["database"],
-  bools: ["true", "false"],
-  colType: ["text", "int"],
-  modifier: [
-    "maxlen",
-    "minlen",
-    "unique",
-    "max",
-    "min",
-    "notnull",
-    "primary",
-    "default",
-    "@caller",
-    "@action",
-    "@dataset",
+  defaultToken: '',
+  keywords: [
+      'table', 'action', 'use', 'procedure'
   ],
-  indexTypes: ["unique", "index", "primary"],
-  action: ["action"],
-  privacy: ["public", "private", "view", "owner"],
-  operators: ["=", ">", "<", "!", "~", "?", ":", "==", "<=", ">=", "!="],
-  foreignKey: ["foreign_key", "fk"],
-  fkRefs: ["references", "on_update", "on_delete", "ref"],
-  fkDo: ["cascade", "restrict", "no_action", "set_null", "set_default"],
+  typeKeywords: ['database'],
+  bools: ['true', 'false'],
+  colType: ['text', 'int', 'uuid'],
+  modifier: ['maxlen', 'minlen', 'unique', 'max', 'min', 'notnull', 'primary', 'default', '@caller', '@action', '@dataset'],
+  indexTypes: ['unique', 'index', 'primary'],
+  action: ['action', 'procedure'],
+  privacy: ['public', 'private', 'view', 'owner'],
+  operators: [
+      '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
+  ],
+  foreignKey: ['foreign_key', 'fk'],
+  fkRefs: ['references', 'on_update', 'on_delete', 'ref'],
+  fkDo: ['cascade', 'restrict', 'no_action', 'set_null', 'set_default'],
   sqlKeywords: sqlKeywords,
-  fillMe: ["_table_", "_column_"],
-  escapes:
-    /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+  fillMe: ['_table_', '_column_'],
+  escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
   // The main tokenizer for our languages
   tokenizer: {
-    root: [
-      // identifiers and keywords
-      [/@\w+/, "modifier"],
-      [/#\w+/, { token: "hashtag", next: "@after_hashtag" }],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@keywords": { token: "keyword", next: "@after_keyword" },
-            "@typeKeywords": { token: "type", next: "@after_keyword" },
-            "@foreignKey": { token: "foreignKey" },
-            "@fillMe": { token: "fillMe" },
-            "@fkRefs": { token: "fkRefs" },
-            "@fkDo": { token: "fkDo" },
-            "@sqlKeywords": { token: "sqlKeyword" },
-            "@bools": { token: "boolean" },
-            "@colType": { token: "colType" },
-            "@modifier": { token: "modifier" },
-            "@privacy": { token: "privacy" },
-            "@default": "identifier",
-          },
-        },
-      ],
-      [
-        /[=><!~?:&|+\-*^%]+/,
-        {
-          cases: {
-            "@operators": { token: "operator" },
-          },
-        },
-      ],
-      // numbers
-      [/\b\d+\b/, "number"],
+      root: [
+          // identifiers and keywords
+          [/@\w+/, 'modifier'],
+          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@keywords': { token: 'keyword', next: '@after_keyword' },
+                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                  '@foreignKey': { token: 'foreignKey' },
+                  '@fillMe': { token: 'fillMe' },
+                  '@fkRefs': { token: 'fkRefs' },
+                  '@fkDo': { token: 'fkDo' },
+                  '@sqlKeywords': { token: 'sqlKeyword' },
+                  '@bools': { token: 'boolean' },
+                  '@colType': { token: 'colType' },
+                  '@modifier': { token: 'modifier' },
+                  '@privacy': { token: 'privacy' },
+                  '@default': 'identifier',
+              }
+          }],
+          [/[=><!~?:&|+\-*^%]+/, {
+              cases: {
+                  '@operators': { token: 'operator' },
+              }
+          }],
+          // numbers
+          [/\b\d+\b/, 'number'],
 
-      //commas
-      [/,/, "delimiter.comma"],
+          //commas
+          [/,/, 'delimiter.comma'],
 
-      //semi-colons
-      [/\;/, "delimiter.semicolon"],
+          //semi-colons
+          [/\;/, 'delimiter.semicolon'],
 
-      // whitespace
-      { include: "@whitespace" },
+          // whitespace
+          { include: '@whitespace' },
 
-      // strings
-      [/"([^"\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/"/, "string", "@string"],
-      [/"([^'\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/'/, "string", "@string"],
+          // strings
+          [/'([^'\\]|\\.)*$/, 'string.invalid'],  // non-terminated string
+          [/'/, 'string', '@string'],
 
-      // Add single-line comments()
-      [/\/\/.*$/, "comment"],
+          // Add single-line comments()
+          [/\/\/.*$/, 'comment'],
 
-      // Add styling for parentheses, curly braces, and square brackets
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level0",
-          next: "@nested_parenthesis_1",
-        },
-      ],
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level1",
-          next: "@nested_parenthesis_0",
-        },
-      ],
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level0", next: "@nested_curly_1" },
-      ],
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level1", next: "@nested_curly_0" },
-      ],
-    ],
-    whitespace: [[/[ \t\r\n]+/, ""]],
-    string: [
-      [/[^\\"']+/, "string"],
-      [/@escapes/, "string.escape"],
-      [/\\./, "string.escape.invalid"],
-      [/['"]/, "string", "@pop"],
-    ],
-    comment: [[/./, "comment.content"]],
-    after_keyword: [
-      { include: "@whitespace" },
-      [/[a-zA-Z_$][\w$]*/, "following.keyword", "@pop"],
-      [/./, "", "@pop"],
-    ],
-    after_hashtag: [
-      { include: "@whitespace" },
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@indexTypes": { token: "indexType", next: "@pop" },
-          },
-        },
-      ],
-    ],
-    nested_parenthesis_0: [
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level0",
-          next: "@nested_parenthesis_1",
-        },
-      ],
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level0", next: "@nested_curly_1" },
-      ],
-      [/\)/, { token: "delimiter.closeParenthesis.level0", next: "@pop" }],
-      [/@\w+/, "modifier"],
-      [/#\w+/, { token: "hashtag", next: "@after_hashtag" }],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@keywords": { token: "keyword", next: "@after_keyword" },
-            "@typeKeywords": { token: "type", next: "@after_keyword" },
-            "@foreignKey": { token: "foreignKey" },
-            "@fillMe": { token: "fillMe" },
-            "@fkRefs": { token: "fkRefs" },
-            "@fkDo": { token: "fkDo" },
-            "@sqlKeywords": { token: "sqlKeyword" },
-            "@bools": { token: "boolean" },
-            "@colType": { token: "colType" },
-            "@modifier": { token: "modifier" },
-            "@privacy": { token: "privacy" },
-            "@default": "identifier",
-          },
-        },
-      ],
-      [
-        /[=><!~?:&|+\-*^%]+/,
-        {
-          cases: {
-            "@operators": { token: "operator" },
-          },
-        },
-      ],
-      [/\b\d+\b/, "number"],
-      [/,/, "delimiter.comma"],
-      [/\;/, "delimiter.semicolon"],
-      { include: "@whitespace" },
+          // Add styling for parentheses, curly braces, and square brackets
+          [/\(/, { token: 'delimiter.openParenthesis.level0', next: '@nested_parenthesis_1' }],
+          [/\(/, { token: 'delimiter.openParenthesis.level1', next: '@nested_parenthesis_0' }],
+          [/\{/, { token: 'delimiter.openParenthesis.level0', next: '@nested_curly_1' }],
+          [/\{/, { token: 'delimiter.openParenthesis.level1', next: '@nested_curly_0' }],
 
-      // strings
-      [/"([^"\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/"/, "string", "@string"],
-      [/"([^'\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/'/, "string", "@string"],
+      ],
+      whitespace: [
+          [/[ \t\r\n]+/, ''],
+      ],
+      string: [
+          [/[^\']+/, 'string'],      
+          [/@escapes/, 'string.escape'],
+          [/\\./, 'string.escape.invalid'],
+          [/'/, 'string', '@pop']
+      ],
+      comment: [
+          [/./, 'comment.content']
+      ],
+      after_keyword: [
+          { include: '@whitespace' },
+          [/[a-zA-Z_$][\w$]*/, 'following.keyword', '@pop'],
+          [/./, '', '@pop'],
+      ],
+      after_hashtag: [
+          { include: '@whitespace' },
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@indexTypes': { token: 'indexType', next: '@pop' },
+              }
+          }]],
+      nested_parenthesis_0: [
+          [/\(/, { token: 'delimiter.openParenthesis.level0', next: '@nested_parenthesis_1' }],
+          [/\{/, { token: 'delimiter.openParenthesis.level0', next: '@nested_curly_1' }],
+          [/\)/, { token: 'delimiter.closeParenthesis.level0', next: '@pop' }],
+          [/@\w+/, 'modifier'],
+          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@keywords': { token: 'keyword', next: '@after_keyword' },
+                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                  '@foreignKey': { token: 'foreignKey' },
+                  '@fillMe': { token: 'fillMe' },
+                  '@fkRefs': { token: 'fkRefs' },
+                  '@fkDo': { token: 'fkDo' },
+                  '@sqlKeywords': { token: 'sqlKeyword' },
+                  '@bools': { token: 'boolean' },
+                  '@colType': { token: 'colType' },
+                  '@modifier': { token: 'modifier' },
+                  '@privacy': { token: 'privacy' },
+                  '@default': 'identifier'
+              }
+          }],
+          [/[=><!~?:&|+\-*^%]+/, {
+              cases: {
+                  '@operators': { token: 'operator' },
+              }
+          }],
+          [/\b\d+\b/, 'number'],
+          [/,/, 'delimiter.comma'],
+          [/\;/, 'delimiter.semicolon'],
+          { include: '@whitespace' },
 
-      // Add single-line comments()
-      [/\/\/.*$/, "comment"],
-    ],
-    nested_curly_0: [
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level0", next: "@nested_curly_1" },
-      ],
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level0",
-          next: "@nested_parenthesis_1",
-        },
-      ],
-      [/\}/, { token: "delimiter.closeParenthesis.level0", next: "@pop" }],
-      [/@\w+/, "modifier"],
-      [/#\w+/, { token: "hashtag", next: "@after_hashtag" }],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@keywords": { token: "keyword", next: "@after_keyword" },
-            "@typeKeywords": { token: "type", next: "@after_keyword" },
-            "@foreignKey": { token: "foreignKey" },
-            "@fillMe": { token: "fillMe" },
-            "@fkRefs": { token: "fkRefs" },
-            "@fkDo": { token: "fkDo" },
-            "@sqlKeywords": { token: "sqlKeyword" },
-            "@bools": { token: "boolean" },
-            "@colType": { token: "colType" },
-            "@modifier": { token: "modifier" },
-            "@privacy": { token: "privacy" },
-            "@default": "identifier",
-          },
-        },
-      ],
-      [
-        /[=><!~?:&|+\-*^%]+/,
-        {
-          cases: {
-            "@operators": { token: "operator" },
-          },
-        },
-      ],
-      [/\b\d+\b/, "number"],
-      [/,/, "delimiter.comma"],
-      [/\;/, "delimiter.semicolon"],
-      { include: "@whitespace" },
+          // strings
+          [/'([^'\\]|\\.)*$/, 'string.invalid'],  // non-terminated string
+          [/'/, 'string', '@string'],
 
-      // strings
-      [/"([^"\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/"/, "string", "@string"],
-      [/"([^'\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/'/, "string", "@string"],
+          // Add single-line comments()
+          [/\/\/.*$/, 'comment'],
 
-      // Add single-line comments()
-      [/\/\/.*$/, "comment"],
-    ],
-    nested_parenthesis_1: [
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level1",
-          next: "@nested_parenthesis_0",
-        },
       ],
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level1", next: "@nested_curly_0" },
-      ],
-      [/\)/, { token: "delimiter.closeParenthesis.level1", next: "@pop" }],
-      [/@\w+/, "modifier"],
-      [/#\w+/, { token: "hashtag", next: "@after_hashtag" }],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@keywords": { token: "keyword", next: "@after_keyword" },
-            "@typeKeywords": { token: "type", next: "@after_keyword" },
-            "@foreignKey": { token: "foreignKey" },
-            "@fillMe": { token: "fillMe" },
-            "@fkRefs": { token: "fkRefs" },
-            "@fkDo": { token: "fkDo" },
-            "@sqlKeywords": { token: "sqlKeyword" },
-            "@bools": { token: "boolean" },
-            "@colType": { token: "colType" },
-            "@modifier": { token: "modifier" },
-            "@privacy": { token: "privacy" },
-            "@default": "identifier",
-          },
-        },
-      ],
-      [
-        /[=><!~?:&|+\-*^%]+/,
-        {
-          cases: {
-            "@operators": { token: "operator" },
-          },
-        },
-      ],
-      [/\b\d+\b/, "number"],
-      [/,/, "delimiter.comma"],
-      [/\;/, "delimiter.semicolon"],
-      { include: "@whitespace" },
+      nested_curly_0: [
+          [/\{/, { token: 'delimiter.openParenthesis.level0', next: '@nested_curly_1' }],
+          [/\(/, { token: 'delimiter.openParenthesis.level0', next: '@nested_parenthesis_1' }],
+          [/\}/, { token: 'delimiter.closeParenthesis.level0', next: '@pop' }],
+          [/@\w+/, 'modifier'],
+          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@keywords': { token: 'keyword', next: '@after_keyword' },
+                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                  '@foreignKey': { token: 'foreignKey' },
+                  '@fillMe': { token: 'fillMe' },
+                  '@fkRefs': { token: 'fkRefs' },
+                  '@fkDo': { token: 'fkDo' },
+                  '@sqlKeywords': { token: 'sqlKeyword' },
+                  '@bools': { token: 'boolean' },
+                  '@colType': { token: 'colType' },
+                  '@modifier': { token: 'modifier' },
+                  '@privacy': { token: 'privacy' },
+                  '@default': 'identifier'
+              }
+          }],
+          [/[=><!~?:&|+\-*^%]+/, {
+              cases: {
+                  '@operators': { token: 'operator' },
+              }
+          }],
+          [/\b\d+\b/, 'number'],
+          [/,/, 'delimiter.comma'],
+          [/\;/, 'delimiter.semicolon'],
+          { include: '@whitespace' },
 
-      // strings
-      [/"([^"\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/"/, "string", "@string"],
-      [/"([^'\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/'/, "string", "@string"],
+          // strings
+          [/'([^'\\]|\\.)*$/, 'string.invalid'],  // non-terminated string
+          [/'/, 'string', '@string'],
 
-      // Add single-line comments()
-      [/\/\/.*$/, "comment"],
-    ],
-    nested_curly_1: [
-      [
-        /\{/,
-        { token: "delimiter.openParenthesis.level1", next: "@nested_curly_0" },
-      ],
-      [
-        /\(/,
-        {
-          token: "delimiter.openParenthesis.level1",
-          next: "@nested_parenthesis_0",
-        },
-      ],
-      [/\}/, { token: "delimiter.closeParenthesis.level1", next: "@pop" }],
-      [/@\w+/, "modifier"],
-      [/#\w+/, { token: "hashtag", next: "@after_hashtag" }],
-      [
-        /[a-zA-Z_$][\w$]*/,
-        {
-          cases: {
-            "@keywords": { token: "keyword", next: "@after_keyword" },
-            "@typeKeywords": { token: "type", next: "@after_keyword" },
-            "@foreignKey": { token: "foreignKey" },
-            "@fillMe": { token: "fillMe" },
-            "@fkRefs": { token: "fkRefs" },
-            "@fkDo": { token: "fkDo" },
-            "@sqlKeywords": { token: "sqlKeyword" },
-            "@bools": { token: "boolean" },
-            "@colType": { token: "colType" },
-            "@modifier": { token: "modifier" },
-            "@privacy": { token: "privacy" },
-            "@default": "identifier",
-          },
-        },
-      ],
-      [
-        /[=><!~?:&|+\-*^%]+/,
-        {
-          cases: {
-            "@operators": { token: "operator" },
-          },
-        },
-      ],
-      [/\b\d+\b/, "number"],
-      [/,/, "delimiter.comma"],
-      [/\;/, "delimiter.semicolon"],
-      { include: "@whitespace" },
+          // Add single-line comments()
+          [/\/\/.*$/, 'comment'],
 
-      // strings
-      [/"([^"\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/"/, "string", "@string"],
-      [/"([^'\\]|\\.)*$/, "string.invalid"], // non-teminated string
-      [/'/, "string", "@string"],
+      ],
+      nested_parenthesis_1: [
+          [/\(/, { token: 'delimiter.openParenthesis.level1', next: '@nested_parenthesis_0' }],
+          [/\{/, { token: 'delimiter.openParenthesis.level1', next: '@nested_curly_0' }],
+          [/\)/, { token: 'delimiter.closeParenthesis.level1', next: '@pop' }],
+          [/@\w+/, 'modifier'],
+          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@keywords': { token: 'keyword', next: '@after_keyword' },
+                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                  '@foreignKey': { token: 'foreignKey' },
+                  '@fillMe': { token: 'fillMe' },
+                  '@fkRefs': { token: 'fkRefs' },
+                  '@fkDo': { token: 'fkDo' },
+                  '@sqlKeywords': { token: 'sqlKeyword' },
+                  '@bools': { token: 'boolean' },
+                  '@colType': { token: 'colType' },
+                  '@modifier': { token: 'modifier' },
+                  '@privacy': { token: 'privacy' },
+                  '@default': 'identifier'
+              }
+          }],
+          [/[=><!~?:&|+\-*^%]+/, {
+              cases: {
+                  '@operators': { token: 'operator' },
+              }
+          }],
+          [/\b\d+\b/, 'number'],
+          [/,/, 'delimiter.comma'],
+          [/\;/, 'delimiter.semicolon'],
+          { include: '@whitespace' },
 
-      // Add single-line comments()
-      [/\/\/.*$/, "comment"],
-    ],
+          // strings
+          [/'([^'\\]|\\.)*$/, 'string.invalid'],  // non-terminated string
+          [/'/, 'string', '@string'],
+
+          // Add single-line comments()
+          [/\/\/.*$/, 'comment'],
+
+      ],
+      nested_curly_1: [
+          [/\{/, { token: 'delimiter.openParenthesis.level1', next: '@nested_curly_0' }],
+          [/\(/, { token: 'delimiter.openParenthesis.level1', next: '@nested_parenthesis_0' }],
+          [/\}/, { token: 'delimiter.closeParenthesis.level1', next: '@pop' }],
+          [/@\w+/, 'modifier'],
+          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+          [/[a-zA-Z_$][\w$]*/, {
+              cases: {
+                  '@keywords': { token: 'keyword', next: '@after_keyword' },
+                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                  '@foreignKey': { token: 'foreignKey' },
+                  '@fillMe': { token: 'fillMe' },
+                  '@fkRefs': { token: 'fkRefs' },
+                  '@fkDo': { token: 'fkDo' },
+                  '@sqlKeywords': { token: 'sqlKeyword' },
+                  '@bools': { token: 'boolean' },
+                  '@colType': { token: 'colType' },
+                  '@modifier': { token: 'modifier' },
+                  '@privacy': { token: 'privacy' },
+                  '@default': 'identifier'
+              }
+          }],
+          [/[=><!~?:&|+\-*^%]+/, {
+              cases: {
+                  '@operators': { token: 'operator' },
+              }
+          }],
+          [/\b\d+\b/, 'number'],
+          [/,/, 'delimiter.comma'],
+          [/\;/, 'delimiter.semicolon'],
+          { include: '@whitespace' },
+
+          // strings
+          [/'([^'\\]|\\.)*$/, 'string.invalid'],  // non-terminated string
+          [/'/, 'string', '@string'],
+
+          // Add single-line comments()
+          [/\/\/.*$/, 'comment'],
+
+      ],
   },
-}
+};
 
 export const customTheme = {
   base: "vs", // Base theme: 'vs', 'vs-dark', or 'hc-black'
@@ -397,12 +299,14 @@ export const autoClosingPairs: languages.LanguageConfiguration = {
   surroundingPairs: [
     { open: '{', close: '}' },
     { open: '(', close: ')' },
+    { open: '[', close: ']'},
     { open: "'", close: "'" },
-    { open: '"', close: '"' },
+    { open: '"', close: '"' }
   ],
   autoClosingPairs: [
     { open: '{', close: '}' },
     { open: '(', close: ')' },
+    { open: '[', close: ']'},
     { open: "'", close: "'", notIn: ['string', 'comment'] },
     { open: '"', close: '"', notIn: ['string', 'comment'] },
   ],
@@ -412,6 +316,7 @@ export const autoClosingPairs: languages.LanguageConfiguration = {
   brackets: [
     ['{', '}'],
     ['(', ')'],
+    ['[', ']'],
   ],
   indentationRules: {
     decreaseIndentPattern: /^\s*\}/,

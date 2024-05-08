@@ -1,133 +1,154 @@
-import KuneiformParserVisitor from "../ANTLR/KuneiformParserVisitor";
-import { Action_declContext, Action_nameContext, Action_stmt_listContext, Database_directiveContext, Database_nameContext, Extension_nameContext, Param_listContext, Table_declContext, Table_nameContext } from "../ANTLR/KuneiformParser";
+import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload";
+import { IKuneiformError, IParseRes, ISchemaInfo } from "./types";
+import { IActionLocations, IProcedureLocations, ITableLocations } from "./completionHelper";
 
-export class KuneiformCollector<Result> extends KuneiformParserVisitor<Result> {
-    public database: string[];
-    public tables: string[];
-    public actions: string[];
-    public paramList: string[][];
-    public actionLocations: { actionName: string, start: number, end: number  }[];
-    public tableLocations: { start: number, end: number }[];
-    public actionStmtList: string[][];
-    public extensionList: string[];
+export class KuneiformCollector {
+    private schema?: CompiledKuneiform;
+    private schema_info?: ISchemaInfo;
+    private errors?: IKuneiformError[];
 
-    constructor() {
-        super();
-        this.database = []
-        this.tables = [];
-        this.actions = [];
-        this.paramList = [];
-        this.actionLocations = [];
-        this.tableLocations = [];
-        this.actionStmtList = [];
-        this.extensionList = [];
-    }
-
-    visitDatabase_directive = (ctx: Database_directiveContext) => {
-        // Assuming database name is the first child
-        const databaseName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
-        this.database.push(databaseName);
-        return super.visitChildren(ctx);
-    }
-
-    visitTable_name = (ctx: Table_nameContext) => {
-        const tableName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
-        this.tables.push(tableName);
-        return super.visitChildren(ctx);
-    }
-
-    // super weird, but for some reason visitAction_name also captures the action body as a name
-    // this goes way in kwil v0.8, so I am just going to push the action name from the visitAction_decl below
-    // visitAction_name = (ctx: Action_nameContext) => {
-    //     console.log(ctx.getChild(0).getText())
-    //     const actionName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
-    //     this.actions.push(actionName);
-    //     return super.visitChildren(ctx); 
-    // }
-
-    visitParam_list = (ctx: Param_listContext) => {
-        let child: string[] = [];
-        ctx.children && ctx.children.length > 0 && ctx.children.forEach((c) => {
-            if(c.getText() !== ',') {
-                child.push(c.getText());
-            }
-        })
-        this.paramList.push(child);
-        return super.visitChildren(ctx);
-    }
-
-    visitAction_decl = (ctx: Action_declContext) => {
-        const actionName = ctx.getChild(1) ? ctx.getChild(1).getText(): '';
-        this.actions.push(actionName);
-        const start = ctx.start.start;
-        const end = ctx.stop?.stop ? ctx.stop.stop : 0;
-        this.actionLocations.push({ actionName, start, end });
-
-        return super.visitChildren(ctx);
-    }
-
-    visitTable_decl = (ctx: Table_declContext) => {
-        const start = ctx.start.start;
-        const end = ctx.stop?.stop ? ctx.stop.stop : 0;
-        this.tableLocations.push({ start, end });
-
-        return super.visitChildren(ctx);
-    }
-
-    visitAction_stmt_list = (ctx: Action_stmt_listContext) => {
-        const childLength = ctx.children ? ctx.children.length : 0;
-        let stmtArray = [];
-
-        for (let i = 0; i < childLength; i++) {
-            const stmt = ctx.getChild(i) ? ctx.getChild(i).getText(): '';
-            if(stmt) stmtArray.push(stmt);
-        }
-
-        this.actionStmtList.push(stmtArray);
-        return super.visitChildren(ctx);
-    }
-
-    visitExtension_name = (ctx: Extension_nameContext) => {
-        const extName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
-        this.extensionList.push(extName);
-
-        return super.visitChildren(ctx);
+    constructor(compiled: IParseRes) {
+        this.schema = compiled?.schema;
+        this.schema_info = compiled?.schema_info;
+        this.errors = compiled?.errors;
     }
 
     getTables() {
-        return this.tables;
+        if(!this.schema || !this.schema.tables) return []
+
+        return this.schema.tables?.map(t => t.name as string);
     }
 
     getActions() {
-        return this.actions;
+        if(!this.schema || !this.schema.actions) return []
+        return this.schema.actions?.map(a => a.name as string);
     }
 
-    getParams() {
-        return this.paramList;
+    getActionLocations(): IActionLocations[] {
+        if(!this.schema?.actions || !this.schema_info) return []
+
+        let actionLocations: IActionLocations[] = [];
+
+        for(const action of this.schema.actions) {
+            if(!action.name) continue;
+            // @ts-ignore  - action.parameters will exist once kwil-js is updated for v0.8
+            const cleanedParams = action.parameters || [];
+            const location = this.schema_info.blocks[action.name];
+
+            // @ts-ignore - action.body will exist once kwil-js is updated for v0.8
+            const statement = action.body || '';
+
+            cleanedParams.push(...this.extractExtensionParameter(statement, cleanedParams));
+
+            actionLocations.push({
+                name: action.name,
+                start: location.abs_start,
+                end: location.abs_end,
+                parameters: cleanedParams
+            });
+        }
+
+        return actionLocations;
     }
 
-    getActionLocations() {
-        return this.actionLocations;
+    getTableLocations(): ITableLocations[] {
+        if(!this.schema?.tables || !this.schema_info) return []
+
+        let tableLocations: ITableLocations[] = [];
+
+        for(const table of this.schema.tables) {
+            if(!table.name) continue;
+
+            const location = this.schema_info.blocks[table.name];
+
+            tableLocations.push({
+                start: location.abs_start,
+                end: location.abs_end
+            });
+        }
+
+        return tableLocations;
     }
 
-    getTableLocations() {
-        return this.tableLocations;
+    getProcedureLocations(): IProcedureLocations[] {
+        // @ts-ignore - schema_info will exist once kwil-js is updated for v0.8
+        if(!this.schema?.procedures || !this.schema_info) return []
+
+        let procedureLocations: IProcedureLocations[] = [];
+
+        // @ts-ignore - schema_info will exist once kwil-js is updated for v0.8
+        for(const procedure of this.schema.procedures) {
+            if(!procedure.name) continue;
+            const rawParams = procedure.parameters || [];
+            // @ts-ignore - procedure.parameters will exist once kwil-js is updated for v0.8
+            const cleanedParams = rawParams.map(p => p.name);
+            const location = this.schema_info.blocks[procedure.name];
+
+            const statement = procedure.body || '';
+
+            cleanedParams.push(...this.extractExtensionParameter(statement, cleanedParams));
+
+            procedureLocations.push({
+                name: procedure.name,
+                start: location.abs_start,
+                end: location.abs_end,
+                parameters: cleanedParams
+            });
+        }
+
+        return procedureLocations;
     }
 
     getDatabaseName() {
-        return this.database;
+        if(!this.schema) return '';
+
+        return this.schema.name;
     }
 
-    getActionStmtList() {
-        return this.actionStmtList;
-    }
+    // getActionStmtList() {
+    //     // return this.actionStmtList;
+    // }
 
     getExtensionList() {
-        // Every even indice returned by the visitor is the extension name, not the alias, so we want to remove those.
-        return this.removeEvenIndices(this.extensionList);
+        if (!this.schema || !this.schema.extensions) return [];
+
+        return this.schema.extensions.map(e => e.name as string);
     }
 
-    private removeEvenIndices(arr: string[]) {
-        return arr.filter((_, index) => index % 2 !== 0);
-      }
+    getErrors() {
+        // filter out errors with the same position
+        let uniqueErrors: IKuneiformError[] = [];
+
+        if(!this.errors) return uniqueErrors;
+
+        for(const error of this.errors) {
+            if(!uniqueErrors.find(
+                e => 
+                    e.node.start_line === error.node.start_line && 
+                    e.node.start_col === error.node.start_col && 
+                    e.node.end_line === error.node.end_line && 
+                    e.node.end_col === error.node.end_col
+                )) {
+                uniqueErrors.push(error);
+            }
+        }
+
+        return uniqueErrors;
+    }
+
+    // within the body of a statement, there may be an extension parameter that is not part of the action parameters. We want to retrieve this parameter so it can be used in the completion list.
+    private extractExtensionParameter(stmt: string, actionParameters: string[]) {
+        const allParams = stmt.match(/\$\w+\b/g)
+        let extensionParams: string[] = [];
+        if(allParams) {
+            for(const param of allParams) {
+                if(!actionParameters.includes(param)) {
+                    extensionParams.push(param);
+                }
+            }
+        }
+        
+
+        return extensionParams;
+    }
 }
