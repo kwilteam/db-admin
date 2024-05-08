@@ -14,7 +14,7 @@ if (fs.existsSync(outputTsFilePath)) {
 }
 
 // for local development
-const localKf = "/Users/lukelamey/Documents/GitHub/kwil-db/parse/wasm/kuneiform.wasm"
+const localKf = path.join(process.cwd(), 'kuneiform.wasm');
 fs.readFile(localKf, (err, data) => {
     if (err) {
         console.error('Error:', err);
