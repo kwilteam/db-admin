@@ -1,4 +1,4 @@
-import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload";
+import { CompiledKuneiform } from "@lukelamey/kwil-js/dist/core/payload";
 
 export type IParseKuneiform = (schema: string) => Promise<IParseRes>
 

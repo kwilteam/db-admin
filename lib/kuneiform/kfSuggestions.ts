@@ -160,7 +160,7 @@ export const kuneiformTableSuggestions = [
     },
 ]
 
-export const kuneiformActionSuggestions = [
+export const kuneiformMethodSuggestions = [
     {
         label: 'public',
         kind: 17,

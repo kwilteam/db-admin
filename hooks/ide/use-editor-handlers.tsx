@@ -28,6 +28,7 @@ export default function useEditorHandlers(parseKuneiform: IParseKuneiform | null
             tables: completionHelper.getTables(),
             // done
             actions: completionHelper.getActions(),
+            procedures: completionHelper.getProcedures(),
             // done
             params: completionHelper.getParams(offset),
             // done
@@ -35,7 +36,7 @@ export default function useEditorHandlers(parseKuneiform: IParseKuneiform | null
             // done
             tableDefault: completionHelper.getTableDefault(offset),
             // done
-            actionDefault: completionHelper.getActionDefault(offset),
+            actionDefault: completionHelper.getMethodDefault(offset),
             // done
             dbDeclaration: completionHelper.getDbDeclaration(),
             //done

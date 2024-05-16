@@ -7,6 +7,7 @@ import { ICompletionItem } from "@/lib/kuneiform/completionHelper";
 export interface IAutoComplete {
   tables: ICompletionItem[];
   actions: ICompletionItem[];
+  procedures: ICompletionItem[];  
   params: ICompletionItem[];
   kfDefault: ICompletionItem[];
   tableDefault: ICompletionItem[];
@@ -36,6 +37,7 @@ export default function useEditorMount() {
   const autoCompleteRef = useRef<IAutoComplete>({
     tables: [],
     actions: [],
+    procedures: [],
     params: [],
     kfDefault: [],
     tableDefault: [],
@@ -86,6 +88,7 @@ export default function useEditorMount() {
         const suggestionKeys = [
           'tables',
           'actions',
+          'procedures',
           'params',
           'kfDefault',
           'tableDefault',

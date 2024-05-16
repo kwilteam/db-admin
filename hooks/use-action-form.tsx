@@ -1,4 +1,4 @@
-import { ActionSchema } from "@kwilteam/kwil-js/dist/core/database"
+import { ActionSchema } from "@lukelamey/kwil-js/dist/core/database"
 import { useCallback, useEffect, useState } from "react"
 
 interface IUseActionFormProps {

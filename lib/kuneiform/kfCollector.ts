@@ -1,4 +1,4 @@
-import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload";
+import { CompiledKuneiform } from "@lukelamey/kwil-js/dist/core/payload";
 import { IKuneiformError, IParseRes, ISchemaInfo } from "./types";
 import { IActionLocations, IProcedureLocations, ITableLocations } from "./completionHelper";
 
@@ -24,6 +24,11 @@ export class KuneiformCollector {
         return this.schema.actions?.map(a => a.name as string);
     }
 
+    getProcedures() {
+        if(!this.schema || !this.schema.procedures) return []
+        return this.schema.procedures?.map(p => p.name as string);
+    }
+
     getActionLocations(): IActionLocations[] {
         if(!this.schema?.actions || !this.schema_info) return []
 
@@ -31,20 +36,21 @@ export class KuneiformCollector {
 
         for(const action of this.schema.actions) {
             if(!action.name) continue;
-            // @ts-ignore  - action.parameters will exist once kwil-js is updated for v0.8
-            const cleanedParams = action.parameters || [];
+            const cleanedParams = action.parameters as Array<string> || []
             const location = this.schema_info.blocks[action.name];
 
-            // @ts-ignore - action.body will exist once kwil-js is updated for v0.8
             const statement = action.body || '';
 
             cleanedParams.push(...this.extractExtensionParameter(statement, cleanedParams));
+
+            // filter duplicates from cleanedParams
+            const uniqueParams = Array.from(new Set(cleanedParams));
 
             actionLocations.push({
                 name: action.name,
                 start: location.abs_start,
                 end: location.abs_end,
-                parameters: cleanedParams
+                parameters: uniqueParams
             });
         }
 
@@ -71,28 +77,30 @@ export class KuneiformCollector {
     }
 
     getProcedureLocations(): IProcedureLocations[] {
-        // @ts-ignore - schema_info will exist once kwil-js is updated for v0.8
+  
         if(!this.schema?.procedures || !this.schema_info) return []
 
         let procedureLocations: IProcedureLocations[] = [];
 
-        // @ts-ignore - schema_info will exist once kwil-js is updated for v0.8
         for(const procedure of this.schema.procedures) {
             if(!procedure.name) continue;
             const rawParams = procedure.parameters || [];
-            // @ts-ignore - procedure.parameters will exist once kwil-js is updated for v0.8
-            const cleanedParams = rawParams.map(p => p.name);
+    
+            const cleanedParams = rawParams.map(p => p?.name) as string[];
             const location = this.schema_info.blocks[procedure.name];
 
             const statement = procedure.body || '';
 
             cleanedParams.push(...this.extractExtensionParameter(statement, cleanedParams));
 
+            // filter duplicates from cleanedParams
+            const uniqueParams = Array.from(new Set(cleanedParams));
+
             procedureLocations.push({
                 name: procedure.name,
                 start: location.abs_start,
                 end: location.abs_end,
-                parameters: cleanedParams
+                parameters: uniqueParams
             });
         }
 

@@ -1,7 +1,7 @@
 // "use server"
 
 // import '../wasm/wasm_exec'
-// import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"
+// import { CompiledKuneiform } from "@lukelamey/kwil-js/dist/core/payload"
 // // @ts-ignore - string is built during the build process
 // import { wasmHex } from "../wasm/wasmString"
 

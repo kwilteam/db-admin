@@ -1,5 +1,5 @@
 import { KuneiformCollector } from "./kfCollector"
-import { dbDeclaration, kuneiformActionSuggestions, kuneiformDefaults, kuneiformTableSuggestions } from "./kfSuggestions"
+import { dbDeclaration, kuneiformMethodSuggestions, kuneiformDefaults, kuneiformTableSuggestions } from "./kfSuggestions"
 import * as monaco from "monaco-editor"
 import { IParseRes } from "./types"
 
@@ -18,7 +18,7 @@ export interface IActionLocations {
     parameters: string[];
 }
 
-export interface IProcedureLocations extends IActionLocations {}
+export interface IProcedureLocations extends IActionLocations { }
 
 export interface ITableLocations {
     start: number;
@@ -70,6 +70,20 @@ export class CompletionHelper {
         return actions;
     }
 
+    public getProcedures(): ICompletionItem[] {
+        const procedures = this.collector.getProcedures().map(t => {
+            return {
+                label: t,
+                kind: 1,
+                insertText: `${t}()`,
+                insertTextRules: 4,
+                detail: "Procedure",
+            }
+        });
+
+        return procedures;
+    }
+
     public getExtensions(): ICompletionItem[] {
         const extensions = this.collector.getExtensionList().map(t => {
             return {
@@ -103,41 +117,33 @@ export class CompletionHelper {
             }
         }
 
-        // // once for procedures
+        // filter for procedure, remove duplicates
         const procedureLocations = this.collector.getProcedureLocations();
-        
+
         for (const procedure of procedureLocations) {
             if (procedure.start <= offset && procedure.end >= offset) {
                 params.push(...procedure.parameters.map(t => {
-                    if (typeof t === 'string') {
-                        return {
-                            label: t,
-                            kind: 4,
-                            insertText: t,
-                            detail: "Parameter",
-                        }
-                    }
 
                     return {
-                        // @ts-ignore - types for procedures will be added in the future
-                        label: t.name,
+                        label: t,
                         kind: 4,
-                        // @ts-ignore - types for procedures will be added in the future
-                        insertText: t.name,
+                        insertText: t,
                         detail: "Parameter",
                     }
                 }));
             }
         }
+
         return params;
     }
 
     public getKfDefault(offset: number): ICompletionItem[] {
         const isInAction = this.isWithinAction(offset);
         const isInTable = this.isWithinTable(offset);
+        const isInProcedure = this.isWithinProcedure(offset);
         const isDbDefined = this.collector.getDatabaseName() !== '';
 
-        return !isInAction && !isInTable && isDbDefined ? kuneiformDefaults : [];
+        return !isInProcedure && !isInAction && !isInTable && isDbDefined ? kuneiformDefaults : [];
     }
 
     public getTableDefault(offset: number): ICompletionItem[] {
@@ -146,10 +152,11 @@ export class CompletionHelper {
         return isInTable ? kuneiformTableSuggestions : [];
     }
 
-    public getActionDefault(offset: number): ICompletionItem[] {
+    public getMethodDefault(offset: number): ICompletionItem[] {
         const isInAction = this.isWithinAction(offset);
+        const isInProcedure = this.isWithinProcedure(offset);
 
-        return isInAction ? kuneiformActionSuggestions : [];
+        return isInAction || isInProcedure ? kuneiformMethodSuggestions : [];
     }
 
     public getDbDeclaration(): ICompletionItem[] {

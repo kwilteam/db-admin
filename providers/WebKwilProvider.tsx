@@ -8,7 +8,7 @@ import {
   useContext,
 } from "react"
 import { usePathname } from "next/navigation"
-import { WebKwil } from "@kwilteam/kwil-js"
+import { WebKwil } from "@lukelamey/kwil-js"
 import { IProvider } from "@/utils/idb/providers"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {

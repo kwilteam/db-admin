@@ -1,4 +1,4 @@
-import { Types as KwilTypes } from "@kwilteam/kwil-js"
+import { Types as KwilTypes } from "@lukelamey/kwil-js"
 import { IQuery } from "./idb/queries"
 
 // Types from the Kwil library
