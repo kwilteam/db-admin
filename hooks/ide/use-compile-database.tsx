@@ -45,7 +45,7 @@ export default function useCompileDatabase(
 
       const parseKf = async (schema: string) => {
         const res = await globalThis.parseKuneiform(schema)
-        console.log(res)
+        console.log(JSON.parse(res.json))
         if(!res.json) {
           dispatch(
             setAlert({

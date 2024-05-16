@@ -56,7 +56,7 @@ export class CompletionHelper {
         return tables;
     }
 
-    public getActions(): ICompletionItem[] {
+    public getActions(offset: number): ICompletionItem[] {
         const actions = this.collector.getActions().map(t => {
             return {
                 label: t,
@@ -67,10 +67,13 @@ export class CompletionHelper {
             }
         });
 
-        return actions;
+        // Actions can only be called within other actions
+        const isWithinAction = this.isWithinAction(offset);
+
+        return isWithinAction ? actions : [];
     }
 
-    public getProcedures(): ICompletionItem[] {
+    public getProcedures(offset: number): ICompletionItem[] {
         const procedures = this.collector.getProcedures().map(t => {
             return {
                 label: t,
@@ -81,7 +84,11 @@ export class CompletionHelper {
             }
         });
 
-        return procedures;
+        // procedures can be called within actions or other procedures
+        const isWithinAction = this.isWithinAction(offset);
+        const isWithinProcedure = this.isWithinProcedure(offset);
+
+        return isWithinAction || isWithinProcedure ? procedures : [];
     }
 
     public getExtensions(): ICompletionItem[] {
@@ -161,6 +168,7 @@ export class CompletionHelper {
 
     public getDbDeclaration(): ICompletionItem[] {
         const isDbDefined = this.collector.getDatabaseName() !== '';
+        console.log(this.collector.getDatabaseName())
         return !isDbDefined ? dbDeclaration : [];
     }
 

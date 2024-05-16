@@ -42,16 +42,16 @@ export const useDatabaseAction = ({
         setData(undefined)
         setColumns(undefined)
 
-        const mutability = action?.mutability
+        const mutability = action?.modifiers?.includes('VIEW')
         const actionInputs = new Utils.ActionInput()
 
         for (const [key, value] of Object.entries(formValues)) {
           actionInputs.put(key, value as string)
         }
-
+ 
         const actionBody: KwilTypes.ActionBody = {
           dbid: databaseObject.dbid,
-          action: actionName,
+          name: actionName,
           inputs: [actionInputs],
         }
 
@@ -60,9 +60,9 @@ export const useDatabaseAction = ({
           | KwilTypes.GenericResponse<KwilTypes.TxReceipt>
           | undefined
 
-        if (mutability === "view") {
+        if (mutability) {
           response = await kwilProvider.call(actionBody)
-        } else if (mutability === "update" && kwilSigner) {
+        } else if (!mutability && kwilSigner) {
           response = await kwilProvider.execute(actionBody, kwilSigner, true)
         } else {
           dispatch(setModal(ModalEnum.CONNECT))

@@ -8,7 +8,7 @@ interface IUseActionFormProps {
 export default function useActionForm({ action }: IUseActionFormProps) {
   const [isDirty, setIsDirty] = useState(false)
   const [errors, setErrors] = useState<Record<string, boolean>>({})
-  const inputs = action?.inputs
+  const inputs = action?.parameters
 
   useEffect(() => {
     if (!inputs) return

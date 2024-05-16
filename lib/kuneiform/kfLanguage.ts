@@ -2,56 +2,60 @@ import { sqlKeywords } from "./sqlKeywords"
 import type { languages } from "monaco-editor/esm/vs/editor/editor.api.d.ts"
 
 export const kfLanguage = {
-  // Set defaultToken to invalid to see what you do not tokenize yet
-  defaultToken: '',
-  keywords: [
-      'table', 'action', 'use', 'procedure'
-  ],
-  typeKeywords: ['database'],
-  bools: ['true', 'false'],
-  colType: ['text', 'int', 'uuid'],
-  modifier: ['maxlen', 'minlen', 'unique', 'max', 'min', 'notnull', 'primary', 'default', '@caller', '@action', '@dataset'],
-  indexTypes: ['unique', 'index', 'primary'],
-  action: ['action', 'procedure'],
-  privacy: ['public', 'private', 'view', 'owner'],
-  operators: [
-      '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
-  ],
-  foreignKey: ['foreign_key', 'fk'],
-  fkRefs: ['references', 'on_update', 'on_delete', 'ref'],
-  fkDo: ['cascade', 'restrict', 'no_action', 'set_null', 'set_default'],
-  sqlKeywords: sqlKeywords,
-  fillMe: ['_table_', '_column_'],
-  escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
-  // The main tokenizer for our languages
-  tokenizer: {
-      root: [
-          // identifiers and keywords
-          [/@\w+/, 'modifier'],
-          [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
-          [/[a-zA-Z_$][\w$]*/, {
-              cases: {
-                  '@keywords': { token: 'keyword', next: '@after_keyword' },
-                  '@typeKeywords': { token: 'type', next: '@after_keyword' },
-                  '@foreignKey': { token: 'foreignKey' },
-                  '@fillMe': { token: 'fillMe' },
-                  '@fkRefs': { token: 'fkRefs' },
-                  '@fkDo': { token: 'fkDo' },
-                  '@sqlKeywords': { token: 'sqlKeyword' },
-                  '@bools': { token: 'boolean' },
-                  '@colType': { token: 'colType' },
-                  '@modifier': { token: 'modifier' },
-                  '@privacy': { token: 'privacy' },
-                  '@default': 'identifier',
-              }
-          }],
-          [/[=><!~?:&|+\-*^%]+/, {
-              cases: {
-                  '@operators': { token: 'operator' },
-              }
-          }],
-          // numbers
-          [/\b\d+\b/, 'number'],
+    // Set defaultToken to invalid to see what you do not tokenize yet
+    defaultToken: '',
+    databaseDefinition: ['database'],
+    keywords: [
+        'table', 'action', 'use', 'procedure', 'foreign'
+    ],
+    definedActions: [''],
+    definedProcedures: [''],
+    bools: ['true', 'false'],
+    colType: ['text', 'int', 'uuid'],
+    modifier: ['maxlen', 'minlen', 'unique', 'max', 'min', 'notnull', 'primary', 'default', '@caller', '@action', '@dataset'],
+    indexTypes: ['unique', 'index', 'primary'],
+    action: ['action', 'procedure'],
+    privacy: ['public', 'private', 'view', 'owner'],
+    operators: [
+        '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
+    ],
+    foreignKey: ['foreign_key', 'fk'],
+    fkRefs: ['references', 'on_update', 'on_delete', 'ref'],
+    fkDo: ['cascade', 'restrict', 'no_action', 'set_null', 'set_default'],
+    sqlKeywords: sqlKeywords,
+    fillMe: ['_table_', '_column_'],
+    escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+    // The main tokenizer for our languages
+    tokenizer: {
+        root: [
+            // identifiers and keywords
+            [/@\w+/, 'modifier'],
+            [/#\w+/, { token: 'hashtag', next: '@after_hashtag' }],
+            [/[a-zA-Z_$][\w$]*/, {
+                cases: {
+                    '@keywords': { token: 'keyword', next: '@after_keyword' },
+                    '@databaseDefinition': { token: 'type', next: '@after_keyword' },
+                    '@definedActions': { token: 'method' },
+                    '@definedProcedures': { token: 'method' },
+                    '@foreignKey': { token: 'foreignKey' },
+                    '@fillMe': { token: 'fillMe' },
+                    '@fkRefs': { token: 'fkRefs' },
+                    '@fkDo': { token: 'fkDo' },
+                    '@sqlKeywords': { token: 'sqlKeyword' },
+                    '@bools': { token: 'boolean' },
+                    '@colType': { token: 'colType' },
+                    '@modifier': { token: 'modifier' },
+                    '@privacy': { token: 'privacy' },
+                    '@default': 'identifier',
+                }
+            }],
+            [/[=><!~?:&|+\-*^%]+/, {
+                cases: {
+                    '@operators': { token: 'operator' },
+                }
+            }],
+            // numbers
+            [/\b\d+\b/, 'number'],
 
             //commas
             [/,/, 'delimiter.comma'],
@@ -109,7 +113,9 @@ export const kfLanguage = {
             [/[a-zA-Z_$][\w$]*/, {
                 cases: {
                     '@keywords': { token: 'keyword', next: '@after_keyword' },
-                    '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                    '@databaseDefinition': { token: 'type', next: '@after_keyword' },
+                    '@definedActions': { token: 'method' },
+                    '@definedProcedures': { token: 'method' },
                     '@foreignKey': { token: 'foreignKey' },
                     '@fillMe': { token: 'fillMe' },
                     '@fkRefs': { token: 'fkRefs' },
@@ -149,7 +155,9 @@ export const kfLanguage = {
             [/[a-zA-Z_$][\w$]*/, {
                 cases: {
                     '@keywords': { token: 'keyword', next: '@after_keyword' },
-                    '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                    '@databaseDefinition': { token: 'type', next: '@after_keyword' },
+                    '@definedActions': { token: 'method' },
+                    '@definedProcedures': { token: 'method' },
                     '@foreignKey': { token: 'foreignKey' },
                     '@fillMe': { token: 'fillMe' },
                     '@fkRefs': { token: 'fkRefs' },
@@ -189,7 +197,9 @@ export const kfLanguage = {
             [/[a-zA-Z_$][\w$]*/, {
                 cases: {
                     '@keywords': { token: 'keyword', next: '@after_keyword' },
-                    '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                    '@databaseDefinition': { token: 'type', next: '@after_keyword' },
+                    '@definedActions': { token: 'method' },
+                    '@definedProcedures': { token: 'method' },
                     '@foreignKey': { token: 'foreignKey' },
                     '@fillMe': { token: 'fillMe' },
                     '@fkRefs': { token: 'fkRefs' },
@@ -229,7 +239,9 @@ export const kfLanguage = {
             [/[a-zA-Z_$][\w$]*/, {
                 cases: {
                     '@keywords': { token: 'keyword', next: '@after_keyword' },
-                    '@typeKeywords': { token: 'type', next: '@after_keyword' },
+                    '@databaseDefinition': { token: 'type', next: '@after_keyword' },
+                    '@definedActions': { token: 'method' },
+                    '@definedProcedures': { token: 'method' },
                     '@foreignKey': { token: 'foreignKey' },
                     '@fillMe': { token: 'fillMe' },
                     '@fkRefs': { token: 'fkRefs' },
@@ -269,6 +281,7 @@ export const customTheme = {
     rules: [
         { token: "", foreground: "000000" }, // Old color: "AADAFA"
         { token: "keyword", foreground: "0000A0" }, // Old color: "679AD1"
+        { token: "method", foreground: "808000" }, // Old color: "DCDCAF"
         { token: "string", foreground: "A0522D" }, // Old color: "CE9178"
         { token: "number", foreground: "006400" }, // Old color: "B5CEA8"
         { token: "boolean", foreground: "800080" }, // Old color: "BC89BD"

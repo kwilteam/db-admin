@@ -12,7 +12,8 @@ export interface IAutoComplete {
   kfDefault: ICompletionItem[];
   tableDefault: ICompletionItem[];
   actionDefault: ICompletionItem[];
-  dbDeclaration: ICompletionItem[];
+  // TODO: This can be uncommented once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+  // dbDeclaration: ICompletionItem[];
   extensionList: ICompletionItem[];
 
   [key: string]: any[];
@@ -42,7 +43,8 @@ export default function useEditorMount() {
     kfDefault: [],
     tableDefault: [],
     actionDefault: [],
-    dbDeclaration: [],
+    // TODO: This can be uncommented once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+    // dbDeclaration: [],
     extensionList: [],
   })
 
@@ -93,7 +95,7 @@ export default function useEditorMount() {
           'kfDefault',
           'tableDefault',
           'actionDefault',
-          'dbDeclaration',
+          // 'dbDeclaration',
           'extensionList'
         ]
 
@@ -107,6 +109,11 @@ export default function useEditorMount() {
     });
 
     setMonacoInstance(monacoInstance)
+
+    console.log(
+      "Monaco Editor Mounted. Available languages are: ",
+      monacoInstance.languages.getLanguages(),
+    )
   }
 
   return { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef }

@@ -16,7 +16,7 @@ export default function Action({ dbid, actionName }: IActionProps) {
     dbid,
     actionName,
   })
-  const statements = action?.statements
+  const statements = [action?.body || ""]
 
   if (!action)
     return (

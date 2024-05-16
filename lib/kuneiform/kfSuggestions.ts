@@ -30,7 +30,9 @@ export const kuneiformDefaults = [
         insertText: 'procedure ${1:} () returns () {}',
         insertTextRules: 4,
         detail: 'New Procedure',
-    }
+    },
+    // TODO: Remove once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+    ...dbDeclaration
 ]
 
 export const kuneiformTableSuggestions = [
