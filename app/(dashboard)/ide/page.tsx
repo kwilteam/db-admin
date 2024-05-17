@@ -16,6 +16,7 @@ import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
 import useEditorHandlers from "@/hooks/ide/use-editor-handlers"
+import { useWindowSize } from "@/hooks/use-window-size"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -28,6 +29,7 @@ export default function IdePage() {
   const { deploy, exportJson, isCompiling } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
   const { handleEditorFeatures } = useEditorHandlers();
+  const windowSize = useWindowSize()
 
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
@@ -78,7 +80,12 @@ export default function IdePage() {
           )}
       </div>
       {openedSchemas && openedSchemas.length > 0 && (
-        <div className="fixed bottom-0 flex h-12 w-full items-center border-t border-slate-200 bg-white p-3">
+        <div
+          className={classNames({
+            "fixed bottom-0 flex h-12 w-full items-center border-t border-slate-200 bg-white px-3": true,
+            "py-7": windowSize === "lg"
+          })}
+        >
           <ActionPanel deploy={deploy} exportJson={exportJson} isLoading={isCompiling || isSaving} />
         </div>
       )}
