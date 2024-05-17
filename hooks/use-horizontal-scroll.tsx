@@ -37,7 +37,6 @@ const useHorizontalScroll = (ref: RefObject<HTMLDivElement>): UseHorizontalScrol
 
   const onWheel = useCallback((event: WheelEvent<HTMLDivElement>) => {
     if (ref.current) {
-      event.preventDefault();
       ref.current.scrollLeft += event.deltaY;
     }
   }, [ref]);

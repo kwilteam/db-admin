@@ -34,7 +34,7 @@ export default function IdePage() {
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
   useEffect(() => {
-    if (editorRef.current && Object.hasOwn(schemaContentDict, activeSchema)) {
+    if (editorRef.current) {
       setTimeout(() => {
         editorRef.current?.focus() // Focus the editor
       }, 500)
@@ -54,8 +54,7 @@ export default function IdePage() {
         })}
       >
         {openedSchemas &&
-          openedSchemas.length > 0 &&
-          Object.hasOwn(schemaContentDict, activeSchema) && (
+          openedSchemas.length > 0 && (
             <Editor
               defaultLanguage={language}
               path={activeSchema}
