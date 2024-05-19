@@ -8,6 +8,7 @@ export enum StoreNames {
   PROVIDERS = "providers",
   SETTINGS = "settings",
   QUERIES = "queries",
+  PINNED = "pinned",
 }
 
 export enum SettingsKeys {
@@ -43,6 +44,9 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
         // Create the settings store
         createStore(db, StoreNames.SETTINGS)
 
+        // Create the pinned databases store
+        createStore(db, StoreNames.PINNED, "dbid")
+
         // Create the queries store
         createStore(db, StoreNames.QUERIES, ["dbid", "name"])
       },
@@ -53,6 +57,9 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
     if (!dbExists) {
       await setupSchema(db)
     }
+
+    // TODO: Set up the pinned database store
+    // If on testnet, pin the model dbs
 
     // Inserting default settings after the upgrade has finished
     // Only if the settings store is empty

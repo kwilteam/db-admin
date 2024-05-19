@@ -18,6 +18,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
     myDbsLoading,
     otherDbsLoading,
     count,
+    pinnedDbs
   } = useDatabases()
 
   return (
@@ -44,6 +45,13 @@ export default function DatabasesExplorer({ isMobile = false }) {
         {providerStatus === KwilProviderStatus.Online &&
           count !== undefined && (
             <>
+              <DatabaseList 
+                databases={pinnedDbs}
+                loading={otherDbsLoading}
+                isMobile={isMobile}
+                isMyDatabase={false}
+                isPinned
+              />
               {activeAccount && (
                 <DatabaseList
                   databases={myDbs}

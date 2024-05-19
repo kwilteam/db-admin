@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon } from "@/utils/icons"
+import { ChevronDownIcon, ChevronRightIcon, DatabaseIcon, EmptyStarIcon, FilledStarIcon } from "@/utils/icons"
 import { useAppSelector, useAppDispatch } from "@/store/hooks"
 import {
   selectDatabaseActiveContext,
@@ -11,6 +11,7 @@ import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/use-database-schema"
 import useDeleteDb from "@/hooks/database/use-delete-db"
 import Loading from "../Loading"
+import useDatabasePins from "@/hooks/database/use-database-pins"
 
 const DatabaseName = ({
   database,
@@ -23,6 +24,8 @@ const DatabaseName = ({
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
   const activeContext = useAppSelector(selectDatabaseActiveContext)
+  const { togglePin, pinned }= useDatabasePins()
+  const isPinned = pinned?.includes(database.dbid)
 
   const isOpen = databaseVisibility[database.dbid]?.open
 
@@ -71,6 +74,20 @@ const DatabaseName = ({
       >
         {database.name}
       </span>
+      
+      {isPinned && 
+        <FilledStarIcon 
+          className={classNames("h-4 w-4 mr-3 ml-auto z-10")}
+          onClick={(e) => togglePin(database.dbid, e)}
+        />
+      }
+
+      {!isPinned &&
+        <EmptyStarIcon 
+          className={classNames("h-4 w-4 mr-3 ml-auto z-10")}
+          onClick={(e) => togglePin(database.dbid, e)}
+        />
+      }
 
       {databaseVisibility[database.dbid]?.loading && (
         <Loading className="absolute right-0 ml-2" />
