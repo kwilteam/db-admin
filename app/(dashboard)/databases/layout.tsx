@@ -29,11 +29,11 @@ export default function DatabasesLayout({
       } else if (query) {
         show = ItemTypes.QUERIES
       }
-
+      
       getSchema(databaseObject, show)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dbid, databaseObject])
 
   return (
     <div className="flex">
