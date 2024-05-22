@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
 import { kfLanguage, customTheme, autoClosingPairs } from "@/lib/kuneiform/kfLanguage"
@@ -23,6 +23,15 @@ export default function useEditorMount() {
   )
 
   const completionProviderRef = useRef<monaco.IDisposable | null>(null)
+
+  // clear completion item provider on unmount
+  useEffect(() => {
+    return () => {
+      if (completionProviderRef.current) {
+        completionProviderRef.current.dispose()
+      }
+    }
+  }, []);
 
   const autoCompleteRef = useRef<IAutoComplete>({
     tables: [],
