@@ -33,6 +33,7 @@ export const WebKwilProvider = ({
   const activeProvider = useAppSelector(selectActiveProvider)
   const providers = useAppSelector(selectProviders)
   const [providerObject, setProviderObject] = useState<IProvider | undefined>()
+  const [isOnline, setIsOnline] = useState<boolean>(false)
 
   useEffect(() => {
     if (!activeProvider) return
@@ -43,7 +44,8 @@ export const WebKwilProvider = ({
   }, [activeProvider, providers, pathname])
 
   const initKwilProvider = useCallback(async () => {
-    if (!providerObject) return
+    if (!providerObject || !isOnline) return
+
 
     try {
       const kwilProviderOptions = {
@@ -60,33 +62,61 @@ export const WebKwilProvider = ({
         kwilInstance = new WebKwil(kwilProviderOptions)
       }
 
-      const ping = await kwilInstance.ping()
-
-      if (ping.status === 200) {
-        setKwilProvider(kwilInstance)
-        dispatch(setProviderStatus(KwilProviderStatus.Online))
-        dispatch(setModal(undefined))
-        dispatch(setProviderOfflineAcknowledged(false))
-      } else {
-        setKwilProvider(undefined)
-        dispatch(setProviderStatus(KwilProviderStatus.Offline))
-        dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
-        
-      }
+      setKwilProvider(kwilInstance)
+      
     } catch (error) {
       setKwilProvider(undefined)
       dispatch(setProviderStatus(KwilProviderStatus.Offline))
       dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
       console.error("Failed to initialize kwil provider", error)
     }
-  }, [dispatch, providerObject])
+  }, [dispatch, providerObject, isOnline])
 
-  // By including the pathname we re-evaluate the Kwil provider whenever the route changes
+  // From Martin: By including the pathname we re-evaluate the Kwil provider whenever the route changes
   // This makes it possible to test the provider status whenever there is a significant user action
   // Allowing us to notify the user when the provider is offline
+
+  // From Luke: The problem with using pathname in the initKwilProvider dependency array is that it will re-trigger database calls on every route change (including switching tables, actions, etc.). This is not ideal because it creates a brief and unnecessary reload on the database page. Instead, we should move the ping check to a separate useEffect that only runs when the pathname changes, and then we can check the provider status there.
   useEffect(() => {
     initKwilProvider()
-  }, [initKwilProvider, pathname])
+  }, [initKwilProvider])
+
+  const checkProviderStatus = useCallback(async () => {
+    if (!providerObject) return
+
+    let tempProvider = kwilProvider
+
+    if(!tempProvider) {
+      tempProvider = new WebKwil({
+        kwilProvider: providerObject.url,
+        chainId: providerObject.chainId || "",
+        logging,
+      }) // Create a new instance to check the provider status
+    }
+
+    try {
+      const ping = await tempProvider.ping()
+
+      if(ping.status === 200) {
+        setIsOnline(true)
+        dispatch(setProviderStatus(KwilProviderStatus.Online))
+        dispatch(setModal(undefined))
+        dispatch(setProviderOfflineAcknowledged(false))
+      } else {
+        setIsOnline(false)
+        setKwilProvider(undefined)
+        dispatch(setProviderStatus(KwilProviderStatus.Offline))
+        dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+      }
+    } catch (error) {
+      setIsOnline(false)
+      console.error("Failed to check provider status", error)
+    };
+  }, [providerObject]);
+
+  useEffect(() => {
+    checkProviderStatus()
+  }, [pathname, checkProviderStatus]);
 
   return (
     <KwilContext.Provider value={kwilProvider}>{children}</KwilContext.Provider>

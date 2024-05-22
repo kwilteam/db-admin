@@ -5,8 +5,6 @@ export default function useDatabasePins() {
     const dispatch = useAppDispatch();
     const pinned = (useAppSelector((state) => state.database.pinnedDatabases));
 
-    console.log(pinned);
-
     const togglePin = (dbid: string, e:
         React.MouseEvent<SVGElement, MouseEvent>
     ) => {

@@ -33,7 +33,7 @@ export default function DatabasesLayout({
       getSchema(databaseObject, show)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbid, databaseObject])
+  }, [])
 
   return (
     <div className="flex">

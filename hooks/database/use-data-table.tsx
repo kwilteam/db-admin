@@ -27,7 +27,6 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
 
   useEffect(() => {
     if (!dbid || !table || !kwilProvider || !databaseObject) return
-
     const fetchTableData = async () => {
       try {
         setIsLoading(true)

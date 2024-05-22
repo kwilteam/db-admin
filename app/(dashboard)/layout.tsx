@@ -13,6 +13,7 @@ import ReadOnlyModal from "@/components/Modal/ReadOnlyModal"
 import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
+import { useWindowSize } from "@/hooks/use-window-size"
 
 interface IProps {
   children: React.ReactNode
@@ -22,6 +23,7 @@ export default function DashboardLayout({ children }: IProps) {
   const dispatch = useAppDispatch()
   const activeAccount = useAppSelector(selectActiveAccount)
   const activeProvider = useAppSelector(selectActiveProvider)
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     dispatch(loadProviders())
@@ -30,7 +32,7 @@ export default function DashboardLayout({ children }: IProps) {
   return (
     <>
       <>
-        <MobileNavigation />
+        {windowSize !== 'lg' && <MobileNavigation />}
         <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
           <DesktopNavigation />
 

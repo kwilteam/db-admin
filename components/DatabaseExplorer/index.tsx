@@ -47,7 +47,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
             <>
               <DatabaseList 
                 databases={pinnedDbs}
-                loading={otherDbsLoading}
+                loading={false}
                 isMobile={isMobile}
                 isMyDatabase={false}
                 isPinned

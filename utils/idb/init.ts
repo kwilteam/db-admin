@@ -2,6 +2,7 @@ import { openDB, IDBPDatabase } from "idb"
 import { setupSettings } from "./settings"
 import { setupSchema } from "./ide"
 import { setupProviders } from "./providers"
+import { setupPinned } from "./pinned"
 
 export enum StoreNames {
   SCHEMA = "schema",
@@ -52,14 +53,12 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
       },
     })
 
-    // Inserting default schema after the upgrade has finished
+    // Inserting default schema and pinned databases after the upgrade has finished
     // Only if the database has just been created
     if (!dbExists) {
       await setupSchema(db)
+      await setupPinned(db)
     }
-
-    // TODO: Set up the pinned database store
-    // If on testnet, pin the model dbs
 
     // Inserting default settings after the upgrade has finished
     // Only if the settings store is empty
