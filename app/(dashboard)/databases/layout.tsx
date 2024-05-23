@@ -40,7 +40,7 @@ export default function DatabasesLayout({
       <div className="hidden border-r border-slate-100 lg:flex lg:w-72">
         <DatabaseExplorer />
       </div>
-      <div className="flex-1 flex-col flex ">{children}</div>
+      <div className="flex-1 flex-col flex overflow-auto">{children}</div>
     </div>
   )
 }

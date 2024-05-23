@@ -44,7 +44,7 @@ export default function DataTable({
   return (
     <div
       data-testid="data-table"
-      className="m-1 overflow-scroll border border-slate-200 lg:m-2"
+      className="m-1 border border-slate-200 lg:m-2"
     >
       <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
