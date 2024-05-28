@@ -1,4 +1,4 @@
-import { CompiledKuneiform } from "@lukelamey/kwil-js/dist/core/payload";
+import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload";
 import { IKuneiformError, IParseRes, ISchemaInfo } from "./types";
 import { IActionLocations, IProcedureLocations, ITableLocations } from "./completionHelper";
 

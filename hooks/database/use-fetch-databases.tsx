@@ -2,7 +2,7 @@ import { useCallback, useState } from "react"
 import { selectDatabaseFilters, setDatabases } from "@/store/database"
 import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { bytesToHex } from "@lukelamey/kwil-js/dist/utils/serial"
+import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
