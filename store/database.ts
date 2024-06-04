@@ -13,6 +13,7 @@ import {
   IDatabaseQueryPaginationDict,
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
+import { deletePinned, getPinned, setPinned } from "@/utils/idb/pinned"
 import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
@@ -39,6 +40,7 @@ interface IDatabaseState {
   queryDict: IDatabaseQueryDict
   queryPaginationDict: IDatabaseQueryPaginationDict
   activeContext: IDatabaseActiveContext | undefined
+  pinnedDatabases: string[] | undefined
 }
 
 const initialState: IDatabaseState = {
@@ -53,7 +55,63 @@ const initialState: IDatabaseState = {
   queryDict: {},
   queryPaginationDict: {},
   activeContext: undefined,
+  pinnedDatabases: undefined,
 }
+
+export const loadPinned = createAsyncThunk(
+  "database/loadPinned",
+  async (_, { rejectWithValue }) => {
+    try {
+      const db = await initIdb()
+      if (!db) return rejectWithValue("Database initialization failed")
+
+      const pinnedDatabases = await getPinned(db)
+
+      return pinnedDatabases?.map((pinned) => pinned.dbid)
+    } catch (error) {
+      console.error("Failed to load pinned databases", error)
+      return rejectWithValue("Failed to load pinned databases")
+    }
+  },
+)
+
+export const savePinnedToStore = createAsyncThunk(
+  "database/setPinned",
+  async (dbid: string, { rejectWithValue }) => {
+    try {
+      const db = await initIdb()
+      if (!db) return rejectWithValue("Database initialization failed")
+
+      await setPinned(db, dbid)
+
+      const pinnedDatabases = await getPinned(db)
+
+      return pinnedDatabases?.map((pinned) => pinned.dbid)
+    } catch (error) {
+      console.error("Failed to set pinned database", error)
+      return rejectWithValue("Failed to set pinned database")
+    }
+  },
+)
+
+export const deletePinnedFromStore = createAsyncThunk(
+  "database/deletePinned",
+  async (dbid: string, { rejectWithValue }) => {
+    try {
+      const db = await initIdb()
+      if (!db) return rejectWithValue("Database initialization failed")
+
+      await deletePinned(db, dbid)
+
+      const pinnedDatabases = await getPinned(db)
+
+      return pinnedDatabases?.map((pinned) => pinned.dbid)
+    } catch (error) {
+      console.error("Failed to delete pinned database", error)
+      return rejectWithValue("Failed to delete pinned database")
+    }
+  },
+)
 
 export const loadQueries = createAsyncThunk(
   "database/loadQueries",
@@ -307,6 +365,17 @@ export const databaseSlice = createSlice({
         const { dbid, queries } = action.payload
 
         state.queryDict[dbid] = queries
+      }),
+      builder.addCase(loadPinned.fulfilled, (state, action) => {
+        state.pinnedDatabases = action.payload
+      }),
+      builder.addCase(savePinnedToStore.fulfilled, (state, action) => {
+        if(!action.payload) return
+        state.pinnedDatabases = action.payload
+      }),
+      builder.addCase(deletePinnedFromStore.fulfilled, (state, action) => {
+        if(!action.payload) return
+        state.pinnedDatabases = action.payload
       })
   },
 })

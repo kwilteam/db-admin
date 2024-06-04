@@ -28,12 +28,14 @@ import {
   HiOutlinePencil,
   HiOutlineQuestionMarkCircle,
   HiOutlineArrowTopRightOnSquare,
-  HiArrowDownTray
+  HiArrowDownTray,
+  HiOutlineStar,
+  HiStar,
 } from "react-icons/hi2"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
-import { PiAsteriskLight } from "react-icons/pi"
+import { PiAsteriskLight, PiPushPinLight } from "react-icons/pi"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -71,5 +73,8 @@ export {
   CiLogout as SignOutIcon,
   TbSql as QueryIcon,
   PiAsteriskLight as OtherIcon,
-  HiArrowDownTray as DownloadIcon
+  HiArrowDownTray as DownloadIcon,
+  HiOutlineStar as EmptyStarIcon,
+  HiStar as FilledStarIcon,
+  PiPushPinLight as PinIcon,
 }

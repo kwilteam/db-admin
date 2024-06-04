@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as monaco from "monaco-editor"
 import { Monaco } from "@monaco-editor/react"
 import { kfLanguage, customTheme, autoClosingPairs } from "@/lib/kuneiform/kfLanguage"
@@ -21,6 +21,17 @@ export default function useEditorMount() {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | undefined>(
     undefined,
   )
+
+  const completionProviderRef = useRef<monaco.IDisposable | null>(null)
+
+  // clear completion item provider on unmount
+  useEffect(() => {
+    return () => {
+      if (completionProviderRef.current) {
+        completionProviderRef.current.dispose()
+      }
+    }
+  }, []);
 
   const autoCompleteRef = useRef<IAutoComplete>({
     tables: [],
@@ -57,7 +68,12 @@ export default function useEditorMount() {
 
     monacoInstance.languages.setLanguageConfiguration('kuneiformLang', autoClosingPairs);
 
-    monacoInstance.languages.registerCompletionItemProvider("kuneiformLang", {
+    // if there is a completion provider already, dispose of it
+    if (completionProviderRef.current) {
+      completionProviderRef.current.dispose()
+    }
+
+    completionProviderRef.current = monacoInstance.languages.registerCompletionItemProvider("kuneiformLang", {
       provideCompletionItems: (model, position) => {
         const word = model.getWordUntilPosition(position);
         const range = {

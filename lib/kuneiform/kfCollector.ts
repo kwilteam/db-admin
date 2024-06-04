@@ -36,11 +36,14 @@ export class KuneiformCollector<Result> extends KuneiformParserVisitor<Result> {
         return super.visitChildren(ctx);
     }
 
-    visitAction_name = (ctx: Action_nameContext) => {
-        const actionName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
-        this.actions.push(actionName);
-        return super.visitChildren(ctx); 
-    }
+    // super weird, but for some reason visitAction_name also captures the action body as a name
+    // this goes way in kwil v0.8, so I am just going to push the action name from the visitAction_decl below
+    // visitAction_name = (ctx: Action_nameContext) => {
+    //     console.log(ctx.getChild(0).getText())
+    //     const actionName = ctx.getChild(0) ? ctx.getChild(0).getText(): '';
+    //     this.actions.push(actionName);
+    //     return super.visitChildren(ctx); 
+    // }
 
     visitParam_list = (ctx: Param_listContext) => {
         let child: string[] = [];
@@ -55,6 +58,7 @@ export class KuneiformCollector<Result> extends KuneiformParserVisitor<Result> {
 
     visitAction_decl = (ctx: Action_declContext) => {
         const actionName = ctx.getChild(1) ? ctx.getChild(1).getText(): '';
+        this.actions.push(actionName);
         const start = ctx.start.start;
         const end = ctx.stop?.stop ? ctx.stop.stop : 0;
         this.actionLocations.push({ actionName, start, end });

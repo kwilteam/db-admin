@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react"
 import { selectActiveAccount } from "@/store/global"
-import { useAppSelector } from "@/store/hooks"
-import { selectDatabases } from "@/store/database"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { loadPinned, selectDatabases } from "@/store/database"
 import useFetchDatabases from "@/hooks/database/use-fetch-databases"
+import useDatabasePins from "./use-database-pins"
 
 // Delay update of loading state to avoid flickering
 const loadingDelay = 1000
@@ -13,6 +14,20 @@ export default function useDatabases() {
   const databases = useAppSelector(selectDatabases)
   const [myDbsLoading, setMyDbsLoading] = useState(true)
   const [otherDbsLoading, setOtherDbsLoading] = useState(true)
+  const { pinned } = useDatabasePins();
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(loadPinned())
+  }, [dispatch])
+
+  const pinnedDbs = useMemo(() => {
+    return databases?.filter((db) => {
+      return pinned?.includes(db.dbid)
+    })
+  }, [pinned, databases])
+
 
   const myDbs = useMemo(() => {
     setMyDbsLoading(true)
@@ -78,5 +93,6 @@ export default function useDatabases() {
     otherDbsLoading,
     fetchDatabasesLoading,
     count: databases?.length,
+    pinnedDbs,
   }
 }

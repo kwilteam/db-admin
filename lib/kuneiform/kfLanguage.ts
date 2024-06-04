@@ -23,7 +23,7 @@ export const kfLanguage = {
   ],
   indexTypes: ["unique", "index", "primary"],
   action: ["action"],
-  privacy: ["public", "private"],
+  privacy: ["public", "private", "view", "owner"],
   operators: ["=", ">", "<", "!", "~", "?", ":", "==", "<=", ">=", "!="],
   foreignKey: ["foreign_key", "fk"],
   fkRefs: ["references", "on_update", "on_delete", "ref"],
@@ -393,6 +393,7 @@ export const customTheme = {
 }
 
 export const autoClosingPairs: languages.LanguageConfiguration = {
+  wordPattern: /[@$]?[a-zA-Z_]\w*/g,
   surroundingPairs: [
     { open: '{', close: '}' },
     { open: '(', close: ')' },
@@ -405,7 +406,7 @@ export const autoClosingPairs: languages.LanguageConfiguration = {
     { open: "'", close: "'", notIn: ['string', 'comment'] },
     { open: '"', close: '"', notIn: ['string', 'comment'] },
   ],
-  comments: {
+  comments: { 
     lineComment: '//',
   },
   brackets: [

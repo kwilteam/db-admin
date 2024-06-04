@@ -2,12 +2,14 @@ import { openDB, IDBPDatabase } from "idb"
 import { setupSettings } from "./settings"
 import { setupSchema } from "./ide"
 import { setupProviders } from "./providers"
+import { setupPinned } from "./pinned"
 
 export enum StoreNames {
   SCHEMA = "schema",
   PROVIDERS = "providers",
   SETTINGS = "settings",
   QUERIES = "queries",
+  PINNED = "pinned",
 }
 
 export enum SettingsKeys {
@@ -22,11 +24,37 @@ const createStore = (
   db.createObjectStore(storeName, { keyPath })
 }
 
+// This is a helper function to get the list of indexedDB databases
+// Firefox <126 does not support the indexedDB.databases() method, so we need to use localStorage
+const getIndexedDBDatabase = async (): Promise<IDBDatabaseInfo[]> => {
+  if('databases' in indexedDB) {
+    return await indexedDB.databases()
+  }
+
+  // If the browser does not support the indexedDB.databases() method
+  const dbList = localStorage.getItem("indexedDBList")
+  if (dbList) {
+    return JSON.parse(dbList) as IDBDatabaseInfo[]
+  }
+
+  return []
+}
+
+// This is a helper function to update the list of indexedDB databases
+// Firefox <126 does not support the indexedDB.databases() method, so we need to use localStorage
+const updateIndexedDBList = async (dbList: IDBDatabaseInfo[]) => {
+  if('databases' in indexedDB) {
+    return
+  }
+
+  localStorage.setItem("indexedDBList", JSON.stringify(dbList))
+};
+
 export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
   try {
     let dbExists = true
     // Check if the database already exists
-    const dbList = await indexedDB.databases()
+    const dbList = await getIndexedDBDatabase()
     if (!dbList.map((db) => db.name).includes("kwil-db-admin")) {
       dbExists = false
     }
@@ -43,15 +71,23 @@ export const initIdb = async (): Promise<IDBPDatabase<unknown> | undefined> => {
         // Create the settings store
         createStore(db, StoreNames.SETTINGS)
 
+        // Create the pinned databases store
+        createStore(db, StoreNames.PINNED, "dbid")
+
         // Create the queries store
         createStore(db, StoreNames.QUERIES, ["dbid", "name"])
       },
     })
 
-    // Inserting default schema after the upgrade has finished
+    // Inserting default schema and pinned databases after the upgrade has finished
     // Only if the database has just been created
     if (!dbExists) {
+      // update the localstorage for browsers that do not support indexedDB.databases()
+      updateIndexedDBList([{ name: "kwil-db-admin", version: 1 }])
+
+      // Set up seeded data
       await setupSchema(db)
+      await setupPinned(db)
     }
 
     // Inserting default settings after the upgrade has finished

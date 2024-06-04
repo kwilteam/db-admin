@@ -60,6 +60,7 @@ export default function useFetchDatabases() {
 
       console.error(error)
     }
+    // There is a bug here where KwilProvider is changing
   }, [dispatch, kwilProvider, filters.includeAll, activeAccount])
 
   return { fetchDatabases, loading }

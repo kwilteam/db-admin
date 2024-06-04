@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import { IDatasetInfoStringOwner } from "@/utils/database-types"
-import { OtherIcon, UserIcon } from "@/utils/icons"
+import { OtherIcon, PinIcon, UserIcon } from "@/utils/icons"
 import { selectDatabaseFilters, setFilter } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import DatabaseName from "./DatabaseName"
@@ -12,6 +12,7 @@ interface IDatabaseListProps {
   isMobile: boolean
   isMyDatabase: boolean
   activeAccount?: string | undefined
+  isPinned?: boolean
 }
 
 export default function DatabaseList({
@@ -20,6 +21,7 @@ export default function DatabaseList({
   isMobile,
   isMyDatabase,
   activeAccount,
+  isPinned,
 }: IDatabaseListProps): JSX.Element {
   const filters = useAppSelector(selectDatabaseFilters)
   const includeOtherDatabases = filters.includeAll
@@ -37,7 +39,13 @@ export default function DatabaseList({
             <UserIcon className="h-4 w-4" />
             <span>MY DATABASES</span>
           </div>
-        ) : (
+        ) : 
+        isPinned ? (
+          <div className="flex items-center gap-1">
+            <PinIcon className="h-4 w-4" />
+            <span>PINNED DATABASES</span>
+          </div>
+        ): (
           <div className="flex items-center gap-1">
             <OtherIcon className="h-4 w-4" />
             <IncludeOtherDatabasesCheckbox

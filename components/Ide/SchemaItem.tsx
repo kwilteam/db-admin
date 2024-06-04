@@ -1,7 +1,7 @@
 import useDeleteSchema from "@/hooks/ide/use-delete-schema"
 import { setIsMenuOpen } from "@/store/global"
-import { useAppDispatch } from "@/store/hooks"
-import { loadSchema, openSchema } from "@/store/ide"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { loadSchema, openSchema, selectSchemaContentDict } from "@/store/ide"
 import { FileIcon } from "@/utils/icons"
 
 interface ISchemaItemProps {
@@ -10,10 +10,10 @@ interface ISchemaItemProps {
 
 export default function SchemaItem({ schema }: ISchemaItemProps) {
   const dispatch = useAppDispatch()
-  const triggerDeleteSchema = useDeleteSchema()
+  const triggerDeleteSchema = useDeleteSchema();
 
-  const triggerOpenSchema = (schema: string) => {
-    dispatch(loadSchema(schema))
+  const triggerOpenSchema = async (schema: string) => {
+    await dispatch(loadSchema(schema))
     dispatch(openSchema(schema))
   }
 
