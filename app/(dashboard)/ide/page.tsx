@@ -29,6 +29,7 @@ export default function IdePage() {
   const { deploy, exportJson, isCompiling, parseKuneiform } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
   const { handleEditorFeatures } = useEditorHandlers(parseKuneiform);
+  const windowSize = useWindowSize();
 
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
