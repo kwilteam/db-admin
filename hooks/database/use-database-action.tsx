@@ -52,7 +52,7 @@ export const useDatabaseAction = ({
         const actionBody: KwilTypes.ActionBody = {
           dbid: databaseObject.dbid,
           name: actionName,
-          inputs: [actionInputs],
+          ...(actionInputs.toArray().length > 0 ? { inputs: [actionInputs] } : {}),
         }
 
         let response:

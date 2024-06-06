@@ -12,11 +12,10 @@ const mockDbid = "mock-dbid"
 const mockActionName = "mock-action"
 const mockAction: KwilTypes.ActionSchema = {
   name: mockActionName,
-  inputs: ["input1", "input2"],
-  statements: ["statement1", "statement2"],
-  mutability: "view",
+  parameters: ["input1", "input2"],
+  body: "statement1",
+  modifiers: ["view"],
   annotations: [],
-  auxiliaries: [],
   public: true,
 }
 
@@ -84,10 +83,9 @@ describe("Action Components", () => {
   describe("ActionStatements", () => {
     it("renders action statements", async () => {
       await act(async () => {
-        render(<ActionStatements statements={mockAction.statements} />)
+        render(<ActionStatements statements={[mockAction.body]} />)
       })
       expect(screen.getByText("statement1")).toBeInTheDocument()
-      expect(screen.getByText("statement2")).toBeInTheDocument()
     })
   })
 })

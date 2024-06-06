@@ -64,7 +64,7 @@ export const setupProviders = async (idb: IDBPDatabase<unknown>) => {
 
   const localhostProvider: IProvider = {
     name: "Localhost",
-    url: "http://localhost:8080",
+    url: "http://localhost:8484",
     chainId: undefined,
   }
   await setProvider(idb, localhostProvider)
