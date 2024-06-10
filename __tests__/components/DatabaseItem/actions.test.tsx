@@ -3,9 +3,9 @@ import { act, render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { mockStore } from "../../mocks/mock-store"
-import Action from "@/components/DatabaseItem/Action"
-import ActionForm from "@/components/DatabaseItem/Action/Form"
-import ActionStatements from "@/components/DatabaseItem/Action/Statements"
+import Method from "@/components/DatabaseItem/Method"
+import MethodForm from "@/components/DatabaseItem/Method/Form"
+import MethodStatements from "@/components/DatabaseItem/Method/Statements"
 import { KwilTypes } from "@/utils/database-types"
 
 const mockDbid = "mock-dbid"
@@ -25,7 +25,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <Action dbid={mockDbid} actionName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} />
           </Provider>,
         )
       })
@@ -46,7 +46,7 @@ describe("Action Components", () => {
               },
             })}
           >
-            <Action dbid={mockDbid} actionName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} />
           </Provider>,
         )
       })
@@ -60,7 +60,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <ActionForm action={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -72,7 +72,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <ActionForm action={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -83,7 +83,7 @@ describe("Action Components", () => {
   describe("ActionStatements", () => {
     it("renders action statements", async () => {
       await act(async () => {
-        render(<ActionStatements statements={[mockAction.body]} />)
+        render(<MethodStatements statements={[mockAction.body]} />)
       })
       expect(screen.getByText("statement1")).toBeInTheDocument()
     })

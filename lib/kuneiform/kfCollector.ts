@@ -10,7 +10,7 @@ export class KuneiformCollector {
     constructor(compiled: IParseRes) {
         this.schema = compiled?.schema;
         this.schema_info = compiled?.schema_info;
-        this.errors = compiled?.errors;
+        this.errors = compiled?.parse_errs;
     }
 
     getTables() {
@@ -132,10 +132,10 @@ export class KuneiformCollector {
         for(const error of this.errors) {
             if(!uniqueErrors.find(
                 e => 
-                    e.node.start_line === error.node.start_line && 
-                    e.node.start_col === error.node.start_col && 
-                    e.node.end_line === error.node.end_line && 
-                    e.node.end_col === error.node.end_col
+                    e.position.start_line === error.position.start_line && 
+                    e.position.start_col === error.position.start_col && 
+                    e.position.end_line === error.position.end_line && 
+                    e.position.end_col === error.position.end_col
                 )) {
                 uniqueErrors.push(error);
             }

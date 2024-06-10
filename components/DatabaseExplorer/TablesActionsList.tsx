@@ -6,10 +6,11 @@ import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
 import useDatabaseParams from "@/hooks/database/use-database-params"
 import { IItemTypes } from "./DatabaseItem"
+import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
 
 interface ITablesActionsList {
   dbid: string
-  items: readonly KwilTypes.Table[] | readonly KwilTypes.ActionSchema[]
+  items: readonly KwilTypes.Table[] | readonly KwilTypes.ActionSchema[] | readonly Procedure[]
   itemType: IItemTypes[string]
   visible: boolean
 }
@@ -29,16 +30,14 @@ export const TablesActionsList = ({
 
   return (
     <>
-      {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema) => (
+      {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
         <div
           data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
           key={`${dbid}-${itemType}-${objectItem.name}`}
           className="ml-6 overflow-hidden text-sm"
         >
           <Link
-            href={`/databases/${dbid}/${itemType.slice(0, -1)}/${
-              objectItem.name
-            }`}
+            href={`/databases/${dbid}/${itemType === ItemTypes.PROCEDURES || itemType === ItemTypes.ACTIONS ? `method/` : ``}${itemType.slice(0, -1)}/${objectItem.name}`}
             className={classNames({
               "flex select-none flex-row items-center gap-1 hover:text-slate-900":
                 true,

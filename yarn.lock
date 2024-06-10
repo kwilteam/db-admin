@@ -619,10 +619,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@kwilteam/kwil-js@^0.7.0-beta.0":
-  version "0.7.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@kwilteam/kwil-js/-/kwil-js-0.7.0-beta.0.tgz#f7085d678acd316ffcf3333d7eef5cfe31859f83"
-  integrity sha512-/5VHb3KcZds7Gcf52TTy6vASdgLPxNf+R12YiSI6ysp6Fal1nUbiUCx9B3O5rYznrwXo/yFLigRcV6XdBRPEBg==
+"@kwilteam/kwil-js@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@kwilteam/kwil-js/-/kwil-js-0.7.1.tgz#be388b42bf39eb84a22f6867235e62ba98a1e73f"
+  integrity sha512-aeqgMmg9q1NNNxkA1LKEAOv0HnYFpQimt9B1o26uiqslC1l7qbJuKfQ35W7HG2hhZs/5+mwJPZQizmPgF4GwIg==
   dependencies:
     axios "^0.27.2"
     ethers "^6.9.1"

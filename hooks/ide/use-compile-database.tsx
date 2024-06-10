@@ -45,7 +45,12 @@ export default function useCompileDatabase(
 
       const parseKf = async (schema: string) => {
         const res = await globalThis.parseKuneiform(schema)
-        console.log(JSON.parse(res.json))
+        console.log({
+          ...res,
+          json: res.json ? JSON.parse(res.json) : res.json
+        })
+        // TODO: Remove res.json !== "" once we are confident that unhandled errors are cleaned up in KF.
+        // if (!res.json || res.json !== "") {
         if(!res.json) {
           dispatch(
             setAlert({
@@ -54,7 +59,7 @@ export default function useCompileDatabase(
             }),
           )
 
-          throw new Error(`Failed to parse database definition. Response: ${res}`)
+          throw new Error(`Failed to parse database definition. Response: ${res.toString()}`)
         }
         return JSON.parse(res.json) as IParseRes
       }
@@ -75,11 +80,11 @@ export default function useCompileDatabase(
 
     try {
       // Compile the code
-      const { schema, errors } = await parseKuneiform(inputs)
+      const { schema, parse_errs } = await parseKuneiform(inputs)
 
-      if(errors) {
-        for (const error of errors) {
-          const msg = `Error: ${error.parser_name} - ${error.error} at ${error.node.start_line}:${error.node.start_col}`
+      if(parse_errs) {
+        for (const error of parse_errs) {
+          const msg = `Error: ${error.parser_name} - ${error.message} at ${error.position.start_line}:${error.position.start_col}`
           const err = new Error(msg)
           const errorMessage = getDetailsErrorMessage(err)
 
@@ -146,11 +151,11 @@ export default function useCompileDatabase(
 
     try {
       // Compile the code
-      const { schema, errors } = await parseKuneiform(inputs)
+      const { schema, parse_errs } = await parseKuneiform(inputs)
 
-      if(errors) {
-        for (const error of errors) {
-          const msg = `Error: ${error.parser_name} - ${error.error} at ${error.node.start_line}:${error.node.start_col}`
+      if(parse_errs) {
+        for (const error of parse_errs) {
+          const msg = `Error: ${error.parser_name} - ${error.message} at ${error.position.start_line}:${error.position.start_col}`
           const err = new Error(msg)
           const errorMessage = getDetailsErrorMessage(err)
 

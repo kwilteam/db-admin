@@ -168,23 +168,20 @@ export class CompletionHelper {
 
     public getDbDeclaration(): ICompletionItem[] {
         const isDbDefined = this.collector.getDatabaseName() !== '';
-        console.log(this.collector.getDatabaseName())
         return !isDbDefined ? dbDeclaration : [];
     }
 
     public getErrors(): IKfError[] {
         const errors = this.collector.getErrors().map(e => {
             return {
-                startLineNumber: e.node.start_line,
-                startColumn: e.node.start_col,
-                endLineNumber: e.node.end_line,
-                endColumn: e.node.end_col,
-                message: e.error,
+                startLineNumber: e.position.start_line,
+                startColumn: e.position.start_col,
+                endLineNumber: e.position.end_line,
+                endColumn: e.position.end_col,
+                message: e.message,
                 severity: 8,
-                code: e.type
+                code: e.error || ""
             }
-
-
         });
 
         return errors;

@@ -4,6 +4,7 @@ import {
   ActionIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  ProcedureIcon,
   QueryIcon,
   TableIcon,
 } from "@/utils/icons"
@@ -65,7 +66,7 @@ const DatabaseItem = ({
       </div>
       <div className="mb-1">
         {visible &&
-          (itemType === ItemTypes.ACTIONS || itemType === ItemTypes.TABLES) &&
+          (itemType === ItemTypes.ACTIONS || itemType === ItemTypes.TABLES || itemType === ItemTypes.PROCEDURES) &&
           databaseSchemaItems && (
             <TablesActionsList
               dbid={database.dbid}
@@ -122,6 +123,14 @@ const ItemIcons = ({
       )}
       {itemType === ItemTypes.QUERIES && (
         <QueryIcon
+          className={classNames({
+            "h-4 w-4": true,
+            "text-kwil-light": visible,
+          })}
+        />
+      )}
+      {itemType === ItemTypes.PROCEDURES && (
+        <ProcedureIcon 
           className={classNames({
             "h-4 w-4": true,
             "text-kwil-light": visible,

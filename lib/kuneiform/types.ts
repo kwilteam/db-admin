@@ -8,15 +8,15 @@ export interface IWasmExec {
 
 export interface IParseRes {
     schema?: CompiledKuneiform;
-    errors?: IKuneiformError[];
+    parse_errs?: IKuneiformError[];
     schema_info?: ISchemaInfo;
 }
 
 export interface IKuneiformError {
     parser_name: string;
-    type: ParserErrorType;
-    error: string;
-    node: INodeInfo;
+    error: ParserErrorType;
+    message: string;
+    position: IPositionInfo;
 }
 
 enum ParserErrorType {
@@ -26,7 +26,7 @@ enum ParserErrorType {
     UNKNOWN_ERROR = "unknown"
 }
 
-interface INodeInfo {
+interface IPositionInfo {
     start_line: number;
     start_col: number;
     end_line: number;
@@ -38,7 +38,7 @@ export interface ISchemaInfo {
 }
 
 interface BlockInfo {
-    [key: string]: INodeInfo & {
+    [key: string]: IPositionInfo & {
         abs_start: number;
         abs_end: number;
     }

@@ -11,6 +11,7 @@ import {
   IDatabaseQueryDict,
   ItemType,
   IDatabaseQueryPaginationDict,
+  ItemTypes,
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
 import { deletePinned, getPinned, setPinned } from "@/utils/idb/pinned"
@@ -238,6 +239,7 @@ export const databaseSlice = createSlice({
         actions: false,
         queries: false,
         loading: false,
+        procedures: false
       }
     },
 
@@ -417,16 +419,17 @@ export const selectDatabaseActiveContext = (state: {
   return activeContext
 }
 
-export const selectAction = (
+export const selectMethod = (
   state: { database: IDatabaseState },
   dbid: string,
   actionName: string,
+  type: ItemType
 ) => {
-  const actions = state.database.schemaDict?.[dbid]?.actions
+  const methods = state.database.schemaDict?.[dbid]?.[type === ItemType.ACTION ? "actions" : "procedures"];
 
-  if (!actions) return undefined
+  if (!methods) return undefined
 
-  return actions.find((action) => action.name === actionName)
+  return methods.find((action) => action.name === actionName)
 }
 
 export const selectTableQueryParams = (

@@ -2,7 +2,7 @@ interface IActionStatementsProps {
   statements: readonly string[] | undefined
 }
 
-export default function ActionStatements({
+export default function MethodStatements({
   statements,
 }: IActionStatementsProps) {
   return (

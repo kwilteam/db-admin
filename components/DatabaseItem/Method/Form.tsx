@@ -1,35 +1,34 @@
 "use client"
 
 import { useState } from "react"
-import classNames from "classnames"
 import { KwilTypes } from "@/utils/database-types"
 import useActionForm from "@/hooks/use-action-form"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"
 import Input from "@/components/Input"
+import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
 
 interface IActionFormProps {
-  action: KwilTypes.ActionSchema | undefined
+  method: KwilTypes.ActionSchema | Procedure | undefined
   executeAction: (
     formValues: Record<string, string>,
   ) => Promise<boolean | undefined>
 }
 
-export default function ActionForm({
-  action,
+export default function MethodForm({
+  method,
   executeAction,
 }: IActionFormProps) {
   const [isExecuting, setIsExecuting] = useState(false)
-  const { inputs, errors, isDirty, validateInput, validateForm, resetForm } =
+  const { cleanInputs, errors, isDirty, validateInput, validateForm, resetForm } =
     useActionForm({
-      action,
+      method,
     })
 
   const triggerAction = async (event: React.FormEvent<HTMLFormElement>) => {
     setIsExecuting(true)
     const isValid = validateForm(event)
-
     if (isValid) {
       const { formValues, form } = isValid
       const success = await executeAction(formValues)
@@ -50,8 +49,8 @@ export default function ActionForm({
           triggerAction(e)
         }}
       >
-        {inputs &&
-          inputs.map((input) => {
+        {cleanInputs &&
+          cleanInputs.map((input) => {
             return (
               <div className="flex flex-row" key={input}>
                 <label className="m-1 w-56 overflow-hidden p-2 text-slate-900">
@@ -70,7 +69,7 @@ export default function ActionForm({
               </div>
             )
           })}
-        {!inputs?.length && <Alert type="info" text="No inputs" />}
+        {!cleanInputs?.length && <Alert type="info" text="No inputs" />}
 
         <div className="my-2">
           {!isExecuting && (

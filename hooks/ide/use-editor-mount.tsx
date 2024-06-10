@@ -109,11 +109,6 @@ export default function useEditorMount() {
     });
 
     setMonacoInstance(monacoInstance)
-
-    console.log(
-      "Monaco Editor Mounted. Available languages are: ",
-      monacoInstance.languages.getLanguages(),
-    )
   }
 
   return { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef }

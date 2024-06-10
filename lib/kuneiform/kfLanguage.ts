@@ -11,11 +11,11 @@ export const kfLanguage = {
     definedActions: [''],
     definedProcedures: [''],
     bools: ['true', 'false'],
-    colType: ['text', 'int', 'uuid'],
+    colType: ['text', 'int', 'uuid', 'blob', 'bool', 'uint256', 'decimal'],
     modifier: ['maxlen', 'minlen', 'unique', 'max', 'min', 'notnull', 'primary', 'default', '@caller', '@action', '@dataset'],
     indexTypes: ['unique', 'index', 'primary'],
     action: ['action', 'procedure'],
-    privacy: ['public', 'private', 'view', 'owner'],
+    privacy: ['public', 'private', 'view', 'owner', 'returns'],
     operators: [
         '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
     ],

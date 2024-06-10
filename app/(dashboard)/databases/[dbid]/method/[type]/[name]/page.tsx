@@ -1,6 +1,6 @@
 "use client"
 
-import Action from "@/components/DatabaseItem/Action"
+import Method from "@/components/DatabaseItem/Method"
 import Title from "@/components/DatabaseItem/Header"
 import {
   selectDatabaseObject,
@@ -11,14 +11,14 @@ import { ItemType } from "@/utils/database-types"
 import { useEffect } from "react"
 interface IProps {
   params: {
+    type: ItemType
     dbid: string
-    action: string
+    name: string
   }
 }
 
 export default function DatabaseActionPage({ params }: IProps) {
-  const { dbid, action: name } = params
-  const type = ItemType.ACTION
+  const { dbid, type, name } = params
   const dispatch = useAppDispatch()
 
   const databaseObject = useAppSelector((state) =>
@@ -38,7 +38,7 @@ export default function DatabaseActionPage({ params }: IProps) {
       <Title database={databaseObject.name} type={type} name={name} />
 
       <div className="flex-1 overflow-scroll bg-slate-50 p-2 lg:min-h-full">
-        <Action dbid={databaseObject.dbid} actionName={name} />
+        <Method dbid={databaseObject.dbid} methodName={name} type={type} />
       </div>
     </div>
   )

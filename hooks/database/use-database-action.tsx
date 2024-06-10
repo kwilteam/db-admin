@@ -1,27 +1,29 @@
 import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectAction, selectDatabaseObject } from "@/store/database"
+import { selectMethod, selectDatabaseObject } from "@/store/database"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { useKwilSigner } from "../use-kwil-signer"
 import { Utils } from "@kwilteam/kwil-js"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import { getDetailsErrorMessage } from "@/utils/error-message"
 
-interface IDatabaseActionProps {
+interface IDatabaseMethodProps {
   dbid: string
-  actionName: string
+  methodName: string
+  type: ItemType
 }
 
-export const useDatabaseAction = ({
+export const useDatabaseMethod = ({
   dbid,
-  actionName,
-}: IDatabaseActionProps) => {
+  methodName,
+  type
+}: IDatabaseMethodProps) => {
   const dispatch = useAppDispatch()
   const [data, setData] = useState<Object[] | undefined>(undefined)
   const [columns, setColumns] = useState<string[] | undefined>(undefined)
-  const action = useAppSelector((state) =>
-    selectAction(state, dbid, actionName),
+  const method = useAppSelector((state) => 
+    selectMethod(state, dbid, methodName, type)
   )
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
@@ -42,7 +44,7 @@ export const useDatabaseAction = ({
         setData(undefined)
         setColumns(undefined)
 
-        const mutability = action?.modifiers?.includes('VIEW')
+        const mutability = method?.modifiers?.includes('VIEW')
         const actionInputs = new Utils.ActionInput()
 
         for (const [key, value] of Object.entries(formValues)) {
@@ -51,7 +53,7 @@ export const useDatabaseAction = ({
  
         const actionBody: KwilTypes.ActionBody = {
           dbid: databaseObject.dbid,
-          name: actionName,
+          name: methodName,
           ...(actionInputs.toArray().length > 0 ? { inputs: [actionInputs] } : {}),
         }
 
@@ -98,6 +100,7 @@ export const useDatabaseAction = ({
         return true
       } catch (error) {
         const errorMessage = getDetailsErrorMessage(error as Error)
+        console.log(error)
 
         dispatch(
           setAlert({
@@ -108,11 +111,11 @@ export const useDatabaseAction = ({
         return false
       }
     },
-    [kwilProvider, kwilSigner, databaseObject, action, actionName, dispatch],
+    [kwilProvider, kwilSigner, databaseObject, method, methodName, dispatch],
   )
 
   return {
-    action,
+    method,
     executeAction,
     data,
     columns,

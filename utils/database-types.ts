@@ -17,11 +17,13 @@ export enum ItemType {
   TABLE = "table",
   ACTION = "action",
   QUERY = "query",
+  PROCEDURE = "procedure"
 }
 
 export enum ItemTypes {
   TABLES = "tables",
   ACTIONS = "actions",
+  PROCEDURES = "procedures",
   QUERIES = "queries",
 }
 
@@ -30,6 +32,7 @@ interface IDatabaseVisibility {
   open: boolean
   tables: boolean
   actions: boolean
+  procedures: boolean
   queries: boolean
   loading: boolean
 }

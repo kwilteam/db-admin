@@ -25,8 +25,6 @@ export default function useEditorHandlers(parseKuneiform: IParseKuneiform | null
 
         monacoInstance.editor.setModelMarkers(model, "kuneiformLang", completionHelper.getErrors());
 
-        console.log(completionHelper.getTableDefault(offset))
-
         autoComplete.current = {
             tables: completionHelper.getTables(),
             actions: completionHelper.getActions(offset),

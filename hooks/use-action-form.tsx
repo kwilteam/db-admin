@@ -1,20 +1,24 @@
-import { ActionSchema } from "@kwilteam/kwil-js/dist/core/database"
-import { useCallback, useEffect, useState } from "react"
+import { ActionSchema, NamedType, Procedure } from "@kwilteam/kwil-js/dist/core/database"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 interface IUseActionFormProps {
-  action: ActionSchema | undefined
+  method: ActionSchema | Procedure | undefined
 }
 
-export default function useActionForm({ action }: IUseActionFormProps) {
+export default function useActionForm({ method }: IUseActionFormProps) {
   const [isDirty, setIsDirty] = useState(false)
   const [errors, setErrors] = useState<Record<string, boolean>>({})
-  const inputs = action?.parameters
+  const [cleanInputs, setCleanInputs] = useState<string[]>([])
+  const inputs = useMemo(() => method?.parameters === null ? [] : method?.parameters, [method?.parameters]);
 
   useEffect(() => {
     if (!inputs) return
 
+    setCleanInputs(cleanParams(inputs))
+
+    const cleanInputs = cleanParams(inputs);
     const initialErrors: Record<string, boolean> = {}
-    inputs.forEach((input) => {
+    cleanInputs.forEach((input) => {
       initialErrors[input] = true
     })
     setErrors(initialErrors)
@@ -39,8 +43,9 @@ export default function useActionForm({ action }: IUseActionFormProps) {
       const formData = new FormData(form)
       const formValues: Record<string, string> = {}
 
+      const cleanInputs = cleanParams(inputs);
       // Validate inputs
-      inputs.map((input) => {
+      cleanInputs?.map((input) => {
         formValues[input] = formData.get(input) as string
         if (!validateInput(input, formValues[input])) {
           tempErrors.push(input)
@@ -78,11 +83,21 @@ export default function useActionForm({ action }: IUseActionFormProps) {
   }, [])
 
   return {
-    inputs,
+    cleanInputs,
     errors,
     isDirty,
     validateInput,
     validateForm,
     resetForm,
   }
+}
+
+function cleanParams(params: readonly string[] | readonly NamedType[]): string[] {
+  return params?.map((param) => {
+    if (typeof param === "string") {
+      return param;
+    }
+
+    return param.name;
+  })
 }
