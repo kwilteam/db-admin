@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 import useActionForm from "@/hooks/use-action-form"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
@@ -13,12 +13,14 @@ interface IActionFormProps {
   method: KwilTypes.ActionSchema | Procedure | undefined
   executeAction: (
     formValues: Record<string, string>,
-  ) => Promise<boolean | undefined>
+  ) => Promise<boolean | undefined>,
+  type: ItemType;
 }
 
 export default function MethodForm({
   method,
   executeAction,
+  type
 }: IActionFormProps) {
   const [isExecuting, setIsExecuting] = useState(false)
   const { cleanInputs, errors, isDirty, validateInput, validateForm, resetForm } =
@@ -74,7 +76,7 @@ export default function MethodForm({
         <div className="my-2">
           {!isExecuting && (
             <Button data-testid="execute-action" context="primary">
-              Execute Action
+              Execute {type.charAt(0).toUpperCase() + type.slice(1)}
             </Button>
           )}
           {isExecuting && <Loading className="p-2" />}

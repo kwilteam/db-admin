@@ -31,8 +31,8 @@ export default function Method({ dbid, methodName, type }: IMethodProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col gap-2 rounded-md bg-slate-100/60 p-2 md:flex-row  md:gap-6">
-        <MethodStatements statements={statements} />
-        <MethodForm method={method} executeAction={executeAction} />
+        <MethodStatements statements={statements} methodType={type} />
+        <MethodForm method={method} executeAction={executeAction} type={type} />
       </div>
       <div className="mt-2">
         {data && (

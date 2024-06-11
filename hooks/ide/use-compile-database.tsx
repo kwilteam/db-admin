@@ -45,13 +45,13 @@ export default function useCompileDatabase(
 
       const parseKf = async (schema: string) => {
         const res = await globalThis.parseKuneiform(schema)
-        console.log({
-          ...res,
-          json: res.json ? JSON.parse(res.json) : res.json
-        })
+        // console.log({
+        //   ...res,
+        //   json: res.json ? JSON.parse(res.json) : res.json
+        // })
         // TODO: Remove res.json !== "" once we are confident that unhandled errors are cleaned up in KF.
-        // if (!res.json || res.json !== "") {
-        if(!res.json) {
+        if (!res.json || res.json !== "") {
+        // if(!res.json) {
           dispatch(
             setAlert({
               type: "error",

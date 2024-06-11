@@ -2,12 +2,15 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { IPagination } from "@/utils/database-types"
 import {
   saveQueryToStores,
+  selectDatabaseObject,
+  selectDatabaseSchemas,
   selectQuery,
   selectQueryPagination,
 } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./use-execute-query"
+import { IColumn, getColumnsFromSchema } from "@/utils/data-table"
 
 export default function useQueryEditor(dbid: string, queryName: string) {
   const dispatch = useAppDispatch()
@@ -17,12 +20,13 @@ export default function useQueryEditor(dbid: string, queryName: string) {
   const pagination = useAppSelector((state) =>
     selectQueryPagination(state, dbid, queryName),
   )
+
   const paginationRef = useRef(pagination)
   const [paginationDisabled, setPaginationDisabled] = useState<boolean>(false)
   const executeQuery = useExecuteQuery(dbid)
   const [sql, setSql] = useState<string>("")
   const [queryData, setQueryData] = useState<Object[] | undefined>(undefined)
-  const [columns, setColumns] = useState<string[] | undefined>(undefined)
+  const [columns, setColumns] = useState<IColumn[] | undefined>(undefined)
   const [totalCount, setTotalCount] = useState<number | undefined>(undefined)
   const [loading, setLoading] = useState<boolean>(false)
   const [isNewQuery, setIsNewQuery] = useState<boolean>(false)
@@ -79,7 +83,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
 
       if (response) {
         setQueryData(response.queryData)
-        setColumns(response.columns)
+        setColumns(response.columns?.map(c => ({ name: c })));
 
         // Get the total count of the query
         const countSql = `SELECT count(*) as count FROM (${cleanSql}) as subQuery`
