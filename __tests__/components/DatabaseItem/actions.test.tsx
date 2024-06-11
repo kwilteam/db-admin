@@ -6,7 +6,7 @@ import { mockStore } from "../../mocks/mock-store"
 import Method from "@/components/DatabaseItem/Method"
 import MethodForm from "@/components/DatabaseItem/Method/Form"
 import MethodStatements from "@/components/DatabaseItem/Method/Statements"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 
 const mockDbid = "mock-dbid"
 const mockActionName = "mock-action"
@@ -25,7 +25,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <Method dbid={mockDbid} methodName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION}/>
           </Provider>,
         )
       })
@@ -46,7 +46,7 @@ describe("Action Components", () => {
               },
             })}
           >
-            <Method dbid={mockDbid} methodName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION} />
           </Provider>,
         )
       })
