@@ -3,20 +3,19 @@ import { act, render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { mockStore } from "../../mocks/mock-store"
-import Action from "@/components/DatabaseItem/Action"
-import ActionForm from "@/components/DatabaseItem/Action/Form"
-import ActionStatements from "@/components/DatabaseItem/Action/Statements"
-import { KwilTypes } from "@/utils/database-types"
+import Method from "@/components/DatabaseItem/Method"
+import MethodForm from "@/components/DatabaseItem/Method/Form"
+import MethodStatements from "@/components/DatabaseItem/Method/Statements"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 
 const mockDbid = "mock-dbid"
 const mockActionName = "mock-action"
 const mockAction: KwilTypes.ActionSchema = {
   name: mockActionName,
-  inputs: ["input1", "input2"],
-  statements: ["statement1", "statement2"],
-  mutability: "view",
+  parameters: ["input1", "input2"],
+  body: "statement1",
+  modifiers: ["view"],
   annotations: [],
-  auxiliaries: [],
   public: true,
 }
 
@@ -26,7 +25,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <Action dbid={mockDbid} actionName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION}/>
           </Provider>,
         )
       })
@@ -47,7 +46,7 @@ describe("Action Components", () => {
               },
             })}
           >
-            <Action dbid={mockDbid} actionName={mockActionName} />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION} />
           </Provider>,
         )
       })
@@ -61,7 +60,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <ActionForm action={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -73,7 +72,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <ActionForm action={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -84,10 +83,9 @@ describe("Action Components", () => {
   describe("ActionStatements", () => {
     it("renders action statements", async () => {
       await act(async () => {
-        render(<ActionStatements statements={mockAction.statements} />)
+        render(<MethodStatements statements={[mockAction.body]} />)
       })
       expect(screen.getByText("statement1")).toBeInTheDocument()
-      expect(screen.getByText("statement2")).toBeInTheDocument()
     })
   })
 })

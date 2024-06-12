@@ -1,9 +1,10 @@
 import Alert from "@/components/Alert"
 import Loading from "@/components/Loading"
+import { IColumn } from "@/utils/data-table"
 import { ItemType } from "@/utils/database-types"
 
 interface IProps {
-  columns?: string[] | undefined
+  columns?: IColumn[] | undefined
   data: Object[] | undefined
   totalCount: number | undefined
   type: ItemType
@@ -49,13 +50,21 @@ export default function DataTable({
       <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
           <tr className=" divide-x divide-slate-200">
-            {columns.map((column: string) => (
+            {columns.map((column: IColumn) => (
               <th
-                key={column}
+                key={column.name}
                 scope="col"
                 className="p-2 text-left text-sm font-semibold text-slate-900"
               >
-                {column}
+                {column.name}
+                {column.type &&
+                  <a
+                    className="text-[11px] text-slate-500 ml-1"
+                    title={column.type}
+                  >
+                    ({column.type})
+                  </a>
+                }
               </th>
             ))}
           </tr>
@@ -64,12 +73,12 @@ export default function DataTable({
           {data &&
             data.map((dataItem: Object, index: number) => (
               <tr className="divide-x divide-slate-200" key={index}>
-                {columns.map((column) => (
+                {columns.map((column: IColumn) => (
                   <td
-                    key={column}
+                    key={column.name}
                     className="whitespace-nowrap p-2 text-sm text-slate-500"
                   >
-                    {(dataItem as IDataItem)[column] as string}
+                    {(dataItem as IDataItem)[column.name] as string}
                   </td>
                 ))}
               </tr>

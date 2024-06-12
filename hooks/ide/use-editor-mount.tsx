@@ -7,11 +7,13 @@ import { ICompletionItem } from "@/lib/kuneiform/completionHelper";
 export interface IAutoComplete {
   tables: ICompletionItem[];
   actions: ICompletionItem[];
+  procedures: ICompletionItem[];  
   params: ICompletionItem[];
   kfDefault: ICompletionItem[];
   tableDefault: ICompletionItem[];
   actionDefault: ICompletionItem[];
-  dbDeclaration: ICompletionItem[];
+  // TODO: This can be uncommented once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+  // dbDeclaration: ICompletionItem[];
   extensionList: ICompletionItem[];
 
   [key: string]: any[];
@@ -36,11 +38,13 @@ export default function useEditorMount() {
   const autoCompleteRef = useRef<IAutoComplete>({
     tables: [],
     actions: [],
+    procedures: [],
     params: [],
     kfDefault: [],
     tableDefault: [],
     actionDefault: [],
-    dbDeclaration: [],
+    // TODO: This can be uncommented once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+    // dbDeclaration: [],
     extensionList: [],
   })
 
@@ -86,11 +90,12 @@ export default function useEditorMount() {
         const suggestionKeys = [
           'tables',
           'actions',
+          'procedures',
           'params',
           'kfDefault',
           'tableDefault',
           'actionDefault',
-          'dbDeclaration',
+          // 'dbDeclaration',
           'extensionList'
         ]
 

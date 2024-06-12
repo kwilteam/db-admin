@@ -16,6 +16,7 @@ const DatabaseSchema = ({
         <>
           <DatabaseItem database={database} itemType={ItemTypes.TABLES} />
           <DatabaseItem database={database} itemType={ItemTypes.ACTIONS} />
+          <DatabaseItem database={database} itemType={ItemTypes.PROCEDURES} />
           <DatabaseItem database={database} itemType={ItemTypes.QUERIES} />
         </>
       )}

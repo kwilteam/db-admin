@@ -1,27 +1,30 @@
 import { useCallback, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectAction, selectDatabaseObject } from "@/store/database"
+import { selectMethod, selectDatabaseObject } from "@/store/database"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { useKwilSigner } from "../use-kwil-signer"
 import { Utils } from "@kwilteam/kwil-js"
-import { KwilTypes } from "@/utils/database-types"
+import { ItemType, KwilTypes } from "@/utils/database-types"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import { getDetailsErrorMessage } from "@/utils/error-message"
+import { IColumn, getColumnsFromProcedure } from "@/utils/data-table"
 
-interface IDatabaseActionProps {
+interface IDatabaseMethodProps {
   dbid: string
-  actionName: string
+  methodName: string
+  type: ItemType
 }
 
-export const useDatabaseAction = ({
+export const useDatabaseMethod = ({
   dbid,
-  actionName,
-}: IDatabaseActionProps) => {
+  methodName,
+  type
+}: IDatabaseMethodProps) => {
   const dispatch = useAppDispatch()
   const [data, setData] = useState<Object[] | undefined>(undefined)
-  const [columns, setColumns] = useState<string[] | undefined>(undefined)
-  const action = useAppSelector((state) =>
-    selectAction(state, dbid, actionName),
+  const [columns, setColumns] = useState<IColumn[] | undefined>(undefined)
+  const method = useAppSelector((state) => 
+    selectMethod(state, dbid, methodName, type)
   )
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
@@ -42,17 +45,17 @@ export const useDatabaseAction = ({
         setData(undefined)
         setColumns(undefined)
 
-        const mutability = action?.mutability
+        const mutability = method?.modifiers?.includes('VIEW')
         const actionInputs = new Utils.ActionInput()
 
         for (const [key, value] of Object.entries(formValues)) {
           actionInputs.put(key, value as string)
         }
-
+ 
         const actionBody: KwilTypes.ActionBody = {
           dbid: databaseObject.dbid,
-          action: actionName,
-          inputs: [actionInputs],
+          name: methodName,
+          ...(actionInputs.toArray().length > 0 ? { inputs: [actionInputs] } : {}),
         }
 
         let response:
@@ -60,9 +63,9 @@ export const useDatabaseAction = ({
           | KwilTypes.GenericResponse<KwilTypes.TxReceipt>
           | undefined
 
-        if (mutability === "view") {
+        if (mutability) {
           response = await kwilProvider.call(actionBody)
-        } else if (mutability === "update" && kwilSigner) {
+        } else if (!mutability && kwilSigner) {
           response = await kwilProvider.execute(actionBody, kwilSigner, true)
         } else {
           dispatch(setModal(ModalEnum.CONNECT))
@@ -91,13 +94,20 @@ export const useDatabaseAction = ({
           if (result && result.length > 0) {
             // TODO: The result is being returned as Nillable<String> but is actually Object[]
             setData(result as unknown as Object[])
-            setColumns(Object.keys(result[0]))
+            setColumns(
+              getColumnsFromProcedure(
+                Object.keys(result[0]), 
+                method && 'return_types' in method ? 
+                  method.return_types : undefined
+              )
+            )
           }
         }
 
         return true
       } catch (error) {
         const errorMessage = getDetailsErrorMessage(error as Error)
+        console.log(error)
 
         dispatch(
           setAlert({
@@ -108,11 +118,11 @@ export const useDatabaseAction = ({
         return false
       }
     },
-    [kwilProvider, kwilSigner, databaseObject, action, actionName, dispatch],
+    [kwilProvider, kwilSigner, databaseObject, method, methodName, dispatch],
   )
 
   return {
-    action,
+    method,
     executeAction,
     data,
     columns,

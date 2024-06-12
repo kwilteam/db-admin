@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
-import { selectDatabaseObject, selectTableQueryParams } from "@/store/database"
+import { selectDatabaseObject, selectDatabaseSchemas, selectTableQueryParams } from "@/store/database"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { setAlert } from "@/store/global"
 import { buildQuery } from "@/utils/build-query"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { getErrorMessage } from "@/utils/error-message"
+import { IColumn, getColumnsFromSchema } from "@/utils/data-table"
 
 interface IDataTableProps {
   dbid: string
@@ -15,7 +16,7 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
   const dispatch = useAppDispatch()
   const [tableData, setTableData] = useState<Object[] | undefined>()
   const [totalCount, setTotalCount] = useState<number | undefined>()
-  const [columns, setColumns] = useState<string[] | undefined>()
+  const [columns, setColumns] = useState<IColumn[] | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const kwilProvider = useKwilProvider()
   const tableQueryParams = useAppSelector((state) =>
@@ -25,8 +26,11 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
     selectDatabaseObject(state, dbid),
   )
 
+  const schemaDict = useAppSelector(selectDatabaseSchemas)
+  const tables = schemaDict[dbid]?.tables
+
   useEffect(() => {
-    if (!dbid || !table || !kwilProvider || !databaseObject) return
+    if (!dbid || !table || !kwilProvider || !databaseObject || !tables) return
     const fetchTableData = async () => {
       try {
         setIsLoading(true)
@@ -41,8 +45,12 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
         setTableData(queryResponse?.data)
 
         if (queryResponse.data && queryResponse.data?.length > 0) {
-          const columns = Object.keys(queryResponse.data[0])
-          setColumns(columns)
+          const columnNames = Object.keys(queryResponse.data[0])
+          setColumns(getColumnsFromSchema(
+            columnNames,
+            table,
+            tables
+          ))
         }
 
         const tableCountQuery = `SELECT count(*) as count FROM ${table}`
@@ -68,7 +76,7 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
     }
 
     fetchTableData()
-  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject, dispatch])
+  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject, dispatch, tables])
 
   return { tableData, totalCount, columns, isLoading }
 }

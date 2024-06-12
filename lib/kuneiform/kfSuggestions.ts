@@ -13,17 +13,26 @@ export const kuneiformDefaults = [
     {
         label: 'table {}',
         kind: 5,
-        insertText: 'table ${1:} {}',
+        insertText: 'table ${1:} {${2:}}',
         insertTextRules: 4,
         detail: 'New Table',
     },
     {
         label: 'action () {}',
         kind: 5,
-        insertText: 'action ${1:} () ${2:} {}',
+        insertText: 'action ${1:} (${2:}) ${3:} {${4:}}',
         insertTextRules: 4,
         detail: 'New Action',
-    }
+    },
+    {
+        label: 'procedure () {}',
+        kind: 5,
+        insertText: 'procedure ${1:} (${2:}) ${3:} {${4:}}',
+        insertTextRules: 4,
+        detail: 'New Procedure',
+    },
+    // TODO: Remove once https://github.com/kwilteam/kwil-db/issues/752 is resolved
+    ...dbDeclaration
 ]
 
 export const kuneiformTableSuggestions = [
@@ -153,7 +162,7 @@ export const kuneiformTableSuggestions = [
     },
 ]
 
-export const kuneiformActionSuggestions = [
+export const kuneiformMethodSuggestions = [
     {
         label: 'public',
         kind: 17,

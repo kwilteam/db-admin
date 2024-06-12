@@ -26,10 +26,10 @@ export default function IdePage() {
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
   const { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef } = useEditorMount()
-  const { deploy, exportJson, isCompiling } = useCompileDatabase(editorRef)
+  const { deploy, exportJson, isCompiling, parseKuneiform } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
-  const { handleEditorFeatures } = useEditorHandlers();
-  const windowSize = useWindowSize()
+  const { handleEditorFeatures } = useEditorHandlers(parseKuneiform);
+  const windowSize = useWindowSize();
 
   // When the active schema changes, focus the editor
   // Helpful when creating a new schema
@@ -64,9 +64,9 @@ export default function IdePage() {
               loading={<Loading className="mt-4" />}
               className="min-h-screen rounded-md border-slate-200 bg-black"
               onMount={handleEditorDidMount}
-              onChange={(value) => {
+              onChange={async (value) => {
                 save(activeSchema, value)
-                handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
+                await handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
               }}
               options={{
                 autoClosingBrackets: "always",
