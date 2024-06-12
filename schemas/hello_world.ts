@@ -7,8 +7,8 @@ table greetings {
   #wallet_index index(wallet)
 }
 
-procedure select_greetings () view public return table(id int, message text, wallet text) {
-  SELECT * FROM greetings;
+procedure select_greetings () view public returns table(id int, message text, wallet text) {
+  return SELECT * FROM greetings;
 }
 
 procedure insert_greeting ($id int, $message text) public {
