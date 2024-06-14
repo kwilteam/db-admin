@@ -3,6 +3,7 @@
 import useActivePage from "@/hooks/use-active-page"
 import { selectDatabaseActiveContext } from "@/store/database"
 import { useAppSelector } from "@/store/hooks"
+import { ItemType } from "@/utils/database-types"
 import { redirect } from "next/navigation"
 
 export default function DatabasesPage() {
@@ -12,7 +13,7 @@ export default function DatabasesPage() {
 
   if (activePage?.name === "Databases" && databaseContext) {
     redirect(
-      `/databases/${databaseContext.dbid}/${databaseContext.type}/${databaseContext.name}`,
+      `/databases/${databaseContext.dbid}/${databaseContext.type === ItemType.PROCEDURE || databaseContext.type === ItemType.ACTION ? `method/` : ``}${databaseContext.type}/${databaseContext.name}`,
     )
   }
 
