@@ -78,7 +78,7 @@ export default function DataTable({
                     key={column.name}
                     className="whitespace-nowrap p-2 text-sm text-slate-500"
                   >
-                    {(dataItem as IDataItem)[column.name] as string}
+                    {(dataItem as IDataItem)[column.name]?.toString()}
                   </td>
                 ))}
               </tr>
