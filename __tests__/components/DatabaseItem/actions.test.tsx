@@ -60,7 +60,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <MethodForm method={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} type={ItemType.ACTION} />
           </Provider>,
         )
       })
@@ -72,7 +72,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <MethodForm method={mockAction} executeAction={vi.fn()} />
+            <MethodForm method={mockAction} executeAction={vi.fn()} type={ItemType.ACTION} />
           </Provider>,
         )
       })
@@ -83,7 +83,7 @@ describe("Action Components", () => {
   describe("ActionStatements", () => {
     it("renders action statements", async () => {
       await act(async () => {
-        render(<MethodStatements statements={[mockAction.body]} />)
+        render(<MethodStatements statements={[mockAction.body]} methodType={ItemType.ACTION} />)
       })
       expect(screen.getByText("statement1")).toBeInTheDocument()
     })
