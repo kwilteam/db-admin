@@ -1,9 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import { loginAction } from "@/utils/server-actions"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 
-export default function DeploymentsSignInPage() {
+export default function DeploymentsLoginPage() {
   return (
     <>
       <div className="mx-auto flex w-full max-w-sm flex-col gap-2 lg:w-96">
@@ -27,7 +28,7 @@ export default function DeploymentsSignInPage() {
 
         <div className="mt-0">
           <div>
-            <form action="#" method="POST" className="space-y-4">
+            <form action={loginAction} method="POST" className="space-y-4">
               <div>
                 <label
                   htmlFor="email"
