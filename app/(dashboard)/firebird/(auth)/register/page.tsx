@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { FormEvent } from "react"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
 import { setAccount } from "@/store/firebird"
-import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { registerAction } from "@/utils/server-actions/firebird"
+import { RegisterIcon } from "@/utils/icons"
+import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 
 export default function DeploymentsRegisterPage() {
   const dispatch = useAppDispatch()
@@ -32,22 +33,22 @@ export default function DeploymentsRegisterPage() {
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 lg:w-96">
-        <div>
-          {/* <Image alt="Kwil" src="/images/kwil.png" width={40} height={40} /> */}
-          <h2 className="text-2xl tracking-tight text-slate-700">
+      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:w-96 lg:p-8">
+        <div className="flex flex-row items-center justify-center gap-4">
+          <RegisterIcon className="h-6 w-6 text-gray-900" />
+          <h2 className="text-xl tracking-tight text-gray-900">
             Create your account
           </h2>
         </div>
 
         <ContinueWithGoogle />
 
-        <div className="relative">
+        <div className="relative mt-2">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200" />
           </div>
           <div className="relative flex justify-center text-sm font-medium leading-6">
-            <span className="px-4 text-gray-900">or</span>
+            <span className="px-4 text-gray-600">or</span>
           </div>
         </div>
 
@@ -57,7 +58,7 @@ export default function DeploymentsRegisterPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-gray-700"
                 >
                   Email address
                 </label>

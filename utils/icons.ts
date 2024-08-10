@@ -81,4 +81,6 @@ export {
   PiPushPinLight as PinIcon,
   HiOutlineBeaker as ProcedureIcon,
   TbNetwork as FirebirdIcon,
+  HiOutlineUserCircle as RegisterIcon,
+  HiOutlineUserCircle as LoginIcon,
 }

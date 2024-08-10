@@ -98,27 +98,25 @@ export default function AccessCodePage() {
 
         <div className="mt-4">
           <form className="space-y-4">
-            <div>
-              <div className="mt-2 flex justify-center space-x-2">
-                {code.map((_, index) => (
-                  <input
-                    key={index}
-                    type="string"
-                    maxLength={1}
-                    autoComplete="off"
-                    className="h-14 w-full rounded border border-none py-1.5 text-center shadow-sm ring-1 ring-slate-300 focus:border-kwil focus:outline-none focus:ring-2 focus:ring-kwil"
-                    onChange={(e) => handleChange(e.target.value, index)}
-                    ref={(el) => {
-                      if (el !== null) {
-                        inputRefs.current[index] = el
+            <div className="mt-2 flex justify-center space-x-2">
+              {code.map((_, index) => (
+                <input
+                  key={index}
+                  type="string"
+                  maxLength={1}
+                  autoComplete="off"
+                  className="h-14 w-full rounded border border-none py-1.5 text-center shadow-sm ring-1 ring-slate-300 focus:border-kwil focus:outline-none focus:ring-2 focus:ring-kwil"
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  ref={(el) => {
+                    if (el !== null) {
+                      inputRefs.current[index] = el
 
-                        // Autofocus on the first input if it's empty
-                        if (index === 0 && code[index] === "") el.focus()
-                      }
-                    }}
-                  />
-                ))}
-              </div>
+                      // Autofocus on the first input if it's empty
+                      if (index === 0 && code[index] === "") el.focus()
+                    }
+                  }}
+                />
+              ))}
             </div>
 
             {checkingAccessCode && (
