@@ -8,6 +8,7 @@ import { setAccount } from "@/store/firebird"
 import { registerAction } from "@/utils/server-actions/firebird"
 import { RegisterIcon } from "@/utils/icons"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
+import Image from "next/image"
 
 export default function DeploymentsRegisterPage() {
   const dispatch = useAppDispatch()
@@ -32,11 +33,24 @@ export default function DeploymentsRegisterPage() {
   }
 
   return (
-    <>
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:w-96 lg:p-8">
+    <div className="flex w-full flex-col justify-center gap-6 p-3">
+      <div className="flex flex-row items-center justify-center gap-2 lg:hidden">
+        <Image
+          className=""
+          src="/images/kwil.png"
+          alt="Kwil"
+          width={60}
+          height={60}
+        />
+        <div className="pt-2 text-2xl font-bold tracking-tight text-kwil">
+          Kwil Firebird
+        </div>
+      </div>
+
+      <div className="mx-auto flex w-full flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:w-96 lg:max-w-sm lg:p-8">
         <div className="flex flex-row items-center justify-center gap-4">
-          <RegisterIcon className="h-6 w-6 text-gray-900" />
-          <h2 className="text-xl tracking-tight text-gray-900">
+          <RegisterIcon className="h-5 w-5 text-gray-900 lg:h-6 lg:w-6" />
+          <h2 className="text-lg tracking-tight text-gray-900 lg:text-xl">
             Create your account
           </h2>
         </div>
@@ -69,7 +83,7 @@ export default function DeploymentsRegisterPage() {
                     type="email"
                     required
                     autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
                     onChange={(e) => setFirebirdEmail(e.target.value)}
                   />
                 </div>
@@ -94,6 +108,6 @@ export default function DeploymentsRegisterPage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }

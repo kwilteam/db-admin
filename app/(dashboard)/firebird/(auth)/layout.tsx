@@ -53,7 +53,7 @@ export default function DeploymentsAuthLayout({
             </div>
           </div>
 
-          <div className="flex h-screen flex-grow items-center justify-center bg-kwil/20">
+          <div className="flex h-screen flex-grow items-start justify-center bg-kwil/20 pt-8 lg:items-center lg:pt-0">
             {children}
           </div>
         </div>

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectAccount, setAccount } from "@/store/firebird"
 import { verifyAccessCodeAction } from "@/utils/server-actions/firebird"
+import { AccessCodeIcon, CheckIcon, ErrorIcon } from "@/utils/icons"
+import Image from "next/image"
 
 export default function AccessCodePage() {
   const router = useRouter()
@@ -84,59 +86,73 @@ export default function AccessCodePage() {
   }
 
   return (
-    <>
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 lg:w-96">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-2xl tracking-tight text-slate-700">
-            Check your email for a code
-          </h2>
-          <p className="text-sm text-slate-500">
-            We sent a code to <strong>{account.email}</strong>. The code expires
-            shortly, so please enter it soon.
-          </p>
-        </div>
-
-        <div className="mt-4">
-          <form className="space-y-4">
-            <div className="mt-2 flex justify-center space-x-2">
-              {code.map((_, index) => (
-                <input
-                  key={index}
-                  type="string"
-                  maxLength={1}
-                  autoComplete="off"
-                  className="h-14 w-full rounded border border-none py-1.5 text-center shadow-sm ring-1 ring-slate-300 focus:border-kwil focus:outline-none focus:ring-2 focus:ring-kwil"
-                  onChange={(e) => handleChange(e.target.value, index)}
-                  ref={(el) => {
-                    if (el !== null) {
-                      inputRefs.current[index] = el
-
-                      // Autofocus on the first input if it's empty
-                      if (index === 0 && code[index] === "") el.focus()
-                    }
-                  }}
-                />
-              ))}
-            </div>
-
-            {checkingAccessCode && (
-              <p className="text-sm text-kwil/80">Checking access code...</p>
-            )}
-
-            {codeSuccess === false && (
-              <p className="text-sm text-red-500">
-                This access code is invalid. Please try again.
-              </p>
-            )}
-
-            {codeSuccess === true && (
-              <p className="text-sm text-kwil">
-                Great! You&apos;re in. Redirecting...
-              </p>
-            )}
-          </form>
+    <div className="flex w-full flex-col justify-center gap-6 p-3">
+      <div className="flex flex-row items-center justify-center gap-2 lg:hidden">
+        <Image
+          className=""
+          src="/images/kwil.png"
+          alt="Kwil"
+          width={60}
+          height={60}
+        />
+        <div className="pt-2 text-2xl font-bold tracking-tight text-kwil">
+          Kwil Firebird
         </div>
       </div>
-    </>
+      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:w-96 lg:p-8">
+        <div className="flex flex-row items-center justify-center gap-4">
+          <AccessCodeIcon className="h-5 w-5 text-gray-900 lg:h-6 lg:w-6" />
+          <h2 className="text-lg tracking-tight text-gray-900 lg:text-xl">
+            Check your email for a code
+          </h2>
+        </div>
+
+        <div className="text-sm text-slate-500">
+          We sent a code to <strong>{account.email}</strong>. The code expires
+          shortly, so please enter it soon.
+        </div>
+
+        <form className="space-y-4">
+          <div className="mt-2 flex justify-center space-x-2">
+            {code.map((_, index) => (
+              <input
+                key={index}
+                type="string"
+                maxLength={1}
+                autoComplete="off"
+                className="h-12 w-full rounded border border-none py-1.5 text-center text-sm shadow-sm ring-1 ring-slate-300 focus:border-kwil focus:outline-none focus:ring-2 focus:ring-kwil lg:h-14"
+                onChange={(e) => handleChange(e.target.value, index)}
+                ref={(el) => {
+                  if (el !== null) {
+                    inputRefs.current[index] = el
+
+                    // Autofocus on the first input if it's empty
+                    if (index === 0 && code[index] === "") el.focus()
+                  }
+                }}
+              />
+            ))}
+          </div>
+
+          {checkingAccessCode && (
+            <p className="text-sm text-kwil/80">Checking access code...</p>
+          )}
+
+          {codeSuccess === false && (
+            <p className="flex flex-row items-center gap-2 text-sm text-red-500">
+              <ErrorIcon className="h-6 w-6" /> The code wasn&apos;t valid. Try
+              again!
+            </p>
+          )}
+
+          {codeSuccess === true && (
+            <p className="flex flex-row items-center gap-2 text-sm text-kwil-dark">
+              <CheckIcon className="h-4 w-4" /> Great! You&apos;re in.
+              Redirecting...
+            </p>
+          )}
+        </form>
+      </div>
+    </div>
   )
 }

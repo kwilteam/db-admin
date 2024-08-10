@@ -45,5 +45,6 @@ export const navigationItems: INavigationItem[] = [
     href: "/firebird",
     icon: FirebirdIcon,
     secondaryMobileMenu: false,
+    closeMobileMenu: true,
   },
 ]

@@ -37,7 +37,7 @@ import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
 import { PiAsteriskLight, PiPushPinLight } from "react-icons/pi"
-import { TbNetwork } from "react-icons/tb"
+import { TbNetwork, TbMailShare } from "react-icons/tb"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -83,4 +83,5 @@ export {
   TbNetwork as FirebirdIcon,
   HiOutlineUserCircle as RegisterIcon,
   HiOutlineUserCircle as LoginIcon,
+  TbMailShare as AccessCodeIcon,
 }
