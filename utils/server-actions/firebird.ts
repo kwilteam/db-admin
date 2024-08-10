@@ -1,7 +1,5 @@
 "use server"
 
-import { redirect } from "next/navigation"
-
 export const loginAction = async (formData: FormData) => {
   const email = formData.get("email")
   console.log(email)

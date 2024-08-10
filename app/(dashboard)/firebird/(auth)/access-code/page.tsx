@@ -111,6 +111,9 @@ export default function AccessCodePage() {
                     ref={(el) => {
                       if (el !== null) {
                         inputRefs.current[index] = el
+
+                        // Autofocus on the first input if it's empty
+                        if (index === 0 && code[index] === "") el.focus()
                       }
                     }}
                   />
@@ -129,7 +132,7 @@ export default function AccessCodePage() {
             )}
 
             {codeSuccess === true && (
-              <p className="text-sm text-green-800">
+              <p className="text-sm text-kwil">
                 Great! You&apos;re in. Redirecting...
               </p>
             )}
