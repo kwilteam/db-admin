@@ -1,11 +1,4 @@
-"use server"
-
-export const loginAction = (formData: FormData) => {
-  const email = formData.get("email")
-  console.log(email)
-
-  console.log("loginAction")
-}
+// "use server"
 
 // import '../wasm/wasm_exec'
 // import { CompiledKuneiform } from "@kwilteam/kwil-js/dist/core/payload"

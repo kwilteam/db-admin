@@ -1,9 +1,35 @@
 "use client"
 
 import Link from "next/link"
+import { FormEvent } from "react"
+import { redirect, useRouter } from "next/navigation"
+import { useAppDispatch } from "@/store/hooks"
+import { setAccount } from "@/store/firebird"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
+import { registerAction } from "@/utils/server-actions/firebird"
 
 export default function DeploymentsRegisterPage() {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+
+  const setFirebirdEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+    if (emailRegex.test(email)) {
+      dispatch(setAccount({ email }))
+    }
+  }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    const success = await registerAction(formData)
+
+    if (success) {
+      router.push("/firebird/access-code")
+    }
+  }
+
   return (
     <>
       <div className="mx-auto flex w-full max-w-sm flex-col gap-2 lg:w-96">
@@ -27,7 +53,7 @@ export default function DeploymentsRegisterPage() {
 
         <div>
           <div>
-            <form action="#" method="POST" className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="email"
@@ -43,6 +69,7 @@ export default function DeploymentsRegisterPage() {
                     required
                     autoComplete="email"
                     className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80 sm:text-sm sm:leading-6"
+                    onChange={(e) => setFirebirdEmail(e.target.value)}
                   />
                 </div>
               </div>
