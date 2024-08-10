@@ -1,4 +1,10 @@
-import { DatabaseIcon, SettingsIcon, IdeIcon, ExtensionsIcon } from "./icons"
+import {
+  DatabaseIcon,
+  SettingsIcon,
+  IdeIcon,
+  ExtensionsIcon,
+  FirebirdIcon,
+} from "./icons"
 
 export interface INavigationItem {
   name: string
@@ -33,5 +39,11 @@ export const navigationItems: INavigationItem[] = [
     href: "/settings/providers",
     icon: SettingsIcon,
     secondaryMobileMenu: true,
+  },
+  {
+    name: "Firebird",
+    href: "/firebird",
+    icon: FirebirdIcon,
+    secondaryMobileMenu: false,
   },
 ]

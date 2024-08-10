@@ -32,11 +32,12 @@ import {
   HiOutlineStar,
   HiStar,
 } from "react-icons/hi2"
-import { HiOutlineBeaker } from "react-icons/hi";
+import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
 import { PiAsteriskLight, PiPushPinLight } from "react-icons/pi"
+import { TbNetwork } from "react-icons/tb"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -78,5 +79,6 @@ export {
   HiOutlineStar as EmptyStarIcon,
   HiStar as FilledStarIcon,
   PiPushPinLight as PinIcon,
-  HiOutlineBeaker as ProcedureIcon
+  HiOutlineBeaker as ProcedureIcon,
+  TbNetwork as FirebirdIcon,
 }

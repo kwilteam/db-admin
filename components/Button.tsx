@@ -16,7 +16,7 @@ export default function Button({
     <button
       {...props}
       className={classNames(
-        "flex cursor-pointer select-none items-center rounded-md border ",
+        "flex cursor-pointer select-none items-center rounded-md border",
         {
           "border-kwil/50 bg-kwil/30 text-kwil-dark hover:bg-kwil/40":
             context === "primary",
