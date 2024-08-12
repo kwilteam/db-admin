@@ -1,6 +1,7 @@
 import {
   IFirebirdNewDeployment,
   selectNewDeployment,
+  selectCurrentStep,
   setCurrentStep,
   setNewDeployment,
 } from "@/store/firebird"
@@ -8,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import classNames from "classnames"
 
 interface IDeploymentOptionCardProps {
+  step: number
   title: string
   subtitle: string
   description: string
@@ -17,6 +19,7 @@ interface IDeploymentOptionCardProps {
 }
 
 export function DeploymentOptionCard({
+  step,
   title,
   subtitle,
   description,
@@ -26,13 +29,17 @@ export function DeploymentOptionCard({
 }: IDeploymentOptionCardProps) {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
+  const currentStep = useAppSelector(selectCurrentStep)
   const isSelected = newDeployment && newDeployment[optionKey] === optionValue
 
   const setDeploymentValue = () => {
     if (talkWithTeam) return
 
     dispatch(setNewDeployment({ key: optionKey, value: optionValue }))
-    dispatch(setCurrentStep(2))
+
+    if (currentStep === step) {
+      dispatch(setCurrentStep(step + 1))
+    }
   }
 
   const _classNames = classNames(
