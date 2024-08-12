@@ -3,7 +3,7 @@
 import classNames from "classnames"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { DeploymentsIcon, ProviderIcon } from "@/utils/icons"
+import { DeployIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
 
@@ -16,8 +16,8 @@ interface IDeploymentsItem {
 const deploymentsItems: IDeploymentsItem[] = [
   {
     name: "Deployments",
-    href: "/deployments/home",
-    icon: DeploymentsIcon,
+    href: "/firebird/deployments",
+    icon: DeployIcon,
   },
 ]
 

@@ -38,7 +38,7 @@ export default function AccessCodePage() {
         setCodeSuccess(true)
 
         setTimeout(() => {
-          router.push("/firebird/home")
+          router.push("/firebird/deployments")
         }, 500)
       } else {
         setCodeSuccess(false)

@@ -10,6 +10,6 @@ export default function FirebirdPage() {
   if (!signedIn) {
     redirect("/firebird/register")
   } else {
-    redirect("/firebird/home")
+    redirect("/firebird/deployments")
   }
 }
