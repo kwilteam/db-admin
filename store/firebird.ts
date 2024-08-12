@@ -5,13 +5,15 @@ interface IFirebirdAccount {
   token?: string
 }
 
+export interface IFirebirdNetworkSettings {
+  chainId?: string
+  kwilVersion?: string
+  companyName?: string
+}
+
 export interface IFirebirdNewDeployment {
   network: "testnet" | "mainnet"
-  networkSettings: {
-    chainId: number
-    kwilVersion: string
-    companyName: string
-  }
+  networkSettings: IFirebirdNetworkSettings
   numberOfNodes: number
   vm: "mini" | "small" | "medium" | "large"
   services: {
@@ -23,12 +25,12 @@ export interface IFirebirdNewDeployment {
     // inviteValidators: boolean
     accessCode: string
   }
-  talkWithTeam: boolean
 }
 
 interface IFirebirdState {
   account: IFirebirdAccount
   newDeployment: IFirebirdNewDeployment | undefined
+  currentStep: number
 }
 
 const initialState: IFirebirdState = {
@@ -36,6 +38,7 @@ const initialState: IFirebirdState = {
     email: undefined,
   },
   newDeployment: undefined,
+  currentStep: 1,
 }
 
 export const firebirdSlice = createSlice({
@@ -67,17 +70,52 @@ export const firebirdSlice = createSlice({
         state.newDeployment = {} as IFirebirdNewDeployment
       }
 
+      // TODO: improve typing
+      // @ts-ignore-next-line
       state.newDeployment[key] = value
+    },
+
+    setNewDeploymentObject: (
+      state,
+      action: PayloadAction<{
+        key: keyof IFirebirdNewDeployment
+        propertyKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment]
+        value: any
+      }>,
+    ) => {
+      const { key, propertyKey, value } = action.payload
+
+      if (!state.newDeployment) {
+        state.newDeployment = {} as IFirebirdNewDeployment
+      }
+
+      if (!state.newDeployment[key]) {
+        state.newDeployment[key] = {}
+      }
+
+      state.newDeployment[key][propertyKey] = value
+    },
+
+    setCurrentStep: (state, action: PayloadAction<number>) => {
+      state.currentStep = action.payload
     },
   },
 })
 
-export const { setAccount, setNewDeployment } = firebirdSlice.actions
+export const {
+  setAccount,
+  setNewDeployment,
+  setNewDeploymentObject,
+  setCurrentStep,
+} = firebirdSlice.actions
 
 export const selectAccount = (state: { firebird: IFirebirdState }) =>
   state.firebird.account
 
 export const selectNewDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment
+
+export const selectCurrentStep = (state: { firebird: IFirebirdState }) =>
+  state.firebird.currentStep
 
 export default firebirdSlice.reducer
