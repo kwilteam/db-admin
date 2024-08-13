@@ -8,6 +8,7 @@ import {
   setCurrentStep,
   setNewDeploymentObject,
 } from "@/store/firebird"
+import { NumberOfNodesStepIcon } from "@/utils/icons"
 
 export function NumberOfNodesStep() {
   const dispatch = useAppDispatch()
@@ -31,6 +32,7 @@ export function NumberOfNodesStep() {
   return (
     <Step
       step={3}
+      icon={<NumberOfNodesStepIcon />}
       title="Number of nodes"
       description="Decide on the number of nodes you want to deploy."
     >

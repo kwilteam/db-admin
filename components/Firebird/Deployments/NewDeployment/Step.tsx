@@ -10,12 +10,13 @@ const heading = Montserrat({
 
 interface IStepProps {
   step: number
+  icon: React.ReactNode
   title: string
   description: string
   children: React.ReactNode
 }
 
-export function Step({ step, title, description, children }: IStepProps) {
+export function Step({ step, icon, title, description, children }: IStepProps) {
   const currentStep = useAppSelector(selectCurrentStep)
 
   if (currentStep < step) {
@@ -26,14 +27,18 @@ export function Step({ step, title, description, children }: IStepProps) {
     <div className="flex flex-col gap-2 p-4">
       <div className="flex flex-row justify-between gap-2">
         <div className="flex flex-col gap-1">
-          <h2
-            className={classNames({
-              [heading.className]: true,
-              "text-xl leading-tight tracking-tighter text-slate-700": true,
-            })}
-          >
-            {title}
-          </h2>
+          <div className="flex flex-row items-center gap-2">
+            {icon}
+
+            <h2
+              className={classNames({
+                [heading.className]: true,
+                "text-xl leading-tight tracking-tighter text-slate-700": true,
+              })}
+            >
+              {title}
+            </h2>
+          </div>
           <p className="text-sm text-slate-500">{description}</p>
         </div>
 

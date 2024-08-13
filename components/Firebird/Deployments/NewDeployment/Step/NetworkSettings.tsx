@@ -9,6 +9,7 @@ import {
   setCurrentStep,
   setNewDeploymentObject,
 } from "@/store/firebird"
+import { NetworkSettingsStepIcon } from "@/utils/icons"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
@@ -65,6 +66,7 @@ export function NetworkSettingsStep() {
   return (
     <Step
       step={2}
+      icon={<NetworkSettingsStepIcon />}
       title="Network settings"
       description="Decide on the settings you require for your deployment."
     >

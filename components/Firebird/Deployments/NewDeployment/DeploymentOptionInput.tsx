@@ -39,7 +39,6 @@ export function DeploymentOptionInput({
             name={propertyKey}
             type="text"
             required
-            autoComplete="email"
             className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
             onChange={(e) =>
               handleChange(parentKey, propertyKey, e.target.value)

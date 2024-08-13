@@ -24,6 +24,7 @@ import {
   HiOutlineCheck,
   HiOutlineCheckBadge,
   HiOutlineXMark,
+  HiServer,
   HiServerStack,
   HiOutlinePencil,
   HiOutlineQuestionMarkCircle,
@@ -31,6 +32,9 @@ import {
   HiArrowDownTray,
   HiOutlineStar,
   HiStar,
+  HiOutlineServer,
+  HiOutlineServerStack,
+  HiOutlineWrenchScrewdriver,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -84,4 +88,7 @@ export {
   HiOutlineUserCircle as RegisterIcon,
   HiOutlineUserCircle as LoginIcon,
   TbMailShare as AccessCodeIcon,
+  HiOutlineServer as NetworkStepIcon,
+  HiOutlineWrenchScrewdriver as NetworkSettingsStepIcon,
+  HiOutlineServerStack as NumberOfNodesStepIcon,
 }

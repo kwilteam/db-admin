@@ -1,10 +1,12 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
+import { NetworkStepIcon } from "@/utils/icons"
 
 export function NetworkStep() {
   return (
     <Step
       step={1}
+      icon={<NetworkStepIcon />}
       title="Select a network"
       description="Select a network to deploy to."
     >
