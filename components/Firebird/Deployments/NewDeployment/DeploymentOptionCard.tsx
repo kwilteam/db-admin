@@ -7,6 +7,7 @@ import {
 } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import classNames from "classnames"
+import { TalkWithTeam } from "./Step/TalkWithTeam"
 
 interface IDeploymentOptionCardProps {
   step: number
@@ -86,21 +87,6 @@ export function DeploymentOptionCard({
         </div>
         {talkWithTeam && <TalkWithTeam />}
       </div>
-    </div>
-  )
-}
-
-export function TalkWithTeam() {
-  return (
-    <div className="flex select-none flex-row items-center rounded-b-md border-t border-slate-200 bg-slate-50 p-1 text-slate-700">
-      <div className="flex flex-grow flex-col pl-2">
-        <span className="text-xs text-slate-600">
-          Schedule a call with our team to discuss your deployment.
-        </span>
-      </div>
-      <button className="m-1 rounded-md bg-kwil px-3 py-2 text-sm text-slate-50">
-        Talk with team
-      </button>
     </div>
   )
 }
