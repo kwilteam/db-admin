@@ -1,57 +1,36 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectAccount, setAccount } from "@/store/firebird"
-import { verifyAccessCodeAction } from "@/utils/server-actions/firebird"
-import { AccessCodeIcon, CheckIcon, ErrorIcon } from "@/utils/icons"
 import Image from "next/image"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { selectAuth } from "@/store/firebird"
+import { AccessCodeIcon, CheckIcon, ErrorIcon } from "@/utils/icons"
+import useAccessCode from "@/hooks/firebird/use-access-code"
+import useCodeResend from "@/hooks/firebird/use-code-resend"
 
 export default function AccessCodePage() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const account = useAppSelector(selectAccount)
-  const [code, setCode] = useState(new Array(6).fill(""))
-  const [checkingAccessCode, setCheckingAccessCode] = useState(false)
-  const [codeSuccess, setCodeSuccess] = useState<boolean | undefined>(undefined)
-  const inputRefs = useRef<HTMLInputElement[]>([])
+  const auth = useAppSelector(selectAuth)
+
+  const {
+    code,
+    setCode,
+    checkingAccessCode,
+    codeSuccess,
+    inputRefs,
+    submitCode,
+    handleChange,
+  } = useAccessCode(auth, dispatch, router)
+
+  const { codeResent, resendCode } = useCodeResend(auth)
 
   useEffect(() => {
-    if (!account.email) {
+    if (!auth.email) {
       router.push("/firebird/login")
     }
-  }, [account.email, router])
-
-  const submitCode = useCallback(
-    async (accessCode: string) => {
-      setCodeSuccess(undefined)
-      setCheckingAccessCode(true)
-
-      const formData = new FormData()
-      formData.append("accessCode", accessCode)
-
-      const token = await verifyAccessCodeAction(formData)
-      dispatch(setAccount({ token, email: account.email }))
-
-      if (token) {
-        setCodeSuccess(true)
-
-        setTimeout(() => {
-          router.push("/firebird/deployments")
-        }, 500)
-      } else {
-        setCodeSuccess(false)
-
-        setTimeout(() => {
-          setCodeSuccess(undefined)
-        }, 3000)
-      }
-
-      setCheckingAccessCode(false)
-    },
-    [account.email, dispatch, router],
-  )
+  }, [auth.email, router])
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -68,22 +47,7 @@ export default function AccessCodePage() {
 
     window.addEventListener("paste", handlePaste)
     return () => window.removeEventListener("paste", handlePaste)
-  }, [submitCode])
-
-  const handleChange = (value: string, index: number) => {
-    const newCode = [...code]
-
-    newCode[index] = value
-    setCode(newCode)
-
-    if (value !== "" && index < 5) {
-      inputRefs.current[index + 1].focus()
-    }
-
-    if (newCode.every((digit) => digit !== "")) {
-      submitCode(newCode.join(""))
-    }
-  }
+  }, [submitCode, setCode, inputRefs])
 
   return (
     <div className="flex w-full flex-col justify-center gap-6 p-3">
@@ -108,7 +72,7 @@ export default function AccessCodePage() {
         </div>
 
         <div className="text-sm text-slate-500">
-          We sent a code to <strong>{account.email}</strong>. The code expires
+          We sent a code to <strong>{auth.email}</strong>. The code expires
           shortly, so please enter it soon.
         </div>
 
@@ -125,14 +89,25 @@ export default function AccessCodePage() {
                 ref={(el) => {
                   if (el !== null) {
                     inputRefs.current[index] = el
-
-                    // Autofocus on the first input if it's empty
                     if (index === 0 && code[index] === "") el.focus()
                   }
                 }}
               />
             ))}
           </div>
+
+          {!checkingAccessCode &&
+            codeSuccess === undefined &&
+            codeResent === undefined && (
+              <div className="mt-4 flex gap-2 text-sm text-gray-500">
+                <button
+                  onClick={resendCode}
+                  className="font-semibold text-kwil/80"
+                >
+                  Resend code
+                </button>
+              </div>
+            )}
 
           {checkingAccessCode && (
             <p className="text-sm text-kwil/80">Checking access code...</p>
@@ -149,6 +124,20 @@ export default function AccessCodePage() {
             <p className="flex flex-row items-center gap-2 text-sm text-kwil-dark">
               <CheckIcon className="h-4 w-4" /> Great! You&apos;re in.
               Redirecting...
+            </p>
+          )}
+
+          {codeResent === false && (
+            <p className="flex flex-row items-center gap-2 text-sm text-red-500">
+              <ErrorIcon className="h-6 w-6" /> There was a problem sending the
+              code. Please try again!
+            </p>
+          )}
+
+          {codeResent === true && (
+            <p className="flex flex-row items-center gap-2 text-sm text-kwil-dark">
+              <CheckIcon className="h-4 w-4" /> Code sent! Please check your
+              email.
             </p>
           )}
         </form>

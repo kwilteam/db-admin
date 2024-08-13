@@ -1,110 +1,18 @@
-"use client"
-
-import { FormEvent } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { useAppDispatch } from "@/store/hooks"
-import { setAccount } from "@/store/firebird"
-import { loginAction } from "@/utils/server-actions/firebird"
-import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { LoginIcon } from "@/utils/icons"
-import Image from "next/image"
+import AuthForm from "@/components/Firebird/AuthForm"
 
 export default function DeploymentsLoginPage() {
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-
-  const setFirebirdEmail = (email: string) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-    if (emailRegex.test(email)) {
-      dispatch(setAccount({ email }))
-    }
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-
-    const success = await loginAction(formData)
-
-    if (success) {
-      router.push("/firebird/access-code")
-    }
-  }
-
   return (
-    <div className="flex w-full flex-col justify-center gap-6 p-3">
-      <div className="flex flex-row items-center justify-center gap-2 lg:hidden">
-        <Image
-          className=""
-          src="/images/kwil.png"
-          alt="Kwil"
-          width={60}
-          height={60}
-        />
-        <div className="pt-2 text-2xl font-bold tracking-tight text-kwil">
-          Kwil Firebird
-        </div>
-      </div>
-      <div className="mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 shadow-sm lg:w-96 lg:max-w-sm lg:p-8">
-        <div className="flex flex-row items-center justify-center gap-4">
-          <LoginIcon className="h-5 w-5 text-gray-900 lg:h-6 lg:w-6" />
-          <h2 className="text-lg tracking-tight text-gray-900 lg:text-xl">
-            Log in to your account
-          </h2>
-        </div>
-
-        <ContinueWithGoogle />
-
-        <div className="relative mt-2">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-sm font-medium leading-6">
-            <span className="px-4 text-gray-600">or</span>
-          </div>
-        </div>
-
-        <div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-700"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
-                  onChange={(e) => setFirebirdEmail(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <button className="text-md w-full justify-center rounded-md bg-kwil/80 py-2 text-white hover:bg-kwil/90">
-                Continue
-              </button>
-            </div>
-
-            <div className="mt-4 flex gap-2 text-sm text-gray-500">
-              Don&apos;t have an account?
-              <Link
-                href="/firebird/register"
-                className="font-semibold text-kwil/80"
-              >
-                Register
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    <AuthForm
+      title="Log in to your account"
+      context="login"
+      icon={<LoginIcon className="h-5 w-5 text-gray-900 lg:h-6 lg:w-6" />}
+    >
+      Don&apos;t have an account?
+      <Link href="/firebird/register" className="font-semibold text-kwil/80">
+        Register
+      </Link>
+    </AuthForm>
   )
 }

@@ -8,7 +8,7 @@ const signedIn = false
 export default function FirebirdPage() {
   // This will auto redirect to the main deployments page
   if (!signedIn) {
-    redirect("/firebird/register")
+    redirect("/firebird/login")
   } else {
     redirect("/firebird/deployments")
   }
