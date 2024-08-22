@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useAppDispatch } from "@/store/hooks"
 import { setAuth } from "@/store/firebird"
-import { requestOtpAction } from "@/utils/server-actions/firebird"
+import { requestOtpAction } from "@/utils/firebird"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
 import classNames from "classnames"
@@ -43,9 +43,9 @@ export default function AuthPage({
 
     setEmailSent(undefined)
 
-    const { success, message } = await requestOtpAction(email)
+    const { status, message } = await requestOtpAction(email)
 
-    if (success) {
+    if (status === 200) {
       setEmailSent(true)
       router.push("/firebird/access-code")
     } else {
@@ -114,7 +114,7 @@ export default function AuthPage({
             </div>
 
             <div>
-              <button className="text-md w-full justify-center rounded-md bg-kwil/80 py-2 text-white hover:bg-kwil/90">
+              <button className="w-full justify-center rounded-md bg-kwil/80 py-2 text-sm text-white hover:bg-kwil/90">
                 Continue
               </button>
             </div>

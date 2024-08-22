@@ -24,7 +24,6 @@ import {
   HiOutlineCheck,
   HiOutlineCheckBadge,
   HiOutlineXMark,
-  HiServer,
   HiServerStack,
   HiOutlinePencil,
   HiOutlineQuestionMarkCircle,
@@ -32,7 +31,6 @@ import {
   HiArrowDownTray,
   HiOutlineStar,
   HiStar,
-  HiOutlineServer,
   HiOutlineServerStack,
   HiOutlineWrenchScrewdriver,
 } from "react-icons/hi2"
@@ -40,8 +38,9 @@ import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
-import { PiAsteriskLight, PiPushPinLight } from "react-icons/pi"
+import { PiAsteriskLight, PiPushPinLight, PiNetworkLight } from "react-icons/pi"
 import { TbNetwork, TbMailShare } from "react-icons/tb"
+import { VscVm } from "react-icons/vsc"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -88,7 +87,8 @@ export {
   HiOutlineUserCircle as RegisterIcon,
   HiOutlineUserCircle as LoginIcon,
   TbMailShare as AccessCodeIcon,
-  HiOutlineServer as NetworkStepIcon,
+  PiNetworkLight as NetworkStepIcon,
   HiOutlineWrenchScrewdriver as NetworkSettingsStepIcon,
   HiOutlineServerStack as NumberOfNodesStepIcon,
+  VscVm as VmStepIcon,
 }

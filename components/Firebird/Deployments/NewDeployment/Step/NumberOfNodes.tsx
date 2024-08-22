@@ -1,32 +1,39 @@
-import { Step } from "../Step"
-import { DeploymentOptionCard } from "../DeploymentOptionCard"
-import { DeploymentOptionInput } from "../DeploymentOptionInput"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { useState } from "react"
 import {
   IFirebirdNewDeployment,
-  selectNewDeployment,
   setCurrentStep,
   setNewDeploymentObject,
 } from "@/store/firebird"
+import { useAppDispatch } from "@/store/hooks"
 import { NumberOfNodesStepIcon } from "@/utils/icons"
+import { Step } from "../Step"
+import { DeploymentOptionDropdown } from "../DeploymentOptionDropdown"
 
 export function NumberOfNodesStep() {
   const dispatch = useAppDispatch()
-  const newDeployment = useAppSelector(selectNewDeployment)
+  const [talkWithTeam, setTalkWithTeam] = useState<boolean>(false)
 
   const handleChange = (
     parentKey: keyof IFirebirdNewDeployment,
     valueKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment],
     value: string,
   ) => {
-    console.log(parentKey, valueKey, value, "handleChange")
+    const numberOfNodes = Number(value)
+    setTalkWithTeam(numberOfNodes > 1)
+
     dispatch(
       setNewDeploymentObject({
         key: parentKey,
         propertyKey: valueKey,
-        value: value,
+        value: numberOfNodes,
       }),
     )
+
+    if (numberOfNodes === 1) {
+      dispatch(setCurrentStep(4))
+    } else {
+      dispatch(setCurrentStep(3))
+    }
   }
 
   return (
@@ -34,18 +41,20 @@ export function NumberOfNodesStep() {
       step={3}
       icon={<NumberOfNodesStepIcon />}
       title="Number of nodes"
-      description="Decide on the number of nodes you want to deploy."
+      description="The number of nodes you want to deploy."
     >
-      {/* <div className="flex w-full flex-row gap-2">{children}</div> */}
       <div className="flex flex-col gap-2">
-        <DeploymentOptionInput
-          title="Chain Id"
-          description="The chain Id of the network you want to deploy on."
+        <DeploymentOptionDropdown
+          title=""
+          description=""
           parentKey="networkSettings"
-          propertyKey="chainId"
+          propertyKey="numberOfNodes"
+          options={["", "1", "2", "3", "4"]}
+          defaultValue=""
           handleChange={handleChange}
         />
       </div>
+      {talkWithTeam && <div>talk</div>}
     </Step>
   )
 }

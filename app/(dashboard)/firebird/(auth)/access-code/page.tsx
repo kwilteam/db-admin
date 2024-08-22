@@ -49,6 +49,16 @@ export default function AccessCodePage() {
     return () => window.removeEventListener("paste", handlePaste)
   }, [submitCode, setCode, inputRefs])
 
+  const handleResendCode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    // Clear existing code values
+    setCode(Array(6).fill(""))
+    inputRefs.current.forEach((input) => {
+      if (input) input.value = ""
+    })
+    resendCode(e)
+  }
+
   return (
     <div className="flex w-full flex-col justify-center gap-6 p-3">
       <div className="flex flex-row items-center justify-center gap-2 lg:hidden">
@@ -101,7 +111,7 @@ export default function AccessCodePage() {
             codeResent === undefined && (
               <div className="mt-4 flex gap-2 text-sm text-gray-500">
                 <button
-                  onClick={resendCode}
+                  onClick={handleResendCode}
                   className="font-semibold text-kwil/80"
                 >
                   Resend code

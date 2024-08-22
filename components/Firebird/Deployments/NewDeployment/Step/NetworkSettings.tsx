@@ -10,6 +10,7 @@ import {
   setNewDeploymentObject,
 } from "@/store/firebird"
 import { NetworkSettingsStepIcon } from "@/utils/icons"
+import { DeploymentOptionDropdown } from "../DeploymentOptionDropdown"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
@@ -39,8 +40,6 @@ export function NetworkSettingsStep() {
       valueKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment],
       value: string,
     ) => {
-      console.log(parentKey, valueKey, value, "handleChange")
-
       const updatedNetworkSettings = {
         ...newDeployment?.networkSettings,
         [valueKey]: value,
@@ -80,11 +79,13 @@ export function NetworkSettingsStep() {
           handleChange={handleChange}
         />
 
-        <DeploymentOptionInput
+        <DeploymentOptionDropdown
           title="Kwil Version"
           description="The Kwil version you want to deploy on."
           parentKey="networkSettings"
           propertyKey="kwilVersion"
+          options={["", "0.8.4"]}
+          defaultValue=""
           handleChange={handleChange}
         />
 

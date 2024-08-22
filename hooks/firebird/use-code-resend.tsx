@@ -1,5 +1,5 @@
 import { IFirebirdAuth } from "@/store/firebird"
-import { requestOtpAction } from "@/utils/server-actions/firebird"
+import { requestOtpAction } from "@/utils/firebird"
 import { useState } from "react"
 
 export default function useCodeResend(auth: IFirebirdAuth) {
@@ -10,9 +10,9 @@ export default function useCodeResend(auth: IFirebirdAuth) {
     if (!auth.email) return
     setCodeResent(undefined)
 
-    const { success, message } = await requestOtpAction(auth.email)
+    const { status, message } = await requestOtpAction(auth.email)
 
-    if (success) {
+    if (status === 200) {
       setCodeResent(true)
     } else {
       setCodeResent(false)

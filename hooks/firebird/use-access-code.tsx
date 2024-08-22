@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { IFirebirdAuth, setAccount } from "@/store/firebird"
-import { verifyOtpAction } from "@/utils/server-actions/firebird"
+import { verifyOtpAction } from "@/utils/firebird"
 import { AppDispatch } from "@/store"
 
 export default function useAccessCode(
@@ -18,22 +18,20 @@ export default function useAccessCode(
     async (accessCode: string) => {
       setCodeSuccess(undefined)
       setCheckingAccessCode(true)
-      if (!auth.email || !auth.context) {
+      if (!auth.email) {
         setCheckingAccessCode(false)
         return
       }
 
       try {
-        const result = await verifyOtpAction(
+        const { status, message } = await verifyOtpAction(
           accessCode,
           auth.email,
-          auth.context,
         )
 
-        if (result && result.success && result.token) {
+        if (status === 200) {
           dispatch(
             setAccount({
-              token: result.token,
               email: auth.email,
             }),
           )
@@ -42,7 +40,7 @@ export default function useAccessCode(
             router.push("/firebird/deployments")
           }, 500)
         } else {
-          console.log(result?.message || "Verification failed")
+          console.log(message)
           setCodeSuccess(false)
           setTimeout(() => {
             setCodeSuccess(undefined)
