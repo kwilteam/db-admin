@@ -31,7 +31,7 @@ export default function DeploymentsAuthLayout({
     loadAsync()
   }, [])
 
-  if (loggedIn) {
+  if (loggedIn === false) {
     return (
       <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
         <div className="flex-1 overflow-scroll">

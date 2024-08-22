@@ -1,16 +1,13 @@
 import { useCallback } from "react"
-import { Step } from "../Step"
-import { DeploymentOptionInput } from "../DeploymentOptionInput"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   IFirebirdNetworkSettings,
-  IFirebirdNewDeployment,
   selectNewDeployment,
   setCurrentStep,
-  setNewDeploymentObject,
+  setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
 import { NetworkSettingsStepIcon } from "@/utils/icons"
-import { DeploymentOptionDropdown } from "../DeploymentOptionDropdown"
+import { Step } from "../Step"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
@@ -35,20 +32,15 @@ export function NetworkSettingsStep() {
   )
 
   const handleChange = useCallback(
-    (
-      parentKey: keyof IFirebirdNewDeployment,
-      valueKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment],
-      value: string,
-    ) => {
+    (valueKey: keyof IFirebirdNetworkSettings, value: string) => {
       const updatedNetworkSettings = {
         ...newDeployment?.networkSettings,
         [valueKey]: value,
       }
 
       dispatch(
-        setNewDeploymentObject({
-          key: parentKey,
-          propertyKey: valueKey,
+        setNewDeploymentNetworkSettings({
+          key: valueKey,
           value: value,
         }),
       )
@@ -69,34 +61,105 @@ export function NetworkSettingsStep() {
       title="Network settings"
       description="Decide on the settings you require for your deployment."
     >
-      {/* <div className="flex w-full flex-row gap-2">{children}</div> */}
       <div className="flex flex-col gap-2">
-        <DeploymentOptionInput
-          title="Chain Id"
-          description="The chain Id of the network you want to deploy on."
-          parentKey="networkSettings"
-          propertyKey="chainId"
-          handleChange={handleChange}
+        <ChainIdInput
+          value={newDeployment?.networkSettings?.chainId}
+          onChange={handleChange}
         />
-
-        <DeploymentOptionDropdown
-          title="Kwil Version"
-          description="The Kwil version you want to deploy on."
-          parentKey="networkSettings"
-          propertyKey="kwilVersion"
-          options={["", "0.8.4"]}
-          defaultValue=""
-          handleChange={handleChange}
+        <KwilVersionSelect
+          value={newDeployment?.networkSettings?.kwilVersion}
+          onChange={handleChange}
         />
-
-        <DeploymentOptionInput
-          title="Company Name"
-          description="Your company name."
-          parentKey="networkSettings"
-          propertyKey="companyName"
-          handleChange={handleChange}
+        <CompanyNameInput
+          value={newDeployment?.networkSettings?.companyName}
+          onChange={handleChange}
         />
       </div>
     </Step>
   )
 }
+
+const kwilVersions = ["", "0.8.4"]
+
+type InputProps = {
+  value: string | undefined
+  onChange: (key: keyof IFirebirdNetworkSettings, value: string) => void
+}
+
+const ChainIdInput = ({ value, onChange }: InputProps) => (
+  <div>
+    <label
+      htmlFor="chainId"
+      className="block text-sm font-medium leading-6 text-gray-700"
+    >
+      Chain Id
+    </label>
+    <p className="text-sm text-gray-500">
+      The chain Id of the network you want to deploy on.
+    </p>
+    <div className="mt-2">
+      <input
+        id="chainId"
+        name="chainId"
+        type="text"
+        required
+        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        value={value}
+        onChange={(e) => onChange("chainId", e.target.value)}
+      />
+    </div>
+  </div>
+)
+
+const KwilVersionSelect = ({ value, onChange }: InputProps) => (
+  <div>
+    <label
+      htmlFor="kwilVersion"
+      className="block text-sm font-medium leading-6 text-gray-700"
+    >
+      Kwil Version
+    </label>
+    <p className="text-sm text-gray-500">
+      The Kwil version you want to deploy.
+    </p>
+    <div className="mt-2">
+      <select
+        id="kwilVersion"
+        name="kwilVersion"
+        required
+        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        value={value}
+        onChange={(e) => onChange("kwilVersion", e.target.value)}
+      >
+        {kwilVersions.map((option) => (
+          <option key={option} value={option} defaultValue={""}>
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+)
+
+const CompanyNameInput = ({ value, onChange }: InputProps) => (
+  <div>
+    <label
+      htmlFor="companyName"
+      className="block text-sm font-medium leading-6 text-gray-700"
+    >
+      Company Name
+    </label>
+    <p className="text-sm text-gray-500">Your company name.</p>
+    <div className="mt-2">
+      <input
+        id="companyName"
+        name="companyName"
+        type="text"
+        required
+        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        value={value}
+        onChange={(e) => onChange("companyName", e.target.value)}
+      />
+    </div>
+  </div>
+)

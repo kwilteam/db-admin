@@ -48,12 +48,20 @@ const firebirdApiRequest = async (
 
 export const requestOtpAction = async (email: string) => {
   console.log("Requesting OTP for email:", email)
-  return firebirdApiRequest("send-otp", "POST", { email })
+  return firebirdApiRequest("/auth/send-otp", "POST", { email })
 }
 
 export const verifyOtpAction = async (accessCode: string, email: string) => {
   console.log("Verifying OTP for email:", email, accessCode)
-  return firebirdApiRequest("verify-otp", "POST", { otp: accessCode, email })
+  return firebirdApiRequest("/auth/verify-otp", "POST", {
+    otp: accessCode,
+    email,
+  })
+}
+
+export const signOut = async () => {
+  console.log("Signing out")
+  return await firebirdApiRequest("/auth/signout")
 }
 
 export const getDeployments = async () => {

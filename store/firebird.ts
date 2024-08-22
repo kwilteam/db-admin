@@ -16,27 +16,32 @@ export interface IFirebirdNetworkSettings {
   companyName?: string
 }
 
+export interface IFirebirdServices {
+  daemon: boolean
+  gateway: boolean
+  indexer: boolean
+}
+
+export interface IFirebirdFinalOptions {
+  inviteValidators?: boolean
+  accessCode: string
+}
+
 export interface IFirebirdNewDeployment {
   network: "testnet" | "mainnet"
   networkSettings: IFirebirdNetworkSettings
   numberOfNodes: number
   vm: "mini" | "small" | "medium" | "large"
-  services: {
-    daemon: boolean
-    gateway: boolean
-    indexer: boolean
-  }
-  finalOptions: {
-    // inviteValidators: boolean
-    accessCode: string
-  }
+  services: IFirebirdServices
+  finalOptions: IFirebirdFinalOptions
+  currentStep: number
+  talkWithTeamModal: boolean
 }
 
 interface IFirebirdState {
   auth: IFirebirdAuth
   account: IFirebirdAccount
   newDeployment: IFirebirdNewDeployment | undefined
-  currentStep: number
 }
 
 const initialState: IFirebirdState = {
@@ -47,7 +52,6 @@ const initialState: IFirebirdState = {
     email: undefined,
   },
   newDeployment: undefined,
-  currentStep: 1,
 }
 
 export const firebirdSlice = createSlice({
@@ -69,7 +73,7 @@ export const firebirdSlice = createSlice({
       state,
       action: PayloadAction<{
         key: keyof IFirebirdNewDeployment
-        value: any
+        value: IFirebirdNewDeployment[keyof IFirebirdNewDeployment]
       }>,
     ) => {
       const { key, value } = action.payload
@@ -78,34 +82,69 @@ export const firebirdSlice = createSlice({
         state.newDeployment = {} as IFirebirdNewDeployment
       }
 
-      // TODO: improve typing
-      // @ts-ignore-next-line
-      state.newDeployment[key] = value
+      state.newDeployment = {
+        ...state.newDeployment,
+        [key]: value,
+      }
     },
 
-    setNewDeploymentObject: (
+    setNewDeploymentNetworkSettings: (
       state,
       action: PayloadAction<{
-        key: keyof IFirebirdNewDeployment
-        propertyKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment]
-        value: any
+        key: keyof IFirebirdNetworkSettings
+        value: IFirebirdNetworkSettings[keyof IFirebirdNetworkSettings]
       }>,
     ) => {
-      const { key, propertyKey, value } = action.payload
+      const { key, value } = action.payload
 
       if (!state.newDeployment) {
         state.newDeployment = {} as IFirebirdNewDeployment
       }
 
-      if (!state.newDeployment[key]) {
-        state.newDeployment[key] = {}
+      if (!state.newDeployment.networkSettings) {
+        state.newDeployment.networkSettings = {} as IFirebirdNetworkSettings
       }
 
-      state.newDeployment[key][propertyKey] = value
+      state.newDeployment.networkSettings[key] = value
     },
+    //   state,
+    //   action: PayloadAction<{
+    //     parentKey: keyof IFirebirdNewDeployment | undefined
+    //     propertyKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment]
+    //     value: any
+    //   }>,
+    // ) => {
+    //   const { parentKey, propertyKey, value } = action.payload
+
+    //   if (!state.newDeployment) {
+    //     state.newDeployment = {} as IFirebirdNewDeployment
+    //   }
+
+    //   if (!parentKey) {
+    //     state.newDeployment[propertyKey] = value
+    //   } else {
+    //     if (!state.newDeployment[parentKey]) {
+    //       state.newDeployment[parentKey] = {}
+    //     }
+
+    //     state.newDeployment[parentKey][propertyKey] = value
+    //   }
+    // },
 
     setCurrentStep: (state, action: PayloadAction<number>) => {
-      state.currentStep = action.payload
+      if (!state.newDeployment) {
+        state.newDeployment = {} as IFirebirdNewDeployment
+      }
+
+      state.newDeployment.currentStep = action.payload
+    },
+
+    setTalkWithTeamModal: (state, action: PayloadAction<boolean>) => {
+      if (!state.newDeployment) {
+        state.newDeployment = {} as IFirebirdNewDeployment
+      }
+
+      state.newDeployment.talkWithTeamModal = action.payload
     },
   },
 })
@@ -113,9 +152,10 @@ export const firebirdSlice = createSlice({
 export const {
   setAccount,
   setNewDeployment,
-  setNewDeploymentObject,
-  setCurrentStep,
+  setNewDeploymentNetworkSettings,
   setAuth,
+  setCurrentStep,
+  setTalkWithTeamModal,
 } = firebirdSlice.actions
 
 export const selectAuth = (state: { firebird: IFirebirdState }) =>
@@ -128,6 +168,9 @@ export const selectNewDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment
 
 export const selectCurrentStep = (state: { firebird: IFirebirdState }) =>
-  state.firebird.currentStep
+  state.firebird.newDeployment?.currentStep ?? 1
+
+export const selectTalkWithTeamModal = (state: { firebird: IFirebirdState }) =>
+  state.firebird.newDeployment?.talkWithTeamModal
 
 export default firebirdSlice.reducer
