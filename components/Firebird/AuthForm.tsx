@@ -4,7 +4,7 @@ import { FormEvent, ReactNode, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useAppDispatch } from "@/store/hooks"
-import { setAuth } from "@/store/firebird"
+import { setAuthEmail } from "@/store/firebird"
 import { requestOtpAction } from "@/utils/firebird"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
@@ -13,16 +13,10 @@ import classNames from "classnames"
 interface AuthPageProps {
   title: string
   icon: ReactNode
-  context: "login" | "register"
   children: ReactNode
 }
 
-export default function AuthPage({
-  title,
-  icon,
-  context,
-  children,
-}: AuthPageProps) {
+export default function AuthPage({ title, icon, children }: AuthPageProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [emailSent, setEmailSent] = useState<boolean | undefined>(undefined)
@@ -30,7 +24,7 @@ export default function AuthPage({
   const onEmailChange = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
     if (emailRegex.test(email)) {
-      dispatch(setAuth({ email, context }))
+      dispatch(setAuthEmail(email))
     }
   }
 

@@ -2,15 +2,15 @@ import { IFirebirdAuth } from "@/store/firebird"
 import { requestOtpAction } from "@/utils/firebird"
 import { useState } from "react"
 
-export default function useCodeResend(auth: IFirebirdAuth) {
+export default function useCodeResend(authEmail: string | undefined) {
   const [codeResent, setCodeResent] = useState<boolean | undefined>(undefined)
 
   const resendCode = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    if (!auth.email) return
+    if (!authEmail) return
     setCodeResent(undefined)
 
-    const { status, message } = await requestOtpAction(auth.email)
+    const { status, message } = await requestOtpAction(authEmail)
 
     if (status === 200) {
       setCodeResent(true)

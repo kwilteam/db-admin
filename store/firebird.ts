@@ -1,10 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
-export interface IFirebirdAuth {
-  email: string | undefined
-  context?: "login" | "register"
-}
-
 interface IFirebirdAccount {
   email: string | undefined
   token?: string
@@ -39,15 +34,13 @@ export interface IFirebirdNewDeployment {
 }
 
 interface IFirebirdState {
-  auth: IFirebirdAuth
+  authEmail: string | undefined
   account: IFirebirdAccount
   newDeployment: IFirebirdNewDeployment | undefined
 }
 
 const initialState: IFirebirdState = {
-  auth: {
-    email: undefined,
-  },
+  authEmail: undefined,
   account: {
     email: undefined,
   },
@@ -58,11 +51,8 @@ export const firebirdSlice = createSlice({
   name: "firebird",
   initialState,
   reducers: {
-    setAuth: (
-      state,
-      action: PayloadAction<{ email: string; context: "login" | "register" }>,
-    ) => {
-      state.auth = action.payload
+    setAuthEmail: (state, action: PayloadAction<string>) => {
+      state.authEmail = action.payload
     },
 
     setAccount: (state, action: PayloadAction<IFirebirdAccount>) => {
@@ -153,13 +143,13 @@ export const {
   setAccount,
   setNewDeployment,
   setNewDeploymentNetworkSettings,
-  setAuth,
+  setAuthEmail,
   setCurrentStep,
   setTalkWithTeamModal,
 } = firebirdSlice.actions
 
-export const selectAuth = (state: { firebird: IFirebirdState }) =>
-  state.firebird.auth
+export const selectAuthEmail = (state: { firebird: IFirebirdState }) =>
+  state.firebird.authEmail
 
 export const selectAccount = (state: { firebird: IFirebirdState }) =>
   state.firebird.account

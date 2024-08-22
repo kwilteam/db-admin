@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { IFirebirdAuth, setAccount } from "@/store/firebird"
+import { setAccount } from "@/store/firebird"
 import { verifyOtpAction } from "@/utils/firebird"
 import { AppDispatch } from "@/store"
 
 export default function useAccessCode(
-  auth: IFirebirdAuth,
+  authEmail: string | undefined,
   dispatch: AppDispatch,
   router: ReturnType<typeof useRouter>,
 ) {
@@ -18,21 +18,18 @@ export default function useAccessCode(
     async (accessCode: string) => {
       setCodeSuccess(undefined)
       setCheckingAccessCode(true)
-      if (!auth.email) {
+      if (!authEmail) {
         setCheckingAccessCode(false)
         return
       }
 
       try {
-        const { status, message } = await verifyOtpAction(
-          accessCode,
-          auth.email,
-        )
+        const { status, message } = await verifyOtpAction(accessCode, authEmail)
 
         if (status === 200) {
           dispatch(
             setAccount({
-              email: auth.email,
+              email: authEmail,
             }),
           )
           setCodeSuccess(true)
@@ -56,7 +53,7 @@ export default function useAccessCode(
 
       setCheckingAccessCode(false)
     },
-    [auth, dispatch, router],
+    [authEmail, dispatch, router],
   )
 
   const handleChange = (value: string, index: number) => {
