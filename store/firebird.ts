@@ -15,6 +15,7 @@ export interface IFirebirdServices {
   daemon: boolean
   gateway: boolean
   indexer: boolean
+  customBinary: boolean
 }
 
 export interface IFirebirdFinalOptions {
@@ -22,12 +23,25 @@ export interface IFirebirdFinalOptions {
   accessCode: string
 }
 
+export enum MachineType {
+  mini = "mini",
+  small = "small",
+  medium = "medium",
+  large = "large",
+}
+
+export interface IFirebirdMachines {
+  type: MachineType
+  provider: "aws"
+  region: "us-east-2"
+}
+
 export interface IFirebirdNewDeployment {
   network: "testnet" | "mainnet"
   networkSettings: IFirebirdNetworkSettings
-  numberOfNodes: number
-  vm: "mini" | "small" | "medium" | "large"
-  services: IFirebirdServices
+  nodeCount: number
+  machines: IFirebirdMachines
+  services: IFirebirdServices | undefined
   finalOptions: IFirebirdFinalOptions
   currentStep: number
   talkWithTeamModal: boolean

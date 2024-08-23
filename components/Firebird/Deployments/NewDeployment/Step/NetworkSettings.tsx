@@ -63,15 +63,15 @@ export function NetworkSettingsStep() {
     >
       <div className="flex flex-col gap-2">
         <ChainIdInput
-          value={newDeployment?.networkSettings?.chainId}
+          value={newDeployment?.networkSettings?.chainId ?? ""}
           onChange={handleChange}
         />
         <KwilVersionSelect
-          value={newDeployment?.networkSettings?.kwilVersion}
+          value={newDeployment?.networkSettings?.kwilVersion ?? ""}
           onChange={handleChange}
         />
         <CompanyNameInput
-          value={newDeployment?.networkSettings?.companyName}
+          value={newDeployment?.networkSettings?.companyName ?? ""}
           onChange={handleChange}
         />
       </div>

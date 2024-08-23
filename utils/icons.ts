@@ -41,6 +41,7 @@ import { TbSql } from "react-icons/tb"
 import { PiAsteriskLight, PiPushPinLight, PiNetworkLight } from "react-icons/pi"
 import { TbNetwork, TbMailShare } from "react-icons/tb"
 import { VscVm } from "react-icons/vsc"
+import { GrServices } from "react-icons/gr"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -91,4 +92,5 @@ export {
   HiOutlineWrenchScrewdriver as NetworkSettingsStepIcon,
   HiOutlineServerStack as NumberOfNodesStepIcon,
   VscVm as VmStepIcon,
+  GrServices as ServicesStepIcon,
 }

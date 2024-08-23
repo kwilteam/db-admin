@@ -3,12 +3,12 @@
 import { FormEvent, ReactNode, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import classNames from "classnames"
 import { useAppDispatch } from "@/store/hooks"
 import { setAuthEmail } from "@/store/firebird"
 import { requestOtpAction } from "@/utils/firebird"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
-import classNames from "classnames"
 
 interface AuthPageProps {
   title: string

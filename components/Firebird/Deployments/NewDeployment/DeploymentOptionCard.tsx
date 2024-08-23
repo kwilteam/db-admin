@@ -9,17 +9,17 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import classNames from "classnames"
 import { TalkWithTeam } from "./Step/TalkWithTeam"
 
-interface IDeploymentOptionCardProps {
+interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   step: number
   title: string
-  subtitle: string
+  subtitle?: string
   description: string
-  optionKey: keyof IFirebirdNewDeployment
-  optionValue: string | number | boolean
+  optionKey: K
+  optionValue: IFirebirdNewDeployment[K]
   talkWithTeam?: boolean
 }
 
-export function DeploymentOptionCard({
+export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   step,
   title,
   subtitle,
@@ -27,7 +27,7 @@ export function DeploymentOptionCard({
   optionKey,
   optionValue,
   talkWithTeam,
-}: IDeploymentOptionCardProps) {
+}: IDeploymentOptionCardProps<K>) {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
   const currentStep = useAppSelector(selectCurrentStep)
@@ -54,7 +54,7 @@ export function DeploymentOptionCard({
 
   return (
     <div className={_classNames} onClick={setDeploymentValue}>
-      <div className="flex flex-col gap-1">
+      <div className="flex w-full flex-col gap-1">
         <div
           className={classNames("flex flex-col gap-1 p-3", {
             "cursor-not-allowed": talkWithTeam,
