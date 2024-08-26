@@ -13,7 +13,7 @@ export function TalkWithTeam(): JSX.Element {
         </span>
       </div>
       <button
-        className="m-1 rounded-md bg-kwil px-3 py-2 text-sm text-slate-50"
+        className="m-1 rounded-md bg-sky-600 px-3 py-2 text-sm text-slate-50"
         onClick={openModal}
       >
         Talk with team

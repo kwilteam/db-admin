@@ -1,14 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { redirect, useRouter } from "next/navigation"
-import { getAccount, signOut } from "@/utils/firebird"
+import { redirect } from "next/navigation"
+import { getAccount } from "@/utils/firebird"
+import { useAppDispatch } from "@/store/hooks"
+import { setAccount } from "@/store/firebird"
 
 export default function FirebirdDashboardLayout({
   children,
 }: React.PropsWithChildren<{}>) {
+  const dispatch = useAppDispatch()
   const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined)
-  const router = useRouter()
 
   useEffect(() => {
     if (loggedIn === false) {
@@ -18,7 +20,9 @@ export default function FirebirdDashboardLayout({
 
   useEffect(() => {
     const loadAsync = async () => {
-      const { status } = await getAccount()
+      const { data, status } = await getAccount()
+
+      dispatch(setAccount(data))
 
       if (status === 200) {
         setLoggedIn(true)
@@ -28,25 +32,12 @@ export default function FirebirdDashboardLayout({
     }
 
     loadAsync()
-  }, [])
-
-  const signOutRedirect = async () => {
-    const { status } = await signOut()
-    if (status === 200) {
-      router.push("/firebird/login")
-    }
-  }
+  }, [dispatch])
 
   if (loggedIn === true) {
     return (
       <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
         {children}
-        {/* <button
-          className="text-sm font-bold text-kwil"
-          onClick={() => signOutRedirect()}
-        >
-          Sign out
-        </button> */}
       </div>
     )
   }

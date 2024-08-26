@@ -1,7 +1,13 @@
+import { useEffect } from "react"
+import {
+  IFirebirdServices,
+  selectNewDeployment,
+  setCurrentStep,
+} from "@/store/firebird"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { ServicesStepIcon } from "@/utils/icons"
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
-import { ServicesStepIcon } from "@/utils/icons"
-import { IFirebirdServices } from "@/store/firebird"
 
 const services: Array<{
   title: string
@@ -58,6 +64,15 @@ const services: Array<{
 ]
 
 export function ServicesStep() {
+  const dispatch = useAppDispatch()
+  const newDeployment = useAppSelector(selectNewDeployment)
+
+  useEffect(() => {
+    if (newDeployment?.services) {
+      dispatch(setCurrentStep(6))
+    }
+  }, [newDeployment?.services, dispatch])
+
   return (
     <Step
       step={5}

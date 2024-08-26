@@ -49,15 +49,13 @@ export interface IFirebirdNewDeployment {
 
 interface IFirebirdState {
   authEmail: string | undefined
-  account: IFirebirdAccount
+  account: IFirebirdAccount | undefined
   newDeployment: IFirebirdNewDeployment | undefined
 }
 
 const initialState: IFirebirdState = {
   authEmail: undefined,
-  account: {
-    email: undefined,
-  },
+  account: undefined,
   newDeployment: undefined,
 }
 
@@ -69,7 +67,10 @@ export const firebirdSlice = createSlice({
       state.authEmail = action.payload
     },
 
-    setAccount: (state, action: PayloadAction<IFirebirdAccount>) => {
+    setAccount: (
+      state,
+      action: PayloadAction<IFirebirdAccount | undefined>,
+    ) => {
       state.account = action.payload
     },
 
@@ -111,29 +112,33 @@ export const firebirdSlice = createSlice({
 
       state.newDeployment.networkSettings[key] = value
     },
-    //   state,
-    //   action: PayloadAction<{
-    //     parentKey: keyof IFirebirdNewDeployment | undefined
-    //     propertyKey: keyof IFirebirdNewDeployment[keyof IFirebirdNewDeployment]
-    //     value: any
-    //   }>,
-    // ) => {
-    //   const { parentKey, propertyKey, value } = action.payload
 
-    //   if (!state.newDeployment) {
-    //     state.newDeployment = {} as IFirebirdNewDeployment
-    //   }
+    setNewDeploymentFinalOptions: (
+      state,
+      action: PayloadAction<{
+        key: keyof IFirebirdFinalOptions
+        value: IFirebirdFinalOptions[keyof IFirebirdFinalOptions]
+      }>,
+    ) => {
+      const { key, value } = action.payload
 
-    //   if (!parentKey) {
-    //     state.newDeployment[propertyKey] = value
-    //   } else {
-    //     if (!state.newDeployment[parentKey]) {
-    //       state.newDeployment[parentKey] = {}
-    //     }
+      if (!state.newDeployment) {
+        state.newDeployment = {} as IFirebirdNewDeployment
+      }
 
-    //     state.newDeployment[parentKey][propertyKey] = value
-    //   }
-    // },
+      if (!state.newDeployment.finalOptions) {
+        state.newDeployment.finalOptions = {} as IFirebirdFinalOptions
+      }
+
+      state.newDeployment.finalOptions = {
+        ...state.newDeployment.finalOptions,
+        [key]: value,
+      }
+    },
+
+    cancelNewDeployment: (state) => {
+      state.newDeployment = undefined
+    },
 
     setCurrentStep: (state, action: PayloadAction<number>) => {
       if (!state.newDeployment) {
@@ -157,6 +162,8 @@ export const {
   setAccount,
   setNewDeployment,
   setNewDeploymentNetworkSettings,
+  setNewDeploymentFinalOptions,
+  cancelNewDeployment,
   setAuthEmail,
   setCurrentStep,
   setTalkWithTeamModal,

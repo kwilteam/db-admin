@@ -12,7 +12,7 @@ export function TalkWithTeamCard({ title, subtitle }: ITalkWithTeamCardProps) {
   const openModal = () => dispatch(setTalkWithTeamModal(true))
 
   const _classNames =
-    "flex w-full lg:w-1/2 select-none flex-row gap-2 rounded-md border border-kwil/80 bg-slate-50"
+    "flex w-full lg:w-1/2 select-none flex-row gap-2 rounded-md border border-sky-700/50 bg-slate-50"
 
   return (
     <div className={_classNames}>
@@ -21,7 +21,7 @@ export function TalkWithTeamCard({ title, subtitle }: ITalkWithTeamCardProps) {
         <span className="text-sm">{subtitle}</span>
         <div className="flex flex-grow justify-end gap-2">
           <button
-            className="m-1 cursor-pointer rounded-md bg-kwil px-3 py-2 text-sm text-slate-50"
+            className="m-1 cursor-pointer rounded-md bg-sky-600 px-3 py-2 text-sm text-slate-50"
             onClick={openModal}
           >
             Contact us

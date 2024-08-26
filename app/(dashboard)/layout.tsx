@@ -14,6 +14,7 @@ import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
 import { useWindowSize } from "@/hooks/use-window-size"
+import FirebirdSignOut from "@/components/Firebird/SignOut"
 
 interface IProps {
   children: React.ReactNode
@@ -32,7 +33,7 @@ export default function DashboardLayout({ children }: IProps) {
   return (
     <>
       <>
-        {windowSize !== 'lg' && <MobileNavigation />}
+        {windowSize !== "lg" && <MobileNavigation />}
         <div className="flex max-h-mobile min-h-mobile lg:min-h-screen">
           <DesktopNavigation />
 
@@ -46,7 +47,8 @@ export default function DashboardLayout({ children }: IProps) {
             <div className="flex flex-1 flex-col overflow-auto lg:pl-16">
               {children}
               <GlobalAlert />
-              <div className="lg:absolute lg:flex right-2 top-1 hidden gap-1">
+              <div className="right-2 top-1 hidden gap-1 lg:absolute lg:flex">
+                <FirebirdSignOut />
                 <KwilFaucet />
                 <KwilProviders
                   activeProvider={activeProvider}

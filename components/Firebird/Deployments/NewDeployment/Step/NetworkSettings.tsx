@@ -99,6 +99,7 @@ const ChainIdInput = ({ value, onChange }: InputProps) => (
     </p>
     <div className="mt-2">
       <input
+        autoComplete="off"
         id="chainId"
         name="chainId"
         type="text"
@@ -152,6 +153,7 @@ const CompanyNameInput = ({ value, onChange }: InputProps) => (
     <p className="text-sm text-gray-500">Your company name.</p>
     <div className="mt-2">
       <input
+        autoComplete="off"
         id="companyName"
         name="companyName"
         type="text"

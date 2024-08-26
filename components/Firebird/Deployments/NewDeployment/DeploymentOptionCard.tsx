@@ -46,8 +46,9 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   const _classNames = classNames(
     "flex flex-grow cursor-pointer select-none flex-row gap-2 rounded-md border",
     {
-      "hover:border-kwil/60 hover:bg-kwil/5": !talkWithTeam && !isSelected,
-      "border-kwil/80 bg-kwil/10": isSelected,
+      "hover:border-sky-700/50 hover:bg-sky-500/5":
+        !talkWithTeam && !isSelected,
+      "border-sky-700/50 bg-sky-500/5": isSelected,
       "border-slate-200 bg-slate-50/70": !isSelected,
     },
   )
