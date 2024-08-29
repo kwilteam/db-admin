@@ -1,13 +1,23 @@
+import {
+  IFirebirdApiAccountResponse,
+  IFirebirdDeployment,
+  IFirebirdDeploymentConfig,
+  IFirebirdApiDeploymentsResponse,
+  IFirebirdApiDeployResponse,
+  IFirebirdApiResponse,
+  IFirebirdApiVerifyOtpResponse,
+} from "./types"
+
 // Helper function to handle API requests
-const firebirdApiRequest = async (
+const firebirdApiRequest = async <T>(
   endpoint: string,
   method: "POST" | "GET" = "GET",
   body?: object,
-) => {
+): Promise<IFirebirdApiResponse<T>> => {
   const apiUrl = process.env.NEXT_PUBLIC_FIREBIRD_API_URL
   if (!apiUrl) {
     console.error("NEXT_PUBLIC_FIREBIRD_API_URL is not set")
-    return { success: false, message: "API URL is not configured properly" }
+    return { status: 400, message: "API URL is not configured properly" }
   }
 
   const url = `${apiUrl}/api/${endpoint}`
@@ -53,10 +63,19 @@ export const requestOtpAction = async (email: string) => {
 
 export const verifyOtpAction = async (accessCode: string, email: string) => {
   console.log("Verifying OTP for email:", email, accessCode)
-  return firebirdApiRequest("auth/verify-otp", "POST", {
-    otp: accessCode,
-    email,
-  })
+  return firebirdApiRequest<IFirebirdApiVerifyOtpResponse>(
+    "auth/verify-otp",
+    "POST",
+    {
+      otp: accessCode,
+      email,
+    },
+  )
+}
+
+export const getAccount = async () => {
+  console.log("Getting account")
+  return await firebirdApiRequest<IFirebirdApiAccountResponse>("account")
 }
 
 export const signOut = async () => {
@@ -66,10 +85,23 @@ export const signOut = async () => {
 
 export const getDeployments = async () => {
   console.log("Getting deployments")
-  return await firebirdApiRequest("deployments")
+  return await firebirdApiRequest<IFirebirdApiDeploymentsResponse>(
+    "deployments",
+  )
 }
 
-export const getAccount = async () => {
-  console.log("Getting account")
-  return await firebirdApiRequest("account")
+export const getDeployment = async (deploymentId: string) => {
+  console.log("Getting deployment", deploymentId)
+  return await firebirdApiRequest<IFirebirdDeployment>(
+    `deployments/${deploymentId}`,
+  )
+}
+
+export const deployNetwork = async (data: IFirebirdDeploymentConfig) => {
+  console.log("Deploying network", data)
+  return await firebirdApiRequest<IFirebirdApiDeployResponse>(
+    "deployments",
+    "POST",
+    data,
+  )
 }

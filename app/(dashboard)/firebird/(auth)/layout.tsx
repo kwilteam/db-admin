@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { redirect } from "next/navigation"
-import { getAccount } from "@/utils/firebird"
+import { getAccount } from "@/utils/firebird/api"
 import { SuccessIcon } from "@/utils/icons"
 import Image from "next/image"
 

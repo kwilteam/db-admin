@@ -33,6 +33,8 @@ import {
   HiStar,
   HiOutlineServerStack,
   HiOutlineWrenchScrewdriver,
+  HiOutlineHashtag,
+  HiOutlineGlobeAlt,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -93,4 +95,6 @@ export {
   HiOutlineServerStack as NumberOfNodesStepIcon,
   VscVm as VmStepIcon,
   GrServices as ServicesStepIcon,
+  HiOutlineHashtag as HashtagIcon,
+  HiOutlineGlobeAlt as ChainIcon,
 }

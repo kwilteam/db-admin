@@ -14,7 +14,7 @@ import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
 import { useWindowSize } from "@/hooks/use-window-size"
-import FirebirdSignOut from "@/components/Firebird/SignOut"
+// import FirebirdSignOut from "@/components/Firebird/SignOut"
 
 interface IProps {
   children: React.ReactNode
@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: IProps) {
               {children}
               <GlobalAlert />
               <div className="right-2 top-1 hidden gap-1 lg:absolute lg:flex">
-                <FirebirdSignOut />
+                {/* <FirebirdSignOut /> */}
                 <KwilFaucet />
                 <KwilProviders
                   activeProvider={activeProvider}

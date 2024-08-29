@@ -1,13 +1,15 @@
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   IFirebirdNetworkSettings,
+  KwilVersions,
   selectNewDeployment,
   setCurrentStep,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
 import { NetworkSettingsStepIcon } from "@/utils/icons"
 import { Step } from "../Step"
+import { generateRandomString } from "@/utils/random-name-generator"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
@@ -54,6 +56,17 @@ export function NetworkSettingsStep() {
     [newDeployment, isStepComplete, dispatch],
   )
 
+  useEffect(() => {
+    if (!newDeployment?.networkSettings?.chainId) {
+      handleChange("chainId", generateRandomString("chain"))
+    }
+    if (!newDeployment?.networkSettings?.companyName) {
+      handleChange("companyName", generateRandomString("company"))
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Step
       step={2}
@@ -78,8 +91,6 @@ export function NetworkSettingsStep() {
     </Step>
   )
 }
-
-const kwilVersions = ["", "0.8.4"]
 
 type InputProps = {
   value: string | undefined
@@ -132,9 +143,9 @@ const KwilVersionSelect = ({ value, onChange }: InputProps) => (
         value={value}
         onChange={(e) => onChange("kwilVersion", e.target.value)}
       >
-        {kwilVersions.map((option) => (
-          <option key={option} value={option} defaultValue={""}>
-            {option}
+        {Object.entries(KwilVersions).map(([key, value]) => (
+          <option key={key} value={value}>
+            {value}
           </option>
         ))}
       </select>

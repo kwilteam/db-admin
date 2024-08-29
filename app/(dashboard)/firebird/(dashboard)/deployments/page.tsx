@@ -1,47 +1,49 @@
 "use client"
 
 import Link from "next/link"
-import { DeployIcon, FirebirdIcon } from "@/utils/icons"
-import { getDeployments } from "@/utils/firebird"
 import { useEffect, useState } from "react"
+import { DeployIcon, FirebirdIcon } from "@/utils/icons"
+import { getDeployments } from "@/utils/firebird/api"
 import { useAppSelector } from "@/store/hooks"
 import { selectAccount } from "@/store/firebird"
-
-export interface IFirebirdDeployment {
-  config: string
-  created_at: number
-  current_task: string
-  id: string
-  name: string
-  status: string
-  updated_at: number
-}
-
-export interface IFirebirdPagination {
-  cursor: string
-  limit: number
-  order_by: string
-}
+import {
+  IFirebirdDeployment,
+  IFirebirdPagination,
+} from "@/utils/firebird/types"
+import DeploymentCard from "@/components/Firebird/Deployments/DeploymentCard"
+import Loading from "@/components/Loading"
 
 export default function DeploymentsHomePage() {
   const account = useAppSelector(selectAccount)
-  const [deployments, setDeployments] = useState<IFirebirdDeployment[] | null>(
-    null,
+  const [deployments, setDeployments] = useState<
+    IFirebirdDeployment[] | undefined
+  >(undefined)
+  const [pagination, setPagination] = useState<IFirebirdPagination | undefined>(
+    undefined,
   )
-  const [pagination, setPagination] = useState<IFirebirdPagination | null>(null)
 
   useEffect(() => {
     const loadAsync = async () => {
       const { status, data } = await getDeployments()
 
-      if (status === 200) {
-        setDeployments(data?.result ?? [])
-        setPagination(data?.pagination ?? null)
+      if (status === 200 && data) {
+        setDeployments(data.result)
+        setPagination(data.pagination)
+      } else {
+        setDeployments([])
       }
     }
 
     loadAsync()
   }, [account])
+
+  if (!deployments) {
+    return (
+      <div className="flex w-full justify-center pt-4">
+        <Loading />
+      </div>
+    )
+  }
 
   return (
     <>
@@ -66,13 +68,10 @@ export default function DeploymentsHomePage() {
         )}
 
         {/* If deployments, show grid of deployments */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="m-2 grid grid-cols-3 gap-2">
           {deployments &&
             deployments.map((deployment: any) => (
-              // <DeploymentCard key={deployment.id} deployment={deployment} />
-              <div key={deployment.id}>
-                <h1>{deployment.name}</h1>
-              </div>
+              <DeploymentCard key={deployment.id} deployment={deployment} />
             ))}
         </div>
       </div>

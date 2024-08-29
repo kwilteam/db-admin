@@ -1,11 +1,8 @@
 import { useRouter } from "next/navigation"
 import { CloseIcon } from "@/utils/icons"
-import { useAppDispatch } from "@/store/hooks"
-import { cancelNewDeployment } from "@/store/firebird"
 
 export function CancelNewDeployment() {
   const router = useRouter()
-  const dispatch = useAppDispatch()
 
   const cancel = () => {
     // ask to confirm
@@ -13,7 +10,7 @@ export function CancelNewDeployment() {
     if (!confirmed) return
 
     // set the new deployment to undefined
-    dispatch(cancelNewDeployment())
+    // dispatch(cancelNewDeployment())
 
     // redirect to the deployments page
     router.push("/firebird/deployments")

@@ -6,7 +6,7 @@ import Image from "next/image"
 import classNames from "classnames"
 import { useAppDispatch } from "@/store/hooks"
 import { setAuthEmail } from "@/store/firebird"
-import { requestOtpAction } from "@/utils/firebird"
+import { requestOtpAction } from "@/utils/firebird/api"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
 

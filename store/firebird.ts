@@ -1,9 +1,5 @@
+import { IFirebirdAccount, IFirebirdDeployment } from "@/utils/firebird/types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-
-interface IFirebirdAccount {
-  email: string | undefined
-  token?: string
-}
 
 export interface IFirebirdNetworkSettings {
   chainId?: string
@@ -23,12 +19,23 @@ export interface IFirebirdFinalOptions {
   accessCode: string
 }
 
+export enum Network {
+  testnet = "testnet",
+  mainnet = "mainnet",
+}
+
 export enum MachineType {
   mini = "mini",
   small = "small",
   medium = "medium",
   large = "large",
 }
+
+export const KwilVersions = {
+  "0.8.4": "0.8.4",
+} as const
+
+export type KwilVersion = keyof typeof KwilVersions
 
 export interface IFirebirdMachines {
   type: MachineType
@@ -37,7 +44,7 @@ export interface IFirebirdMachines {
 }
 
 export interface IFirebirdNewDeployment {
-  network: "testnet" | "mainnet"
+  network: Network
   networkSettings: IFirebirdNetworkSettings
   nodeCount: number
   machines: IFirebirdMachines
@@ -51,12 +58,41 @@ interface IFirebirdState {
   authEmail: string | undefined
   account: IFirebirdAccount | undefined
   newDeployment: IFirebirdNewDeployment | undefined
+  deployments: IFirebirdDeployment[] | undefined
+  activeDeployment: IFirebirdDeployment | undefined
 }
 
 const initialState: IFirebirdState = {
   authEmail: undefined,
   account: undefined,
-  newDeployment: undefined,
+  newDeployment: {
+    network: Network.testnet,
+    networkSettings: {
+      chainId: undefined,
+      kwilVersion: KwilVersions["0.8.4"],
+      companyName: undefined,
+    },
+    nodeCount: 1,
+    machines: {
+      type: MachineType.mini,
+      provider: "aws",
+      region: "us-east-2",
+    },
+    services: {
+      daemon: true,
+      gateway: false,
+      indexer: false,
+      customBinary: false,
+    },
+    finalOptions: {
+      inviteValidators: undefined,
+      accessCode: "",
+    },
+    currentStep: 1,
+    talkWithTeamModal: false,
+  },
+  deployments: undefined,
+  activeDeployment: undefined,
 }
 
 export const firebirdSlice = createSlice({
@@ -136,10 +172,6 @@ export const firebirdSlice = createSlice({
       }
     },
 
-    cancelNewDeployment: (state) => {
-      state.newDeployment = undefined
-    },
-
     setCurrentStep: (state, action: PayloadAction<number>) => {
       if (!state.newDeployment) {
         state.newDeployment = {} as IFirebirdNewDeployment
@@ -155,6 +187,13 @@ export const firebirdSlice = createSlice({
 
       state.newDeployment.talkWithTeamModal = action.payload
     },
+
+    setActiveDeployment: (
+      state,
+      action: PayloadAction<IFirebirdDeployment | undefined>,
+    ) => {
+      state.activeDeployment = action.payload
+    },
   },
 })
 
@@ -163,10 +202,10 @@ export const {
   setNewDeployment,
   setNewDeploymentNetworkSettings,
   setNewDeploymentFinalOptions,
-  cancelNewDeployment,
   setAuthEmail,
   setCurrentStep,
   setTalkWithTeamModal,
+  setActiveDeployment,
 } = firebirdSlice.actions
 
 export const selectAuthEmail = (state: { firebird: IFirebirdState }) =>
@@ -183,5 +222,8 @@ export const selectCurrentStep = (state: { firebird: IFirebirdState }) =>
 
 export const selectTalkWithTeamModal = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment?.talkWithTeamModal
+
+export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
+  state.firebird.activeDeployment
 
 export default firebirdSlice.reducer

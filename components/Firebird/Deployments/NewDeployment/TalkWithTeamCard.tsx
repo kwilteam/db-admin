@@ -1,6 +1,5 @@
-import { IFirebirdNewDeployment, setTalkWithTeamModal } from "@/store/firebird"
 import { useAppDispatch } from "@/store/hooks"
-import classNames from "classnames"
+import { setTalkWithTeamModal } from "@/store/firebird"
 
 interface ITalkWithTeamCardProps {
   title: string

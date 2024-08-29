@@ -1,6 +1,7 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
 import { NetworkStepIcon } from "@/utils/icons"
+import { Network } from "@/store/firebird"
 
 export function NetworkStep() {
   return (
@@ -18,7 +19,7 @@ export function NetworkStep() {
           subtitle="Kwil Testnet"
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
           optionKey="network"
-          optionValue="testnet"
+          optionValue={Network.testnet}
         />
 
         <DeploymentOptionCard
@@ -27,7 +28,7 @@ export function NetworkStep() {
           subtitle="Kwil Mainnet"
           description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
           optionKey="network"
-          optionValue="mainnet"
+          optionValue={Network.mainnet}
           talkWithTeam
         />
       </div>
