@@ -30,12 +30,10 @@ export default function SelectedDeploymentCard({
     console.log("Connect to provider", providerEndpoint)
   }
 
-  const statusColorClass = statusColor[status] || "bg-gray-500"
-
-  console.log("Status:", status, "Color class:", statusColorClass)
+  const statusColorClass = statusColor[status] || "bg-slate-100"
 
   return (
-    <div className="flex flex-col gap-3 p-3">
+    <div className="flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3">
       <div className="flex w-full items-center justify-center gap-8 px-4 py-6">
         <div className="flex h-24 w-24 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
           <Image

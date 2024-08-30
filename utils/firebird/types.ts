@@ -68,3 +68,33 @@ export interface IFirebirdApiDeployResponse {
   id: string
   status?: string
 }
+
+export enum NodeStatus {
+  PENDING = "PENDING",
+  RUNNING = "RUNNING",
+  FAILED = "FAILED",
+  STOPPING = "STOPPING",
+  STOPPED = "STOPPED",
+  SHUTTING_DOWN = "SHUTTING_DOWN",
+  TERMINATED = "TERMINATED",
+}
+
+export interface IFirebirdApiNode {
+  id: string
+  name: string
+  // status: NodeStatus
+  state: NodeStatus
+  created_at: number
+  deployment_id: string
+  private_ip: string
+  public_ip: string
+}
+
+export interface IFirebirdApiService {
+  address: string
+  config: string
+  endpoint: string
+  id: string
+  name: string
+  running: boolean
+}

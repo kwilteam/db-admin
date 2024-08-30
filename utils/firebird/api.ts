@@ -6,6 +6,7 @@ import {
   IFirebirdApiDeployResponse,
   IFirebirdApiResponse,
   IFirebirdApiVerifyOtpResponse,
+  IFirebirdApiNode,
 } from "./types"
 
 // Helper function to handle API requests
@@ -83,6 +84,15 @@ export const signOut = async () => {
   return await firebirdApiRequest("auth/signout")
 }
 
+export const deployNetwork = async (data: IFirebirdDeploymentConfig) => {
+  console.log("Deploying network", data)
+  return await firebirdApiRequest<IFirebirdApiDeployResponse>(
+    "deployments",
+    "POST",
+    data,
+  )
+}
+
 export const getDeployments = async () => {
   console.log("Getting deployments")
   return await firebirdApiRequest<IFirebirdApiDeploymentsResponse>(
@@ -97,11 +107,19 @@ export const getDeployment = async (deploymentId: string) => {
   )
 }
 
-export const deployNetwork = async (data: IFirebirdDeploymentConfig) => {
-  console.log("Deploying network", data)
-  return await firebirdApiRequest<IFirebirdApiDeployResponse>(
-    "deployments",
-    "POST",
-    data,
+export const getNodes = async (deploymentId: string) => {
+  console.log("Getting nodes", deploymentId)
+  return await firebirdApiRequest<IFirebirdApiNode[]>(
+    `deployments/${deploymentId}/nodes`,
   )
+}
+
+export const getDeploymentServices = async (deploymentId: string) => {
+  console.log("Getting deployment services", deploymentId)
+  return await firebirdApiRequest<[]>(`deployments/${deploymentId}/services`)
+}
+
+export const getNodeServices = async (nodeId: string) => {
+  console.log("Getting node services", nodeId)
+  return await firebirdApiRequest<[]>(`nodes/${nodeId}/services`)
 }

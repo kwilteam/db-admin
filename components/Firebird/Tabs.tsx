@@ -9,7 +9,7 @@ export default function Tabs({
   const [activeTab, setActiveTab] = useState(tabs[0].name)
 
   return (
-    <div className="m-2 flex flex-col gap-3">
+    <div className="m-1 flex w-full flex-col gap-2">
       <nav aria-label="Tabs" className="inline-flex gap-1 rounded-md p-1">
         {tabs.map((tab) => (
           <a
@@ -27,7 +27,7 @@ export default function Tabs({
           </a>
         ))}
       </nav>
-      <div className="px-2">
+      <div className="px-1">
         {tabs.find((tab) => tab.name === activeTab)?.component}
       </div>
     </div>

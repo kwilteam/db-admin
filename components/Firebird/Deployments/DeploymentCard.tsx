@@ -26,9 +26,8 @@ export default function DeploymentCard({
   const machines = deployment.config.machines
   const status = deployment.status
 
-  const statusColorClass = statusColor[status] || "bg-gray-500"
+  const statusColorClass = statusColor[status] || "bg-slate-100"
 
-  console.log("Status:", status, "Color class:", statusColorClass)
   return (
     <Link href={`/firebird/deployments/${deployment.id}`}>
       <div className="flex grow cursor-pointer select-none flex-row items-center gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-4 py-6">
