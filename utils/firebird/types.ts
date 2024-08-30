@@ -41,6 +41,9 @@ export interface IFirebirdDeployment {
   id: string
   status: DeploymentStatus
   updated_at: number
+  endpoints: {
+    chain: string //TODO: Change to provider?
+  }
 }
 
 export interface IFirebirdPagination {
@@ -64,13 +67,4 @@ export interface IFirebirdApiDeploymentsResponse {
 export interface IFirebirdApiDeployResponse {
   id: string
   status?: string
-}
-
-export const statusColor = {
-  [DeploymentStatus.PENDING]: "bg-blue-500/80",
-  [DeploymentStatus.DEPLOYING]: "bg-yellow-500/80",
-  [DeploymentStatus.ACTIVE]: "bg-emerald-500/80",
-  [DeploymentStatus.FAILED]: "bg-red-500/80",
-  [DeploymentStatus.STOPPED]: "bg-red-600/80",
-  [DeploymentStatus.TERMINATED]: "bg-red-600/80",
 }

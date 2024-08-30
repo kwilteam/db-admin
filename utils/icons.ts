@@ -35,6 +35,8 @@ import {
   HiOutlineWrenchScrewdriver,
   HiOutlineHashtag,
   HiOutlineGlobeAlt,
+  HiOutlineClipboardDocument,
+  HiOutlineClipboardDocumentCheck,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -97,4 +99,6 @@ export {
   GrServices as ServicesStepIcon,
   HiOutlineHashtag as HashtagIcon,
   HiOutlineGlobeAlt as ChainIcon,
+  HiOutlineClipboardDocument as ClipboardIcon,
+  HiOutlineClipboardDocumentCheck as ClipboardCheckIcon,
 }

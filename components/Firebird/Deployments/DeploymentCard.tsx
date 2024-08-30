@@ -1,14 +1,19 @@
 import Link from "next/link"
 import Image from "next/image"
-import classNames from "classnames"
-import {
-  IFirebirdDeployment,
-  IFirebirdDeploymentConfig,
-  statusColor,
-} from "@/utils/firebird/types"
+import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import { ChainIcon, ChevronDownIcon } from "@/utils/icons"
 import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "./DeploymentBadge"
+
+// Have to include here as Tailwind struggles to import from the types file
+export const statusColor = {
+  [DeploymentStatus.PENDING]: "bg-blue-500/80",
+  [DeploymentStatus.DEPLOYING]: "bg-yellow-500/80",
+  [DeploymentStatus.ACTIVE]: "bg-emerald-500/80",
+  [DeploymentStatus.FAILED]: "bg-red-500/80",
+  [DeploymentStatus.STOPPED]: "bg-red-600/80",
+  [DeploymentStatus.TERMINATED]: "bg-red-600/80",
+}
 
 export default function DeploymentCard({
   deployment,
@@ -21,6 +26,9 @@ export default function DeploymentCard({
   const machines = deployment.config.machines
   const status = deployment.status
 
+  const statusColorClass = statusColor[status] || "bg-gray-500"
+
+  console.log("Status:", status, "Color class:", statusColorClass)
   return (
     <Link href={`/firebird/deployments/${deployment.id}`}>
       <div className="flex grow cursor-pointer select-none flex-row items-center gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-4 py-6">
@@ -47,10 +55,7 @@ export default function DeploymentCard({
           <div className="flex flex-row items-center justify-start gap-2 text-xs text-slate-500">
             <DeploymentBadge>
               <div
-                className={classNames(
-                  "h-2 w-2 rounded-full border border-slate-100",
-                  statusColor[status],
-                )}
+                className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
               />
               <span>{capitalize(status)}</span>
             </DeploymentBadge>
