@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
@@ -7,16 +8,18 @@ import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import Tabs from "../../Tabs"
 import KwilCliConnect from "./KwilCliConnect"
 import JsSdkConnect from "./JsSdkConnect"
-import Config from "./Config"
 import Nodes from "./Nodes"
 import Services from "./Services"
+import { DeploymentStatus } from "@/utils/firebird/types"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const activeDeployment = useAppSelector(selectActiveDeployment)
 
   const chain = activeDeployment?.config.chain
-  const providerEndpoint = activeDeployment?.endpoints.chain
+  const providerEndpoint =
+    activeDeployment?.service_endpoints?.kwil_rpc_provider
 
   useEffect(() => {
     const loadAsync = async () => {
@@ -24,6 +27,11 @@ export default function ExistingDeployment({ id }: { id: string }) {
 
       if (status === 200 && data) {
         dispatch(setActiveDeployment(data))
+      } else if (status === 404) {
+        dispatch(setActiveDeployment(undefined))
+        router.push("/firebird/deployments")
+      } else {
+        console.error("Failed to fetch deployment", status, data)
       }
     }
 
@@ -32,7 +40,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
     return () => {
       dispatch(setActiveDeployment(undefined))
     }
-  }, [id, dispatch])
+  }, [id, dispatch, router])
 
   console.log(activeDeployment, "activeDeployment")
 
@@ -45,52 +53,57 @@ export default function ExistingDeployment({ id }: { id: string }) {
   }
 
   return (
-    <div className="m-2 flex h-screen flex-row gap-2">
-      <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
-        <SelectedDeploymentCard deployment={activeDeployment} />
+    <>
+      <div className="m-2 flex h-screen flex-row gap-2">
+        <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
+          <SelectedDeploymentCard deployment={activeDeployment} />
 
-        <div className="flex w-full rounded-md border border-slate-100">
-          <Tabs
-            tabs={[
-              { name: "Nodes", component: <Nodes deploymentId={id} /> },
-              { name: "Services", component: <Services deploymentId={id} /> },
-              {
-                name: "Config",
-                component: <Config />,
-              },
-            ]}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col justify-start gap-2 lg:w-1/2">
-        <div className="rounded-md border border-slate-100">
-          {providerEndpoint && chain && (
-            <Tabs
-              tabs={[
-                {
-                  name: "Kwil CLI",
-                  component: (
-                    <KwilCliConnect
-                      providerEndpoint={providerEndpoint}
-                      chain={chain}
-                    />
-                  ),
-                },
-                {
-                  name: "JavaScript",
-                  component: (
-                    <JsSdkConnect
-                      providerEndpoint={providerEndpoint}
-                      chain={chain}
-                    />
-                  ),
-                },
-              ]}
-            />
+          {activeDeployment.status === DeploymentStatus.ACTIVE && (
+            <div className="flex w-full rounded-md border border-slate-100">
+              <Tabs
+                tabs={[
+                  { name: "Nodes", component: <Nodes deploymentId={id} /> },
+                  {
+                    name: "Services",
+                    component: <Services deploymentId={id} />,
+                  },
+                ]}
+              />
+            </div>
           )}
         </div>
+
+        {activeDeployment.status === DeploymentStatus.ACTIVE &&
+          providerEndpoint &&
+          chain && (
+            <div className="flex flex-col justify-start gap-2 lg:w-1/2">
+              <div className="rounded-md border border-slate-100">
+                <Tabs
+                  tabs={[
+                    {
+                      name: "Kwil CLI",
+                      component: (
+                        <KwilCliConnect
+                          providerEndpoint={providerEndpoint}
+                          chain={chain}
+                        />
+                      ),
+                    },
+                    {
+                      name: "JavaScript",
+                      component: (
+                        <JsSdkConnect
+                          providerEndpoint={providerEndpoint}
+                          chain={chain}
+                        />
+                      ),
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+          )}
       </div>
-    </div>
+    </>
   )
 }

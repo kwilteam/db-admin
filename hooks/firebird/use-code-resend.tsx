@@ -1,5 +1,4 @@
-import { IFirebirdAuth } from "@/store/firebird"
-import { requestOtpAction } from "@/utils/firebird"
+import { requestOtpAction } from "@/utils/firebird/api"
 import { useState } from "react"
 
 export default function useCodeResend(authEmail: string | undefined) {

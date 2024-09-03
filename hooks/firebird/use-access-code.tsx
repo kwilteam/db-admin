@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { setAccount } from "@/store/firebird"
-import { verifyOtpAction } from "@/utils/firebird"
+import { verifyOtpAction } from "@/utils/firebird/api"
 import { AppDispatch } from "@/store"
 
 export default function useAccessCode(

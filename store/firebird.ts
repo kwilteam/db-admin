@@ -60,6 +60,7 @@ interface IFirebirdState {
   newDeployment: IFirebirdNewDeployment | undefined
   deployments: IFirebirdDeployment[] | undefined
   activeDeployment: IFirebirdDeployment | undefined
+  deleteDeploymentId: string | undefined
 }
 
 const initialState: IFirebirdState = {
@@ -93,6 +94,7 @@ const initialState: IFirebirdState = {
   },
   deployments: undefined,
   activeDeployment: undefined,
+  deleteDeploymentId: undefined,
 }
 
 export const firebirdSlice = createSlice({
@@ -194,6 +196,13 @@ export const firebirdSlice = createSlice({
     ) => {
       state.activeDeployment = action.payload
     },
+
+    setDeleteDeploymentId: (
+      state,
+      action: PayloadAction<string | undefined>,
+    ) => {
+      state.deleteDeploymentId = action.payload
+    },
   },
 })
 
@@ -206,6 +215,7 @@ export const {
   setCurrentStep,
   setTalkWithTeamModal,
   setActiveDeployment,
+  setDeleteDeploymentId,
 } = firebirdSlice.actions
 
 export const selectAuthEmail = (state: { firebird: IFirebirdState }) =>
@@ -225,5 +235,8 @@ export const selectTalkWithTeamModal = (state: { firebird: IFirebirdState }) =>
 
 export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.activeDeployment
+
+export const selectDeleteDeploymentId = (state: { firebird: IFirebirdState }) =>
+  state.firebird.deleteDeploymentId
 
 export default firebirdSlice.reducer

@@ -42,7 +42,7 @@ export const navigationItems: INavigationItem[] = [
   },
   {
     name: "Firebird",
-    href: "/firebird",
+    href: "/firebird/deployments",
     icon: FirebirdIcon,
     secondaryMobileMenu: false,
     closeMobileMenu: true,

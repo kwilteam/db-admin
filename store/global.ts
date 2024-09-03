@@ -13,6 +13,7 @@ export enum ModalEnum {
   PROVIDER_OFFLINE = "provider_offline",
   CONNECT = "connect",
   SAVE_QUERY = "save_query",
+  DELETE_DEPLOYMENT = "delete_deployment",
 }
 
 interface IGlobalState {
@@ -97,8 +98,9 @@ export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
 
-export const selectProviderOfflineAcknowledged = (state: { global: IGlobalState }) =>
-  state.global.providerOfflineAcknowledged
+export const selectProviderOfflineAcknowledged = (state: {
+  global: IGlobalState
+}) => state.global.providerOfflineAcknowledged
 
 export default globalSlice.reducer
 

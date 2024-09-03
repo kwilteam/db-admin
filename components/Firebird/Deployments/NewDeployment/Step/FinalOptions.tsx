@@ -6,12 +6,11 @@ import {
   selectNewDeployment,
   setNewDeploymentFinalOptions,
 } from "@/store/firebird"
-import { DeployIcon } from "@/utils/icons"
-import { Step } from "../Step"
 import { deployNetwork } from "@/utils/firebird/api"
 import { setAlert } from "@/store/global"
 import Loading from "@/components/Loading"
-import { IFirebirdApiDeploymentConfig } from "@/utils/firebird/types"
+import { IFirebirdNewDeployment } from "@/utils/firebird/types"
+import { DeployIcon } from "@/utils/icons"
 
 export function FinalOptionsStep() {
   const dispatch = useAppDispatch()
@@ -22,7 +21,8 @@ export function FinalOptionsStep() {
 
   useEffect(() => {
     const accessCode = newDeployment?.finalOptions?.accessCode
-    if (accessCode && accessCode.length >= 10) {
+    const hexRegex = /^[0-9a-fA-F]{32}$/
+    if (accessCode && hexRegex.test(accessCode)) {
       setReadyToDeploy(true)
     } else {
       setReadyToDeploy(false)
@@ -87,7 +87,7 @@ export function FinalOptionsStep() {
     setDeploying(false)
   }
 
-  const formatNewDeploymentData = (): IFirebirdApiDeploymentConfig => {
+  const formatNewDeploymentData = (): IFirebirdNewDeployment => {
     return {
       chain: {
         chain_id: newDeployment?.networkSettings.chainId ?? "",
@@ -104,34 +104,35 @@ export function FinalOptionsStep() {
     }
   }
 
+  const isValidAccessCode = (accessCode: string) => {
+    return accessCode.length >= 10
+  }
+
   return (
-    <Step
-      step={6}
-      icon={<DeployIcon />}
-      title="Final options"
-      description="Finalize your deployment."
-    >
-      <div className="flex flex-col gap-2">
-        {/* Button for “invite other validators” that is disabled out and says, “Coming soon”. */}
+    <div className="mr-2 flex w-full flex-row gap-2">
+      {/* Button for “invite other validators” that is disabled out and says, “Coming soon”. */}
 
-        <AccessCodeInput
-          value={newDeployment?.finalOptions?.accessCode ?? ""}
-          onChange={handleChange}
-        />
+      <AccessCodeInput
+        value={newDeployment?.finalOptions?.accessCode ?? ""}
+        onChange={handleChange}
+      />
 
+      <div className="flex flex-grow items-center justify-end gap-2">
         <button
-          className="btn btn-primary h-12 items-center rounded-lg bg-kwil p-2 text-lg font-semibold tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn btn-primary text-md flex flex-row items-center rounded-lg bg-kwil p-2 font-semibold tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!readyToDeploy || deploying}
           onClick={triggerDeployNetwork}
         >
           {deploying ? (
             <Loading className="flex justify-center" color="white" />
           ) : (
-            "Deploy New Kwil Network"
+            <>
+              <DeployIcon className="mr-2 h-4 w-4" /> Deploy Kwil Network
+            </>
           )}
         </button>
       </div>
-    </Step>
+    </div>
   )
 }
 
@@ -141,7 +142,7 @@ type InputProps = {
 }
 
 const AccessCodeInput = ({ value, onChange }: InputProps) => (
-  <div>
+  <div className="ml-3 flex flex-row items-center gap-3">
     <label
       htmlFor="accessCode"
       className="block text-sm font-medium leading-6 text-gray-700"
@@ -151,17 +152,15 @@ const AccessCodeInput = ({ value, onChange }: InputProps) => (
     <p className="text-sm text-gray-500">
       This is the access code given to you by the team.
     </p>
-    <div className="mt-2">
-      <input
-        autoComplete="off"
-        id="accessCode"
-        name="accessCode"
-        type="text"
-        required
-        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
-        value={value}
-        onChange={(e) => onChange("accessCode", e.target.value)}
-      />
-    </div>
+    <input
+      autoComplete="off"
+      id="accessCode"
+      name="accessCode"
+      type="text"
+      required
+      className="block w-72 rounded-md border-0 py-1 text-center text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+      value={value}
+      onChange={(e) => onChange("accessCode", e.target.value)}
+    />
   </div>
 )

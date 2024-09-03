@@ -37,6 +37,7 @@ import {
   HiOutlineGlobeAlt,
   HiOutlineClipboardDocument,
   HiOutlineClipboardDocumentCheck,
+  HiOutlineTrash,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -101,4 +102,5 @@ export {
   HiOutlineGlobeAlt as ChainIcon,
   HiOutlineClipboardDocument as ClipboardIcon,
   HiOutlineClipboardDocumentCheck as ClipboardCheckIcon,
+  HiOutlineTrash as DeleteIcon,
 }

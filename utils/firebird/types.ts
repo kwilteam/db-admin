@@ -5,10 +5,10 @@ export interface IFirebirdApiResponse<T> {
 }
 
 export interface IFirebirdAccount {
-  created_at: number
+  created_at?: number
   email: string
-  id: string
-  origin: string
+  id?: string
+  origin?: string
 }
 
 export interface IFirebirdDeploymentConfig {
@@ -35,14 +35,29 @@ export enum DeploymentStatus {
   TERMINATED = "TERMINATED",
 }
 
+export interface IFirebirdNewDeployment {
+  chain: {
+    chain_id: string
+    version: string
+  }
+  node_count: number
+  machines: {
+    instance_name: string
+    provider: string
+    region: string
+    type: string
+  }
+  access_token: string
+}
+
 export interface IFirebirdDeployment {
   config: IFirebirdDeploymentConfig
   created_at: number
   id: string
   status: DeploymentStatus
   updated_at: number
-  endpoints: {
-    chain: string //TODO: Change to provider?
+  service_endpoints: {
+    kwil_rpc_provider?: string
   }
 }
 
@@ -82,8 +97,7 @@ export enum NodeStatus {
 export interface IFirebirdApiNode {
   id: string
   name: string
-  // status: NodeStatus
-  state: NodeStatus
+  status: NodeStatus
   created_at: number
   deployment_id: string
   private_ip: string

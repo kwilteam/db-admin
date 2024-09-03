@@ -7,12 +7,13 @@ import {
   IFirebirdApiResponse,
   IFirebirdApiVerifyOtpResponse,
   IFirebirdApiNode,
+  IFirebirdApiService,
 } from "./types"
 
 // Helper function to handle API requests
 const firebirdApiRequest = async <T>(
   endpoint: string,
-  method: "POST" | "GET" = "GET",
+  method: "POST" | "GET" | "DELETE" = "GET",
   body?: object,
 ): Promise<IFirebirdApiResponse<T>> => {
   const apiUrl = process.env.NEXT_PUBLIC_FIREBIRD_API_URL
@@ -116,10 +117,19 @@ export const getNodes = async (deploymentId: string) => {
 
 export const getDeploymentServices = async (deploymentId: string) => {
   console.log("Getting deployment services", deploymentId)
-  return await firebirdApiRequest<[]>(`deployments/${deploymentId}/services`)
+  return await firebirdApiRequest<IFirebirdApiService[]>(
+    `deployments/${deploymentId}/services`,
+  )
 }
 
 export const getNodeServices = async (nodeId: string) => {
   console.log("Getting node services", nodeId)
-  return await firebirdApiRequest<[]>(`nodes/${nodeId}/services`)
+  return await firebirdApiRequest<IFirebirdApiService[]>(
+    `nodes/${nodeId}/services`,
+  )
+}
+
+export const deleteDeployment = async (deploymentId: string) => {
+  console.log("Deleting deployment", deploymentId)
+  return await firebirdApiRequest(`deployments/${deploymentId}`, "DELETE")
 }

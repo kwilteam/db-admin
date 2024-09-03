@@ -1,8 +1,11 @@
 import Image from "next/image"
+import { useAppDispatch } from "@/store/hooks"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
-import { ChainIcon, ProviderIcon } from "@/utils/icons"
+import { ChainIcon, DeleteIcon, ProviderIcon } from "@/utils/icons"
 import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "../DeploymentBadge"
+import { ModalEnum, setModal } from "@/store/global"
+import { setDeleteDeploymentId } from "@/store/firebird"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -20,11 +23,12 @@ export default function SelectedDeploymentCard({
   deployment: IFirebirdDeployment
 }) {
   console.log(deployment, "Deployment")
+  const dispatch = useAppDispatch()
 
   const chain = deployment.config.chain
   const machines = deployment.config.machines
   const status = deployment.status
-  const providerEndpoint = deployment.endpoints.chain
+  const providerEndpoint = deployment.service_endpoints?.kwil_rpc_provider
 
   const connectToProvider = () => {
     console.log("Connect to provider", providerEndpoint)
@@ -32,9 +36,18 @@ export default function SelectedDeploymentCard({
 
   const statusColorClass = statusColor[status] || "bg-slate-100"
 
+  const triggerDeleteDeploymentModal = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    e.preventDefault()
+    console.log("delete deployment", deployment)
+    dispatch(setModal(ModalEnum.DELETE_DEPLOYMENT))
+    dispatch(setDeleteDeploymentId(deployment.id))
+  }
+
   return (
-    <div className="flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3">
-      <div className="flex w-full items-center justify-center gap-8 px-4 py-6">
+    <div className="relative flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3">
+      <div className="flex w-full items-center justify-start gap-8 px-4 py-6">
         <div className="flex h-24 w-24 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
           <Image
             src="/images/kwil.png"
@@ -71,20 +84,31 @@ export default function SelectedDeploymentCard({
 
             <span>{chain.version}</span>
           </DeploymentBadge>
+
           <DeploymentBadge className="p-4">
             <ChainIcon className="h-4 w-4" />
-            <span>{chain.chain_id}</span>
+            <span className="whitespace-nowrap">{chain.chain_id}</span>
           </DeploymentBadge>
 
-          <div
-            className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-slate-100 bg-kwil p-4 text-slate-50"
-            onClick={connectToProvider}
-          >
-            <ProviderIcon className="h-4 w-4" />
-            Connect to Provider
-          </div>
+          {deployment.status === DeploymentStatus.ACTIVE && (
+            <button
+              className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-slate-100 bg-kwil p-4 text-slate-50"
+              onClick={connectToProvider}
+            >
+              <ProviderIcon className="h-4 w-4" />
+              <span className="whitespace-nowrap">Connect to Provider</span>
+            </button>
+          )}
         </div>
       </div>
+      {deployment.status === DeploymentStatus.ACTIVE && (
+        <button
+          className="absolute right-3 top-3 flex cursor-pointer rounded-lg border border-slate-100 p-1 text-slate-600 hover:border-slate-300 hover:text-slate-900"
+          onClick={triggerDeleteDeploymentModal}
+        >
+          <DeleteIcon className="h-4 w-4" />
+        </button>
+      )}
     </div>
   )
 }

@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation"
 import { FirebirdIcon, PlusIcon } from "@/utils/icons"
 import { useAppSelector } from "@/store/hooks"
 import { selectActiveDeployment } from "@/store/firebird"
-import { IFirebirdDeploymentConfig } from "@/utils/firebird/types"
 import FirebirdSignOut from "../SignOut"
 
 export default function Header() {

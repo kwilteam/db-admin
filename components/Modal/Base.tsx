@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
+import KwilLogo from "@/public/images/kwil-white-horizontal.svg"
 
 interface IModalProps {
   show: boolean
@@ -44,10 +45,10 @@ export default function Base({
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-0 text-left align-middle shadow-xl transition-all">
                   <div className="flex flex-col items-center">
-                    <div className="flex w-full flex-col rounded-md  text-center">
+                    <div className="flex w-full flex-col rounded-md text-center">
                       <div className="flex-1 rounded-t-md bg-kwil">
                         <Image
-                          src="/images/kwil-white-horizontal.svg"
+                          src="/images/kwil-white-horizontal.png"
                           alt="Kwil Logo"
                           className="mx-auto h-auto p-4"
                           width={200}

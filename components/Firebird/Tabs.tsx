@@ -10,7 +10,7 @@ export default function Tabs({
 
   return (
     <div className="m-1 flex w-full flex-col gap-2">
-      <nav aria-label="Tabs" className="inline-flex gap-1 rounded-md p-1">
+      <nav aria-label="Tabs" className="inline-flex gap-2 rounded-md p-1">
         {tabs.map((tab) => (
           <a
             key={tab.name}
@@ -27,7 +27,7 @@ export default function Tabs({
           </a>
         ))}
       </nav>
-      <div className="px-1">
+      <div className="mb-1 px-1">
         {tabs.find((tab) => tab.name === activeTab)?.component}
       </div>
     </div>
