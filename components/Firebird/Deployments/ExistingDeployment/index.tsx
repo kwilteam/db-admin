@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
+import { DeploymentStatus } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import Tabs from "../../Tabs"
@@ -10,7 +11,6 @@ import KwilCliConnect from "./KwilCliConnect"
 import JsSdkConnect from "./JsSdkConnect"
 import Nodes from "./Nodes"
 import Services from "./Services"
-import { DeploymentStatus } from "@/utils/firebird/types"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
@@ -54,10 +54,11 @@ export default function ExistingDeployment({ id }: { id: string }) {
 
   return (
     <>
-      <div className="m-2 flex h-screen flex-row gap-2">
+      <div className="m-2 flex flex-col items-start gap-2">
+        <SelectedDeploymentCard deployment={activeDeployment} />
+      </div>
+      <div className="mx-2 flex h-screen flex-row gap-2">
         <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
-          <SelectedDeploymentCard deployment={activeDeployment} />
-
           {activeDeployment.status === DeploymentStatus.ACTIVE && (
             <div className="flex w-full rounded-md border border-slate-100">
               <Tabs

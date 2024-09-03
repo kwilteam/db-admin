@@ -11,7 +11,7 @@ export default function DeploymentPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="flex flex-col overflow-y-scroll">
+      <div className="flex flex-col overflow-y-auto">
         {isNew ? <NewDeploymentForm /> : <ExistingDeployment id={id} />}
       </div>
 
