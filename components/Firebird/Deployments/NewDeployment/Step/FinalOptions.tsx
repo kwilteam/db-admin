@@ -11,6 +11,7 @@ import { setAlert } from "@/store/global"
 import Loading from "@/components/Loading"
 import { IFirebirdNewDeployment } from "@/utils/firebird/types"
 import { DeployIcon } from "@/utils/icons"
+import { TalkWithTeam } from "./TalkWithTeam"
 
 export function FinalOptionsStep() {
   const dispatch = useAppDispatch()
@@ -18,16 +19,43 @@ export function FinalOptionsStep() {
   const newDeployment = useAppSelector(selectNewDeployment)
   const [readyToDeploy, setReadyToDeploy] = useState(false)
   const [deploying, setDeploying] = useState(false)
+  const [talkWithTeam, setTalkWithTeam] = useState(false)
 
   useEffect(() => {
     const accessCode = newDeployment?.finalOptions?.accessCode
     const hexRegex = /^[0-9a-fA-F]{32}$/
-    if (accessCode && hexRegex.test(accessCode)) {
-      setReadyToDeploy(true)
-    } else {
+    if (!accessCode || !hexRegex.test(accessCode)) {
       setReadyToDeploy(false)
+      return
     }
-  }, [newDeployment?.finalOptions])
+
+    if (newDeployment?.network.length === 0) {
+      setReadyToDeploy(false)
+      return
+    }
+
+    if (!newDeployment?.nodeCount || newDeployment?.nodeCount === 0) {
+      setReadyToDeploy(false)
+      return
+    }
+
+    if (newDeployment?.machines.length === 0) {
+      setReadyToDeploy(false)
+      return
+    }
+
+    if (
+      newDeployment?.services?.daemon === false &&
+      newDeployment?.services?.gateway === false &&
+      newDeployment?.services?.indexer === false &&
+      newDeployment?.services?.customBinary === false
+    ) {
+      setReadyToDeploy(false)
+      return
+    }
+
+    setReadyToDeploy(true)
+  }, [newDeployment])
 
   const handleChange = useCallback(
     (valueKey: keyof IFirebirdFinalOptions, value: string) => {
@@ -40,6 +68,36 @@ export function FinalOptionsStep() {
     },
     [dispatch],
   )
+
+  useEffect(() => {
+    if (newDeployment?.network === "mainnet") {
+      setTalkWithTeam(true)
+      return
+    }
+
+    if (newDeployment?.nodeCount && newDeployment?.nodeCount > 1) {
+      setTalkWithTeam(true)
+      return
+    }
+
+    if (newDeployment?.machines !== "mini") {
+      setTalkWithTeam(true)
+      return
+    }
+
+    const services = newDeployment?.services
+
+    if (
+      services?.gateway === true ||
+      services?.indexer === true ||
+      services?.customBinary === true
+    ) {
+      setTalkWithTeam(true)
+      return
+    }
+
+    setTalkWithTeam(false)
+  }, [newDeployment])
 
   const triggerDeployNetwork = async () => {
     setDeploying(true)
@@ -95,43 +153,46 @@ export function FinalOptionsStep() {
       },
       node_count: newDeployment?.nodeCount ?? 0,
       machines: {
-        instance_name: newDeployment?.networkSettings.companyName ?? "",
-        provider: newDeployment?.machines.provider ?? "",
-        region: newDeployment?.machines.region ?? "",
-        type: newDeployment?.machines.type ?? "",
+        instance_name:
+          newDeployment?.networkSettings.companyName ?? "kwil-db-network",
+        provider: "aws",
+        region: "us-east-2",
+        type: newDeployment?.machines ?? "",
       },
       access_token: newDeployment?.finalOptions?.accessCode ?? "",
     }
   }
 
-  const isValidAccessCode = (accessCode: string) => {
-    return accessCode.length >= 10
-  }
-
   return (
     <div className="mr-2 flex w-full flex-row gap-2">
-      {/* Button for “invite other validators” that is disabled out and says, “Coming soon”. */}
+      {/* TODO: Checkbox for “invite other validators” that is disabled out and says, “Coming soon”. */}
 
-      <AccessCodeInput
-        value={newDeployment?.finalOptions?.accessCode ?? ""}
-        onChange={handleChange}
-      />
+      {talkWithTeam && <TalkWithTeam />}
 
-      <div className="flex flex-grow items-center justify-end gap-2">
-        <button
-          className="btn btn-primary text-md flex flex-row items-center rounded-lg bg-kwil p-2 font-semibold tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
-          disabled={!readyToDeploy || deploying}
-          onClick={triggerDeployNetwork}
-        >
-          {deploying ? (
-            <Loading className="flex justify-center" color="white" />
-          ) : (
-            <>
-              <DeployIcon className="mr-2 h-4 w-4" /> Deploy Kwil Network
-            </>
-          )}
-        </button>
-      </div>
+      {!talkWithTeam && (
+        <>
+          <AccessCodeInput
+            value={newDeployment?.finalOptions?.accessCode ?? ""}
+            onChange={handleChange}
+          />
+
+          <div className="flex flex-grow items-center justify-end gap-2">
+            <button
+              className="text-md m-1 flex flex-row items-center rounded-lg bg-kwil px-4 py-3 tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!readyToDeploy || deploying}
+              onClick={triggerDeployNetwork}
+            >
+              {deploying ? (
+                <Loading className="flex justify-center" color="white" />
+              ) : (
+                <>
+                  <DeployIcon className="mr-2 h-5 w-5" /> Deploy Kwil Network
+                </>
+              )}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

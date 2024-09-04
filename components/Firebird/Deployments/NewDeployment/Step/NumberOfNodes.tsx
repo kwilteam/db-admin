@@ -15,8 +15,6 @@ const nodeCountOptions = ["", "1", "2", "3", "4", "5"]
 export function NumberOfNodesStep() {
   const dispatch = useAppDispatch()
   const newDeploymentObject = useAppSelector(selectNewDeployment)
-  const currentStep = useAppSelector(selectCurrentStep)
-  const [talkWithTeam, setTalkWithTeam] = useState<boolean>(false)
 
   const handleChange = (value: string) => {
     const nodeCount = Number(value)
@@ -28,28 +26,6 @@ export function NumberOfNodesStep() {
       }),
     )
   }
-
-  useEffect(() => {
-    const nodeCount = Number(newDeploymentObject?.nodeCount)
-    const machineSelected = newDeploymentObject?.machines?.type
-
-    if (nodeCount === 1 && machineSelected) {
-      dispatch(setCurrentStep(5))
-    } else if (nodeCount === 1 && !machineSelected) {
-      dispatch(setCurrentStep(4))
-    } else if (nodeCount === 0 && currentStep >= 3) {
-      dispatch(setCurrentStep(3))
-    } else if (nodeCount > 1) {
-      dispatch(setCurrentStep(3))
-    }
-
-    setTalkWithTeam(nodeCount > 1)
-  }, [
-    dispatch,
-    newDeploymentObject?.nodeCount,
-    currentStep,
-    newDeploymentObject?.machines?.type,
-  ])
 
   return (
     <Step
@@ -74,12 +50,6 @@ export function NumberOfNodesStep() {
           ))}
         </select>
       </div>
-      {talkWithTeam && (
-        <TalkWithTeamCard
-          title="Talk with our team"
-          subtitle="Talk with our team, so we can help you with your requirements."
-        />
-      )}
     </Step>
   )
 }
