@@ -37,17 +37,17 @@ export const KwilVersions = {
 
 export type KwilVersion = keyof typeof KwilVersions
 
-export interface IFirebirdMachines {
-  type: MachineType
-  provider: "aws"
-  region: "us-east-2"
-}
+// export interface IFirebirdMachines {
+//   type: MachineType
+//   provider: "aws"
+//   region: "us-east-2"
+// }
 
 export interface IFirebirdNewDeployment {
   network: Network
   networkSettings: IFirebirdNetworkSettings
   nodeCount: number
-  machines: IFirebirdMachines
+  machines: MachineType
   services: IFirebirdServices | undefined
   finalOptions: IFirebirdFinalOptions
   currentStep: number
@@ -74,11 +74,7 @@ const initialState: IFirebirdState = {
       companyName: undefined,
     },
     nodeCount: 1,
-    machines: {
-      type: MachineType.mini,
-      provider: "aws",
-      region: "us-east-2",
-    },
+    machines: MachineType.mini,
     services: {
       daemon: true,
       gateway: false,
@@ -151,6 +147,26 @@ export const firebirdSlice = createSlice({
       state.newDeployment.networkSettings[key] = value
     },
 
+    setNewDeploymentServices: (
+      state,
+      action: PayloadAction<{
+        key: keyof IFirebirdServices
+        value: boolean
+      }>,
+    ) => {
+      const { key, value } = action.payload
+
+      if (!state.newDeployment) {
+        state.newDeployment = {} as IFirebirdNewDeployment
+      }
+
+      if (!state.newDeployment.services) {
+        state.newDeployment.services = {} as IFirebirdServices
+      }
+
+      state.newDeployment.services[key] = value
+    },
+
     setNewDeploymentFinalOptions: (
       state,
       action: PayloadAction<{
@@ -210,6 +226,7 @@ export const {
   setAccount,
   setNewDeployment,
   setNewDeploymentNetworkSettings,
+  setNewDeploymentServices,
   setNewDeploymentFinalOptions,
   setAuthEmail,
   setCurrentStep,
@@ -226,6 +243,10 @@ export const selectAccount = (state: { firebird: IFirebirdState }) =>
 
 export const selectNewDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment
+
+export const selectNewDeploymentServices = (state: {
+  firebird: IFirebirdState
+}) => state.firebird.newDeployment?.services
 
 export const selectCurrentStep = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment?.currentStep ?? 1

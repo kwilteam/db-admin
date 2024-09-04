@@ -24,7 +24,7 @@ export default function NavigationItem({ item }: IProps) {
           "flex h-12 w-12 flex-row items-center justify-center gap-3 rounded-full p-1 text-sm text-white hover:bg-kwil-dark hover:text-slate-100 hover:drop-shadow-md":
             true,
           "bg-kwil-dark text-slate-100 drop-shadow-md": pathname.startsWith(
-            item.href,
+            item.activePathPrefix,
           ),
         })}
         onClick={() => {

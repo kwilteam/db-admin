@@ -62,14 +62,12 @@ export default function DeploymentsAuthLayout({
                   <li className="flex flex-row items-center gap-2">
                     <SuccessIcon className="h-4 w-4 text-kwil" />
                     <div className="text-sm text-gray-600">
-                      Easily deploy Kwil services to the cloud
+                      Deploy Kwil services in one click
                     </div>
                   </li>
                   <li className="flex flex-row items-center gap-2">
                     <SuccessIcon className="h-4 w-4 text-kwil" />
-                    <div className="text-sm text-gray-600">
-                      Fully managed service
-                    </div>
+                    <div className="text-sm text-gray-600">Fully managed</div>
                   </li>
                   <li className="flex flex-row items-center gap-2">
                     <SuccessIcon className="h-4 w-4 text-kwil" />

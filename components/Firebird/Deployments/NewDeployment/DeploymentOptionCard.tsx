@@ -16,7 +16,7 @@ interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   description: string
   optionKey: K
   optionValue: IFirebirdNewDeployment[K]
-  talkWithTeam?: boolean
+  enterprise?: boolean
 }
 
 export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
@@ -26,7 +26,7 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   description,
   optionKey,
   optionValue,
-  talkWithTeam,
+  enterprise,
 }: IDeploymentOptionCardProps<K>) {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
@@ -34,8 +34,6 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   const isSelected = newDeployment && newDeployment[optionKey] === optionValue
 
   const setDeploymentValue = () => {
-    if (talkWithTeam) return
-
     dispatch(setNewDeployment({ key: optionKey, value: optionValue }))
 
     if (currentStep === step) {
@@ -46,47 +44,28 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   const _classNames = classNames(
     "flex flex-grow cursor-pointer select-none flex-row gap-2 rounded-md border",
     {
-      "hover:border-sky-700/50 hover:bg-sky-500/5":
-        !talkWithTeam && !isSelected,
+      "hover:border-sky-700/50 hover:bg-sky-500/5": !enterprise && !isSelected,
       "border-sky-700/50 bg-sky-500/5": isSelected,
       "border-slate-200 bg-slate-50/70": !isSelected,
+      "text-slate-400": enterprise,
+      "text-slate-700": !enterprise,
     },
   )
 
   return (
     <div className={_classNames} onClick={setDeploymentValue}>
-      <div className="flex w-full flex-col gap-1">
-        <div
-          className={classNames("flex flex-col gap-1 p-3", {
-            "cursor-not-allowed": talkWithTeam,
-          })}
-        >
-          <span
-            className={classNames("text-xl tracking-tighter", {
-              "text-slate-400": talkWithTeam,
-              "text-slate-700": !talkWithTeam,
-            })}
-          >
-            {title}
-          </span>
-          <span
-            className={classNames("text-sm", {
-              "text-slate-400": talkWithTeam,
-              "text-slate-600": !talkWithTeam,
-            })}
-          >
-            {subtitle}
-          </span>
-          <div
-            className={classNames("mt-3 text-xs", {
-              "text-slate-400": talkWithTeam,
-              "text-slate-600": !talkWithTeam,
-            })}
-          >
-            {description}
+      <div className="relative flex w-full flex-col gap-1">
+        {enterprise && (
+          <div className="absolute right-1 top-1 rounded-md bg-sky-500 px-2 py-1 text-xs text-white">
+            Enterprise
           </div>
+        )}
+
+        <div className="flex flex-col gap-1 p-3">
+          <span className="text-xl tracking-tighter">{title}</span>
+          <span className="text-sm">{subtitle}</span>
+          <div className="mt-3 text-xs">{description}</div>
         </div>
-        {talkWithTeam && <TalkWithTeam />}
       </div>
     </div>
   )

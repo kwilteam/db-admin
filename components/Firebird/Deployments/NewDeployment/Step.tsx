@@ -1,7 +1,5 @@
 import { Montserrat } from "next/font/google"
 import classNames from "classnames"
-import { useAppSelector } from "@/store/hooks"
-import { selectCurrentStep } from "@/store/firebird"
 
 const heading = Montserrat({
   weight: "500",
@@ -17,12 +15,6 @@ interface IStepProps {
 }
 
 export function Step({ step, icon, title, description, children }: IStepProps) {
-  const currentStep = useAppSelector(selectCurrentStep)
-
-  if (currentStep < step) {
-    return null
-  }
-
   return (
     <div className="flex flex-col gap-2 p-4">
       <div className="flex flex-row justify-between gap-2">
@@ -43,7 +35,7 @@ export function Step({ step, icon, title, description, children }: IStepProps) {
         </div>
 
         <div className="flex flex-row gap-2 p-2 text-slate-500">
-          <span>Step {step} / 6</span>
+          <span>Step {step} / 5</span>
         </div>
       </div>
 
