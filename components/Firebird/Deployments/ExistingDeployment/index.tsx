@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
 import { DeploymentStatus } from "@/utils/firebird/types"
+import useDeploymentStatusWebSocket from "@/hooks/use-deployment-status-ws"
 import Loading from "@/components/Loading"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import Tabs from "../../Tabs"
@@ -16,6 +17,10 @@ export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const activeDeployment = useAppSelector(selectActiveDeployment)
+  // const deploymentStatus = useDeploymentStatusWebSocket(
+  //   id,
+  //   activeDeployment?.status || DeploymentStatus.PENDING,
+  // )
 
   const chain = activeDeployment?.config.chain
   const providerEndpoint =
@@ -43,6 +48,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
   }, [id, dispatch, router])
 
   console.log(activeDeployment, "activeDeployment")
+  // console.log(deploymentStatus, "WS deploymentStatus")
 
   if (!activeDeployment) {
     return (

@@ -11,35 +11,45 @@ import { useEffect } from "react"
 
 const machinesOptions: Array<{
   title: string
-  subtitle: string
+  cpu: string
+  ram: string
+  storage: string
   description: string
   optionValue: MachineType
   enterprise: boolean
 }> = [
   {
     title: "Mini",
-    subtitle: "1 vCPU\n1 GB Ram\n10 GB storage",
+    cpu: "1 vCPU",
+    ram: "1 GB Ram",
+    storage: "10 GB storage",
     description: "For development and testing.",
     optionValue: MachineType.mini,
     enterprise: false,
   },
   {
     title: "Small",
-    subtitle: "2 vCPU\n2 GB Ram\n20 GB storage",
+    cpu: "2 vCPU",
+    ram: "2 GB Ram",
+    storage: "20 GB storage",
     description: "For small applications.",
     optionValue: MachineType.small,
     enterprise: true,
   },
   {
     title: "Medium",
-    subtitle: "4 vCPU\n4 GB Ram\n40 GB storage",
+    cpu: "4 vCPU",
+    ram: "4 GB Ram",
+    storage: "40 GB storage",
     description: "For growing applications.",
     optionValue: MachineType.medium,
     enterprise: true,
   },
   {
     title: "Large",
-    subtitle: "8 vCPU\n8 GB Ram\n80 GB storage",
+    cpu: "8 vCPU",
+    ram: "8 GB Ram",
+    storage: "80 GB storage",
     description: "For enterprise applications.",
     optionValue: MachineType.large,
     enterprise: true,
@@ -59,13 +69,24 @@ export function MachinesStep() {
           <DeploymentOptionCard
             key={option.title}
             step={4}
-            title={option.title}
-            subtitle={option.subtitle}
-            description={option.description}
             optionKey="machines"
             optionValue={option.optionValue}
             enterprise={option.enterprise}
-          />
+          >
+            <span className="text-xl tracking-tighter">{option.title}</span>
+            <div className="flex flex-row gap-2">
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.cpu}
+              </span>
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.ram}
+              </span>
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.storage}
+              </span>
+            </div>
+            <div className="mt-3 text-xs">{option.description}</div>
+          </DeploymentOptionCard>
         ))}
       </div>
     </Step>

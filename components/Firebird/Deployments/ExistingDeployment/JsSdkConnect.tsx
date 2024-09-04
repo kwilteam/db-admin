@@ -45,8 +45,8 @@ const kwil = new WebKwil({
   return (
     <div>
       <div className="mb-4 flex items-center justify-start">
-        <div className="flex items-center space-x-4">
-          <label className="inline-flex items-center">
+        <div className="ml-2 mt-1 flex items-center space-x-4">
+          <label className="inline-flex cursor-pointer items-center">
             <input
               type="radio"
               className="form-radio text-kwil focus:ring-1 focus:ring-slate-200"
@@ -57,7 +57,7 @@ const kwil = new WebKwil({
             />
             <span className="ml-2 text-xs">Web</span>
           </label>
-          <label className="inline-flex items-center">
+          <label className="inline-flex cursor-pointer items-center">
             <input
               type="radio"
               className="form-radio text-kwil focus:ring-1 focus:ring-slate-200"

@@ -14,22 +14,38 @@ export function NetworkStep() {
       <div className="grid grid-cols-2 gap-2">
         <DeploymentOptionCard
           step={1}
-          title="Testnet"
-          subtitle="Kwil Testnet"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
           optionKey="network"
           optionValue={Network.testnet}
-        />
+        >
+          <span className="text-xl tracking-tighter">Testnet</span>
+          <span className="text-sm">Kwil Testnet</span>
+          <div className="mt-3 text-xs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur.
+          </div>
+        </DeploymentOptionCard>
 
         <DeploymentOptionCard
           step={1}
-          title="Mainnet"
-          subtitle="Kwil Mainnet"
-          description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
           optionKey="network"
           optionValue={Network.mainnet}
           enterprise
-        />
+        >
+          <span className="text-xl tracking-tighter">Mainnet</span>
+          <span className="text-sm">Kwil Mainnet</span>
+          <div className="mt-3 text-xs">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur.
+          </div>
+        </DeploymentOptionCard>
       </div>
     </Step>
   )

@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import {
   IFirebirdNewDeployment,
   selectNewDeployment,
@@ -6,14 +7,10 @@ import {
   setNewDeployment,
 } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import classNames from "classnames"
-import { TalkWithTeam } from "./Step/TalkWithTeam"
 
 interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   step: number
-  title: string
-  subtitle?: string
-  description: string
+  children: React.ReactNode
   optionKey: K
   optionValue: IFirebirdNewDeployment[K]
   enterprise?: boolean
@@ -21,9 +18,7 @@ interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
 
 export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   step,
-  title,
-  subtitle,
-  description,
+  children,
   optionKey,
   optionValue,
   enterprise,
@@ -61,11 +56,7 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
           </div>
         )}
 
-        <div className="flex flex-col gap-1 p-3">
-          <span className="text-xl tracking-tighter">{title}</span>
-          <span className="text-sm">{subtitle}</span>
-          <div className="mt-3 text-xs">{description}</div>
-        </div>
+        <div className="flex flex-col gap-1 p-3">{children}</div>
       </div>
     </div>
   )
