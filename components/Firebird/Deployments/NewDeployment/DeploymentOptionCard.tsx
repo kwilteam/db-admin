@@ -2,11 +2,10 @@ import classNames from "classnames"
 import {
   IFirebirdNewDeployment,
   selectNewDeployment,
-  selectCurrentStep,
-  setCurrentStep,
   setNewDeployment,
 } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { ModalEnum, setModal } from "@/store/global"
 
 interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   step: number
@@ -25,14 +24,14 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
 }: IDeploymentOptionCardProps<K>) {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
-  const currentStep = useAppSelector(selectCurrentStep)
+
   const isSelected = newDeployment && newDeployment[optionKey] === optionValue
 
   const setDeploymentValue = () => {
     dispatch(setNewDeployment({ key: optionKey, value: optionValue }))
 
-    if (currentStep === step) {
-      dispatch(setCurrentStep(step + 1))
+    if (enterprise) {
+      dispatch(setModal(ModalEnum.TALK_WITH_TEAM))
     }
   }
 

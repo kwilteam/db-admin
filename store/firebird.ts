@@ -50,8 +50,7 @@ export interface IFirebirdNewDeployment {
   machines: MachineType
   services: IFirebirdServices | undefined
   finalOptions: IFirebirdFinalOptions
-  currentStep: number
-  talkWithTeamModal: boolean
+  talkWithTeam: boolean
 }
 
 interface IFirebirdState {
@@ -85,8 +84,7 @@ const initialState: IFirebirdState = {
       inviteValidators: undefined,
       accessCode: "",
     },
-    currentStep: 1,
-    talkWithTeamModal: false,
+    talkWithTeam: true,
   },
   deployments: undefined,
   activeDeployment: undefined,
@@ -106,6 +104,19 @@ export const firebirdSlice = createSlice({
       action: PayloadAction<IFirebirdAccount | undefined>,
     ) => {
       state.account = action.payload
+    },
+
+    setDeployments: (
+      state,
+      action: PayloadAction<IFirebirdDeployment[] | undefined>,
+    ) => {
+      state.deployments = action.payload
+    },
+
+    removeDeployment: (state, action: PayloadAction<string>) => {
+      state.deployments = state.deployments?.filter(
+        (deployment) => deployment.id !== action.payload,
+      )
     },
 
     setNewDeployment: (
@@ -190,20 +201,12 @@ export const firebirdSlice = createSlice({
       }
     },
 
-    setCurrentStep: (state, action: PayloadAction<number>) => {
+    setTalkWithTeam: (state, action: PayloadAction<boolean>) => {
       if (!state.newDeployment) {
         state.newDeployment = {} as IFirebirdNewDeployment
       }
 
-      state.newDeployment.currentStep = action.payload
-    },
-
-    setTalkWithTeamModal: (state, action: PayloadAction<boolean>) => {
-      if (!state.newDeployment) {
-        state.newDeployment = {} as IFirebirdNewDeployment
-      }
-
-      state.newDeployment.talkWithTeamModal = action.payload
+      state.newDeployment.talkWithTeam = action.payload
     },
 
     setActiveDeployment: (
@@ -224,13 +227,14 @@ export const firebirdSlice = createSlice({
 
 export const {
   setAccount,
+  setDeployments,
+  removeDeployment,
   setNewDeployment,
   setNewDeploymentNetworkSettings,
   setNewDeploymentServices,
   setNewDeploymentFinalOptions,
   setAuthEmail,
-  setCurrentStep,
-  setTalkWithTeamModal,
+  setTalkWithTeam,
   setActiveDeployment,
   setDeleteDeploymentId,
 } = firebirdSlice.actions
@@ -241,6 +245,9 @@ export const selectAuthEmail = (state: { firebird: IFirebirdState }) =>
 export const selectAccount = (state: { firebird: IFirebirdState }) =>
   state.firebird.account
 
+export const selectDeployments = (state: { firebird: IFirebirdState }) =>
+  state.firebird.deployments
+
 export const selectNewDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment
 
@@ -248,11 +255,8 @@ export const selectNewDeploymentServices = (state: {
   firebird: IFirebirdState
 }) => state.firebird.newDeployment?.services
 
-export const selectCurrentStep = (state: { firebird: IFirebirdState }) =>
-  state.firebird.newDeployment?.currentStep ?? 1
-
-export const selectTalkWithTeamModal = (state: { firebird: IFirebirdState }) =>
-  state.firebird.newDeployment?.talkWithTeamModal
+export const selectTalkWithTeam = (state: { firebird: IFirebirdState }) =>
+  state.firebird.newDeployment?.talkWithTeam
 
 export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.activeDeployment

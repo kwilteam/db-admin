@@ -10,6 +10,7 @@ interface IAlert {
 }
 
 export enum ModalEnum {
+  TALK_WITH_TEAM = "talk_with_team",
   PROVIDER_OFFLINE = "provider_offline",
   CONNECT = "connect",
   SAVE_QUERY = "save_query",

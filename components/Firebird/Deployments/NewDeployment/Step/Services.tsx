@@ -1,3 +1,5 @@
+import classNames from "classnames"
+import { ModalEnum, setModal } from "@/store/global"
 import {
   IFirebirdServices,
   selectNewDeploymentServices,
@@ -6,7 +8,6 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ServicesStepIcon } from "@/utils/icons"
 import { Step } from "../Step"
-import classNames from "classnames"
 
 const services: Array<{
   title: string
@@ -66,6 +67,10 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
 
   const setService = (key: keyof IFirebirdServices, value: boolean) => {
     dispatch(setNewDeploymentServices({ key, value }))
+
+    if (service.enterprise && !isSelected) {
+      dispatch(setModal(ModalEnum.TALK_WITH_TEAM))
+    }
   }
 
   const _classNames = classNames(

@@ -4,7 +4,6 @@ import {
   IFirebirdNetworkSettings,
   KwilVersions,
   selectNewDeployment,
-  setCurrentStep,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
 import { NetworkSettingsStepIcon } from "@/utils/icons"
@@ -15,45 +14,16 @@ export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
 
-  const isStepComplete = useCallback(
-    (
-      updatedNetworkSettings:
-        | IFirebirdNetworkSettings
-        | undefined = newDeployment?.networkSettings,
-    ) => {
-      return (
-        updatedNetworkSettings?.chainId &&
-        updatedNetworkSettings?.chainId.length > 0 &&
-        updatedNetworkSettings?.kwilVersion &&
-        updatedNetworkSettings?.kwilVersion.length > 0 &&
-        updatedNetworkSettings?.companyName &&
-        updatedNetworkSettings?.companyName.length > 0
-      )
-    },
-    [newDeployment],
-  )
-
   const handleChange = useCallback(
     (valueKey: keyof IFirebirdNetworkSettings, value: string) => {
-      const updatedNetworkSettings = {
-        ...newDeployment?.networkSettings,
-        [valueKey]: value,
-      }
-
       dispatch(
         setNewDeploymentNetworkSettings({
           key: valueKey,
           value: value,
         }),
       )
-
-      if (isStepComplete(updatedNetworkSettings)) {
-        dispatch(setCurrentStep(3))
-      } else {
-        dispatch(setCurrentStep(2))
-      }
     },
-    [newDeployment, isStepComplete, dispatch],
+    [dispatch],
   )
 
   useEffect(() => {

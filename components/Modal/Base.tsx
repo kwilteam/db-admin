@@ -32,7 +32,7 @@ export default function Base({
             <div className="fixed inset-0 bg-black/25" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 overflow-y-hidden">
             <div className="m-2 flex min-h-full items-start justify-center p-0 text-center md:m-10 md:p-4">
               <Transition.Child
                 as={Fragment}
@@ -43,10 +43,10 @@ export default function Base({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-0 text-left align-middle shadow-xl transition-all">
-                  <div className="flex flex-col items-center">
-                    <div className="flex w-full flex-col rounded-md text-center">
-                      <div className="flex-1 rounded-t-md bg-kwil">
+                <Dialog.Panel className="flex max-h-[calc(100vh-2rem)] w-full max-w-md transform flex-col overflow-hidden rounded-2xl bg-white p-0 text-left align-middle shadow-xl transition-all">
+                  <div className="flex flex-grow flex-col items-center overflow-hidden">
+                    <div className="flex h-full w-full flex-col rounded-md text-center">
+                      <div className="flex-shrink-0 rounded-t-md bg-kwil">
                         <Image
                           src="/images/kwil-white-horizontal.png"
                           alt="Kwil Logo"
@@ -57,9 +57,11 @@ export default function Base({
                         />
                       </div>
 
-                      <div className="flex flex-1">{children}</div>
+                      <div className="flex-grow overflow-y-auto">
+                        {children}
+                      </div>
 
-                      <div className="flex flex-1 flex-col rounded-b-md bg-white pb-3">
+                      <div className="flex-shrink-0 rounded-b-md bg-white pb-3">
                         {footer}
                       </div>
                     </div>

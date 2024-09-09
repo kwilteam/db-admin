@@ -1,13 +1,7 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
 import { VmStepIcon } from "@/utils/icons"
-import {
-  MachineType,
-  selectNewDeployment,
-  setCurrentStep,
-} from "@/store/firebird"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { useEffect } from "react"
+import { MachineType } from "@/store/firebird"
 
 const machinesOptions: Array<{
   title: string

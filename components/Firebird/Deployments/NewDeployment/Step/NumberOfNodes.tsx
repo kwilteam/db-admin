@@ -1,14 +1,7 @@
-import { useEffect, useState } from "react"
-import {
-  selectCurrentStep,
-  selectNewDeployment,
-  setCurrentStep,
-  setNewDeployment,
-} from "@/store/firebird"
+import { selectNewDeployment, setNewDeployment } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { NumberOfNodesStepIcon } from "@/utils/icons"
 import { Step } from "../Step"
-import { TalkWithTeamCard } from "../TalkWithTeamCard"
 
 const nodeCountOptions = ["", "1", "2", "3", "4", "5"]
 

@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation"
 import {
+  removeDeployment,
   selectDeleteDeploymentId,
   setDeleteDeploymentId,
 } from "@/store/firebird"
@@ -28,6 +29,8 @@ export default function DeleteDeploymentModal() {
     console.log("Delete deployment", status, data)
 
     if (status === 200) {
+      dispatch(removeDeployment(deleteDeploymentId))
+
       // After deleting, hide modal
       dispatch(setModal(undefined))
       dispatch(setDeleteDeploymentId(undefined))

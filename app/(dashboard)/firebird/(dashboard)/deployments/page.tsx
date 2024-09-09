@@ -1,41 +1,42 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { DeployIcon, FirebirdIcon } from "@/utils/icons"
 import { getDeployments } from "@/utils/firebird/api"
-import { useAppSelector } from "@/store/hooks"
-import { selectAccount } from "@/store/firebird"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { setAlert } from "@/store/global"
 import {
-  IFirebirdDeployment,
-  IFirebirdPagination,
-} from "@/utils/firebird/types"
+  selectAccount,
+  selectDeployments,
+  setDeployments,
+} from "@/store/firebird"
 import DeploymentCard from "@/components/Firebird/Deployments/DeploymentCard"
 import Loading from "@/components/Loading"
 
 export default function DeploymentsHomePage() {
+  const dispatch = useAppDispatch()
   const account = useAppSelector(selectAccount)
-  const [deployments, setDeployments] = useState<
-    IFirebirdDeployment[] | undefined
-  >(undefined)
-  const [pagination, setPagination] = useState<IFirebirdPagination | undefined>(
-    undefined,
-  )
-
+  const deployments = useAppSelector(selectDeployments)
   useEffect(() => {
     const loadAsync = async () => {
       const { status, data } = await getDeployments()
 
       if (status === 200 && data) {
-        setDeployments(data.result)
-        setPagination(data.pagination)
+        dispatch(setDeployments(data.result))
       } else {
-        setDeployments([])
+        dispatch(
+          setAlert({
+            text: "There was a problem loading your deployments",
+            type: "error",
+          }),
+        )
+        dispatch(setDeployments([]))
       }
     }
 
     loadAsync()
-  }, [account])
+  }, [account, dispatch])
 
   if (!deployments) {
     return (

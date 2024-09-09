@@ -1,10 +1,15 @@
+import { setTalkWithTeam } from "@/store/firebird"
+import { ModalEnum, setModal } from "@/store/global"
 import { useAppDispatch } from "@/store/hooks"
-import { setTalkWithTeamModal } from "@/store/firebird"
 import { ScheduleIcon } from "@/utils/icons"
 
 export function TalkWithTeam(): JSX.Element {
   const dispatch = useAppDispatch()
-  const openModal = () => dispatch(setTalkWithTeamModal(true))
+
+  const openModal = () => {
+    dispatch(setModal(ModalEnum.TALK_WITH_TEAM))
+    dispatch(setTalkWithTeam(true))
+  }
 
   return (
     <div className="flex flex-grow select-none flex-row items-center justify-end gap-2 p-1 text-slate-700">

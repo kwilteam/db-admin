@@ -1,8 +1,8 @@
 "use client"
 
 import Header from "@/components/Firebird/Deployments/Header"
-import DeleteDeploymentModal from "@/components/Firebird/Deployments/NewDeployment/DeleteDeploymentModal"
-import TalkWithTeamModal from "@/components/Firebird/Deployments/NewDeployment/TalkWithTeamModal"
+import DeleteDeploymentModal from "@/components/Modal/DeleteDeployment"
+import TalkWithTeamModal from "@/components/Modal/TalkWithTeam"
 
 export default function FirebirdDeploymentsLayout({
   children,
