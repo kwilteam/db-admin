@@ -1,22 +1,29 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
+import {
+  selectActiveDeployment,
+  selectActiveDeploymentNodeId,
+  setActiveDeployment,
+  setActiveDeploymentNodeId,
+} from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
-import { DeploymentStatus } from "@/utils/firebird/types"
+import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import useDeploymentStatusWebSocket from "@/hooks/use-deployment-status-ws"
 import Loading from "@/components/Loading"
+import { CloseIcon } from "@/utils/icons"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import Tabs from "../../Tabs"
 import KwilCliConnect from "./KwilCliConnect"
 import JsSdkConnect from "./JsSdkConnect"
 import Nodes from "./Nodes"
-import Services from "./Services"
+import Config from "./Config"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const activeDeployment = useAppSelector(selectActiveDeployment)
+  const nodeId = useAppSelector(selectActiveDeploymentNodeId)
   // const deploymentStatus = useDeploymentStatusWebSocket(
   //   id,
   //   activeDeployment?.status || DeploymentStatus.PENDING,
@@ -66,51 +73,80 @@ export default function ExistingDeployment({ id }: { id: string }) {
       <div className="mx-2 flex h-screen flex-row gap-2">
         <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
           {activeDeployment.status === DeploymentStatus.ACTIVE && (
-            <div className="flex w-full rounded-md border border-slate-100">
-              <Tabs
-                tabs={[
-                  { name: "Nodes", component: <Nodes deploymentId={id} /> },
-                  {
-                    name: "Services",
-                    component: <Services deploymentId={id} />,
-                  },
-                ]}
-              />
-            </div>
+            <ActiveDeploymentTabs
+              deploymentId={id}
+              activeDeployment={activeDeployment}
+            />
           )}
         </div>
 
-        {activeDeployment.status === DeploymentStatus.ACTIVE &&
-          providerEndpoint &&
-          chain && (
-            <div className="flex flex-col justify-start gap-2 lg:w-1/2">
-              <div className="rounded-md border border-slate-100">
-                <Tabs
-                  tabs={[
-                    {
-                      name: "Kwil CLI",
-                      component: (
-                        <KwilCliConnect
-                          providerEndpoint={providerEndpoint}
-                          chain={chain}
-                        />
-                      ),
-                    },
-                    {
-                      name: "JavaScript",
-                      component: (
-                        <JsSdkConnect
-                          providerEndpoint={providerEndpoint}
-                          chain={chain}
-                        />
-                      ),
-                    },
-                  ]}
-                />
-              </div>
-            </div>
-          )}
+        <div className="flex w-full flex-col gap-2 lg:w-1/2">
+          {activeDeployment.status === DeploymentStatus.ACTIVE &&
+            providerEndpoint &&
+            chain && (
+              <QuickConnect providerEndpoint={providerEndpoint} chain={chain} />
+            )}
+        </div>
       </div>
     </>
+  )
+}
+
+const ActiveDeploymentTabs = ({
+  deploymentId,
+  activeDeployment,
+}: {
+  deploymentId: string
+  activeDeployment: IFirebirdDeployment
+}) => {
+  return (
+    <div className="flex w-full rounded-md border border-slate-100">
+      <Tabs
+        tabs={[
+          { name: "Nodes", component: <Nodes deploymentId={deploymentId} /> },
+          {
+            name: "Config",
+            component: <Config config={activeDeployment.config} />,
+          },
+        ]}
+      />
+    </div>
+  )
+}
+
+const QuickConnect = ({
+  providerEndpoint,
+  chain,
+}: {
+  providerEndpoint: string
+  chain: { chain_id: string; version: string }
+}) => {
+  return (
+    <div className="flex flex-col justify-start gap-2">
+      <div className="rounded-md border border-slate-100">
+        <Tabs
+          tabs={[
+            {
+              name: "Kwil CLI",
+              component: (
+                <KwilCliConnect
+                  providerEndpoint={providerEndpoint}
+                  chain={chain}
+                />
+              ),
+            },
+            {
+              name: "JavaScript",
+              component: (
+                <JsSdkConnect
+                  providerEndpoint={providerEndpoint}
+                  chain={chain}
+                />
+              ),
+            },
+          ]}
+        />
+      </div>
+    </div>
   )
 }

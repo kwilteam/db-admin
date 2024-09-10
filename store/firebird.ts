@@ -59,6 +59,7 @@ interface IFirebirdState {
   newDeployment: IFirebirdNewDeployment | undefined
   deployments: IFirebirdDeployment[] | undefined
   activeDeployment: IFirebirdDeployment | undefined
+  activeDeploymentNodeId: string | undefined
   deleteDeploymentId: string | undefined
 }
 
@@ -88,6 +89,7 @@ const initialState: IFirebirdState = {
   },
   deployments: undefined,
   activeDeployment: undefined,
+  activeDeploymentNodeId: undefined,
   deleteDeploymentId: undefined,
 }
 
@@ -216,6 +218,13 @@ export const firebirdSlice = createSlice({
       state.activeDeployment = action.payload
     },
 
+    setActiveDeploymentNodeId: (
+      state,
+      action: PayloadAction<string | undefined>,
+    ) => {
+      state.activeDeploymentNodeId = action.payload
+    },
+
     setDeleteDeploymentId: (
       state,
       action: PayloadAction<string | undefined>,
@@ -236,6 +245,7 @@ export const {
   setAuthEmail,
   setTalkWithTeam,
   setActiveDeployment,
+  setActiveDeploymentNodeId,
   setDeleteDeploymentId,
 } = firebirdSlice.actions
 
@@ -260,6 +270,10 @@ export const selectTalkWithTeam = (state: { firebird: IFirebirdState }) =>
 
 export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.activeDeployment
+
+export const selectActiveDeploymentNodeId = (state: {
+  firebird: IFirebirdState
+}) => state.firebird.activeDeploymentNodeId
 
 export const selectDeleteDeploymentId = (state: { firebird: IFirebirdState }) =>
   state.firebird.deleteDeploymentId

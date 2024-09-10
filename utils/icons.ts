@@ -39,6 +39,7 @@ import {
   HiOutlineClipboardDocumentCheck,
   HiOutlineTrash,
   HiOutlineCalendarDays,
+  HiOutlineDocumentArrowDown,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -105,4 +106,5 @@ export {
   HiOutlineClipboardDocumentCheck as ClipboardCheckIcon,
   HiOutlineTrash as DeleteIcon,
   HiOutlineCalendarDays as ScheduleIcon,
+  HiOutlineDocumentArrowDown as DownloadLogsIcon,
 }

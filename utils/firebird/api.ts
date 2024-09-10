@@ -130,6 +130,38 @@ export const getNodeServices = async (nodeId: string) => {
   )
 }
 
+export const downloadServiceLogs = async (serviceId: string) => {
+  console.log("Downloading service logs", serviceId)
+  const apiUrl = process.env.NEXT_PUBLIC_FIREBIRD_API_URL
+  if (!apiUrl) {
+    console.error("NEXT_PUBLIC_FIREBIRD_API_URL is not set")
+    return { status: 400, message: "API URL is not configured properly" }
+  }
+
+  const url = `${apiUrl}/api/services/${serviceId}/log`
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      credentials: "include",
+    })
+
+    if (response.ok) {
+      const text = await response.text()
+      return { status: 200, message: "Request successful", data: text }
+    } else {
+      const errorData = await response.json().catch(() => ({}))
+      return {
+        status: response.status,
+        message: errorData.message || `Failed to download logs`,
+      }
+    }
+  } catch (error) {
+    console.error(`Error downloading logs:`, error)
+    return { status: 500, message: "An unexpected error occurred" }
+  }
+}
+
 export const deleteDeployment = async (deploymentId: string) => {
   console.log("Deleting deployment", deploymentId)
   return await firebirdApiRequest(`deployments/${deploymentId}`, "DELETE")
