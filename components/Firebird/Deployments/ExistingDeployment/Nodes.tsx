@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import Loading from "@/components/Loading"
+import classNames from "classnames"
 import {
   downloadServiceLogs,
   getNodes,
@@ -10,14 +10,11 @@ import {
   IFirebirdApiService,
   NodeStatus,
 } from "@/utils/firebird/types"
+import { ModalEnum, setModal, setModalData } from "@/store/global"
 import { capitalize } from "@/utils/helpers"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import {
-  selectActiveDeploymentNodeId,
-  setActiveDeploymentNodeId,
-} from "@/store/firebird"
-import classNames from "classnames"
-import { CloseIcon, DeleteIcon, DownloadLogsIcon } from "@/utils/icons"
+import { useAppDispatch } from "@/store/hooks"
+import { DeleteIcon, DownloadLogsIcon } from "@/utils/icons"
+import Loading from "@/components/Loading"
 
 export const statusColor = {
   [NodeStatus.PENDING]: "bg-blue-500/80",
@@ -31,7 +28,6 @@ export const statusColor = {
 
 export default function Nodes({ deploymentId }: { deploymentId: string }) {
   const dispatch = useAppDispatch()
-  const activeNodeId = useAppSelector(selectActiveDeploymentNodeId)
   const [openNodeIds, setOpenNodeIds] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [nodes, setNodes] = useState<IFirebirdApiNode[] | undefined>(undefined)
@@ -64,25 +60,22 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
 
     setLoading(false)
     fetchNodes()
-
-    return () => {
-      dispatch(setActiveDeploymentNodeId(undefined))
-    }
   }, [deploymentId, dispatch])
 
   if (!nodes) {
     return <Loading className="mb-1" />
   }
 
-  const setActiveNode = (nodeId: string) => {
-    if (activeNodeId === nodeId) {
-      dispatch(setActiveDeploymentNodeId(undefined))
-    } else {
-      dispatch(setActiveDeploymentNodeId(nodeId))
-    }
-  }
+  const triggerDeleteNode = async (
+    e: React.MouseEvent<HTMLDivElement>,
+    nodeId: string,
+  ) => {
+    e.stopPropagation()
 
-  // TODO: allow node to be deleted
+    // Set Model to delete node
+    dispatch(setModal(ModalEnum.DELETE_NODE))
+    dispatch(setModalData({ nodeId, onlyNode: nodes.length === 1 }))
+  }
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -104,7 +97,12 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
               )}
               onClick={() => toggleNodeOpen(node.id)}
             >
-              <div className="absolute right-2 top-2 cursor-pointer p-1">
+              <div
+                className="absolute right-2 top-2 cursor-pointer rounded-full border border-slate-100 p-1 hover:bg-slate-100"
+                onClick={(e) => {
+                  triggerDeleteNode(e, node.id)
+                }}
+              >
                 <DeleteIcon className="h-4 w-4" />
               </div>
               <h2 className="flex flex-row items-center gap-2 text-sm font-medium">
@@ -121,6 +119,10 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
             </div>
           </>
         ))}
+
+      {!nodes.length && (
+        <div className="text-sm text-slate-500">No nodes found</div>
+      )}
     </div>
   )
 }

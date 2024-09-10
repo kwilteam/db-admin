@@ -1,17 +1,11 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import {
-  selectActiveDeployment,
-  selectActiveDeploymentNodeId,
-  setActiveDeployment,
-  setActiveDeploymentNodeId,
-} from "@/store/firebird"
+import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import useDeploymentStatusWebSocket from "@/hooks/use-deployment-status-ws"
 import Loading from "@/components/Loading"
-import { CloseIcon } from "@/utils/icons"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import Tabs from "../../Tabs"
 import KwilCliConnect from "./KwilCliConnect"
@@ -23,7 +17,6 @@ export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const activeDeployment = useAppSelector(selectActiveDeployment)
-  const nodeId = useAppSelector(selectActiveDeploymentNodeId)
   // const deploymentStatus = useDeploymentStatusWebSocket(
   //   id,
   //   activeDeployment?.status || DeploymentStatus.PENDING,

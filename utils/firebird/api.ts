@@ -1,7 +1,6 @@
 import {
   IFirebirdApiAccountResponse,
   IFirebirdDeployment,
-  IFirebirdDeploymentConfig,
   IFirebirdApiDeploymentsResponse,
   IFirebirdApiDeployResponse,
   IFirebirdApiResponse,
@@ -160,6 +159,11 @@ export const downloadServiceLogs = async (serviceId: string) => {
     console.error(`Error downloading logs:`, error)
     return { status: 500, message: "An unexpected error occurred" }
   }
+}
+
+export const deleteNode = async (nodeId: string) => {
+  console.log("Deleting node", nodeId)
+  return await firebirdApiRequest(`nodes/${nodeId}`, "DELETE")
 }
 
 export const deleteDeployment = async (deploymentId: string) => {

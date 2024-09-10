@@ -15,6 +15,7 @@ export enum ModalEnum {
   CONNECT = "connect",
   SAVE_QUERY = "save_query",
   DELETE_DEPLOYMENT = "delete_deployment",
+  DELETE_NODE = "delete_node",
 }
 
 interface IGlobalState {
@@ -25,6 +26,7 @@ interface IGlobalState {
   providerOfflineAcknowledged: boolean
   settingsLoaded: boolean
   alert: IAlert | undefined
+  modalData: any
 }
 
 const initialState: IGlobalState = {
@@ -35,6 +37,7 @@ const initialState: IGlobalState = {
   providerOfflineAcknowledged: false,
   settingsLoaded: false,
   alert: undefined,
+  modalData: undefined,
 }
 
 export const globalSlice = createSlice({
@@ -46,6 +49,9 @@ export const globalSlice = createSlice({
     },
     setModal: (state, action: PayloadAction<ModalEnum | undefined>) => {
       state.modal = action.payload
+    },
+    setModalData: (state, action: PayloadAction<any>) => {
+      state.modalData = action.payload
     },
     setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
       state.providerStatus = action.payload
@@ -75,6 +81,7 @@ export const globalSlice = createSlice({
 export const {
   setIsMenuOpen,
   setModal,
+  setModalData,
   setProviderStatus,
   setProviderOfflineAcknowledged,
   setActiveAccount,
@@ -86,6 +93,9 @@ export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
 
 export const selectModal = (state: { global: IGlobalState }) =>
   state.global.modal
+
+export const selectModalData = (state: { global: IGlobalState }) =>
+  state.global.modalData
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount
