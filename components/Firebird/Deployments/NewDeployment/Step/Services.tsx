@@ -9,40 +9,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ServicesStepIcon } from "@/utils/icons"
 import { Step } from "../Step"
 
-const services: Array<{
-  title: string
-  description: string
-  optionKey: keyof IFirebirdServices
-  enterprise: boolean
-}> = [
-  {
-    title: "KwilD + Postgres",
-    description:
-      "The Kwil Daemon, responsible for validating blocks and executing transactions, and its underlying Postgres instance.",
-    optionKey: "daemon",
-    enterprise: false,
-  },
-  {
-    title: "Kwil Gateway",
-
-    description: "Authn and load balancing service for Kwil networks.",
-    optionKey: "gateway",
-    enterprise: true,
-  },
-  {
-    title: "Kwil Indexer",
-    description: "A blockchain indexer for Kwil networks.",
-    optionKey: "indexer",
-    enterprise: true,
-  },
-  {
-    title: "Custom Binary",
-    description: "Upload a compiled Kwild binary with extensions.",
-    optionKey: "customBinary",
-    enterprise: true,
-  },
-]
-
 export function ServicesStep() {
   return (
     <Step
@@ -116,3 +82,37 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
     </div>
   )
 }
+
+const services: Array<{
+  title: string
+  description: string
+  optionKey: keyof IFirebirdServices
+  enterprise: boolean
+}> = [
+  {
+    title: "KwilD + Postgres",
+    description:
+      "The Kwil Daemon, responsible for validating blocks and executing transactions, and its underlying Postgres instance.",
+    optionKey: "daemon",
+    enterprise: false,
+  },
+  {
+    title: "Kwil Gateway",
+
+    description: "Authn and load balancing service for Kwil networks.",
+    optionKey: "gateway",
+    enterprise: true,
+  },
+  {
+    title: "Kwil Indexer",
+    description: "A blockchain indexer for Kwil networks.",
+    optionKey: "indexer",
+    enterprise: true,
+  },
+  {
+    title: "Custom Binary",
+    description: "Upload a compiled Kwild binary with extensions.",
+    optionKey: "customBinary",
+    enterprise: true,
+  },
+]

@@ -9,9 +9,6 @@ export function CancelNewDeployment() {
     const confirmed = confirm("Are you sure you want to cancel the deployment?")
     if (!confirmed) return
 
-    // set the new deployment to undefined
-    // dispatch(cancelNewDeployment())
-
     // redirect to the deployments page
     router.push("/firebird/deployments")
   }

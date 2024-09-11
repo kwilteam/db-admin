@@ -7,11 +7,8 @@ import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import useDeploymentStatusWebSocket from "@/hooks/use-deployment-status-ws"
 import Loading from "@/components/Loading"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
-import Tabs from "../../Tabs"
-import KwilCliConnect from "./KwilCliConnect"
-import JsSdkConnect from "./JsSdkConnect"
-import Nodes from "./Nodes"
-import Config from "./Config"
+import QuickConnect from "./QuickConnect"
+import ActiveDeploymentTabs from "./ActiveDeploymentTabs"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
@@ -82,64 +79,5 @@ export default function ExistingDeployment({ id }: { id: string }) {
         </div>
       </div>
     </>
-  )
-}
-
-const ActiveDeploymentTabs = ({
-  deploymentId,
-  activeDeployment,
-}: {
-  deploymentId: string
-  activeDeployment: IFirebirdDeployment
-}) => {
-  return (
-    <div className="flex w-full rounded-md border border-slate-100">
-      <Tabs
-        tabs={[
-          { name: "Nodes", component: <Nodes deploymentId={deploymentId} /> },
-          {
-            name: "Config",
-            component: <Config config={activeDeployment.config} />,
-          },
-        ]}
-      />
-    </div>
-  )
-}
-
-const QuickConnect = ({
-  providerEndpoint,
-  chain,
-}: {
-  providerEndpoint: string
-  chain: { chain_id: string; version: string }
-}) => {
-  return (
-    <div className="flex flex-col justify-start gap-2">
-      <div className="rounded-md border border-slate-100">
-        <Tabs
-          tabs={[
-            {
-              name: "Kwil CLI",
-              component: (
-                <KwilCliConnect
-                  providerEndpoint={providerEndpoint}
-                  chain={chain}
-                />
-              ),
-            },
-            {
-              name: "JavaScript",
-              component: (
-                <JsSdkConnect
-                  providerEndpoint={providerEndpoint}
-                  chain={chain}
-                />
-              ),
-            },
-          ]}
-        />
-      </div>
-    </div>
   )
 }

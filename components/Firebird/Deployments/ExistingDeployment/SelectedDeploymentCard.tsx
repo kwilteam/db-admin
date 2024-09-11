@@ -6,6 +6,7 @@ import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "../DeploymentBadge"
 import { ModalEnum, setModal } from "@/store/global"
 import { setDeleteDeploymentId } from "@/store/firebird"
+import { useConnectToProvider } from "@/hooks/firebird/use-connect-to-provider"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -24,15 +25,15 @@ export default function SelectedDeploymentCard({
 }) {
   console.log(deployment, "Deployment")
   const dispatch = useAppDispatch()
+  const { connectToProvider } = useConnectToProvider({
+    providerEndpoint: deployment.service_endpoints?.kwil_rpc_provider || "",
+    instanceName: deployment.config.machines.instance_name || "",
+    chainId: deployment.config.chain.chain_id || "",
+  })
 
   const chain = deployment.config.chain
   const machines = deployment.config.machines
   const status = deployment.status
-  const providerEndpoint = deployment.service_endpoints?.kwil_rpc_provider
-
-  const connectToProvider = () => {
-    console.log("Connect to provider", providerEndpoint)
-  }
 
   const statusColorClass = statusColor[status] || "bg-slate-100"
 

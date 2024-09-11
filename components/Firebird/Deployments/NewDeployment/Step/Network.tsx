@@ -12,11 +12,7 @@ export function NetworkStep() {
       description="Select a network to deploy to."
     >
       <div className="grid grid-cols-2 gap-2">
-        <DeploymentOptionCard
-          step={1}
-          optionKey="network"
-          optionValue={Network.testnet}
-        >
+        <DeploymentOptionCard optionKey="network" optionValue={Network.testnet}>
           <span className="text-xl tracking-tighter">Testnet</span>
           <span className="text-sm">Kwil Testnet</span>
           <div className="mt-3 text-xs">
@@ -30,7 +26,6 @@ export function NetworkStep() {
         </DeploymentOptionCard>
 
         <DeploymentOptionCard
-          step={1}
           optionKey="network"
           optionValue={Network.mainnet}
           enterprise

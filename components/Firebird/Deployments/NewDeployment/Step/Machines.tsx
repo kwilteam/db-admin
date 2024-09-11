@@ -3,6 +3,42 @@ import { DeploymentOptionCard } from "../DeploymentOptionCard"
 import { VmStepIcon } from "@/utils/icons"
 import { MachineType } from "@/store/firebird"
 
+export function MachinesStep() {
+  return (
+    <Step
+      step={4}
+      icon={<VmStepIcon />}
+      title="Select a Machine"
+      description="Choose the machine you want to deploy to."
+    >
+      <div className="grid grid-cols-2 gap-2">
+        {machinesOptions.map((option) => (
+          <DeploymentOptionCard
+            key={option.title}
+            optionKey="machines"
+            optionValue={option.optionValue}
+            enterprise={option.enterprise}
+          >
+            <span className="text-xl tracking-tighter">{option.title}</span>
+            <div className="flex flex-row gap-2">
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.cpu}
+              </span>
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.ram}
+              </span>
+              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
+                {option.storage}
+              </span>
+            </div>
+            <div className="mt-3 text-xs">{option.description}</div>
+          </DeploymentOptionCard>
+        ))}
+      </div>
+    </Step>
+  )
+}
+
 const machinesOptions: Array<{
   title: string
   cpu: string
@@ -49,40 +85,3 @@ const machinesOptions: Array<{
     enterprise: true,
   },
 ]
-
-export function MachinesStep() {
-  return (
-    <Step
-      step={4}
-      icon={<VmStepIcon />}
-      title="Select a Machine"
-      description="Choose the machine you want to deploy to."
-    >
-      <div className="grid grid-cols-2 gap-2">
-        {machinesOptions.map((option) => (
-          <DeploymentOptionCard
-            key={option.title}
-            step={4}
-            optionKey="machines"
-            optionValue={option.optionValue}
-            enterprise={option.enterprise}
-          >
-            <span className="text-xl tracking-tighter">{option.title}</span>
-            <div className="flex flex-row gap-2">
-              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
-                {option.cpu}
-              </span>
-              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
-                {option.ram}
-              </span>
-              <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
-                {option.storage}
-              </span>
-            </div>
-            <div className="mt-3 text-xs">{option.description}</div>
-          </DeploymentOptionCard>
-        ))}
-      </div>
-    </Step>
-  )
-}

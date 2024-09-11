@@ -1,7 +1,8 @@
 import { useState } from "react"
 import CodeBlock from "../../CodeBlock"
+import useCodeSnippets from "@/hooks/firebird/use-code-snippets"
 
-const customStyle = {
+const codeBlockCustomStyle = {
   background: "#f8fafc", // Tailwind's bg-slate-50
   fontSize: "0.75rem",
   borderRadius: "0.375rem", // Tailwind's rounded-md
@@ -16,31 +17,7 @@ export default function JsSdkConnect({
   chain: { chain_id: string; version: string }
 }) {
   const [environment, setEnvironment] = useState<"web" | "node">("web")
-
-  const nodeCode = `
-const { Wallet } = require('ethers');
-const kwiljs = require('@kwilteam/kwil-js');
-
-const wallet = new Wallet("MY_PRIVATE_KEY");
-
-const kwil = new kwiljs.NodeKwil({
-  kwilProvider: "${providerEndpoint}",
-  chainId: "${chain?.chain_id}"
-});
-  `.trim()
-
-  const webCode = `
-import { BrowserProvider } from 'ethers';
-import { WebKwil } from '@kwilteam/kwil-js';
-
-// to be used for funding and signing transactions
-const provider = new BrowserProvider(window.ethereum)
-
-const kwil = new WebKwil({
-    kwilProvider: "${providerEndpoint}",
-    chainId: "${chain?.chain_id}"
-});
-  `.trim()
+  const { node, web } = useCodeSnippets(providerEndpoint, chain?.chain_id)
 
   return (
     <div>
@@ -72,8 +49,8 @@ const kwil = new WebKwil({
       </div>
       <CodeBlock
         language="js"
-        code={environment === "web" ? webCode : nodeCode}
-        customStyle={customStyle}
+        code={environment === "web" ? web : node}
+        customStyle={codeBlockCustomStyle}
       />
     </div>
   )

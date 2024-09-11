@@ -35,7 +35,7 @@ export enum DeploymentStatus {
   TERMINATED = "TERMINATED",
 }
 
-export interface IFirebirdNewDeployment {
+export interface IFirebirdApiNewDeployment {
   chain: {
     chain_id: string
     version: string

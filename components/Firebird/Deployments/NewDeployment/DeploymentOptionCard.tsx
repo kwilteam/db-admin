@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setModal } from "@/store/global"
 
 interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
-  step: number
   children: React.ReactNode
   optionKey: K
   optionValue: IFirebirdNewDeployment[K]
@@ -16,7 +15,6 @@ interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
 }
 
 export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
-  step,
   children,
   optionKey,
   optionValue,

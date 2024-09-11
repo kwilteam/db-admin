@@ -7,7 +7,7 @@ import {
   IFirebirdApiVerifyOtpResponse,
   IFirebirdApiNode,
   IFirebirdApiService,
-  IFirebirdNewDeployment,
+  IFirebirdApiNewDeployment,
 } from "./types"
 
 // Helper function to handle API requests
@@ -85,7 +85,7 @@ export const signOut = async () => {
   return await firebirdApiRequest("auth/signout")
 }
 
-export const deployNetwork = async (data: IFirebirdNewDeployment) => {
+export const deployNetwork = async (data: IFirebirdApiNewDeployment) => {
   console.log("Deploying network", data)
   return await firebirdApiRequest<IFirebirdApiDeployResponse>(
     "deployments",
