@@ -18,6 +18,7 @@ export default function DeploymentsHomePage() {
   const dispatch = useAppDispatch()
   const account = useAppSelector(selectAccount)
   const deployments = useAppSelector(selectDeployments)
+
   useEffect(() => {
     const loadAsync = async () => {
       const { status, data } = await getDeployments()

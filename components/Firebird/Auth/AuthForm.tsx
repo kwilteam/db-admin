@@ -10,13 +10,13 @@ import { requestOtpAction } from "@/utils/firebird/api"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
 
-interface AuthPageProps {
+interface AuthFormProps {
   title: string
   icon: ReactNode
   children: ReactNode
 }
 
-export default function AuthPage({ title, icon, children }: AuthPageProps) {
+export default function AuthForm({ title, icon, children }: AuthFormProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [emailSent, setEmailSent] = useState<boolean | undefined>(undefined)
