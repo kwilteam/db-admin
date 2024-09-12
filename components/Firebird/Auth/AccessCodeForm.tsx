@@ -8,7 +8,7 @@ export default function AccessCodeForm({
   inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>
 }) {
   return (
-    <div className="mt-2 flex justify-center space-x-2">
+    <div className="mt-2 flex justify-center space-x-2" data-testid="otp-input">
       {code.map((_, index) => (
         <input
           key={index}

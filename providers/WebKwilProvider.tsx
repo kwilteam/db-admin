@@ -16,7 +16,12 @@ import {
   selectActiveProvider,
   selectProviders,
 } from "@/store/providers"
-import { ModalEnum, setModal, setProviderOfflineAcknowledged, setProviderStatus } from "@/store/global"
+import {
+  ModalEnum,
+  setModal,
+  setProviderOfflineAcknowledged,
+  setProviderStatus,
+} from "@/store/global"
 
 const logging = true
 
@@ -46,7 +51,6 @@ export const WebKwilProvider = ({
   const initKwilProvider = useCallback(async () => {
     if (!providerObject || !isOnline) return
 
-
     try {
       const kwilProviderOptions = {
         kwilProvider: providerObject.url,
@@ -63,7 +67,6 @@ export const WebKwilProvider = ({
       }
 
       setKwilProvider(kwilInstance)
-      
     } catch (error) {
       setKwilProvider(undefined)
       dispatch(setProviderStatus(KwilProviderStatus.Offline))
@@ -86,7 +89,7 @@ export const WebKwilProvider = ({
 
     let tempProvider = kwilProvider
 
-    if(!tempProvider) {
+    if (!tempProvider) {
       tempProvider = new WebKwil({
         kwilProvider: providerObject.url,
         chainId: providerObject.chainId || "",
@@ -97,7 +100,7 @@ export const WebKwilProvider = ({
     try {
       const ping = await tempProvider.ping()
 
-      if(ping.status === 200) {
+      if (ping.status === 200) {
         setIsOnline(true)
         dispatch(setProviderStatus(KwilProviderStatus.Online))
         dispatch(setModal(undefined))
@@ -111,12 +114,12 @@ export const WebKwilProvider = ({
     } catch (error) {
       setIsOnline(false)
       console.error("Failed to check provider status", error)
-    };
-  }, [providerObject]);
+    }
+  }, [providerObject])
 
   useEffect(() => {
     checkProviderStatus()
-  }, [pathname, checkProviderStatus]);
+  }, [pathname, checkProviderStatus])
 
   return (
     <KwilContext.Provider value={kwilProvider}>{children}</KwilContext.Provider>

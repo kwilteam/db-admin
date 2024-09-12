@@ -2,6 +2,7 @@ import { Fragment } from "react"
 import Image from "next/image"
 import { Dialog, Transition } from "@headlessui/react"
 import KwilLogo from "@/public/images/kwil-white-horizontal.svg"
+import { CloseIcon } from "@/utils/icons"
 
 interface IModalProps {
   show: boolean
@@ -44,7 +45,13 @@ export default function Base({
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="flex max-h-[calc(100vh-2rem)] w-full max-w-md transform flex-col overflow-hidden rounded-2xl bg-white p-0 text-left align-middle shadow-xl transition-all">
-                  <div className="flex flex-grow flex-col items-center overflow-hidden">
+                  <div className="relative flex flex-grow flex-col items-center overflow-hidden">
+                    <div
+                      className="absolute right-2 top-2 cursor-pointer rounded-full border border-white/20 p-1 text-white hover:bg-white/30"
+                      onClick={closeModal}
+                    >
+                      <CloseIcon className="h-4 w-4" />
+                    </div>
                     <div className="flex h-full w-full flex-col rounded-md text-center">
                       <div className="flex-shrink-0 rounded-t-md bg-kwil">
                         <Image

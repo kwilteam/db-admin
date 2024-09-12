@@ -9,6 +9,7 @@ import { setAuthEmail } from "@/store/firebird"
 import { requestOtpAction } from "@/utils/firebird/api"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
 import { CheckIcon, ErrorIcon } from "@/utils/icons"
+import Loading from "@/components/Loading"
 
 interface AuthFormProps {
   title: string
@@ -20,6 +21,7 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [emailSent, setEmailSent] = useState<boolean | undefined>(undefined)
+  const [requestingOtp, setRequestingOtp] = useState<boolean>(false)
 
   const onEmailChange = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -36,15 +38,25 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
     if (typeof email !== "string" || !email) return
 
     setEmailSent(undefined)
+    setRequestingOtp(true)
+    try {
+      const response = await requestOtpAction(email)
 
-    const { status, message } = await requestOtpAction(email)
+      if (response && response.status === 200) {
+        setEmailSent(true)
 
-    if (status === 200) {
-      setEmailSent(true)
-      router.push("/firebird/access-code")
-    } else {
+        setTimeout(() => {
+          router.push("/firebird/access-code")
+          setRequestingOtp(false)
+        }, 1000)
+      } else {
+        setEmailSent(false)
+        setRequestingOtp(false)
+        console.log(response?.message || "Unknown error occurred")
+      }
+    } catch (error) {
       setEmailSent(false)
-      console.log(message)
+      console.error("Error requesting OTP:", error)
     }
 
     setTimeout(() => {
@@ -99,6 +111,7 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
                   id="email"
                   name="email"
                   type="email"
+                  data-testid="email-input"
                   required
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
@@ -108,8 +121,22 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
             </div>
 
             <div>
-              <button className="w-full justify-center rounded-md bg-kwil/80 py-2 text-sm text-white hover:bg-kwil/90">
-                Continue
+              <button
+                type="submit"
+                className="h-10 w-full justify-center rounded-md bg-kwil/80 py-1 text-sm text-white hover:bg-kwil/90"
+                data-testid="continue-button"
+                disabled={requestingOtp}
+              >
+                {requestingOtp ? (
+                  <Loading
+                    className="flex items-center justify-center"
+                    color="white"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center">
+                    Continue
+                  </div>
+                )}
               </button>
             </div>
 
@@ -122,14 +149,20 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
             </div>
 
             {emailSent === false && (
-              <p className="flex flex-row items-center gap-2 text-sm text-red-500">
+              <p
+                className="flex flex-row items-center gap-2 text-sm text-red-500"
+                data-testid="error-message"
+              >
                 <ErrorIcon className="h-6 w-6" /> There was a problem sending
                 the email.
               </p>
             )}
 
             {emailSent === true && (
-              <p className="flex flex-row items-center gap-2 text-sm text-kwil-dark">
+              <p
+                className="flex flex-row items-center gap-2 text-sm text-kwil-dark"
+                data-testid="success-message"
+              >
                 <CheckIcon className="h-4 w-4" /> Code sent!
               </p>
             )}
