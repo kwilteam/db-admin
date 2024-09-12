@@ -45,8 +45,6 @@ export const WebKwilProvider = ({
 
   const initKwilProvider = useCallback(async () => {
     if (!providerObject || !isOnline) return
-
-
     try {
       const kwilProviderOptions = {
         kwilProvider: providerObject.url,
@@ -83,16 +81,11 @@ export const WebKwilProvider = ({
 
   const checkProviderStatus = useCallback(async () => {
     if (!providerObject) return
-
-    let tempProvider = kwilProvider
-
-    if(!tempProvider) {
-      tempProvider = new WebKwil({
-        kwilProvider: providerObject.url,
-        chainId: providerObject.chainId || "",
-        logging,
-      }) // Create a new instance to check the provider status
-    }
+    const tempProvider = new WebKwil({
+      kwilProvider: providerObject.url,
+      chainId: providerObject.chainId || "",
+      logging,
+    }) // Create a new instance to check the provider status
 
     try {
       const ping = await tempProvider.ping()
@@ -110,6 +103,9 @@ export const WebKwilProvider = ({
       }
     } catch (error) {
       setIsOnline(false)
+      setKwilProvider(undefined)
+      dispatch(setProviderStatus(KwilProviderStatus.Offline))
+      dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
       console.error("Failed to check provider status", error)
     };
   }, [providerObject]);
