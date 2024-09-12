@@ -8,6 +8,8 @@ import { ModalEnum, setModal } from "@/store/global"
 import { setDeleteDeploymentId } from "@/store/firebird"
 import { useConnectToProvider } from "@/hooks/firebird/use-connect-to-provider"
 import { selectActiveProvider } from "@/store/providers"
+import Link from "next/link"
+import Button from "@/components/Button"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -128,7 +130,10 @@ const ConnectToProviderButton = ({
 
   if (isActiveProvider) {
     return (
-      <button className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-kwil bg-white p-4 text-xs text-kwil">
+      <button
+        className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-kwil bg-white p-4 text-xs text-kwil"
+        onClick={connectToProvider}
+      >
         <CheckIcon className="h-4 w-4" />
         <span className="whitespace-nowrap">Active Provider</span>
       </button>

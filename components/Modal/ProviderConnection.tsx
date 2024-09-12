@@ -6,6 +6,7 @@ import Base from "@/components/Modal/Base"
 import { selectProviderConnected, setProviderConnected } from "@/store/firebird"
 import { selectProviderStatus } from "@/store/global"
 import { KwilProviderStatus } from "@/store/providers"
+import Loading from "../Loading"
 
 export default function ProviderConnectionModal() {
   const dispatch = useAppDispatch()
@@ -34,38 +35,40 @@ export default function ProviderConnectionModal() {
       <div className="flex flex-col justify-center">
         <div className="flex flex-col gap-2 text-sm">
           {providerStatus === KwilProviderStatus.Online ? (
-            <div className="flex flex-col gap-1 italic text-kwil">
-              <div>Connected to provider.</div>
-              <div>You can now connect to your deployment.</div>
-              <div className="mt-4 flex justify-center gap-2">
-                <Link href="/databases">
-                  <Button
-                    context="secondary"
-                    size="md"
-                    onClick={() => dispatch(setProviderConnected(undefined))}
-                  >
-                    Explore Databases
-                  </Button>
-                </Link>
-                <Link href="/ide">
-                  <Button
-                    context="primary"
-                    size="md"
-                    onClick={() => dispatch(setProviderConnected(undefined))}
-                  >
-                    Deploy a Schema
-                  </Button>
-                </Link>
+            <>
+              <div className="flex flex-col gap-1 italic text-kwil">
+                <div>Connected to provider.</div>
+                <div>You can now connect to your deployment.</div>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Link href="/databases">
+                    <Button
+                      context="secondary"
+                      size="md"
+                      onClick={() => dispatch(setProviderConnected(undefined))}
+                    >
+                      Explore Databases
+                    </Button>
+                  </Link>
+                  <Link href="/ide">
+                    <Button
+                      context="primary"
+                      size="md"
+                      onClick={() => dispatch(setProviderConnected(undefined))}
+                    >
+                      Deploy a Schema
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            </div>
+            </>
           ) : showOfflineMessage ? (
             <div className="flex flex-col gap-1 italic text-red-500">
               <div>Could not connect to provider.</div>
               <div>Please make sure the provider is online and try again.</div>
             </div>
           ) : (
-            <div className="flex flex-col gap-1 italic text-gray-500">
-              <div>Connecting to provider...</div>
+            <div className="flex items-center justify-center gap-1 italic text-gray-500">
+              <Loading />
             </div>
           )}
         </div>
