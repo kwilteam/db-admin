@@ -65,8 +65,6 @@ export const useConnectToProvider = ({
   }, [dispatch, existingKwilProviders, providerEndpoint, instanceName, chainId])
 
   useEffect(() => {
-    dispatch(setProviderOfflineAcknowledged(true))
-
     if (isConnecting) {
       dispatch(setProviderConnected(true))
       setIsConnecting(false)

@@ -1,7 +1,5 @@
 import { IFirebirdDeploymentConfig } from "@/utils/firebird/types"
 
-// TODO: Improve the UI
-
 export default function Config({
   config,
 }: {
