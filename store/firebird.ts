@@ -203,6 +203,10 @@ export const firebirdSlice = createSlice({
       }
     },
 
+    clearNewDeployment: (state) => {
+      state.newDeployment = undefined
+    },
+
     setTalkWithTeam: (state, action: PayloadAction<boolean>) => {
       if (!state.newDeployment) {
         state.newDeployment = {} as IFirebirdNewDeployment
@@ -242,6 +246,7 @@ export const {
   setNewDeploymentNetworkSettings,
   setNewDeploymentServices,
   setNewDeploymentFinalOptions,
+  clearNewDeployment,
   setAuthEmail,
   setTalkWithTeam,
   setActiveDeployment,

@@ -40,6 +40,7 @@ import {
   HiOutlineTrash,
   HiOutlineCalendarDays,
   HiOutlineDocumentArrowDown,
+  HiOutlineMinusCircle,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -107,4 +108,7 @@ export {
   HiOutlineTrash as DeleteIcon,
   HiOutlineCalendarDays as ScheduleIcon,
   HiOutlineDocumentArrowDown as DownloadLogsIcon,
+  HiOutlineMinusCircle as DeploymentStepPendingIcon,
+  HiOutlineCheckCircle as DeploymentStepFinishedIcon,
+  HiOutlineXMark as DeploymentStepFailedIcon,
 }

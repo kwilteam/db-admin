@@ -1,15 +1,27 @@
 import Image from "next/image"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
-import { ChainIcon, CheckIcon, DeleteIcon, ProviderIcon } from "@/utils/icons"
+import {
+  ChainIcon,
+  CheckIcon,
+  DeleteIcon,
+  DeploymentStepFailedIcon,
+  DeploymentStepFinishedIcon,
+  DeploymentStepPendingIcon,
+  ProviderIcon,
+} from "@/utils/icons"
 import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "../DeploymentBadge"
 import { ModalEnum, setModal } from "@/store/global"
 import { setDeleteDeploymentId } from "@/store/firebird"
 import { useConnectToProvider } from "@/hooks/firebird/use-connect-to-provider"
 import { selectActiveProvider } from "@/store/providers"
-import Link from "next/link"
-import Button from "@/components/Button"
+import {
+  DeploymentEvents,
+  DeploymentEventType,
+} from "@/hooks/use-deployment-status-stream"
+import Loading from "@/components/Loading"
+import classNames from "classnames"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -23,10 +35,16 @@ export const statusColor = {
 
 export default function SelectedDeploymentCard({
   deployment,
+  deploymentStatus,
+  deploymentProgress,
 }: {
   deployment: IFirebirdDeployment
+  deploymentStatus: DeploymentStatus | undefined
+  deploymentProgress: Map<DeploymentEvents, DeploymentEventType>
 }) {
   const activeProvider = useAppSelector(selectActiveProvider)
+  const isDeploymentActive = deployment.status === DeploymentStatus.ACTIVE
+
   const chain = deployment.config.chain
   const machines = deployment.config.machines
   const status = deployment.status
@@ -40,19 +58,27 @@ export default function SelectedDeploymentCard({
           createdAt={deployment.created_at}
         />
         <DeploymentBadges
-          status={status}
+          status={deploymentStatus || status}
           chainVersion={chain.version}
           chainId={chain.chain_id}
         />
 
-        {deployment.status === DeploymentStatus.ACTIVE && (
+        {isDeploymentActive && (
           <ConnectToProviderButton
             deployment={deployment}
             isActiveProvider={activeProvider === machines.instance_name}
           />
         )}
+
+        {!isDeploymentActive && (
+          <DeploymentStatusStream
+            status={deploymentStatus}
+            progress={deploymentProgress}
+          />
+        )}
       </div>
-      {deployment.status === DeploymentStatus.ACTIVE && (
+
+      {isDeploymentActive && (
         <DeleteDeploymentButton deploymentId={deployment.id} />
       )}
     </div>
@@ -169,5 +195,71 @@ const DeleteDeploymentButton = ({ deploymentId }: { deploymentId: string }) => {
     >
       <DeleteIcon className="h-4 w-4" />
     </button>
+  )
+}
+
+const DeploymentStatusStream = ({
+  status,
+  progress,
+}: {
+  status: DeploymentStatus | undefined
+  progress: Map<DeploymentEvents, DeploymentEventType>
+}) => {
+  console.log("Progress", progress)
+  if (status === DeploymentStatus.ACTIVE) return
+
+  const eventDisplayNames = {
+    [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
+    [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
+    [DeploymentEvents.WAIT_INSTANCE_READY]: "Starting Instance",
+    [DeploymentEvents.INSTALL_KWILD]: "Installing Kwil Daemon",
+    [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
+    [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
+  }
+
+  return (
+    <div className="ml-16 flex flex-col gap-2 text-sm">
+      {Array.from(progress.entries()).map(([event, eventType]) => (
+        <div className="flex flex-row items-center gap-2" key={event}>
+          <span
+            className={classNames({
+              flex: eventType === DeploymentEventType.NOT_STARTED,
+              hidden: eventType !== DeploymentEventType.NOT_STARTED,
+            })}
+          >
+            <DeploymentStepPendingIcon className="h-4 w-4" />
+          </span>
+
+          <span
+            className={classNames({
+              flex: eventType === DeploymentEventType.START,
+              hidden: eventType !== DeploymentEventType.START,
+            })}
+          >
+            <Loading className="h-4 w-4" />
+          </span>
+
+          <span
+            className={classNames("text-kwil", {
+              flex: eventType === DeploymentEventType.FINISH,
+              hidden: eventType !== DeploymentEventType.FINISH,
+            })}
+          >
+            <DeploymentStepFinishedIcon className="h-4 w-4" />
+          </span>
+
+          <span
+            className={classNames("text-red-500", {
+              flex: eventType === DeploymentEventType.FAIL,
+              hidden: eventType !== DeploymentEventType.FAIL,
+            })}
+          >
+            <DeploymentStepFailedIcon className="h-4 w-4" />
+          </span>
+
+          <span>{eventDisplayNames[event]}</span>
+        </div>
+      ))}
+    </div>
   )
 }
