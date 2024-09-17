@@ -1,9 +1,16 @@
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import { render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { NewDeploymentForm } from "@/components/Firebird/Deployments/NewDeployment/Form"
 import { mockStore } from "@/__tests__/mocks/mock-store"
+
+// Mock the Montserrat font
+vi.mock("next/font/google", () => ({
+  Montserrat: () => ({
+    className: "mocked-montserrat",
+  }),
+}))
 
 describe("NewDeploymentForm", () => {
   const store = mockStore({
@@ -27,9 +34,8 @@ describe("NewDeploymentForm", () => {
     )
     expect(screen.getByText("Select a network")).toBeInTheDocument()
     expect(screen.getByText("Network settings")).toBeInTheDocument()
-    expect(screen.getByText("Node count")).toBeInTheDocument()
-    expect(screen.getByText("Machine type")).toBeInTheDocument()
-    expect(screen.getByText("Services")).toBeInTheDocument()
-    expect(screen.getByText("Final options")).toBeInTheDocument()
+    expect(screen.getByText("Number of nodes")).toBeInTheDocument()
+    expect(screen.getByText("Select a Machine")).toBeInTheDocument()
+    expect(screen.getByText("Select services")).toBeInTheDocument()
   })
 })

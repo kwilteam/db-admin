@@ -60,22 +60,20 @@ export default function ExistingDeployment({ id }: { id: string }) {
   return (
     <>
       <div className="m-2 flex flex-col items-start gap-2">
-        {true && (
-          <SelectedDeploymentCard
-            deployment={activeDeployment}
-            deploymentStatus={deploymentStatus}
-            deploymentProgress={deploymentProgress}
-          />
-        )}
+        <SelectedDeploymentCard
+          deployment={activeDeployment}
+          deploymentStatus={deploymentStatus}
+          deploymentProgress={deploymentProgress}
+        />
       </div>
       <div className="mx-2 flex h-screen flex-row gap-2">
         <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
-          {/* {true && ( */}
-          <ActiveDeploymentTabs
-            deploymentId={id}
-            activeDeployment={activeDeployment}
-          />
-          {/* )} */}
+          {isDeploymentActive && (
+            <ActiveDeploymentTabs
+              deploymentId={id}
+              activeDeployment={activeDeployment}
+            />
+          )}
         </div>
 
         <div className="flex w-full flex-col gap-2 lg:w-1/2">

@@ -66,10 +66,6 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
             onDelete={(e) => triggerDeleteNode(e, node.id)}
           />
         ))}
-
-      {!nodes.length && (
-        <div className="text-sm text-slate-500">No nodes found</div>
-      )}
     </div>
   )
 }

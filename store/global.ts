@@ -116,15 +116,13 @@ export const selectProviderOfflineAcknowledged = (state: {
 export default globalSlice.reducer
 
 export const setAlert =
-  (alert: IAlert, autoHide: boolean = true) =>
+  (alert: IAlert, hideDelay: number = 5000) =>
   (dispatch: AppDispatch) => {
     dispatch(setAlertStart(alert))
 
-    if (autoHide) {
-      setTimeout(() => {
-        dispatch(setAlertEnd())
-      }, 5000)
-    }
+    setTimeout(() => {
+      dispatch(setAlertEnd())
+    }, hideDelay)
   }
 
 const setAlertStart = (alert: IAlert): PayloadAction<IAlert> => ({

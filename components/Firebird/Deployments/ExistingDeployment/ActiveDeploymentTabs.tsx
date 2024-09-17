@@ -2,6 +2,7 @@ import { IFirebirdDeployment } from "@/utils/firebird/types"
 import Tabs from "../../Tabs"
 import Config from "./Config"
 import Nodes from "./Nodes"
+import { ConfigIcon, NodesIcon } from "@/utils/icons"
 
 export default function ActiveDeploymentTabs({
   deploymentId,
@@ -17,10 +18,15 @@ export default function ActiveDeploymentTabs({
     >
       <Tabs
         tabs={[
-          { name: "Nodes", component: <Nodes deploymentId={deploymentId} /> },
+          {
+            name: "Nodes",
+            component: <Nodes deploymentId={deploymentId} />,
+            icon: NodesIcon,
+          },
           {
             name: "Config",
             component: <Config config={activeDeployment.config} />,
+            icon: ConfigIcon,
           },
         ]}
       />

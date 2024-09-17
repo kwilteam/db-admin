@@ -38,7 +38,7 @@ export default function ProviderConnectionModal() {
             <>
               <div className="flex flex-col gap-1 italic text-kwil">
                 <div>Connected to provider.</div>
-                <div>You can now connect to your deployment.</div>
+                <div>How would you like to get started?</div>
                 <div className="mt-4 flex justify-center gap-2">
                   <Link href="/databases">
                     <Button

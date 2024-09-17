@@ -44,6 +44,9 @@ export default function SelectedDeploymentCard({
 }) {
   const activeProvider = useAppSelector(selectActiveProvider)
   const isDeploymentActive = deployment.status === DeploymentStatus.ACTIVE
+  const isDeploymentPending =
+    deployment.status === DeploymentStatus.PENDING ||
+    deployment.status === DeploymentStatus.DEPLOYING
 
   const chain = deployment.config.chain
   const machines = deployment.config.machines
@@ -56,24 +59,22 @@ export default function SelectedDeploymentCard({
     >
       <div className="flex w-full items-center justify-start gap-8 px-4 py-6">
         <DeploymentIcon instanceName={machines.instance_name} />
+
         <DeploymentInfo
           instanceName={machines.instance_name}
           createdAt={deployment.created_at}
+          deployment={deployment}
+          isDeploymentActive={isDeploymentActive}
+          activeProvider={activeProvider}
         />
+
         <DeploymentBadges
           status={deploymentStatus || status}
           chainVersion={chain.version}
           chainId={chain.chain_id}
         />
 
-        {isDeploymentActive && (
-          <ConnectToProviderButton
-            deployment={deployment}
-            isActiveProvider={activeProvider === machines.instance_name}
-          />
-        )}
-
-        {!isDeploymentActive && (
+        {isDeploymentPending && (
           <DeploymentStatusStream
             status={deploymentStatus}
             progress={deploymentProgress}
@@ -97,17 +98,33 @@ const DeploymentIcon = ({ instanceName }: { instanceName: string }) => (
 const DeploymentInfo = ({
   instanceName,
   createdAt,
+  isDeploymentActive,
+  deployment,
+  activeProvider,
 }: {
   instanceName: string
   createdAt: number
-}) => (
-  <div className="flex flex-col gap-2">
-    <div className="flex flex-row items-center justify-between">
-      <h1 className="text-lg font-medium">{instanceName}</h1>
+  isDeploymentActive: boolean
+  deployment: IFirebirdDeployment
+  activeProvider: string | undefined
+}) => {
+  const machines = deployment.config.machines
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-row items-center justify-between">
+        <h1 className="text-lg font-medium">{instanceName}</h1>
+      </div>
+      <div className="text-xs text-slate-500">{formatTimestamp(createdAt)}</div>
+      {isDeploymentActive && (
+        <ConnectToProviderButton
+          deployment={deployment}
+          isActiveProvider={activeProvider === machines.instance_name}
+        />
+      )}
     </div>
-    <div className="text-xs text-slate-500">{formatTimestamp(createdAt)}</div>
-  </div>
-)
+  )
+}
 
 const DeploymentBadges = ({
   status,
@@ -119,14 +136,14 @@ const DeploymentBadges = ({
   chainId: string
 }) => (
   <div className="flex flex-row items-center justify-start gap-2 text-xs text-slate-500">
-    <DeploymentBadge className="p-4">
+    <DeploymentBadge info="Status" size="lg">
       <div
         className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]}`}
       />
       <span>{capitalize(status)}</span>
     </DeploymentBadge>
 
-    <DeploymentBadge className="p-4">
+    <DeploymentBadge info="KwilD" size="lg">
       <Image
         src="/images/kwil.png"
         className="h-4 w-4"
@@ -137,7 +154,7 @@ const DeploymentBadges = ({
       <span>{chainVersion}</span>
     </DeploymentBadge>
 
-    <DeploymentBadge className="p-4">
+    <DeploymentBadge info="Chain ID" size="lg">
       <ChainIcon className="h-4 w-4" />
       <span className="whitespace-nowrap">{chainId}</span>
     </DeploymentBadge>
@@ -160,22 +177,22 @@ const ConnectToProviderButton = ({
   if (isActiveProvider) {
     return (
       <button
-        className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-kwil bg-white p-4 text-xs text-kwil"
+        className="flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border border-kwil bg-white p-2 text-xs text-kwil"
         onClick={connectToProvider}
       >
         <CheckIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Active Provider</span>
+        <span className="whitespace-nowrap">Connected</span>
       </button>
     )
   }
 
   return (
     <button
-      className="flex cursor-pointer flex-row items-center gap-2 rounded-md border border-slate-100 bg-kwil p-4 text-xs text-slate-50"
+      className="flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border border-slate-100 bg-kwil p-2 text-xs text-slate-50"
       onClick={connectToProvider}
     >
       <ProviderIcon className="h-4 w-4" />
-      <span className="whitespace-nowrap">Connect to Provider</span>
+      <span className="whitespace-nowrap">Connect</span>
     </button>
   )
 }

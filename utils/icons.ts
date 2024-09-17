@@ -111,4 +111,7 @@ export {
   HiOutlineMinusCircle as DeploymentStepPendingIcon,
   HiOutlineCheckCircle as DeploymentStepFinishedIcon,
   HiOutlineXMark as DeploymentStepFailedIcon,
+  HiOutlineServerStack as NodesIcon,
+  HiOutlineCog8Tooth as ConfigIcon,
+  GrServices as ServicesIcon,
 }
