@@ -50,7 +50,10 @@ export default function SelectedDeploymentCard({
   const status = deployment.status
 
   return (
-    <div className="relative flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3">
+    <div
+      data-testid="selected-deployment-card"
+      className="relative flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3"
+    >
       <div className="flex w-full items-center justify-start gap-8 px-4 py-6">
         <DeploymentIcon instanceName={machines.instance_name} />
         <DeploymentInfo

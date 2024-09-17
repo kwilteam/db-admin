@@ -34,10 +34,11 @@ export default function useTriggerDeployment(
         text: "Your network is being deployed. You will be redirected to the deployment page shortly...",
       }),
     )
+
     setTimeout(() => {
       router.push(`/firebird/deployments/${id}`)
       dispatch(clearNewDeployment)
-    }, 3000)
+    }, 5000)
   }
 
   const deploymentError = () => {

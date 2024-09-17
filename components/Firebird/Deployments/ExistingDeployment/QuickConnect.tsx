@@ -10,7 +10,10 @@ export default function QuickConnect({
   chain: { chain_id: string; version: string }
 }) {
   return (
-    <div className="flex flex-col justify-start gap-2">
+    <div
+      data-testid="quick-connect"
+      className="flex flex-col justify-start gap-2"
+    >
       <div className="rounded-md border border-slate-100">
         <Tabs
           tabs={[

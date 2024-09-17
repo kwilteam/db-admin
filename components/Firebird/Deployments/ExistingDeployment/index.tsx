@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import useDeploymentStatusStream from "@/hooks/use-deployment-status-stream"
 import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
 import { DeploymentStatus } from "@/utils/firebird/types"
@@ -8,7 +9,6 @@ import Loading from "@/components/Loading"
 import SelectedDeploymentCard from "./SelectedDeploymentCard"
 import QuickConnect from "./QuickConnect"
 import ActiveDeploymentTabs from "./ActiveDeploymentTabs"
-import useDeploymentStatusStream from "@/hooks/use-deployment-status-stream"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
@@ -60,20 +60,22 @@ export default function ExistingDeployment({ id }: { id: string }) {
   return (
     <>
       <div className="m-2 flex flex-col items-start gap-2">
-        <SelectedDeploymentCard
-          deployment={activeDeployment}
-          deploymentStatus={deploymentStatus}
-          deploymentProgress={deploymentProgress}
-        />
+        {true && (
+          <SelectedDeploymentCard
+            deployment={activeDeployment}
+            deploymentStatus={deploymentStatus}
+            deploymentProgress={deploymentProgress}
+          />
+        )}
       </div>
       <div className="mx-2 flex h-screen flex-row gap-2">
         <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
-          {isDeploymentActive && (
-            <ActiveDeploymentTabs
-              deploymentId={id}
-              activeDeployment={activeDeployment}
-            />
-          )}
+          {/* {true && ( */}
+          <ActiveDeploymentTabs
+            deploymentId={id}
+            activeDeployment={activeDeployment}
+          />
+          {/* )} */}
         </div>
 
         <div className="flex w-full flex-col gap-2 lg:w-1/2">

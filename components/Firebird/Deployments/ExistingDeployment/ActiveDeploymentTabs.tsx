@@ -11,7 +11,10 @@ export default function ActiveDeploymentTabs({
   activeDeployment: IFirebirdDeployment
 }) {
   return (
-    <div className="flex w-full rounded-md border border-slate-100">
+    <div
+      data-testid="active-deployment-tabs"
+      className="flex w-full rounded-md border border-slate-100"
+    >
       <Tabs
         tabs={[
           { name: "Nodes", component: <Nodes deploymentId={deploymentId} /> },

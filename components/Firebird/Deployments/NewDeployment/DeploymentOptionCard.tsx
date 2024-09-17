@@ -12,6 +12,7 @@ interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   optionKey: K
   optionValue: IFirebirdNewDeployment[K]
   enterprise?: boolean
+  testId?: string
 }
 
 export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
@@ -19,6 +20,7 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   optionKey,
   optionValue,
   enterprise,
+  testId,
 }: IDeploymentOptionCardProps<K>) {
   const dispatch = useAppDispatch()
   const newDeployment = useAppSelector(selectNewDeployment)
@@ -45,7 +47,11 @@ export function DeploymentOptionCard<K extends keyof IFirebirdNewDeployment>({
   )
 
   return (
-    <div className={_classNames} onClick={setDeploymentValue}>
+    <div
+      className={_classNames}
+      onClick={setDeploymentValue}
+      data-testid={testId}
+    >
       <div className="relative flex w-full flex-col gap-1">
         {enterprise && (
           <div className="absolute right-1 top-1 rounded-md bg-sky-500 px-2 py-1 text-xs text-white">

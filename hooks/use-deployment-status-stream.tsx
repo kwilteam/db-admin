@@ -19,9 +19,9 @@ export enum DeploymentEventType {
 }
 
 export enum DeploymentEvents {
+  INIT_KEY_PAIR = "INIT_KEY_PAIR",
   CREATE_INSTANCE = "CREATE_INSTANCE",
   WAIT_INSTANCE_READY = "WAIT_INSTANCE_READY",
-  INIT_KEY_PAIR = "INIT_KEY_PAIR",
   INSTALL_KWILD = "INSTALL_KWILD",
   REGISTER_DOMAIN = "REGISTER_DOMAIN",
   FINALIZE_DEPLOYMENT = "FINALIZE_DEPLOYMENT",
@@ -35,9 +35,9 @@ const useDeploymentStatusStream = (deploymentId: string) => {
     Map<DeploymentEvents, DeploymentEventType>
   >(
     new Map([
+      [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.CREATE_INSTANCE, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.WAIT_INSTANCE_READY, DeploymentEventType.NOT_STARTED],
-      [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.INSTALL_KWILD, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.REGISTER_DOMAIN, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.FINALIZE_DEPLOYMENT, DeploymentEventType.NOT_STARTED],
