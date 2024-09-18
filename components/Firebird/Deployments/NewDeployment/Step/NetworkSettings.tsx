@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
@@ -6,9 +7,9 @@ import {
   selectNewDeployment,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
-import { NetworkSettingsStepIcon } from "@/utils/icons"
-import { Step } from "../Step"
+import { ChainIcon, CompanyIcon, NetworkSettingsStepIcon } from "@/utils/icons"
 import { generateRandomString } from "@/utils/random-name-generator"
+import { Step } from "../Step"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()
@@ -78,14 +79,17 @@ const ChainIdInput = ({ value, onChange }: InputProps) => (
     <p className="text-sm text-gray-500">
       The chain Id of the network you want to deploy on.
     </p>
-    <div className="mt-2">
+    <div className="mt-2 flex rounded-md shadow-sm">
+      <span className="inline-flex items-center rounded-l-md border border-r-0 border-slate-100 bg-slate-50 px-3 text-gray-500 sm:text-sm">
+        <ChainIcon className="h-4 w-4" />
+      </span>
       <input
         autoComplete="off"
         id="chainId"
         name="chainId"
         type="text"
         required
-        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        className="block w-full rounded-none rounded-r-md border-0 border-l-0 py-1.5 text-sm leading-6 ring-1 ring-inset ring-slate-100 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-slate-100"
         value={value}
         onChange={(e) => onChange("chainId", e.target.value)}
       />
@@ -104,12 +108,21 @@ const KwilVersionSelect = ({ value, onChange }: InputProps) => (
     <p className="text-sm text-gray-500">
       The Kwil version you want to deploy.
     </p>
-    <div className="mt-2">
+    <div className="mt-2 flex rounded-md shadow-sm">
+      <span className="inline-flex items-center rounded-l-md border border-r-0 border-slate-100 bg-slate-50 px-3 text-gray-500 sm:text-sm">
+        <Image
+          src="/images/kwil.png"
+          className="h-4 w-4"
+          alt="Kwil"
+          width={16}
+          height={16}
+        />
+      </span>
       <select
         id="kwilVersion"
         name="kwilVersion"
         required
-        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        className="block w-full rounded-none rounded-r-md border-0 py-1.5 text-sm leading-6 ring-1 ring-inset ring-slate-100 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-slate-100"
         value={value}
         onChange={(e) => onChange("kwilVersion", e.target.value)}
       >
@@ -132,14 +145,17 @@ const CompanyNameInput = ({ value, onChange }: InputProps) => (
       Company Name
     </label>
     <p className="text-sm text-gray-500">Your company name.</p>
-    <div className="mt-2">
+    <div className="mt-2 flex rounded-md shadow-sm">
+      <span className="inline-flex items-center rounded-l-md border border-r-0 border-slate-100 bg-slate-50 px-3 text-gray-500 sm:text-sm">
+        <CompanyIcon className="h-4 w-4" />
+      </span>
       <input
         autoComplete="off"
         id="companyName"
         name="companyName"
         type="text"
         required
-        className="block w-full rounded-md border-0 py-1.5 text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+        className="block w-full rounded-none rounded-r-md border-0 border-l-0 py-1.5 text-sm leading-6 ring-1 ring-inset ring-slate-100 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-slate-100"
         value={value}
         onChange={(e) => onChange("companyName", e.target.value)}
       />

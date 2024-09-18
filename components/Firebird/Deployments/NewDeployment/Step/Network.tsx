@@ -17,7 +17,9 @@ export function NetworkStep() {
           optionKey="network"
           optionValue={Network.testnet}
         >
-          <span className="text-xl tracking-tighter">Testnet</span>
+          <span className="flex flex-row items-center gap-2 text-xl tracking-tighter">
+            <NetworkStepIcon /> Testnet
+          </span>
           <span className="text-sm">Kwil Testnet</span>
           <div className="mt-3 text-xs">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -35,7 +37,9 @@ export function NetworkStep() {
           optionValue={Network.mainnet}
           enterprise
         >
-          <span className="text-xl tracking-tighter">Mainnet</span>
+          <span className="flex flex-row items-center gap-2 text-xl tracking-tighter">
+            <NetworkStepIcon /> Mainnet
+          </span>
           <span className="text-sm">Kwil Mainnet</span>
           <div className="mt-3 text-xs">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

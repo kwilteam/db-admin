@@ -41,6 +41,7 @@ import {
   HiOutlineCalendarDays,
   HiOutlineDocumentArrowDown,
   HiOutlineMinusCircle,
+  HiOutlineBriefcase,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
 import { CiLogout } from "react-icons/ci"
@@ -114,4 +115,5 @@ export {
   HiOutlineServerStack as NodesIcon,
   HiOutlineCog8Tooth as ConfigIcon,
   GrServices as ServicesIcon,
+  HiOutlineBriefcase as CompanyIcon,
 }

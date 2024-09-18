@@ -43,6 +43,8 @@ export function FinalOptionsStep() {
             onChange={handleChange}
           />
 
+          <InviteOtherValidators />
+
           <DeployButton
             readyToDeploy={readyToDeploy}
             deploying={deploying}
@@ -80,6 +82,20 @@ const AccessCodeInput = ({ value, onChange }: InputProps) => (
       value={value}
       onChange={(e) => onChange("accessCode", e.target.value)}
     />
+  </div>
+)
+
+const InviteOtherValidators = () => (
+  <div className="ml-4 flex flex-row items-center justify-center gap-2 opacity-50">
+    <input
+      type="checkbox"
+      className="cursor-not-allowed rounded border border-gray-300 bg-white p-3"
+      id="inviteOtherValidators"
+      name="inviteOtherValidators"
+      disabled
+    />
+    <label htmlFor="inviteOtherValidators">Invite other validators?</label>
+    <p className="text-xs text-gray-500">Coming soon.</p>
   </div>
 )
 

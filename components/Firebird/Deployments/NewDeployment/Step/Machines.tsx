@@ -19,7 +19,9 @@ export function MachinesStep() {
             optionValue={option.optionValue}
             enterprise={option.enterprise}
           >
-            <span className="text-xl tracking-tighter">{option.title}</span>
+            <span className="flex flex-row items-center gap-2 text-xl tracking-tighter">
+              <VmStepIcon /> {option.title}
+            </span>
             <div className="flex flex-row gap-2">
               <span className="rounded-md border border-slate-200 bg-slate-50/50 px-1 text-sm">
                 {option.cpu}

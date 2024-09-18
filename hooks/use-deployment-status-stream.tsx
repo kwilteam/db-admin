@@ -54,7 +54,24 @@ const useDeploymentStatusStream = (deploymentId: string) => {
         if (Object.values(DeploymentEvents).includes(event)) {
           setDeploymentProgress((prev) => {
             const newMap = new Map(prev)
+            const eventIndex = Object.values(DeploymentEvents).indexOf(event)
+
+            // If the event is a start or finish, mark all previous events as finished
+            if (
+              type === DeploymentEventType.START ||
+              type === DeploymentEventType.FINISH
+            ) {
+              for (let i = 0; i < eventIndex; i++) {
+                newMap.set(
+                  Object.values(DeploymentEvents)[i],
+                  DeploymentEventType.FINISH,
+                )
+              }
+            }
+
+            // Set the current event
             newMap.set(event, type)
+
             return newMap
           })
         }

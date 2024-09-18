@@ -42,7 +42,7 @@ export default function DeleteNodeModal() {
     if (!modalData || !modalData.nodeId) return
 
     setDeleting(true)
-    const { status, data } = await deleteNode(modalData.nodeId)
+    const { status } = await deleteNode(modalData.nodeId)
     setDeleting(false)
 
     if (status === 200) {

@@ -24,7 +24,7 @@ export default function DeleteDeploymentModal() {
     if (!deployment) return
 
     setDeleting(true)
-    const { status, data } = await deleteDeployment(deployment.id)
+    const { status } = await deleteDeployment(deployment.id)
     setDeleting(false)
 
     if (status === 200) {

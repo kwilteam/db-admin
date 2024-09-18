@@ -232,7 +232,6 @@ const DeploymentStatusStream = ({
   status: DeploymentStatus | undefined
   progress: Map<DeploymentEvents, DeploymentEventType>
 }) => {
-  console.log("Progress", progress)
   if (status === DeploymentStatus.ACTIVE) return
 
   const eventDisplayNames = {

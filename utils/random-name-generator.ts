@@ -1,9 +1,10 @@
 import {
   uniqueNamesGenerator,
   Config,
-  adjectives,
   colors,
   animals,
+  names,
+  adjectives,
 } from "unique-names-generator"
 
 export const generateRandomString = (type: "chain" | "company") => {
@@ -17,7 +18,7 @@ export const generateRandomString = (type: "chain" | "company") => {
     }
   } else {
     config = {
-      dictionaries: [adjectives, colors],
+      dictionaries: [names, colors],
       separator: " ",
       length: 2,
     }

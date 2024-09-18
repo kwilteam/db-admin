@@ -69,7 +69,7 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
         <span className="text-lg font-medium">
           <input
             type="checkbox"
-            className="h-5 w-5 rounded border p-3"
+            className="h-5 w-5 rounded border p-3 ring-0 checked:bg-kwil checked:hover:bg-kwil focus:ring-1 focus:ring-slate-100 checked:focus:bg-kwil"
             checked={selectedServices?.[service.optionKey] === true}
             onChange={(e) => {
               setService(service.optionKey, e.target.checked)
