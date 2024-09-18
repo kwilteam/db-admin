@@ -1,4 +1,5 @@
 import Image from "next/image"
+import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import {
@@ -12,16 +13,14 @@ import {
 } from "@/utils/icons"
 import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "../DeploymentBadge"
-import { ModalEnum, setModal } from "@/store/global"
-import { setDeleteDeploymentId } from "@/store/firebird"
+import { ModalEnum, selectProviderStatus, setModal } from "@/store/global"
 import { useConnectToProvider } from "@/hooks/firebird/use-connect-to-provider"
-import { selectActiveProvider } from "@/store/providers"
+import { KwilProviderStatus, selectActiveProvider } from "@/store/providers"
 import {
   DeploymentEvents,
   DeploymentEventType,
 } from "@/hooks/use-deployment-status-stream"
 import Loading from "@/components/Loading"
-import classNames from "classnames"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -168,31 +167,40 @@ const ConnectToProviderButton = ({
   deployment: IFirebirdDeployment
   isActiveProvider: boolean
 }) => {
+  const providerStatus = useAppSelector(selectProviderStatus)
+
   const { connectToProvider } = useConnectToProvider({
     providerEndpoint: deployment.service_endpoints?.kwil_rpc_provider || "",
     instanceName: deployment.config.machines.instance_name || "",
     chainId: deployment.config.chain.chain_id || "",
   })
 
-  if (isActiveProvider) {
-    return (
-      <button
-        className="flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border border-kwil bg-white p-2 text-xs text-kwil"
-        onClick={connectToProvider}
-      >
-        <CheckIcon className="h-4 w-4" />
-        <span className="whitespace-nowrap">Connected</span>
-      </button>
-    )
-  }
+  const buttonClasses =
+    "flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border p-2 text-xs"
+  const activeClasses = "border-kwil bg-white text-kwil"
+  const inactiveClasses = "border-slate-100 bg-kwil text-slate-50"
 
   return (
     <button
-      className="flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border border-slate-100 bg-kwil p-2 text-xs text-slate-50"
+      className={classNames(buttonClasses, {
+        [activeClasses]:
+          isActiveProvider && providerStatus === KwilProviderStatus.Online,
+        [inactiveClasses]:
+          !isActiveProvider || providerStatus !== KwilProviderStatus.Online,
+      })}
       onClick={connectToProvider}
     >
-      <ProviderIcon className="h-4 w-4" />
-      <span className="whitespace-nowrap">Connect</span>
+      {isActiveProvider && providerStatus === KwilProviderStatus.Online ? (
+        <>
+          <CheckIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Connected</span>
+        </>
+      ) : (
+        <>
+          <ProviderIcon className="h-4 w-4" />
+          <span className="whitespace-nowrap">Connect</span>
+        </>
+      )}
     </button>
   )
 }
@@ -205,7 +213,6 @@ const DeleteDeploymentButton = ({ deploymentId }: { deploymentId: string }) => {
   ) => {
     e.preventDefault()
     dispatch(setModal(ModalEnum.DELETE_DEPLOYMENT))
-    dispatch(setDeleteDeploymentId(deploymentId))
   }
 
   return (

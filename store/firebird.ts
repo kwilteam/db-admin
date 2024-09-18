@@ -1,4 +1,8 @@
-import { IFirebirdAccount, IFirebirdDeployment } from "@/utils/firebird/types"
+import {
+  IFirebirdAccount,
+  IFirebirdApiNode,
+  IFirebirdDeployment,
+} from "@/utils/firebird/types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 export interface IFirebirdNetworkSettings {
@@ -59,7 +63,9 @@ interface IFirebirdState {
   newDeployment: IFirebirdNewDeployment | undefined
   deployments: IFirebirdDeployment[] | undefined
   activeDeployment: IFirebirdDeployment | undefined
-  deleteDeploymentId: string | undefined
+  deploymentNodes:
+    | { deploymentId: string; nodes: IFirebirdApiNode[] }[]
+    | undefined
   providerConnected: boolean | undefined
 }
 
@@ -89,7 +95,7 @@ const initialState: IFirebirdState = {
   },
   deployments: undefined,
   activeDeployment: undefined,
-  deleteDeploymentId: undefined,
+  deploymentNodes: undefined,
   providerConnected: undefined,
 }
 
@@ -222,11 +228,47 @@ export const firebirdSlice = createSlice({
       state.activeDeployment = action.payload
     },
 
-    setDeleteDeploymentId: (
+    setDeploymentNodes: (
       state,
-      action: PayloadAction<string | undefined>,
+      action: PayloadAction<{
+        deploymentId: string
+        nodes: IFirebirdApiNode[]
+      }>,
     ) => {
-      state.deleteDeploymentId = action.payload
+      const { deploymentId, nodes } = action.payload
+
+      if (!state.deploymentNodes) {
+        state.deploymentNodes = []
+      }
+
+      const existingIndex = state.deploymentNodes.findIndex(
+        (item) => item.deploymentId === deploymentId,
+      )
+
+      if (existingIndex !== -1) {
+        state.deploymentNodes[existingIndex].nodes = nodes
+      } else {
+        state.deploymentNodes.push({ deploymentId, nodes })
+      }
+    },
+
+    deleteDeploymentNode: (
+      state,
+      action: PayloadAction<{ deploymentId: string; nodeId: string }>,
+    ) => {
+      const { deploymentId, nodeId } = action.payload
+
+      if (!state.deploymentNodes) return
+
+      const deploymentIndex = state.deploymentNodes.findIndex(
+        (item) => item.deploymentId === deploymentId,
+      )
+
+      if (deploymentIndex !== -1) {
+        state.deploymentNodes[deploymentIndex].nodes = state.deploymentNodes[
+          deploymentIndex
+        ].nodes.filter((node) => node.id !== nodeId)
+      }
     },
 
     setProviderConnected: (
@@ -250,7 +292,8 @@ export const {
   setAuthEmail,
   setTalkWithTeam,
   setActiveDeployment,
-  setDeleteDeploymentId,
+  setDeploymentNodes,
+  deleteDeploymentNode,
   setProviderConnected,
 } = firebirdSlice.actions
 
@@ -276,8 +319,11 @@ export const selectTalkWithTeam = (state: { firebird: IFirebirdState }) =>
 export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
   state.firebird.activeDeployment
 
-export const selectDeleteDeploymentId = (state: { firebird: IFirebirdState }) =>
-  state.firebird.deleteDeploymentId
+export const selectDeploymentNodesById =
+  (deploymentId: string) => (state: { firebird: IFirebirdState }) =>
+    state.firebird.deploymentNodes?.find(
+      (item) => item.deploymentId === deploymentId,
+    )?.nodes
 
 export const selectProviderConnected = (state: { firebird: IFirebirdState }) =>
   state.firebird.providerConnected

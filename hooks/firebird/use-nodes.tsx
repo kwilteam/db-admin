@@ -1,28 +1,30 @@
-import { getNodes } from "@/utils/firebird/api"
-import { IFirebirdApiNode } from "@/utils/firebird/types"
 import { useEffect, useState } from "react"
+import { selectDeploymentNodesById, setDeploymentNodes } from "@/store/firebird"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { getNodes } from "@/utils/firebird/api"
 
 export default function useNodes(deploymentId: string) {
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(true)
-  const [nodes, setNodes] = useState<IFirebirdApiNode[] | undefined>(undefined)
+  const nodes = useAppSelector(selectDeploymentNodesById(deploymentId))
 
   useEffect(() => {
     const fetchNodes = async () => {
       setLoading(true)
       const { status, data } = await getNodes(deploymentId)
       if (status === 200 && data) {
-        setNodes(data)
+        dispatch(setDeploymentNodes({ deploymentId, nodes: data }))
       } else if (status === 404) {
-        setNodes([])
+        dispatch(setDeploymentNodes({ deploymentId, nodes: [] }))
       } else {
-        setNodes([])
+        dispatch(setDeploymentNodes({ deploymentId, nodes: [] }))
         console.error("Failed to fetch nodes", status, data)
       }
       setLoading(false)
     }
 
     fetchNodes()
-  }, [deploymentId])
+  }, [deploymentId, dispatch])
 
   return { loading, nodes }
 }

@@ -40,9 +40,15 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
     (e: React.MouseEvent<HTMLDivElement>, nodeId: string) => {
       e.stopPropagation()
       dispatch(setModal(ModalEnum.DELETE_NODE))
-      dispatch(setModalData({ nodeId, onlyNode: nodes?.length === 1 }))
+      dispatch(
+        setModalData({
+          deploymentId,
+          nodeId,
+          onlyNode: nodes?.length === 1,
+        }),
+      )
     },
-    [dispatch, nodes],
+    [dispatch, nodes, deploymentId],
   )
 
   if (!nodes) {
@@ -51,7 +57,7 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      {!loading && nodes && !nodes.length && (
+      {!loading && nodes && nodes.length === 0 && (
         <div className="text-sm text-slate-500">No nodes found</div>
       )}
 

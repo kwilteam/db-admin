@@ -10,12 +10,12 @@ interface IAlert {
 }
 
 export enum ModalEnum {
-  TALK_WITH_TEAM = "talk_with_team",
-  PROVIDER_OFFLINE = "provider_offline",
-  CONNECT = "connect",
-  SAVE_QUERY = "save_query",
-  DELETE_DEPLOYMENT = "delete_deployment",
-  DELETE_NODE = "delete_node",
+  TALK_WITH_TEAM = "TALK_WITH_TEAM",
+  PROVIDER_OFFLINE = "PROVIDER_OFFLINE",
+  CONNECT = "CONNECT",
+  SAVE_QUERY = "SAVE_QUERY",
+  DELETE_DEPLOYMENT = "DELETE_DEPLOYMENT",
+  DELETE_NODE = "DELETE_NODE",
 }
 
 interface IGlobalState {
