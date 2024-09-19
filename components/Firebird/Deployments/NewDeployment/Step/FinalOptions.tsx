@@ -32,8 +32,6 @@ export function FinalOptionsStep() {
 
   return (
     <div className="mr-2 flex w-full flex-row gap-2">
-      {/* TODO: Checkbox for "invite other validators" that is disabled out and says, "Coming soon". */}
-
       {talkWithTeam ? (
         <TalkWithTeam />
       ) : (

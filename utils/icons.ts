@@ -116,4 +116,5 @@ export {
   HiOutlineCog8Tooth as ConfigIcon,
   GrServices as ServicesIcon,
   HiOutlineBriefcase as CompanyIcon,
+  HiOutlineArrowTopRightOnSquare as LinkIcon,
 }
