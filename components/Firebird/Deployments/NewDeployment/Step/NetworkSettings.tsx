@@ -7,7 +7,7 @@ import {
   selectNewDeployment,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
-import { ChainIcon, CompanyIcon, NetworkSettingsStepIcon } from "@/utils/icons"
+import { ChainIcon, CompanyIcon, StepIcon } from "@/utils/icons"
 import { generateRandomString } from "@/utils/random-name-generator"
 import { Step } from "../Step"
 
@@ -41,8 +41,8 @@ export function NetworkSettingsStep() {
   return (
     <Step
       step={2}
-      icon={<NetworkSettingsStepIcon />}
-      title="Network settings"
+      icon={<StepIcon />}
+      title="Network Settings"
       description="Decide on the settings you require for your deployment."
     >
       <div className="flex flex-col gap-2">

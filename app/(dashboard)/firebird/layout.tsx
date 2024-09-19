@@ -1,5 +1,3 @@
-import FirebirdNavigation from "@/components/Firebird/Navigation"
-
 export default function FirebirdLayout({
   children,
 }: React.PropsWithChildren<{}>) {

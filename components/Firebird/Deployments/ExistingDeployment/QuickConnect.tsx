@@ -18,6 +18,7 @@ export default function QuickConnect({
         <Tabs
           tabs={[
             {
+              id: "kwil-cli",
               name: "Kwil CLI",
               component: (
                 <KwilCliConnect
@@ -27,6 +28,7 @@ export default function QuickConnect({
               ),
             },
             {
+              id: "js-sdk",
               name: "JavaScript",
               component: (
                 <JsSdkConnect

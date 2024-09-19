@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { getAccount } from "@/utils/firebird/api"
 import { SuccessIcon } from "@/utils/icons"
 import Image from "next/image"
+import Loading from "@/components/Loading"
 
 export default function DeploymentsAuthLayout({
   children,
@@ -87,4 +88,6 @@ export default function DeploymentsAuthLayout({
       </div>
     )
   }
+
+  return <Loading className="mt-4 flex justify-center" />
 }

@@ -12,8 +12,8 @@ export default function FirebirdSignOut() {
   const triggerSignOut = async () => {
     const { status, message } = await signOut()
     if (status === 200) {
-      dispatch(setAccount(undefined))
       router.push("/firebird/login")
+      dispatch(setAccount(undefined))
     } else {
       console.error("Sign out failed", message)
     }

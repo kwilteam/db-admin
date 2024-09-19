@@ -1,4 +1,6 @@
 import { useCallback } from "react"
+import { Montserrat } from "next/font/google"
+import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   IFirebirdFinalOptions,
@@ -6,10 +8,15 @@ import {
   setNewDeploymentFinalOptions,
 } from "@/store/firebird"
 import Loading from "@/components/Loading"
-import { DeployIcon } from "@/utils/icons"
+import { DeployIcon, StepIcon } from "@/utils/icons"
 import { TalkWithTeam } from "./TalkWithTeam"
 import useDeploymentState from "@/hooks/firebird/use-deployment-state"
 import useTriggerDeployment from "@/hooks/firebird/use-trigger-deployment"
+
+const heading = Montserrat({
+  weight: "500",
+  subsets: ["latin"],
+})
 
 export function FinalOptionsStep() {
   const dispatch = useAppDispatch()
@@ -31,7 +38,7 @@ export function FinalOptionsStep() {
   )
 
   return (
-    <div className="mr-2 flex w-full flex-row gap-2">
+    <div className="mr-2 flex w-full flex-row items-center gap-2">
       {talkWithTeam ? (
         <TalkWithTeam />
       ) : (
@@ -61,12 +68,15 @@ type InputProps = {
 
 const AccessCodeInput = ({ value, onChange }: InputProps) => (
   <div className="ml-3 flex flex-row items-center gap-3">
-    <label
-      htmlFor="accessCode"
-      className="block text-sm font-medium leading-6 text-gray-700"
+    <StepIcon className="h-4 w-4" />
+    <h2
+      className={classNames({
+        [heading.className]: true,
+        "text-xl leading-tight tracking-tighter text-slate-700": true,
+      })}
     >
       Access Code
-    </label>
+    </h2>
     <p className="text-sm text-gray-500">
       This is the access code given to you by the team.
     </p>

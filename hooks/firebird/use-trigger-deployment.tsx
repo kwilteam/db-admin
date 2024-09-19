@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
-import { clearNewDeployment, IFirebirdNewDeployment } from "@/store/firebird"
+import { resetNewDeployment, IFirebirdNewDeployment } from "@/store/firebird"
 import { deployNetwork } from "@/utils/firebird/api"
 import { IFirebirdApiNewDeployment } from "@/utils/firebird/types"
 import { setAlert } from "@/store/global"
@@ -51,7 +51,7 @@ export default function useTriggerDeployment(
 
     setTimeout(() => {
       router.push(`/firebird/deployments/${id}`)
-      dispatch(clearNewDeployment)
+      dispatch(resetNewDeployment())
     }, FORWARD_DELAY)
   }
 

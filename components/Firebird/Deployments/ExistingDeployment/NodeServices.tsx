@@ -9,7 +9,13 @@ export default function NodeServices({ nodeId }: { nodeId: string }) {
   const { services, loading } = useNodeServices(nodeId)
 
   return (
-    <div className="flex cursor-default flex-col justify-start gap-2 rounded-md border border-slate-100 bg-white p-2">
+    <div
+      className="flex cursor-default flex-col justify-start gap-2 rounded-md border border-slate-100 bg-white p-2"
+      onClick={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+      }}
+    >
       <div className="flex flex-col gap-2">
         <h3 className="flex flex-row items-center gap-2 text-sm font-medium">
           <ServicesIcon className="h-4 w-4" />

@@ -3,13 +3,12 @@
 import { FormEvent, ReactNode, useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import classNames from "classnames"
 import { useAppDispatch } from "@/store/hooks"
 import { setAuthEmail } from "@/store/firebird"
 import { requestOtpAction } from "@/utils/firebird/api"
 import ContinueWithGoogle from "@/components/ContinueWithGoogle"
-import { CheckIcon, ErrorIcon } from "@/utils/icons"
 import Loading from "@/components/Loading"
+import { setAlert } from "@/store/global"
 
 interface AuthFormProps {
   title: string
@@ -20,7 +19,6 @@ interface AuthFormProps {
 export default function AuthForm({ title, icon, children }: AuthFormProps) {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const [emailSent, setEmailSent] = useState<boolean | undefined>(undefined)
   const [requestingOtp, setRequestingOtp] = useState<boolean>(false)
 
   const onEmailChange = (email: string) => {
@@ -37,31 +35,33 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
 
     if (typeof email !== "string" || !email) return
 
-    setEmailSent(undefined)
     setRequestingOtp(true)
     try {
       const response = await requestOtpAction(email)
 
       if (response && response.status === 200) {
-        setEmailSent(true)
-
         setTimeout(() => {
           router.push("/firebird/access-code")
-          setRequestingOtp(false)
         }, 1000)
       } else {
-        setEmailSent(false)
         setRequestingOtp(false)
-        console.log(response?.message || "Unknown error occurred")
+
+        dispatch(
+          setAlert({
+            text: "There was a problem sending your access code.  Please try again in 30 seconds.",
+            type: "error",
+          }),
+        )
       }
     } catch (error) {
-      setEmailSent(false)
-      console.error("Error requesting OTP:", error)
+      setRequestingOtp(false)
+      dispatch(
+        setAlert({
+          text: "There was a problem sending your access code.  Please try again in 30 seconds.",
+          type: "error",
+        }),
+      )
     }
-
-    setTimeout(() => {
-      setEmailSent(undefined)
-    }, 3500)
   }
 
   return (
@@ -140,32 +140,9 @@ export default function AuthForm({ title, icon, children }: AuthFormProps) {
               </button>
             </div>
 
-            <div
-              className={classNames("mt-4 flex gap-2 text-sm text-gray-500", {
-                hidden: emailSent !== undefined,
-              })}
-            >
+            <div className="mt-4 flex gap-2 text-sm text-gray-500">
               {children}
             </div>
-
-            {emailSent === false && (
-              <p
-                className="flex flex-row items-center gap-2 text-sm text-red-500"
-                data-testid="error-message"
-              >
-                <ErrorIcon className="h-6 w-6" /> There was a problem sending
-                the email.
-              </p>
-            )}
-
-            {emailSent === true && (
-              <p
-                className="flex flex-row items-center gap-2 text-sm text-kwil-dark"
-                data-testid="success-message"
-              >
-                <CheckIcon className="h-4 w-4" /> Code sent!
-              </p>
-            )}
           </form>
         </div>
       </div>

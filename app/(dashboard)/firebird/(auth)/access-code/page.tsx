@@ -26,7 +26,7 @@ export default function AccessCodePage() {
     handleChange,
   } = useAccessCode(authEmail, dispatch, router)
 
-  const { codeResent, resendCode } = useCodeResend(authEmail)
+  const { codeResent, resendCode, resendingCode } = useCodeResend(authEmail)
 
   useEffect(() => {
     if (!authEmail) {
@@ -84,6 +84,7 @@ export default function AccessCodePage() {
           />
           <AccessCodeStatus
             checkingAccessCode={checkingAccessCode}
+            resendingCode={resendingCode}
             codeSuccess={codeSuccess}
             codeResent={codeResent}
             handleResendCode={handleResendCode}

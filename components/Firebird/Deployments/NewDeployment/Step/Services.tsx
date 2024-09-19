@@ -6,15 +6,15 @@ import {
   setNewDeploymentServices,
 } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { ServicesStepIcon } from "@/utils/icons"
+import { ServicesStepIcon, StepIcon } from "@/utils/icons"
 import { Step } from "../Step"
 
 export function ServicesStep() {
   return (
     <Step
       step={5}
-      icon={<ServicesStepIcon />}
-      title="Select services"
+      icon={<StepIcon />}
+      title="Select Services"
       description="Select the services you want to deploy."
     >
       <div className="grid grid-cols-4 gap-2">
@@ -77,6 +77,7 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
           />
         </span>
         {service.title}
+        <ServicesStepIcon />
       </div>
       <span className="text-sm">{service.description}</span>
     </div>

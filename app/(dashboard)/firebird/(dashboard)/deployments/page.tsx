@@ -16,7 +16,7 @@ import Loading from "@/components/Loading"
 
 export default function DeploymentsHomePage() {
   const dispatch = useAppDispatch()
-  const account = useAppSelector(selectAccount)
+  // const account = useAppSelector(selectAccount)
   const deployments = useAppSelector(selectDeployments)
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function DeploymentsHomePage() {
     }
 
     loadAsync()
-  }, [account, dispatch])
+  }, [dispatch])
 
   if (!deployments) {
     return (

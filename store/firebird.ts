@@ -41,12 +41,6 @@ export const KwilVersions = {
 
 export type KwilVersion = keyof typeof KwilVersions
 
-// export interface IFirebirdMachines {
-//   type: MachineType
-//   provider: "aws"
-//   region: "us-east-2"
-// }
-
 export interface IFirebirdNewDeployment {
   network: Network
   networkSettings: IFirebirdNetworkSettings
@@ -69,30 +63,32 @@ interface IFirebirdState {
   providerConnected: boolean | undefined
 }
 
+const initialNewDeployment: IFirebirdNewDeployment = {
+  network: Network.testnet,
+  networkSettings: {
+    chainId: undefined,
+    kwilVersion: KwilVersions["0.8.4"],
+    companyName: undefined,
+  },
+  nodeCount: 1,
+  machines: MachineType.mini,
+  services: {
+    daemon: true,
+    gateway: false,
+    indexer: false,
+    customBinary: false,
+  },
+  finalOptions: {
+    inviteValidators: undefined,
+    accessCode: "",
+  },
+  talkWithTeam: false,
+}
+
 const initialState: IFirebirdState = {
   authEmail: undefined,
   account: undefined,
-  newDeployment: {
-    network: Network.testnet,
-    networkSettings: {
-      chainId: undefined,
-      kwilVersion: KwilVersions["0.8.4"],
-      companyName: undefined,
-    },
-    nodeCount: 1,
-    machines: MachineType.mini,
-    services: {
-      daemon: true,
-      gateway: false,
-      indexer: false,
-      customBinary: false,
-    },
-    finalOptions: {
-      inviteValidators: undefined,
-      accessCode: "",
-    },
-    talkWithTeam: true,
-  },
+  newDeployment: initialNewDeployment,
   deployments: undefined,
   activeDeployment: undefined,
   deploymentNodes: undefined,
@@ -209,8 +205,8 @@ export const firebirdSlice = createSlice({
       }
     },
 
-    clearNewDeployment: (state) => {
-      state.newDeployment = undefined
+    resetNewDeployment: (state) => {
+      state.newDeployment = initialNewDeployment
     },
 
     setTalkWithTeam: (state, action: PayloadAction<boolean>) => {
@@ -288,7 +284,7 @@ export const {
   setNewDeploymentNetworkSettings,
   setNewDeploymentServices,
   setNewDeploymentFinalOptions,
-  clearNewDeployment,
+  resetNewDeployment,
   setAuthEmail,
   setTalkWithTeam,
   setActiveDeployment,

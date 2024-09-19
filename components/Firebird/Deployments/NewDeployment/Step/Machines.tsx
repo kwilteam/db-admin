@@ -1,13 +1,13 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
-import { VmStepIcon } from "@/utils/icons"
+import { StepIcon, VmStepIcon } from "@/utils/icons"
 import { MachineType } from "@/store/firebird"
 
 export function MachinesStep() {
   return (
     <Step
       step={4}
-      icon={<VmStepIcon />}
+      icon={<StepIcon />}
       title="Select a Machine"
       description="Choose the machine you want to deploy to."
     >

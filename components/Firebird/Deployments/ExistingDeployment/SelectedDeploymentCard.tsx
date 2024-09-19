@@ -81,9 +81,7 @@ export default function SelectedDeploymentCard({
         )}
       </div>
 
-      {isDeploymentActive && (
-        <DeleteDeploymentButton deploymentId={deployment.id} />
-      )}
+      {isDeploymentActive && <DeleteDeploymentButton />}
     </div>
   )
 }
@@ -137,7 +135,7 @@ const DeploymentBadges = ({
   <div className="flex flex-row items-center justify-start gap-2 text-xs text-slate-500">
     <DeploymentBadge info="Status" size="lg">
       <div
-        className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]}`}
+        className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]} ${status === DeploymentStatus.DEPLOYING ? "animate-pulse" : ""}`}
       />
       <span>{capitalize(status)}</span>
     </DeploymentBadge>
@@ -205,7 +203,7 @@ const ConnectToProviderButton = ({
   )
 }
 
-const DeleteDeploymentButton = ({ deploymentId }: { deploymentId: string }) => {
+const DeleteDeploymentButton = () => {
   const dispatch = useAppDispatch()
 
   const triggerDeleteDeploymentModal = (

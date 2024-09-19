@@ -1,14 +1,14 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
-import { NetworkStepIcon } from "@/utils/icons"
+import { NetworkStepIcon, StepIcon } from "@/utils/icons"
 import { Network } from "@/store/firebird"
 
 export function NetworkStep() {
   return (
     <Step
       step={1}
-      icon={<NetworkStepIcon />}
-      title="Select a network"
+      icon={<StepIcon />}
+      title="Select a Network"
       description="Select a network to deploy to."
     >
       <div className="grid grid-cols-2 gap-2">

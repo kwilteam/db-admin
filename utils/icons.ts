@@ -32,6 +32,7 @@ import {
   HiOutlineStar,
   HiStar,
   HiOutlineServerStack,
+  HiOutlineServer,
   HiOutlineWrenchScrewdriver,
   HiOutlineHashtag,
   HiOutlineGlobeAlt,
@@ -51,6 +52,7 @@ import { PiAsteriskLight, PiPushPinLight, PiNetworkLight } from "react-icons/pi"
 import { TbNetwork, TbMailShare } from "react-icons/tb"
 import { VscVm } from "react-icons/vsc"
 import { GrServices } from "react-icons/gr"
+import { BsAsterisk } from "react-icons/bs"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -117,4 +119,6 @@ export {
   GrServices as ServicesIcon,
   HiOutlineBriefcase as CompanyIcon,
   HiOutlineArrowTopRightOnSquare as LinkIcon,
+  BsAsterisk as StepIcon,
+  HiOutlineServer as NodeIcon,
 }

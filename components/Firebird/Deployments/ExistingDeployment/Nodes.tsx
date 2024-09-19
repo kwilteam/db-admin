@@ -4,7 +4,7 @@ import { IFirebirdApiNode, NodeStatus } from "@/utils/firebird/types"
 import { ModalEnum, setModal, setModalData } from "@/store/global"
 import { capitalize } from "@/utils/helpers"
 import { useAppDispatch } from "@/store/hooks"
-import { DeleteIcon } from "@/utils/icons"
+import { DeleteIcon, NodeIcon } from "@/utils/icons"
 import Loading from "@/components/Loading"
 import useNodes from "@/hooks/firebird/use-nodes"
 import NodeServices from "./NodeServices"
@@ -92,10 +92,10 @@ const NodeItem = ({
   <div
     key={node.id}
     className={classNames(
-      "relative flex grow cursor-pointer select-none flex-col gap-2 rounded-md border border-slate-100 p-2",
+      "relative flex grow cursor-pointer select-none flex-col gap-2 rounded-md border border-slate-100 p-3",
       {
         "bg-kwil/25": isOpen,
-        "bg-slate-50/30": !isOpen,
+        "bg-slate-50/30 hover:bg-slate-50": !isOpen,
       },
     )}
     onClick={onToggle}
@@ -107,10 +107,10 @@ const NodeItem = ({
       <DeleteIcon className="h-4 w-4" />
     </div>
     <h2 className="flex flex-row items-center gap-2 text-sm font-medium">
+      <NodeIcon className="h-4 w-4" />
       <span>Node #{index + 1}</span>
       <Status status={node.status} />
     </h2>
-    <div className="text-sm">{node.name}</div>
     {isOpen && <NodeServices nodeId={node.id} />}
   </div>
 )
