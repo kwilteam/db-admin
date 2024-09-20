@@ -17,7 +17,7 @@ export function ServicesStep() {
       title="Select Services"
       description="Select the services you want to deploy."
     >
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 gap-2 lg:grid-cols-4">
         {services.map((service) => (
           <ServiceCard key={service.title} service={service} />
         ))}

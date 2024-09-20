@@ -22,8 +22,8 @@ export function TalkWithTeam(): JSX.Element {
         className="text-md m-1 flex flex-row items-center rounded-md bg-kwil px-4 py-3 text-slate-50"
         onClick={openModal}
       >
-        <ScheduleIcon className="mr-2 h-5 w-5" />
-        Talk with team
+        <ScheduleIcon className="h-5 w-5 lg:mr-2" />
+        <span className="hidden lg:block">Talk with team</span>
       </button>
     </div>
   )

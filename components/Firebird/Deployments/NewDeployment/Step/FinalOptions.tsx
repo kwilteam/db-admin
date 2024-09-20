@@ -67,17 +67,18 @@ type InputProps = {
 }
 
 const AccessCodeInput = ({ value, onChange }: InputProps) => (
-  <div className="ml-3 flex flex-row items-center gap-3">
-    <StepIcon className="h-4 w-4" />
+  <div className="ml-3 flex flex-grow flex-row items-center gap-3">
+    <StepIcon className="hidden h-4 w-4 lg:block" />
     <h2
       className={classNames({
         [heading.className]: true,
-        "text-xl leading-tight tracking-tighter text-slate-700": true,
+        "hidden text-xl leading-tight tracking-tighter text-slate-700 lg:block":
+          true,
       })}
     >
       Access Code
     </h2>
-    <p className="text-sm text-gray-500">
+    <p className="hidden text-sm text-gray-500 lg:block">
       This is the access code given to you by the team.
     </p>
     <input
@@ -85,8 +86,9 @@ const AccessCodeInput = ({ value, onChange }: InputProps) => (
       id="accessCode"
       name="accessCode"
       type="text"
+      placeholder="Enter access code"
       required
-      className="block w-72 rounded-md border-0 py-1 text-center text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80"
+      className="flex flex-grow rounded-md border-0 py-2 text-center text-sm leading-6 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-kwil/80 sm:placeholder-transparent"
       value={value}
       onChange={(e) => onChange("accessCode", e.target.value)}
     />
@@ -94,7 +96,7 @@ const AccessCodeInput = ({ value, onChange }: InputProps) => (
 )
 
 const InviteOtherValidators = () => (
-  <div className="ml-4 flex flex-row items-center justify-center gap-2 opacity-50">
+  <div className="ml-4 hidden flex-row items-center justify-center gap-2 opacity-50 lg:flex">
     <input
       type="checkbox"
       className="cursor-not-allowed rounded border border-gray-300 bg-white p-3"
@@ -116,9 +118,9 @@ const DeployButton = ({
   deploying: boolean
   onClick: () => void
 }) => (
-  <div className="flex flex-grow items-center justify-end gap-2">
+  <div className="flex items-center justify-end gap-2 lg:flex-grow">
     <button
-      className="text-md m-1 flex flex-row items-center rounded-lg bg-kwil px-4 py-3 tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50"
+      className="text-md m-1 flex flex-row items-center rounded-lg bg-kwil p-2 tracking-tight text-white disabled:cursor-not-allowed disabled:opacity-50 lg:px-4 lg:py-3"
       disabled={!readyToDeploy || deploying}
       onClick={onClick}
     >
@@ -126,7 +128,8 @@ const DeployButton = ({
         <Loading className="flex justify-center" color="white" />
       ) : (
         <>
-          <DeployIcon className="mr-2 h-5 w-5" /> Deploy Kwil Network
+          <DeployIcon className="h-5 w-5 lg:mr-2" />
+          <span className="hidden lg:block">Deploy Kwil Network</span>
         </>
       )}
     </button>

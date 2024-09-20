@@ -11,7 +11,7 @@ export function MachinesStep() {
       title="Select a Machine"
       description="Choose the machine you want to deploy to."
     >
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
         {machinesOptions.map((option) => (
           <DeploymentOptionCard
             key={option.title}

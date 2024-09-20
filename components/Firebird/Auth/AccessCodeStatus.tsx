@@ -32,7 +32,7 @@ export default function AccessCodeStatus({
       {(checkingAccessCode || resendingCode) && <Loading className="w-4" />}
       {codeSuccess === false && (
         <p className="flex flex-row items-center gap-2 text-sm text-red-500">
-          <ErrorIcon className="h-6 w-6" /> The code isn&apos;t valid. Try
+          <ErrorIcon className="h-6 w-6" /> This code isn&apos;t valid. Try
           again.
         </p>
       )}

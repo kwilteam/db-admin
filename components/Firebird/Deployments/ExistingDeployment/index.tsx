@@ -58,16 +58,16 @@ export default function ExistingDeployment({ id }: { id: string }) {
   }
 
   return (
-    <>
-      <div className="m-2 flex flex-col items-start gap-2">
+    <div className="flex flex-col gap-2 p-2">
+      <div className="flex flex-col items-start gap-2">
         <SelectedDeploymentCard
           deployment={activeDeployment}
           deploymentStatus={deploymentStatus}
           deploymentProgress={deploymentProgress}
         />
       </div>
-      <div className="mx-2 flex h-screen flex-row gap-2">
-        <div className="flex h-24 w-full flex-col items-start gap-2 lg:w-1/2">
+      <div className="flex flex-col gap-2 lg:flex-row">
+        <div className="flex flex-col items-start gap-2 lg:w-1/2">
           {isDeploymentActive && (
             <ActiveDeploymentTabs
               deploymentId={id}
@@ -76,12 +76,12 @@ export default function ExistingDeployment({ id }: { id: string }) {
           )}
         </div>
 
-        <div className="flex w-full flex-col gap-2 lg:w-1/2">
+        <div className="flex flex-col gap-2 lg:w-1/2">
           {isDeploymentActive && providerEndpoint && chain && (
             <QuickConnect providerEndpoint={providerEndpoint} chain={chain} />
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }

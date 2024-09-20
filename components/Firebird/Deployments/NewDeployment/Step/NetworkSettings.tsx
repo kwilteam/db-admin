@@ -45,7 +45,7 @@ export function NetworkSettingsStep() {
       title="Network Settings"
       description="Decide on the settings you require for your deployment."
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <ChainIdInput
           value={newDeployment?.networkSettings?.chainId ?? ""}
           onChange={handleChange}

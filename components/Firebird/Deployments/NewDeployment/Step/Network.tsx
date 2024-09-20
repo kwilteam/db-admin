@@ -11,7 +11,7 @@ export function NetworkStep() {
       title="Select a Network"
       description="Select a network to deploy to."
     >
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
         <DeploymentOptionCard
           testId="testnet-option"
           optionKey="network"

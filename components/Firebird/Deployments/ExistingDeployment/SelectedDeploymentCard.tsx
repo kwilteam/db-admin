@@ -54,31 +54,37 @@ export default function SelectedDeploymentCard({
   return (
     <div
       data-testid="selected-deployment-card"
-      className="relative flex w-full flex-col gap-3 rounded-md border border-slate-100 p-3"
+      className="relative flex w-full flex-col gap-3 rounded-md border border-slate-100 lg:p-3"
     >
-      <div className="flex w-full items-center justify-start gap-8 px-4 py-6">
-        <DeploymentIcon instanceName={machines.instance_name} />
+      <div className="flex w-full flex-col items-center justify-start gap-3 p-3 lg:flex-row lg:gap-4 lg:px-4 lg:py-6">
+        {/* <div÷className="flex lg:w-1/2 lg:gap-4"> */}
+        <div className="flex w-full flex-row items-center justify-start gap-3 lg:w-auto lg:gap-4">
+          <DeploymentIcon instanceName={machines.instance_name} />
 
-        <DeploymentInfo
-          instanceName={machines.instance_name}
-          createdAt={deployment.created_at}
-          deployment={deployment}
-          isDeploymentActive={isDeploymentActive}
-          activeProvider={activeProvider}
-        />
+          <DeploymentInfo
+            instanceName={machines.instance_name}
+            createdAt={deployment.created_at}
+            deployment={deployment}
+            isDeploymentActive={isDeploymentActive}
+            activeProvider={activeProvider}
+          />
+        </div>
 
         <DeploymentBadges
           status={deploymentStatus || status}
           chainVersion={chain.version}
           chainId={chain.chain_id}
         />
+        {/* </div> */}
 
-        {isDeploymentPending && (
+        <div className="flex flex-row items-center justify-start gap-4 lg:w-1/2 lg:gap-8">
+          {/* {isDeploymentPending && ( */}
           <DeploymentStatusStream
             status={deploymentStatus}
             progress={deploymentProgress}
           />
-        )}
+          {/* )} */}
+        </div>
       </div>
 
       {isDeploymentActive && <DeleteDeploymentButton />}
@@ -87,7 +93,7 @@ export default function SelectedDeploymentCard({
 }
 
 const DeploymentIcon = ({ instanceName }: { instanceName: string }) => (
-  <div className="flex h-24 w-24 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
+  <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
     <Image src="/images/kwil.png" alt={instanceName} width={40} height={40} />
   </div>
 )
@@ -108,7 +114,7 @@ const DeploymentInfo = ({
   const machines = deployment.config.machines
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-lg font-medium">{instanceName}</h1>
       </div>
@@ -132,28 +138,30 @@ const DeploymentBadges = ({
   chainVersion: string
   chainId: string
 }) => (
-  <div className="flex flex-row items-center justify-start gap-2 text-xs text-slate-500">
-    <DeploymentBadge info="Status" size="lg">
-      <div
-        className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]} ${status === DeploymentStatus.DEPLOYING ? "animate-pulse" : ""}`}
-      />
-      <span>{capitalize(status)}</span>
-    </DeploymentBadge>
+  <div className="flex w-full flex-col items-center justify-start gap-2 text-xs text-slate-500 lg:w-auto lg:flex-row lg:gap-4">
+    <div className="flex w-full flex-row items-center justify-start gap-2 lg:w-auto lg:gap-4">
+      <DeploymentBadge info="Status" size="lg" className="w-full lg:w-auto">
+        <div
+          className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]} ${status === DeploymentStatus.DEPLOYING ? "animate-pulse" : ""}`}
+        />
+        <span>{capitalize(status)}</span>
+      </DeploymentBadge>
 
-    <DeploymentBadge info="KwilD" size="lg">
-      <Image
-        src="/images/kwil.png"
-        className="h-4 w-4"
-        alt={chainVersion}
-        width={16}
-        height={16}
-      />
-      <span>{chainVersion}</span>
-    </DeploymentBadge>
+      <DeploymentBadge info="KwilD" size="lg" className="w-full lg:w-auto">
+        <Image
+          src="/images/kwil.png"
+          className="h-4 w-4"
+          alt={chainVersion}
+          width={16}
+          height={16}
+        />
+        <span>{chainVersion}</span>
+      </DeploymentBadge>
+    </div>
 
-    <DeploymentBadge info="Chain ID" size="lg">
+    <DeploymentBadge info="Chain ID" size="lg" className="w-full lg:w-auto">
       <ChainIcon className="h-4 w-4" />
-      <span className="whitespace-nowrap">{chainId}</span>
+      <span className="whitespace-nowrap">{chainId.slice(0, 35)}</span>
     </DeploymentBadge>
   </div>
 )
@@ -174,7 +182,7 @@ const ConnectToProviderButton = ({
   })
 
   const buttonClasses =
-    "flex cursor-pointer flex-row items-center justify-center gap-2 rounded-md border p-2 text-xs"
+    "flex w-full cursor-pointer flex-row items-center justify-center gap-2 rounded-md border p-2 text-xs"
   const activeClasses = "border-kwil bg-white text-kwil"
   const inactiveClasses = "border-slate-100 bg-kwil text-slate-50"
 
@@ -242,16 +250,16 @@ const DeploymentStatusStream = ({
   }
 
   return (
-    <div className="ml-16 flex flex-col gap-2 text-sm">
+    <div className="flex flex-col gap-2 text-sm lg:ml-16">
       {Array.from(progress.entries()).map(([event, eventType]) => (
-        <div className="flex flex-row items-center gap-2" key={event}>
+        <div className="flex flex-row items-center gap-3" key={event}>
           <span
             className={classNames({
               flex: eventType === DeploymentEventType.NOT_STARTED,
               hidden: eventType !== DeploymentEventType.NOT_STARTED,
             })}
           >
-            <DeploymentStepPendingIcon className="h-4 w-4" />
+            <DeploymentStepPendingIcon className="h-4 w-4 p-1" />
           </span>
 
           <span

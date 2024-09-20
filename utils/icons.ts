@@ -41,7 +41,7 @@ import {
   HiOutlineTrash,
   HiOutlineCalendarDays,
   HiOutlineDocumentArrowDown,
-  HiOutlineMinusCircle,
+  HiOutlineMinus,
   HiOutlineBriefcase,
 } from "react-icons/hi2"
 import { HiOutlineBeaker } from "react-icons/hi"
@@ -111,7 +111,7 @@ export {
   HiOutlineTrash as DeleteIcon,
   HiOutlineCalendarDays as ScheduleIcon,
   HiOutlineDocumentArrowDown as DownloadLogsIcon,
-  HiOutlineMinusCircle as DeploymentStepPendingIcon,
+  HiOutlineMinus as DeploymentStepPendingIcon,
   HiOutlineCheckCircle as DeploymentStepFinishedIcon,
   HiOutlineXMark as DeploymentStepFailedIcon,
   HiOutlineServerStack as NodesIcon,

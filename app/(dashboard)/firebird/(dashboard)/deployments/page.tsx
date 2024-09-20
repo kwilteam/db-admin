@@ -52,7 +52,7 @@ export default function DeploymentsHomePage() {
       <div className="flex-1 overflow-auto bg-white">
         {/* If no deployments, show a message */}
         {deployments && deployments.length === 0 && (
-          <div className="flex h-screen flex-col items-center justify-center gap-4">
+          <div className="mt-16 flex max-h-mobile flex-col items-center justify-center gap-4 lg:mt-0 lg:min-h-mobile">
             <FirebirdIcon className="h-12 w-12 text-gray-600" />
             <h1 className="text-lg tracking-tight text-gray-900 lg:text-xl">
               Deploy your first Kwil network!
@@ -70,7 +70,7 @@ export default function DeploymentsHomePage() {
         )}
 
         {/* If deployments, show grid of deployments */}
-        <div className="m-2 grid grid-cols-3 gap-2">
+        <div className="m-2 grid grid-cols-1 gap-2 lg:grid-cols-3">
           {deployments &&
             deployments.map((deployment: any) => (
               <DeploymentCard key={deployment.id} deployment={deployment} />

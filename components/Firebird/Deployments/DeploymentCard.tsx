@@ -43,7 +43,7 @@ export default function DeploymentCard({
   return (
     <Link href={`/firebird/deployments/${deployment.id}`}>
       <div className="flex grow cursor-pointer select-none flex-row items-center gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-4 py-6">
-        <div className="flex h-24 w-24 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
+        <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
           <Image
             src="/images/kwil.png"
             alt={machines.instance_name}
@@ -51,6 +51,7 @@ export default function DeploymentCard({
             height={40}
           />
         </div>
+
         <div className="flex grow flex-col gap-2">
           <div className="flex flex-row items-center justify-between">
             <h1 className="text-lg font-medium">{machines.instance_name}</h1>
@@ -64,11 +65,11 @@ export default function DeploymentCard({
               </button>
             )}
           </div>
-          <div className="text-xs text-slate-500">
+          <div className="hidden text-xs text-slate-500 lg:block">
             {formatTimestamp(deployment.created_at)}
           </div>
 
-          <div className="flex flex-row items-center justify-start gap-2 text-xs text-slate-500">
+          <div className="hidden flex-row items-start justify-start gap-2 text-xs text-slate-500 lg:flex">
             <DeploymentBadge>
               <div
                 className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
@@ -90,6 +91,36 @@ export default function DeploymentCard({
             <DeploymentBadge>
               <ChainIcon className="h-4 w-4" />
               <span>{chain.chain_id}</span>
+            </DeploymentBadge>
+          </div>
+
+          <div className="flex flex-col items-start justify-start gap-2 text-xs text-slate-500 lg:hidden">
+            <div className="flex w-full flex-row items-center justify-start gap-2">
+              <DeploymentBadge className="grow">
+                <div
+                  className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
+                />
+                <span>{capitalize(status)}</span>
+              </DeploymentBadge>
+
+              <DeploymentBadge className="grow">
+                <Image
+                  src="/images/kwil.png"
+                  className="h-4 w-4"
+                  alt={machines.instance_name}
+                  width={16}
+                  height={16}
+                />
+
+                <span>{chain.version}</span>
+              </DeploymentBadge>
+            </div>
+
+            <DeploymentBadge className="w-full">
+              <ChainIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+              <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                {chain.chain_id.slice(0, 35)}
+              </span>
             </DeploymentBadge>
           </div>
         </div>

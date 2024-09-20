@@ -13,7 +13,9 @@ export default function FirebirdSignOut() {
     const { status, message } = await signOut()
     if (status === 200) {
       router.push("/firebird/login")
-      dispatch(setAccount(undefined))
+      setTimeout(() => {
+        dispatch(setAccount(undefined))
+      }, 500)
     } else {
       console.error("Sign out failed", message)
     }
@@ -28,7 +30,7 @@ export default function FirebirdSignOut() {
   const emailDisplay = `${email.slice(0, 10)}...${email.slice(-10)}`
 
   return (
-    <div className="flex flex-row items-center gap-2">
+    <div className="hidden flex-row items-center gap-2 lg:flex">
       <button
         className="inline-flex w-auto items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         onClick={triggerSignOut}

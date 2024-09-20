@@ -20,15 +20,12 @@ export function CancelNewDeployment() {
 
   return (
     <div
-      className="m-3 ml-3 flex w-20 cursor-pointer flex-row items-center gap-2 hover:underline"
+      className="m-1 mt-2 flex cursor-pointer flex-row items-center justify-start gap-2 hover:underline lg:ml-3 lg:mt-3"
       onClick={cancel}
     >
-      <div className="p-1 text-slate-500">
-        <CloseIcon className="h-3 w-3" />
+      <div className="flex h-6 w-6 items-center justify-center rounded-full border border-slate-200 text-slate-600 hover:border-slate-400">
+        <CloseIcon className="h-4 w-4" />
       </div>
-      <button className="btn btn-outline btn-error text-sm text-slate-500">
-        Cancel
-      </button>
     </div>
   )
 }

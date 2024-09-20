@@ -16,7 +16,7 @@ interface IStepProps {
 
 export function Step({ step, icon, title, description, children }: IStepProps) {
   return (
-    <div className="flex flex-col gap-2 p-4">
+    <div className="flex flex-col gap-2 p-2 lg:p-4">
       <div className="flex flex-row justify-between gap-2">
         <div className="flex flex-col gap-1">
           <div className="flex flex-row items-center gap-2">
@@ -34,7 +34,7 @@ export function Step({ step, icon, title, description, children }: IStepProps) {
           <p className="text-sm text-slate-500">{description}</p>
         </div>
 
-        <div className="flex flex-row gap-2 p-2 text-slate-500">
+        <div className="hidden flex-row gap-2 p-2 text-slate-500 lg:flex">
           <span>Step {step} / 5</span>
         </div>
       </div>

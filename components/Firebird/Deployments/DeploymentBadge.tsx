@@ -2,11 +2,13 @@ import classNames from "classnames"
 
 export const DeploymentBadge = ({
   children,
+  className,
   info = undefined,
   size = "md",
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode
+  className?: string
   info?: string
   size?: "md" | "lg"
 }) => {
@@ -15,6 +17,7 @@ export const DeploymentBadge = ({
       className={classNames(
         "relative flex cursor-default select-none flex-row items-center gap-2 rounded-md border border-slate-100 bg-white",
         size === "lg" ? "px-8 py-6" : "p-2",
+        className,
       )}
       {...props}
     >
