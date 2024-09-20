@@ -78,12 +78,12 @@ export default function SelectedDeploymentCard({
         {/* </div> */}
 
         <div className="flex flex-row items-center justify-start gap-4 lg:w-1/2 lg:gap-8">
-          {/* {isDeploymentPending && ( */}
-          <DeploymentStatusStream
-            status={deploymentStatus}
-            progress={deploymentProgress}
-          />
-          {/* )} */}
+          {isDeploymentPending && (
+            <DeploymentStatusStream
+              status={deploymentStatus}
+              progress={deploymentProgress}
+            />
+          )}
         </div>
       </div>
 
@@ -250,7 +250,7 @@ const DeploymentStatusStream = ({
   }
 
   return (
-    <div className="flex flex-col gap-2 text-sm lg:ml-16">
+    <div className="flex flex-col gap-2 text-sm xl:ml-16">
       {Array.from(progress.entries()).map(([event, eventType]) => (
         <div className="flex flex-row items-center gap-3" key={event}>
           <span
