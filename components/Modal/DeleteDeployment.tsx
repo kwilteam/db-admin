@@ -1,27 +1,58 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { removeDeployment, selectActiveDeployment } from "@/store/firebird"
-import { ModalEnum, selectModal, setAlert, setModal } from "@/store/global"
+import {
+  removeDeployment,
+  selectActiveDeployment,
+  selectDeploymentById,
+} from "@/store/firebird"
+import {
+  ModalEnum,
+  selectModal,
+  selectModalData,
+  setAlert,
+  setModal,
+} from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { deleteDeployment } from "@/utils/firebird/api"
 import Button from "@/components/Button"
 import Base from "@/components/Modal/Base"
 import Loading from "../Loading"
+import { IFirebirdDeployment } from "@/utils/firebird/types"
 
 export default function DeleteDeploymentModal() {
   const router = useRouter()
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
-  const deployment = useAppSelector(selectActiveDeployment)
+  const modalData = useAppSelector(selectModalData)
+  const activeDeployment = useAppSelector(selectActiveDeployment)
+  const deploymentById = useAppSelector(
+    selectDeploymentById(modalData?.deploymentId),
+  )
   const [deleting, setDeleting] = useState(false)
   const [instanceName, setInstanceName] = useState("")
+  const [deployment, setDeployment] = useState<IFirebirdDeployment | undefined>(
+    undefined,
+  )
 
   const cancel = () => {
     dispatch(setModal(undefined))
+    setInstanceName("")
   }
 
+  useEffect(() => {
+    if (activeDeployment) {
+      setDeployment(activeDeployment)
+    }
+  }, [activeDeployment])
+
+  useEffect(() => {
+    if (!activeDeployment && modalData?.deploymentId) {
+      setDeployment(deploymentById)
+    }
+  }, [deploymentById, activeDeployment, modalData?.deploymentId])
+
   const continueDeleteDeployment = async () => {
-    if (!deployment) return
+    if (!deployment || !isDeleteEnabled) return
 
     setDeleting(true)
     const { status } = await deleteDeployment(deployment.id)
@@ -39,6 +70,7 @@ export default function DeleteDeploymentModal() {
       router.push("/firebird/deployments")
 
       dispatch(setModal(undefined))
+      setInstanceName("")
     } else {
       dispatch(
         setAlert({
@@ -67,6 +99,11 @@ export default function DeleteDeploymentModal() {
           type="text"
           value={instanceName}
           onChange={(e) => setInstanceName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              continueDeleteDeployment()
+            }
+          }}
           placeholder=""
           className="rounded border-2 border-gray-300 p-3 text-center text-sm focus:border-2 focus:border-kwil/100 focus:outline-none focus:ring-0 focus:ring-kwil/100"
         />

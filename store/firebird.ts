@@ -321,6 +321,16 @@ export const selectDeploymentNodesById =
       (item) => item.deploymentId === deploymentId,
     )?.nodes
 
+export const selectDeploymentById =
+  (deploymentId: string | undefined) =>
+  (state: { firebird: IFirebirdState }) => {
+    if (!deploymentId) return undefined
+
+    return state.firebird.deployments?.find(
+      (deployment) => deployment.id === deploymentId,
+    )
+  }
+
 export const selectProviderConnected = (state: { firebird: IFirebirdState }) =>
   state.firebird.providerConnected
 

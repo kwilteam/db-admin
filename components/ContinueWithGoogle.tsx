@@ -1,8 +1,14 @@
+const googleButtonUrl = process.env.NEXT_PUBLIC_GOOGLE_SIGN_IN_URL
+
 export default function ContinueWithGoogle() {
+  if (!googleButtonUrl) {
+    console.error("NEXT_PUBLIC_GOOGLE_SIGN_IN_URL is not set")
+  }
+
   return (
     <div className="mt-6 flex flex-col gap-2">
       <a
-        href="#"
+        href={googleButtonUrl}
         className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">

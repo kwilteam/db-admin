@@ -5,7 +5,7 @@ import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import { ChainIcon, DeleteIcon } from "@/utils/icons"
 import { capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "./DeploymentBadge"
-import { ModalEnum, setModal } from "@/store/global"
+import { ModalEnum, setModal, setModalData } from "@/store/global"
 
 // Have to include here as Tailwind struggles to import from the types file
 export const statusColor = {
@@ -37,6 +37,7 @@ export default function DeploymentCard({
     e.preventDefault()
     console.log("delete deployment", deployment)
     dispatch(setModal(ModalEnum.DELETE_DEPLOYMENT))
+    dispatch(setModalData({ deploymentId: deployment.id }))
   }
 
   return (

@@ -23,6 +23,10 @@ export default function JsSdkConnect({
   const { node, web } = useCodeSnippets(providerEndpoint, chain?.chain_id)
   const installCode = "npm install @kwilteam/kwil-js"
 
+  if (!docsUrl) {
+    console.error("NEXT_PUBLIC_KWIL_JS_SDK_DOCS_URL is not set")
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <p className="flex flex-row gap-1 text-sm">

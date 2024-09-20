@@ -10,7 +10,7 @@ export default function DeploymentPage({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div className="flex flex-col overflow-y-auto">
+      <div className="flex flex-col overflow-auto">
         {isNew ? <NewDeploymentForm /> : <ExistingDeployment id={id} />}
       </div>
 

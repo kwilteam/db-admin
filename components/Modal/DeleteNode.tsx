@@ -33,13 +33,14 @@ export default function DeleteNodeModal() {
 
   const cancel = () => {
     dispatch(setModal(undefined))
+    setInstanceName("")
     setTimeout(() => {
       dispatch(setModalData(undefined))
     }, 500)
   }
 
   const continueDeleteNode = async () => {
-    if (!modalData || !modalData.nodeId) return
+    if (!modalData || !modalData.nodeId || !isDeleteEnabled) return
 
     setDeleting(true)
     const { status } = await deleteNode(modalData.nodeId)
@@ -64,6 +65,7 @@ export default function DeleteNodeModal() {
       setTimeout(() => {
         dispatch(setModalData(undefined))
       }, 500)
+      setInstanceName("")
     } else {
       dispatch(
         setAlert({
@@ -98,6 +100,11 @@ export default function DeleteNodeModal() {
           type="text"
           value={instanceName}
           onChange={(e) => setInstanceName(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              continueDeleteNode()
+            }
+          }}
           placeholder=""
           className="rounded border-2 border-gray-300 p-3 text-center text-sm focus:border-2 focus:border-kwil/100 focus:outline-none focus:ring-0 focus:ring-kwil/100"
         />

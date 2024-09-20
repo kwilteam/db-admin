@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { getAccount } from "@/utils/firebird/api"
 import { SuccessIcon } from "@/utils/icons"
 import Image from "next/image"
@@ -10,13 +10,14 @@ import Loading from "@/components/Loading"
 export default function DeploymentsAuthLayout({
   children,
 }: React.PropsWithChildren<{}>) {
+  const router = useRouter()
   const [loggedIn, setLoggedIn] = useState<boolean | undefined>(undefined)
 
   useEffect(() => {
     if (loggedIn === true) {
-      redirect("/firebird/deployments")
+      router.push("/firebird/deployments")
     }
-  }, [loggedIn])
+  }, [loggedIn, router])
 
   useEffect(() => {
     const loadAsync = async () => {
@@ -32,10 +33,14 @@ export default function DeploymentsAuthLayout({
     loadAsync()
   }, [])
 
+  if (loggedIn === undefined || loggedIn === true) {
+    return <Loading className="mt-4 flex justify-center" />
+  }
+
   if (loggedIn === false) {
     return (
       <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
-        <div className="flex-1 overflow-scroll">
+        <div className="overflow-none flex-1">
           <div className="flex flex-row items-center justify-center">
             <div className="hidden h-screen w-1/2 items-center justify-center bg-gradient-to-r from-white from-10% via-60% to-kwil/20 to-90% text-left lg:flex">
               <div className="flex flex-col">
@@ -88,6 +93,4 @@ export default function DeploymentsAuthLayout({
       </div>
     )
   }
-
-  return <Loading className="mt-4 flex justify-center" />
 }

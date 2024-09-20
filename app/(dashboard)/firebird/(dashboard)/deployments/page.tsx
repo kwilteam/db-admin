@@ -49,7 +49,7 @@ export default function DeploymentsHomePage() {
 
   return (
     <>
-      <div className="flex-1 overflow-scroll bg-white">
+      <div className="flex-1 overflow-auto bg-white">
         {/* If no deployments, show a message */}
         {deployments && deployments.length === 0 && (
           <div className="flex h-screen flex-col items-center justify-center gap-4">

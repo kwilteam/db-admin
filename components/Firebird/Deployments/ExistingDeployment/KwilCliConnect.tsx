@@ -22,6 +22,14 @@ export default function KwilCliConnect({
   const cliPingCode = `kwil-cli utils ping --provider=${providerEndpoint}`
   const cliConnectCode = `kwil-cli --provider=${providerEndpoint} --private-key=your_private_key --chain-id=${chain?.chain_id}`
 
+  if (!docsUrl) {
+    console.error("NEXT_PUBLIC_KWIL_CLI_DOCS_URL is not set")
+  }
+
+  if (!downloadUrl) {
+    console.error("NEXT_PUBLIC_KWIL_CLI_DOWNLOAD_URL is not set")
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <a
