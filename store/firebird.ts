@@ -2,43 +2,14 @@ import {
   IFirebirdAccount,
   IFirebirdApiNode,
   IFirebirdDeployment,
+  IFirebirdFinalOptions,
+  IFirebirdNetworkSettings,
+  IFirebirdServices,
+  KwilVersions,
+  MachineType,
+  Network,
 } from "@/utils/firebird/types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-
-export interface IFirebirdNetworkSettings {
-  chainId?: string
-  kwilVersion?: string
-  companyName?: string
-}
-
-export interface IFirebirdServices {
-  daemon: boolean
-  gateway: boolean
-  indexer: boolean
-  customBinary: boolean
-}
-
-export interface IFirebirdFinalOptions {
-  inviteValidators?: boolean
-  accessCode: string
-}
-
-export enum Network {
-  testnet = "testnet",
-  mainnet = "mainnet",
-}
-
-export enum MachineType {
-  mini = "mini",
-  small = "small",
-  medium = "medium",
-  large = "large",
-}
-
-export const KwilVersions = {
-  "0.8.4": "0.8.4",
-} as const
-
 export type KwilVersion = keyof typeof KwilVersions
 
 export interface IFirebirdNewDeployment {

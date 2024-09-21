@@ -1,7 +1,7 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
 import { NetworkStepIcon, StepIcon } from "@/utils/icons"
-import { Network } from "@/store/firebird"
+import { Network } from "@/utils/firebird/types"
 
 export function NetworkStep() {
   return (

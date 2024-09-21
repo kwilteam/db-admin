@@ -68,12 +68,12 @@ export default function MobileNavigation() {
                   hidden: !secondaryMobileMenu,
                 })}
               >
-                {pathname.startsWith("/databases") && (
+                {pathname?.startsWith("/databases") && (
                   <DatabaseExplorer isMobile={true} />
                 )}
-                {pathname.startsWith("/ide") && <SchemaExplorer />}
-                {pathname.startsWith("/settings") && <SettingsNavigation />}
-                {pathname.startsWith("/extensions") && <ExtensionFilters />}
+                {pathname?.startsWith("/ide") && <SchemaExplorer />}
+                {pathname?.startsWith("/settings") && <SettingsNavigation />}
+                {pathname?.startsWith("/extensions") && <ExtensionFilters />}
               </div>
               <div
                 className="h-10 lg:hidden"

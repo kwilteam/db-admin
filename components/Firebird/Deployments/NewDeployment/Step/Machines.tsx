@@ -1,7 +1,7 @@
 import { Step } from "../Step"
 import { DeploymentOptionCard } from "../DeploymentOptionCard"
 import { StepIcon, VmStepIcon } from "@/utils/icons"
-import { MachineType } from "@/store/firebird"
+import { MachineType } from "@/utils/firebird/types"
 
 export function MachinesStep() {
   return (

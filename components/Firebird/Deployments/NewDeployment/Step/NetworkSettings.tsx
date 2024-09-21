@@ -2,14 +2,13 @@ import Image from "next/image"
 import { useCallback, useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
-  IFirebirdNetworkSettings,
-  KwilVersions,
   selectNewDeployment,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
 import { ChainIcon, CompanyIcon, StepIcon } from "@/utils/icons"
 import { generateRandomString } from "@/utils/random-name-generator"
 import { Step } from "../Step"
+import { IFirebirdNetworkSettings, KwilVersions } from "@/utils/firebird/types"
 
 export function NetworkSettingsStep() {
   const dispatch = useAppDispatch()

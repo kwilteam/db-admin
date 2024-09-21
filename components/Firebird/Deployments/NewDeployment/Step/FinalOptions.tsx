@@ -3,15 +3,15 @@ import { Montserrat } from "next/font/google"
 import classNames from "classnames"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
-  IFirebirdFinalOptions,
   selectNewDeployment,
   setNewDeploymentFinalOptions,
 } from "@/store/firebird"
+import useDeploymentState from "@/hooks/firebird/use-deployment-state"
+import useTriggerDeployment from "@/hooks/firebird/use-trigger-deployment"
+import { IFirebirdFinalOptions } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
 import { DeployIcon, StepIcon } from "@/utils/icons"
 import { TalkWithTeam } from "./TalkWithTeam"
-import useDeploymentState from "@/hooks/firebird/use-deployment-state"
-import useTriggerDeployment from "@/hooks/firebird/use-trigger-deployment"
 
 const heading = Montserrat({
   weight: "500",

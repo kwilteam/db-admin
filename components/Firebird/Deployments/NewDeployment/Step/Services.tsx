@@ -1,13 +1,13 @@
 import classNames from "classnames"
 import { ModalEnum, setModal } from "@/store/global"
 import {
-  IFirebirdServices,
   selectNewDeploymentServices,
   setNewDeploymentServices,
 } from "@/store/firebird"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ServicesStepIcon, StepIcon } from "@/utils/icons"
 import { Step } from "../Step"
+import { IFirebirdServices } from "@/utils/firebird/types"
 
 export function ServicesStep() {
   return (

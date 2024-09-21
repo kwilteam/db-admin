@@ -1,8 +1,4 @@
-export interface IFirebirdApiResponse<T> {
-  status: number
-  message: string
-  data?: T
-}
+// Interfaces for Firebird store
 
 export interface IFirebirdAccount {
   created_at?: number
@@ -10,6 +6,51 @@ export interface IFirebirdAccount {
   id?: string
   origin?: string
 }
+
+export interface IFirebirdDeployment {
+  config: IFirebirdDeploymentConfig
+  created_at: number
+  id: string
+  status: DeploymentStatus
+  updated_at: number
+  service_endpoints: {
+    kwil_rpc_provider?: string
+  }
+}
+
+export interface IFirebirdNetworkSettings {
+  chainId?: string
+  kwilVersion?: string
+  companyName?: string
+}
+
+export interface IFirebirdServices {
+  daemon: boolean
+  gateway: boolean
+  indexer: boolean
+  customBinary: boolean
+}
+
+export interface IFirebirdFinalOptions {
+  inviteValidators?: boolean
+  accessCode: string
+}
+
+export enum Network {
+  testnet = "testnet",
+  mainnet = "mainnet",
+}
+
+export enum MachineType {
+  mini = "mini",
+  small = "small",
+  medium = "medium",
+  large = "large",
+}
+
+export const KwilVersions = {
+  "0.8.4": "0.8.4",
+} as const
 
 export interface IFirebirdDeploymentConfig {
   chain: {
@@ -35,6 +76,14 @@ export enum DeploymentStatus {
   TERMINATED = "TERMINATED",
 }
 
+// Interfaces for API responses
+
+export interface IFirebirdApiResponse<T> {
+  status: number
+  message: string
+  data?: T
+}
+
 export interface IFirebirdApiNewDeployment {
   chain: {
     chain_id: string
@@ -48,17 +97,6 @@ export interface IFirebirdApiNewDeployment {
     type: string
   }
   access_token: string
-}
-
-export interface IFirebirdDeployment {
-  config: IFirebirdDeploymentConfig
-  created_at: number
-  id: string
-  status: DeploymentStatus
-  updated_at: number
-  service_endpoints: {
-    kwil_rpc_provider?: string
-  }
 }
 
 export interface IFirebirdPagination {
