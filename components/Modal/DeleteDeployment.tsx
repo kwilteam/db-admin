@@ -18,8 +18,10 @@ import Button from "@/components/Button"
 import Base from "@/components/Modal/Base"
 import Loading from "../Loading"
 import { IFirebirdDeployment } from "@/utils/firebird/types"
+import useTriggerProviderStatusCheck from "@/hooks/use-trigger-provider-status-check"
 
 export default function DeleteDeploymentModal() {
+  const triggerProviderStatusCheck = useTriggerProviderStatusCheck()
   const router = useRouter()
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
@@ -71,6 +73,8 @@ export default function DeleteDeploymentModal() {
 
       dispatch(setModal(undefined))
       setInstanceName("")
+
+      triggerProviderStatusCheck({ suppressOfflineWarning: true, delay: 2000 })
     } else {
       dispatch(
         setAlert({

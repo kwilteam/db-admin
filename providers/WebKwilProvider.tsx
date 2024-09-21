@@ -7,14 +7,11 @@ import {
   createContext,
   useContext,
 } from "react"
-import { usePathname } from "next/navigation"
 import { WebKwil } from "@kwilteam/kwil-js"
-import { IProvider } from "@/utils/idb/providers"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import {
   KwilProviderStatus,
-  selectActiveProvider,
-  selectProviders,
+  selectActiveProviderObject,
 } from "@/store/providers"
 import {
   ModalEnum,
@@ -35,34 +32,24 @@ export const WebKwilProvider = ({
   children: React.ReactNode
 }) => {
   const dispatch = useAppDispatch()
-  const pathname = usePathname()
   const [kwilProvider, setKwilProvider] = useState<WebKwil | undefined>()
-  const activeProvider = useAppSelector(selectActiveProvider)
-  const providers = useAppSelector(selectProviders)
-  const [providerObject, setProviderObject] = useState<IProvider | undefined>()
+  const activeProviderObject = useAppSelector(selectActiveProviderObject)
   const [isOnline, setIsOnline] = useState<boolean>(false)
   const checkProviderStatusFlag = useAppSelector(selectCheckProviderStatus)
 
-  useEffect(() => {
-    if (!activeProvider) return
-
-    const _provider = providers?.find((p) => p.name === activeProvider)
-
-    setProviderObject(_provider || undefined)
-  }, [activeProvider, providers, pathname])
-
   const initKwilProvider = useCallback(async () => {
-    if (!providerObject || !isOnline) return
+    if (!activeProviderObject || !isOnline) return
+
     try {
       const kwilProviderOptions = {
-        kwilProvider: providerObject.url,
-        chainId: providerObject.chainId || "",
+        kwilProvider: activeProviderObject.url,
+        chainId: activeProviderObject.chainId || "",
         logging,
       }
 
       let kwilInstance = new WebKwil(kwilProviderOptions)
 
-      if (!providerObject.chainId) {
+      if (!activeProviderObject.chainId) {
         const { data } = await kwilInstance.chainInfo()
         kwilProviderOptions.chainId = data?.chain_id || ""
         kwilInstance = new WebKwil(kwilProviderOptions)
@@ -75,11 +62,7 @@ export const WebKwilProvider = ({
       dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
       console.error("Failed to initialize kwil provider", error)
     }
-  }, [dispatch, providerObject, isOnline])
-
-  // From Martin: By including the pathname we re-evaluate the Kwil provider whenever the route changes
-  // This makes it possible to test the provider status whenever there is a significant user action
-  // Allowing us to notify the user when the provider is offline
+  }, [dispatch, activeProviderObject, isOnline])
 
   // From Luke: The problem with using pathname in the initKwilProvider dependency array is that it will re-trigger database calls on every route change (including switching tables, actions, etc.). This is not ideal because it creates a brief and unnecessary reload on the database page. Instead, we should move the ping check to a separate useEffect that only runs when the pathname changes, and then we can check the provider status there.
   useEffect(() => {
@@ -87,10 +70,11 @@ export const WebKwilProvider = ({
   }, [initKwilProvider])
 
   const checkProviderStatus = useCallback(async () => {
-    if (!providerObject) return
+    if (!activeProviderObject) return
+
     const tempProvider = new WebKwil({
-      kwilProvider: providerObject.url,
-      chainId: providerObject.chainId || "",
+      kwilProvider: activeProviderObject.url,
+      chainId: activeProviderObject.chainId || "",
       logging,
     }) // Create a new instance to check the provider status
 
@@ -115,12 +99,10 @@ export const WebKwilProvider = ({
       dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
       console.error("Failed to check provider status", error)
     }
-  }, [providerObject])
+  }, [activeProviderObject, dispatch])
 
-  // useEffect(() => {
-  //   checkProviderStatus()
-  // }, [pathname, checkProviderStatus])
-
+  // Instead of checking the provider status on every route change, we check the provider status
+  // When the checkProviderStatusFlag is set to true
   useEffect(() => {
     if (checkProviderStatusFlag) {
       checkProviderStatus()

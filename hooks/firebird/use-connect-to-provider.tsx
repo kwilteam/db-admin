@@ -6,15 +6,9 @@ import {
   saveProviderToStores,
   selectProviders,
 } from "@/store/providers"
-import {
-  ModalEnum,
-  selectProviderStatus,
-  setModal,
-  setModalData,
-  setProviderOfflineAcknowledged,
-} from "@/store/global"
+import { setCheckProviderStatus, setProviderStatus } from "@/store/global"
 import { setDatabaseActiveContext, setDatabases } from "@/store/database"
-import { setProviderConnected } from "@/store/firebird"
+import { setDisplayProviderConnectionModal } from "@/store/firebird"
 
 export const useConnectToProvider = ({
   providerEndpoint,
@@ -27,7 +21,6 @@ export const useConnectToProvider = ({
 }) => {
   const dispatch = useAppDispatch()
   const existingKwilProviders = useAppSelector(selectProviders)
-  const providerStatus = useAppSelector(selectProviderStatus)
   const [isConnecting, setIsConnecting] = useState(false)
 
   const connectToProvider = useCallback(() => {
@@ -35,15 +28,13 @@ export const useConnectToProvider = ({
 
     setIsConnecting(true)
 
-    console.log("Connect to Provider", existingKwilProviders)
-    console.log("Kwil RPC", providerEndpoint)
-
     const providerAlreadyExists = existingKwilProviders?.find(
       (provider) => provider.url === providerEndpoint,
     )
 
     if (providerAlreadyExists) {
       // Just connect to this provider
+      dispatch(setProviderStatus(KwilProviderStatus.Unknown))
       dispatch(saveActiveProvider(providerAlreadyExists.name))
     } else {
       // Otherwise save the provider to the DB and connect
@@ -64,12 +55,16 @@ export const useConnectToProvider = ({
     dispatch(setDatabaseActiveContext(undefined))
   }, [dispatch, existingKwilProviders, providerEndpoint, instanceName, chainId])
 
+  const displayConnectedModal = useCallback(() => {
+    dispatch(setDisplayProviderConnectionModal(true))
+  }, [dispatch])
+
   useEffect(() => {
     if (isConnecting) {
-      dispatch(setProviderConnected(true))
+      displayConnectedModal()
       setIsConnecting(false)
     }
-  }, [isConnecting, providerStatus, dispatch])
+  }, [isConnecting, displayConnectedModal])
 
-  return { connectToProvider }
+  return { connectToProvider, displayConnectedModal }
 }

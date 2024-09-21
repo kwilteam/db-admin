@@ -3,39 +3,66 @@ import Link from "next/link"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "@/components/Button"
 import Base from "@/components/Modal/Base"
-import { selectProviderConnected, setProviderConnected } from "@/store/firebird"
+import {
+  selectDisplayProviderConnectionModal,
+  selectSelectedDeployment,
+  setDisplayProviderConnectionModal,
+} from "@/store/firebird"
 import { selectProviderStatus } from "@/store/global"
-import { KwilProviderStatus } from "@/store/providers"
+import {
+  KwilProviderStatus,
+  selectActiveProvider,
+  selectActiveProviderUrl,
+} from "@/store/providers"
 import Loading from "../Loading"
 import { DatabaseIcon, IdeIcon } from "@/utils/icons"
 
 export default function ProviderConnectionModal() {
   const dispatch = useAppDispatch()
-  const providerConnected = useAppSelector(selectProviderConnected)
+  const displayProviderConnectionModal = useAppSelector(
+    selectDisplayProviderConnectionModal,
+  )
+  const selectedDeployment = useAppSelector(selectSelectedDeployment)
+  const providerUrl = selectedDeployment?.service_endpoints.kwil_rpc_provider
   const providerStatus = useAppSelector(selectProviderStatus)
-  const [showOfflineMessage, setShowOfflineMessage] = useState(false)
+  const activeProviderUrl = useAppSelector(selectActiveProviderUrl)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const isSelectedProviderOnline =
+    providerStatus === KwilProviderStatus.Online &&
+    providerUrl === activeProviderUrl
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (providerStatus === KwilProviderStatus.Offline) {
-      timer = setTimeout(() => {
-        setShowOfflineMessage(true)
-      }, 3000)
-    } else {
-      setShowOfflineMessage(false)
+    if (
+      providerStatus === KwilProviderStatus.Online &&
+      providerUrl === activeProviderUrl
+    ) {
+      setIsLoading(false)
+    } else if (
+      providerStatus === KwilProviderStatus.Offline &&
+      providerUrl === activeProviderUrl
+    ) {
+      setIsLoading(false)
     }
-    return () => clearTimeout(timer)
-  }, [providerStatus])
+
+    return () => {
+      setIsLoading(true)
+    }
+  }, [providerStatus, providerUrl, activeProviderUrl])
 
   const cancel = () => {
-    dispatch(setProviderConnected(undefined))
+    dispatch(setDisplayProviderConnectionModal(false))
+
+    setTimeout(() => {
+      setIsLoading(true)
+    }, 500)
   }
 
   const modalBody = (
     <div className="flex flex-1 flex-col bg-white p-3">
       <div className="flex flex-col justify-center">
         <div className="flex flex-col gap-2 text-sm">
-          {providerStatus === KwilProviderStatus.Online ? (
+          {isSelectedProviderOnline ? (
             <>
               <div className="flex flex-col gap-1 italic text-kwil">
                 <div>Connected to provider.</div>
@@ -47,7 +74,8 @@ export default function ProviderConnectionModal() {
                       size="md"
                       onClick={() =>
                         setTimeout(
-                          () => dispatch(setProviderConnected(undefined)),
+                          () =>
+                            dispatch(setDisplayProviderConnectionModal(false)),
                           500,
                         )
                       }
@@ -63,7 +91,8 @@ export default function ProviderConnectionModal() {
                       size="md"
                       onClick={() =>
                         setTimeout(
-                          () => dispatch(setProviderConnected(undefined)),
+                          () =>
+                            dispatch(setDisplayProviderConnectionModal(false)),
                           500,
                         )
                       }
@@ -75,14 +104,14 @@ export default function ProviderConnectionModal() {
                 </div>
               </div>
             </>
-          ) : showOfflineMessage ? (
+          ) : isLoading ? (
+            <div className="flex items-center justify-center gap-1 italic text-gray-500">
+              <Loading />
+            </div>
+          ) : (
             <div className="flex flex-col gap-1 italic text-red-500">
               <div>Could not connect to provider.</div>
               <div>Please make sure the provider is online and try again.</div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center gap-1 italic text-gray-500">
-              <Loading />
             </div>
           )}
         </div>
@@ -94,7 +123,7 @@ export default function ProviderConnectionModal() {
 
   return (
     <Base
-      show={providerConnected !== undefined}
+      show={displayProviderConnectionModal ?? false}
       closeModal={cancel}
       footer={modalFooter}
     >

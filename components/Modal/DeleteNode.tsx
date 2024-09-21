@@ -17,9 +17,10 @@ import {
   selectSelectedDeployment,
 } from "@/store/firebird"
 import Loading from "../Loading"
+import useTriggerProviderStatusCheck from "@/hooks/use-trigger-provider-status-check"
 
 export default function DeleteNodeModal() {
-  const router = useRouter()
+  const triggerProviderStatusCheck = useTriggerProviderStatusCheck()
   const dispatch = useAppDispatch()
   const deployment = useAppSelector(selectSelectedDeployment)
   const modal = useAppSelector(selectModal)
@@ -65,10 +66,12 @@ export default function DeleteNodeModal() {
       )
 
       dispatch(setModal(undefined))
+      setInstanceName("")
       setTimeout(() => {
         dispatch(setModalData(undefined))
       }, 500)
-      setInstanceName("")
+
+      triggerProviderStatusCheck({ suppressOfflineWarning: true, delay: 2000 })
     } else {
       dispatch(
         setAlert({

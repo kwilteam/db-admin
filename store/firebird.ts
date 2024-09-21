@@ -60,7 +60,8 @@ interface IFirebirdState {
   deploymentNodes:
     | { deploymentId: string; nodes: IFirebirdApiNode[] }[]
     | undefined
-  providerConnected: boolean | undefined
+
+  displayProviderConnectionModal: boolean | undefined
 }
 
 const initialNewDeployment: IFirebirdNewDeployment = {
@@ -92,7 +93,7 @@ const initialState: IFirebirdState = {
   deployments: undefined,
   selectedDeployment: undefined,
   deploymentNodes: undefined,
-  providerConnected: undefined,
+  displayProviderConnectionModal: false,
 }
 
 export const firebirdSlice = createSlice({
@@ -267,11 +268,11 @@ export const firebirdSlice = createSlice({
       }
     },
 
-    setProviderConnected: (
+    setDisplayProviderConnectionModal: (
       state,
       action: PayloadAction<boolean | undefined>,
     ) => {
-      state.providerConnected = action.payload
+      state.displayProviderConnectionModal = action.payload
     },
   },
 })
@@ -290,7 +291,7 @@ export const {
   setSelectedDeployment,
   setDeploymentNodes,
   deleteDeploymentNode,
-  setProviderConnected,
+  setDisplayProviderConnectionModal,
 } = firebirdSlice.actions
 
 export const selectAuthEmail = (state: { firebird: IFirebirdState }) =>
@@ -331,7 +332,8 @@ export const selectDeploymentById =
     )
   }
 
-export const selectProviderConnected = (state: { firebird: IFirebirdState }) =>
-  state.firebird.providerConnected
+export const selectDisplayProviderConnectionModal = (state: {
+  firebird: IFirebirdState
+}) => state.firebird.displayProviderConnectionModal
 
 export default firebirdSlice.reducer

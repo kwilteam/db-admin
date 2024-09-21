@@ -14,6 +14,7 @@ import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
 import { useWindowSize } from "@/hooks/use-window-size"
+import useTriggerProviderStatusCheck from "@/hooks/use-trigger-provider-status-check"
 // import FirebirdSignOut from "@/components/Firebird/SignOut"
 
 interface IProps {
@@ -25,13 +26,13 @@ export default function DashboardLayout({ children }: IProps) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const activeProvider = useAppSelector(selectActiveProvider)
   const windowSize = useWindowSize()
+  const triggerProviderStatusCheck = useTriggerProviderStatusCheck()
 
   useEffect(() => {
     dispatch(loadProviders())
-    setTimeout(() => {
-      dispatch(setCheckProviderStatus(true))
-    }, 2000)
   }, [dispatch])
+
+  triggerProviderStatusCheck({ suppressOfflineWarning: true, delay: 2000 })
 
   return (
     <>
