@@ -1,34 +1,37 @@
 import { useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import useDeploymentStatusStream from "@/hooks/use-deployment-status-stream"
-import { selectActiveDeployment, setActiveDeployment } from "@/store/firebird"
+import useDeploymentStatusStream from "@/hooks/firebird/use-deployment-status-stream"
+import {
+  selectSelectedDeployment,
+  setSelectedDeployment,
+} from "@/store/firebird"
 import { getDeployment } from "@/utils/firebird/api"
 import { DeploymentStatus } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
-import SelectedDeploymentCard from "./SelectedDeploymentCard"
+import SelectedDeployment from "./SelectedDeployment"
 import QuickConnect from "./QuickConnect"
-import ActiveDeploymentTabs from "./ActiveDeploymentTabs"
+import SelectedDeploymentTabs from "./SelectedDeploymentTabs"
 
 export default function ExistingDeployment({ id }: { id: string }) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const { deploymentStatus, deploymentProgress } = useDeploymentStatusStream(id)
-  const activeDeployment = useAppSelector(selectActiveDeployment)
+  const selectedDeployment = useAppSelector(selectSelectedDeployment)
   const isDeploymentActive =
-    activeDeployment?.status === DeploymentStatus.ACTIVE
+    selectedDeployment?.status === DeploymentStatus.ACTIVE
 
-  const chain = activeDeployment?.config.chain
+  const chain = selectedDeployment?.config.chain
   const providerEndpoint =
-    activeDeployment?.service_endpoints?.kwil_rpc_provider
+    selectedDeployment?.service_endpoints?.kwil_rpc_provider
 
   const loadAsync = useCallback(async () => {
     const { status, data } = await getDeployment(id)
 
     if (status === 200 && data) {
-      dispatch(setActiveDeployment(data))
+      dispatch(setSelectedDeployment(data))
     } else if (status === 404) {
-      dispatch(setActiveDeployment(undefined))
+      dispatch(setSelectedDeployment(undefined))
       router.push("/firebird/deployments")
     } else {
       console.error("Failed to fetch deployment", status, data)
@@ -39,7 +42,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
     loadAsync()
 
     return () => {
-      dispatch(setActiveDeployment(undefined))
+      dispatch(setSelectedDeployment(undefined))
     }
   }, [id, dispatch, router, loadAsync])
 
@@ -49,7 +52,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
     }
   }, [deploymentStatus, loadAsync])
 
-  if (!activeDeployment) {
+  if (!selectedDeployment) {
     return (
       <div className="flex w-full justify-center pt-4">
         <Loading />
@@ -60,8 +63,8 @@ export default function ExistingDeployment({ id }: { id: string }) {
   return (
     <div className="flex flex-col gap-2 p-2">
       <div className="flex flex-col items-start gap-2">
-        <SelectedDeploymentCard
-          deployment={activeDeployment}
+        <SelectedDeployment
+          deployment={selectedDeployment}
           deploymentStatus={deploymentStatus}
           deploymentProgress={deploymentProgress}
         />
@@ -69,9 +72,9 @@ export default function ExistingDeployment({ id }: { id: string }) {
       <div className="flex flex-col gap-2 lg:flex-row">
         <div className="flex flex-col items-start gap-2 lg:w-1/2">
           {isDeploymentActive && (
-            <ActiveDeploymentTabs
+            <SelectedDeploymentTabs
               deploymentId={id}
-              activeDeployment={activeDeployment}
+              selectedDeployment={selectedDeployment}
             />
           )}
         </div>

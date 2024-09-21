@@ -21,6 +21,8 @@ import {
   setModal,
   setProviderOfflineAcknowledged,
   setProviderStatus,
+  setCheckProviderStatus,
+  selectCheckProviderStatus,
 } from "@/store/global"
 
 const logging = true
@@ -39,6 +41,7 @@ export const WebKwilProvider = ({
   const providers = useAppSelector(selectProviders)
   const [providerObject, setProviderObject] = useState<IProvider | undefined>()
   const [isOnline, setIsOnline] = useState<boolean>(false)
+  const checkProviderStatusFlag = useAppSelector(selectCheckProviderStatus)
 
   useEffect(() => {
     if (!activeProvider) return
@@ -114,9 +117,16 @@ export const WebKwilProvider = ({
     }
   }, [providerObject])
 
+  // useEffect(() => {
+  //   checkProviderStatus()
+  // }, [pathname, checkProviderStatus])
+
   useEffect(() => {
-    checkProviderStatus()
-  }, [pathname, checkProviderStatus])
+    if (checkProviderStatusFlag) {
+      checkProviderStatus()
+      dispatch(setCheckProviderStatus(false)) // Reset the flag after checking
+    }
+  }, [checkProviderStatusFlag, checkProviderStatus, dispatch])
 
   return (
     <KwilContext.Provider value={kwilProvider}>{children}</KwilContext.Provider>

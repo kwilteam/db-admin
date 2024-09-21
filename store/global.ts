@@ -27,6 +27,7 @@ interface IGlobalState {
   settingsLoaded: boolean
   alert: IAlert | undefined
   modalData: any
+  checkProviderStatus: boolean
 }
 
 const initialState: IGlobalState = {
@@ -38,6 +39,7 @@ const initialState: IGlobalState = {
   settingsLoaded: false,
   alert: undefined,
   modalData: undefined,
+  checkProviderStatus: false,
 }
 
 export const globalSlice = createSlice({
@@ -75,6 +77,9 @@ export const globalSlice = createSlice({
     setAlertEnd: (state) => {
       state.alert = undefined
     },
+    setCheckProviderStatus: (state, action: PayloadAction<boolean>) => {
+      state.checkProviderStatus = action.payload
+    },
   },
 })
 
@@ -86,6 +91,7 @@ export const {
   setProviderOfflineAcknowledged,
   setActiveAccount,
   setSettingsLoaded,
+  setCheckProviderStatus,
 } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
@@ -112,6 +118,9 @@ export const selectAlert = (state: { global: IGlobalState }) =>
 export const selectProviderOfflineAcknowledged = (state: {
   global: IGlobalState
 }) => state.global.providerOfflineAcknowledged
+
+export const selectCheckProviderStatus = (state: { global: IGlobalState }) =>
+  state.global.checkProviderStatus
 
 export default globalSlice.reducer
 

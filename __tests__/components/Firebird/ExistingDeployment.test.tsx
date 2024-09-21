@@ -41,7 +41,7 @@ describe("ExistingDeployment", () => {
 
   const store = mockStore({
     firebird: {
-      activeDeployment: mockDeployment,
+      selectedDeployment: mockDeployment,
     },
   })
 
@@ -54,7 +54,7 @@ describe("ExistingDeployment", () => {
     expect(screen.getByTestId("selected-deployment-card")).toBeInTheDocument()
   })
 
-  it("renders ActiveDeploymentTabs when deployment is active", () => {
+  it("renders SelectedDeploymentTabs when deployment is active", () => {
     render(
       <Provider store={store}>
         <ExistingDeployment id="test-id" />

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { FirebirdIcon, PlusIcon } from "@/utils/icons"
 import { useAppSelector } from "@/store/hooks"
-import { selectActiveDeployment } from "@/store/firebird"
+import { selectSelectedDeployment } from "@/store/firebird"
 import FirebirdSignOut from "../SignOut"
 
 export default function Header() {
@@ -46,13 +46,13 @@ const NewDeploymentButton = () => {
 }
 
 const ExistingDeploymentName = () => {
-  const activeDeployment = useAppSelector(selectActiveDeployment)
+  const selectedDeployment = useAppSelector(selectSelectedDeployment)
 
-  if (!activeDeployment) {
+  if (!selectedDeployment) {
     return null
   }
 
-  const config = activeDeployment.config
+  const config = selectedDeployment.config
 
   return <div>&gt; {config.machines.instance_name}</div>
 }

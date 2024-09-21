@@ -56,7 +56,7 @@ interface IFirebirdState {
   account: IFirebirdAccount | undefined
   newDeployment: IFirebirdNewDeployment | undefined
   deployments: IFirebirdDeployment[] | undefined
-  activeDeployment: IFirebirdDeployment | undefined
+  selectedDeployment: IFirebirdDeployment | undefined
   deploymentNodes:
     | { deploymentId: string; nodes: IFirebirdApiNode[] }[]
     | undefined
@@ -90,7 +90,7 @@ const initialState: IFirebirdState = {
   account: undefined,
   newDeployment: initialNewDeployment,
   deployments: undefined,
-  activeDeployment: undefined,
+  selectedDeployment: undefined,
   deploymentNodes: undefined,
   providerConnected: undefined,
 }
@@ -217,11 +217,11 @@ export const firebirdSlice = createSlice({
       state.newDeployment.talkWithTeam = action.payload
     },
 
-    setActiveDeployment: (
+    setSelectedDeployment: (
       state,
       action: PayloadAction<IFirebirdDeployment | undefined>,
     ) => {
-      state.activeDeployment = action.payload
+      state.selectedDeployment = action.payload
     },
 
     setDeploymentNodes: (
@@ -287,7 +287,7 @@ export const {
   resetNewDeployment,
   setAuthEmail,
   setTalkWithTeam,
-  setActiveDeployment,
+  setSelectedDeployment,
   setDeploymentNodes,
   deleteDeploymentNode,
   setProviderConnected,
@@ -312,8 +312,8 @@ export const selectNewDeploymentServices = (state: {
 export const selectTalkWithTeam = (state: { firebird: IFirebirdState }) =>
   state.firebird.newDeployment?.talkWithTeam
 
-export const selectActiveDeployment = (state: { firebird: IFirebirdState }) =>
-  state.firebird.activeDeployment
+export const selectSelectedDeployment = (state: { firebird: IFirebirdState }) =>
+  state.firebird.selectedDeployment
 
 export const selectDeploymentNodesById =
   (deploymentId: string) => (state: { firebird: IFirebirdState }) =>

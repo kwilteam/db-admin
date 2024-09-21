@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { selectActiveAccount } from "@/store/global"
+import { selectActiveAccount, setCheckProviderStatus } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loadProviders, selectActiveProvider } from "@/store/providers"
 import MobileNavigation from "@/components/Navigation/Mobile"
@@ -28,6 +28,9 @@ export default function DashboardLayout({ children }: IProps) {
 
   useEffect(() => {
     dispatch(loadProviders())
+    setTimeout(() => {
+      dispatch(setCheckProviderStatus(true))
+    }, 2000)
   }, [dispatch])
 
   return (

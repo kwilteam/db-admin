@@ -7,6 +7,7 @@ import { selectProviderConnected, setProviderConnected } from "@/store/firebird"
 import { selectProviderStatus } from "@/store/global"
 import { KwilProviderStatus } from "@/store/providers"
 import Loading from "../Loading"
+import { DatabaseIcon, IdeIcon } from "@/utils/icons"
 
 export default function ProviderConnectionModal() {
   const dispatch = useAppDispatch()
@@ -40,22 +41,35 @@ export default function ProviderConnectionModal() {
                 <div>Connected to provider.</div>
                 <div>How would you like to get started?</div>
                 <div className="mt-4 flex justify-center gap-2">
-                  <Link href="/databases">
-                    <Button
-                      context="secondary"
-                      size="md"
-                      onClick={() => dispatch(setProviderConnected(undefined))}
-                    >
-                      Explore Databases
-                    </Button>
-                  </Link>
                   <Link href="/ide">
                     <Button
                       context="primary"
                       size="md"
-                      onClick={() => dispatch(setProviderConnected(undefined))}
+                      onClick={() =>
+                        setTimeout(
+                          () => dispatch(setProviderConnected(undefined)),
+                          500,
+                        )
+                      }
                     >
+                      <IdeIcon className="mr-2 h-4 w-4" />
                       Deploy a Schema
+                    </Button>
+                  </Link>
+
+                  <Link href="/databases">
+                    <Button
+                      context="secondary"
+                      size="md"
+                      onClick={() =>
+                        setTimeout(
+                          () => dispatch(setProviderConnected(undefined)),
+                          500,
+                        )
+                      }
+                    >
+                      <DatabaseIcon className="mr-2 h-4 w-4" />
+                      Explore Databases
                     </Button>
                   </Link>
                 </div>

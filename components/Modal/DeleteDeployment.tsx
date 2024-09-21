@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   removeDeployment,
-  selectActiveDeployment,
+  selectSelectedDeployment,
   selectDeploymentById,
 } from "@/store/firebird"
 import {
@@ -24,7 +24,7 @@ export default function DeleteDeploymentModal() {
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
   const modalData = useAppSelector(selectModalData)
-  const activeDeployment = useAppSelector(selectActiveDeployment)
+  const selectedDeployment = useAppSelector(selectSelectedDeployment)
   const deploymentById = useAppSelector(
     selectDeploymentById(modalData?.deploymentId),
   )
@@ -40,16 +40,16 @@ export default function DeleteDeploymentModal() {
   }
 
   useEffect(() => {
-    if (activeDeployment) {
-      setDeployment(activeDeployment)
+    if (selectedDeployment) {
+      setDeployment(selectedDeployment)
     }
-  }, [activeDeployment])
+  }, [selectedDeployment])
 
   useEffect(() => {
-    if (!activeDeployment && modalData?.deploymentId) {
+    if (!selectedDeployment && modalData?.deploymentId) {
       setDeployment(deploymentById)
     }
-  }, [deploymentById, activeDeployment, modalData?.deploymentId])
+  }, [deploymentById, selectedDeployment, modalData?.deploymentId])
 
   const continueDeleteDeployment = async () => {
     if (!deployment || !isDeleteEnabled) return

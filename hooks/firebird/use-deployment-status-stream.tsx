@@ -35,7 +35,7 @@ const useDeploymentStatusStream = (deploymentId: string) => {
     Map<DeploymentEvents, DeploymentEventType>
   >(
     new Map([
-      [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.NOT_STARTED],
+      [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.START],
       [DeploymentEvents.CREATE_INSTANCE, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.WAIT_INSTANCE_READY, DeploymentEventType.NOT_STARTED],
       [DeploymentEvents.INSTALL_KWILD, DeploymentEventType.NOT_STARTED],

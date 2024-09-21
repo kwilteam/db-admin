@@ -12,13 +12,16 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { deleteNode } from "@/utils/firebird/api"
 import Button from "@/components/Button"
 import Base from "@/components/Modal/Base"
-import { deleteDeploymentNode, selectActiveDeployment } from "@/store/firebird"
+import {
+  deleteDeploymentNode,
+  selectSelectedDeployment,
+} from "@/store/firebird"
 import Loading from "../Loading"
 
 export default function DeleteNodeModal() {
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const deployment = useAppSelector(selectActiveDeployment)
+  const deployment = useAppSelector(selectSelectedDeployment)
   const modal = useAppSelector(selectModal)
   const modalData:
     | {

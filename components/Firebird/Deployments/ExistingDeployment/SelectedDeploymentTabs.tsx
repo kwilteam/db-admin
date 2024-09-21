@@ -6,12 +6,12 @@ import { ConfigIcon, NodesIcon } from "@/utils/icons"
 import { useAppSelector } from "@/store/hooks"
 import { selectDeploymentNodesById } from "@/store/firebird"
 
-export default function ActiveDeploymentTabs({
+export default function SelectedDeploymentTabs({
   deploymentId,
-  activeDeployment,
+  selectedDeployment,
 }: {
   deploymentId: string
-  activeDeployment: IFirebirdDeployment
+  selectedDeployment: IFirebirdDeployment
 }) {
   const nodes = useAppSelector(selectDeploymentNodesById(deploymentId))
   const nodesCount = nodes?.length
@@ -33,7 +33,7 @@ export default function ActiveDeploymentTabs({
           {
             id: "config",
             name: "Config",
-            component: <Config config={activeDeployment.config} />,
+            component: <Config config={selectedDeployment.config} />,
             icon: ConfigIcon,
           },
         ]}
