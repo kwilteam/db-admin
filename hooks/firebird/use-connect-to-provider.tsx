@@ -6,7 +6,10 @@ import {
   saveProviderToStores,
   selectProviders,
 } from "@/store/providers"
-import { setCheckProviderStatus, setProviderStatus } from "@/store/global"
+import {
+  setProviderOfflineAcknowledged,
+  setProviderStatus,
+} from "@/store/global"
 import { setDatabaseActiveContext, setDatabases } from "@/store/database"
 import { setDisplayProviderConnectionModal } from "@/store/firebird"
 
@@ -57,6 +60,7 @@ export const useConnectToProvider = ({
 
   const displayConnectedModal = useCallback(() => {
     dispatch(setDisplayProviderConnectionModal(true))
+    dispatch(setProviderOfflineAcknowledged(true))
   }, [dispatch])
 
   useEffect(() => {
