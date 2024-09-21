@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { selectActiveAccount, setCheckProviderStatus } from "@/store/global"
+import { selectActiveAccount } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { loadProviders, selectActiveProvider } from "@/store/providers"
 import MobileNavigation from "@/components/Navigation/Mobile"
@@ -14,8 +14,6 @@ import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
 import { useWindowSize } from "@/hooks/use-window-size"
-import useTriggerProviderStatusCheck from "@/hooks/use-trigger-provider-status-check"
-// import FirebirdSignOut from "@/components/Firebird/SignOut"
 
 interface IProps {
   children: React.ReactNode
@@ -26,14 +24,10 @@ export default function DashboardLayout({ children }: IProps) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const activeProvider = useAppSelector(selectActiveProvider)
   const windowSize = useWindowSize()
-  const triggerProviderStatusCheck = useTriggerProviderStatusCheck()
 
   useEffect(() => {
     dispatch(loadProviders())
   }, [dispatch])
-
-  triggerProviderStatusCheck({ suppressOfflineWarning: true, delay: 2000 })
-
   return (
     <>
       <>

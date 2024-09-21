@@ -37,6 +37,13 @@ export const WebKwilProvider = ({
   const [isOnline, setIsOnline] = useState<boolean>(false)
   const checkProviderStatusFlag = useAppSelector(selectCheckProviderStatus)
 
+  const handleProviderOffline = useCallback(() => {
+    setKwilProvider(undefined)
+    setIsOnline(false)
+    dispatch(setProviderStatus(KwilProviderStatus.Offline))
+    dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+  }, [dispatch])
+
   const initKwilProvider = useCallback(async () => {
     if (!activeProviderObject || !isOnline) return
 
@@ -87,28 +94,28 @@ export const WebKwilProvider = ({
         dispatch(setModal(undefined))
         dispatch(setProviderOfflineAcknowledged(false))
       } else {
-        setIsOnline(false)
-        setKwilProvider(undefined)
-        dispatch(setProviderStatus(KwilProviderStatus.Offline))
-        dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
+        handleProviderOffline()
       }
     } catch (error) {
-      setIsOnline(false)
-      setKwilProvider(undefined)
-      dispatch(setProviderStatus(KwilProviderStatus.Offline))
-      dispatch(setModal(ModalEnum.PROVIDER_OFFLINE))
-      console.error("Failed to check provider status", error)
+      handleProviderOffline()
     }
-  }, [activeProviderObject, dispatch])
+  }, [activeProviderObject, dispatch, handleProviderOffline])
 
-  // Instead of checking the provider status on every route change, we check the provider status
-  // When the checkProviderStatusFlag is set to true
+  // The provider status can be checked by setting the checkProviderStatusFlag to true
+  // This is so, we can check the provider status even when the provider has not changed
   useEffect(() => {
     if (checkProviderStatusFlag) {
       checkProviderStatus()
       dispatch(setCheckProviderStatus(false)) // Reset the flag after checking
     }
   }, [checkProviderStatusFlag, checkProviderStatus, dispatch])
+
+  // If the active provider changes, we should check the provider status
+  useEffect(() => {
+    if (activeProviderObject) {
+      checkProviderStatus()
+    }
+  }, [activeProviderObject, checkProviderStatus])
 
   return (
     <KwilContext.Provider value={kwilProvider}>{children}</KwilContext.Provider>
