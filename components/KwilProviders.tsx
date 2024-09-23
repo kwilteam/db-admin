@@ -18,11 +18,7 @@ import {
 } from "@/store/providers"
 import { IProvider } from "@/utils/idb/providers"
 import { setDatabaseActiveContext, setDatabases } from "@/store/database"
-import {
-  selectProviderStatus,
-  setCheckProviderStatus,
-  setProviderStatus,
-} from "@/store/global"
+import { selectProviderStatus, setProviderStatus } from "@/store/global"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined

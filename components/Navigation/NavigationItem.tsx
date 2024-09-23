@@ -28,7 +28,7 @@ export default function NavigationItem({ item }: IProps) {
           ),
         })}
         onClick={() => {
-          if (item.closeMobileMenu) {
+          if (item.closeMobileNavOnSelect) {
             dispatch(setIsMenuOpen(false))
           }
         }}

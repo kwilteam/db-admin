@@ -5,8 +5,8 @@ export interface INavigationItem {
   href: string
   activePathPrefix: string
   icon: React.ComponentType<{ className?: string }>
-  secondaryMobileMenu: boolean // If a secondary menu should be available on mobile
-  closeMobileMenu?: boolean // If the mobile menu should be closed after clicking on the navigation item
+  hasSecondaryMobileMenu: boolean // If a secondary menu exists on mobile
+  closeMobileNavOnSelect?: boolean // If the mobile nav should be closed after clicking on the navigation item
 }
 
 export const navigationItems: INavigationItem[] = [
@@ -15,20 +15,20 @@ export const navigationItems: INavigationItem[] = [
     href: "/databases",
     activePathPrefix: "/databases",
     icon: DatabaseIcon,
-    secondaryMobileMenu: true,
+    hasSecondaryMobileMenu: true,
   },
   {
     name: "IDE",
     href: "/ide",
     activePathPrefix: "/ide",
     icon: IdeIcon,
-    secondaryMobileMenu: true,
+    hasSecondaryMobileMenu: true,
   },
   // {
   //   name: "Extensions",
   //   href: "/extensions",
   //   icon: ExtensionsIcon,
-  //   secondaryMobileMenu: true,
+  //   hasSecondaryMobileMenu: true,
   //   closeMobileMenu: true,
   // },
   {
@@ -36,15 +36,15 @@ export const navigationItems: INavigationItem[] = [
     href: "/settings/providers",
     activePathPrefix: "/settings",
     icon: SettingsIcon,
-    secondaryMobileMenu: true,
-    closeMobileMenu: true,
+    hasSecondaryMobileMenu: true,
+    closeMobileNavOnSelect: true,
   },
   {
     name: "Firebird",
     href: "/firebird/deployments",
     activePathPrefix: "/firebird",
     icon: FirebirdIcon,
-    secondaryMobileMenu: false,
-    closeMobileMenu: true,
+    hasSecondaryMobileMenu: false,
+    closeMobileNavOnSelect: true,
   },
 ]

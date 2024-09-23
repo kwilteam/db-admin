@@ -30,14 +30,15 @@ export default function MobileNavigation() {
   const activePage = useActivePage()
   const pathname = usePathname()
 
-  const secondaryMobileMenu = activePage?.secondaryMobileMenu ?? false
-  const closeMobileMenu = activePage?.closeMobileMenu ?? false
+  const hasSecondaryMobileMenu = activePage?.hasSecondaryMobileMenu ?? false
+  const closeMobileNavOnSelect = activePage?.closeMobileNavOnSelect ?? false
 
+  // On the initial render, this will show the secondary mobile menu if the page has one and the closeMobileNavOnSelect is not true
   useEffect(() => {
-    if (secondaryMobileMenu && !closeMobileMenu) {
+    if (hasSecondaryMobileMenu && !closeMobileNavOnSelect) {
       dispatch(setIsMenuOpen(true))
     }
-  }, [dispatch, secondaryMobileMenu])
+  }, [dispatch, hasSecondaryMobileMenu, closeMobileNavOnSelect])
 
   return (
     <>
@@ -72,7 +73,7 @@ export default function MobileNavigation() {
                 className={classNames({
                   "flex min-h-screen w-80 overflow-scroll border-r border-slate-100 bg-white pl-16 lg:hidden":
                     true,
-                  hidden: !secondaryMobileMenu,
+                  hidden: !hasSecondaryMobileMenu,
                 })}
               >
                 {pathname?.startsWith("/databases") && (
@@ -89,7 +90,7 @@ export default function MobileNavigation() {
                 <HiOutlineXMark
                   className={classNames({
                     "m-2 h-8 w-8 p-1 text-slate-50": true,
-                    "ml-16": !secondaryMobileMenu,
+                    "ml-16": !hasSecondaryMobileMenu,
                   })}
                 />
               </div>

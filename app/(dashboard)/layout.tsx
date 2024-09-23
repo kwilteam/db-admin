@@ -46,7 +46,6 @@ export default function DashboardLayout({ children }: IProps) {
               {children}
               <GlobalAlert />
               <div className="right-2 top-1 hidden gap-1 lg:absolute lg:flex">
-                {/* <FirebirdSignOut /> */}
                 <KwilFaucet />
                 <KwilProviders
                   activeProvider={activeProvider}
