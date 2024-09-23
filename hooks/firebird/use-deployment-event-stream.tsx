@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { DeploymentStatus } from "@/utils/firebird/types"
 
 const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
@@ -27,11 +27,9 @@ export enum DeploymentEvents {
   FINALIZE_DEPLOYMENT = "FINALIZE_DEPLOYMENT",
 }
 
-const useDeploymentStatusStream = (deploymentId: string) => {
-  const [deploymentStatus, setDeploymentStatus] = useState<
-    DeploymentStatus | undefined
-  >(undefined)
-  const [deploymentProgress, setDeploymentProgress] = useState<
+const useDeploymentEventStream = (deploymentId: string) => {
+  const [status, setStatus] = useState<DeploymentStatus | undefined>(undefined)
+  const [progress, setProgress] = useState<
     Map<DeploymentEvents, DeploymentEventType>
   >(
     new Map([
@@ -52,7 +50,7 @@ const useDeploymentStatusStream = (deploymentId: string) => {
       if (data.payload?.event && data.payload?.type) {
         const { event, type } = data.payload
         if (Object.values(DeploymentEvents).includes(event)) {
-          setDeploymentProgress((prev) => {
+          setProgress((prev) => {
             const newMap = new Map(prev)
             const eventIndex = Object.values(DeploymentEvents).indexOf(event)
 
@@ -84,7 +82,7 @@ const useDeploymentStatusStream = (deploymentId: string) => {
     (data: DeploymentStreamMessage) => {
       console.log("Updating deployment status", data)
       if (data.status) {
-        setDeploymentStatus(data.status)
+        setStatus(data.status)
         console.log("Deployment status:", data.status)
         console.log("Payload:", data.payload)
 
@@ -170,7 +168,7 @@ const useDeploymentStatusStream = (deploymentId: string) => {
     }
   }, [deploymentId, handleMessage])
 
-  return { deploymentStatus, deploymentProgress }
+  return { status, progress }
 }
 
-export default useDeploymentStatusStream
+export default useDeploymentEventStream

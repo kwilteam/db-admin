@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import classNames from "classnames"
 import { Dialog, Transition } from "@headlessui/react"
@@ -31,6 +31,13 @@ export default function MobileNavigation() {
   const pathname = usePathname()
 
   const secondaryMobileMenu = activePage?.secondaryMobileMenu ?? false
+  const closeMobileMenu = activePage?.closeMobileMenu ?? false
+
+  useEffect(() => {
+    if (secondaryMobileMenu && !closeMobileMenu) {
+      dispatch(setIsMenuOpen(true))
+    }
+  }, [dispatch, secondaryMobileMenu])
 
   return (
     <>

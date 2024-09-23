@@ -22,7 +22,6 @@ export default function DeploymentCard({
 }: {
   deployment: IFirebirdDeployment
 }) {
-  console.log(deployment, "Deployment")
   const dispatch = useAppDispatch()
 
   const chain = deployment.config.chain
@@ -35,7 +34,6 @@ export default function DeploymentCard({
     e: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault()
-    console.log("delete deployment", deployment)
     dispatch(setModal(ModalEnum.DELETE_DEPLOYMENT))
     dispatch(setModalData({ deploymentId: deployment.id }))
   }
@@ -58,7 +56,7 @@ export default function DeploymentCard({
 
             {deployment.status === DeploymentStatus.ACTIVE && (
               <button
-                className="rounded-md border border-slate-100 p-1 text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                className="rounded-full border border-slate-100 p-1 text-slate-600 hover:border-slate-300 hover:text-slate-900"
                 onClick={triggerDeleteDeploymentModal}
               >
                 <DeleteIcon className="h-4 w-4" />
@@ -69,62 +67,100 @@ export default function DeploymentCard({
             {formatTimestamp(deployment.created_at)}
           </div>
 
-          <div className="hidden flex-row items-start justify-start gap-2 text-xs text-slate-500 lg:flex">
-            <DeploymentBadge>
-              <div
-                className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
-              />
-              <span>{capitalize(status)}</span>
-            </DeploymentBadge>
+          <MobileDeploymentBadges
+            deployment={deployment}
+            statusColorClass={statusColorClass}
+          />
 
-            <DeploymentBadge>
-              <Image
-                src="/images/kwil.png"
-                className="h-4 w-4"
-                alt={machines.instance_name}
-                width={16}
-                height={16}
-              />
-
-              <span>{chain.version}</span>
-            </DeploymentBadge>
-            <DeploymentBadge>
-              <ChainIcon className="h-4 w-4" />
-              <span>{chain.chain_id}</span>
-            </DeploymentBadge>
-          </div>
-
-          <div className="flex flex-col items-start justify-start gap-2 text-xs text-slate-500 lg:hidden">
-            <div className="flex w-full flex-row items-center justify-start gap-2">
-              <DeploymentBadge className="grow">
-                <div
-                  className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
-                />
-                <span>{capitalize(status)}</span>
-              </DeploymentBadge>
-
-              <DeploymentBadge className="grow">
-                <Image
-                  src="/images/kwil.png"
-                  className="h-4 w-4"
-                  alt={machines.instance_name}
-                  width={16}
-                  height={16}
-                />
-
-                <span>{chain.version}</span>
-              </DeploymentBadge>
-            </div>
-
-            <DeploymentBadge className="w-full">
-              <ChainIcon className="mr-2 h-4 w-4 flex-shrink-0" />
-              <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                {chain.chain_id.slice(0, 35)}
-              </span>
-            </DeploymentBadge>
-          </div>
+          <DesktopDeploymentBadges
+            deployment={deployment}
+            statusColorClass={statusColorClass}
+          />
         </div>
       </div>
     </Link>
+  )
+}
+
+const MobileDeploymentBadges = ({
+  deployment,
+  statusColorClass,
+}: {
+  deployment: IFirebirdDeployment
+  statusColorClass: string
+}) => {
+  const chain = deployment.config.chain
+  const machines = deployment.config.machines
+  const status = deployment.status
+
+  return (
+    <div className="flex flex-col items-start justify-start gap-2 text-xs text-slate-500 lg:hidden">
+      <div className="flex w-full flex-row items-center justify-start gap-2">
+        <DeploymentBadge className="grow">
+          <div
+            className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
+          />
+          <span>{capitalize(status)}</span>
+        </DeploymentBadge>
+
+        <DeploymentBadge className="grow">
+          <Image
+            src="/images/kwil.png"
+            className="h-4 w-4"
+            alt={machines.instance_name}
+            width={16}
+            height={16}
+          />
+
+          <span>{chain.version}</span>
+        </DeploymentBadge>
+      </div>
+
+      <DeploymentBadge className="w-full">
+        <ChainIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+        <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+          {chain.chain_id.slice(0, 35)}
+        </span>
+      </DeploymentBadge>
+    </div>
+  )
+}
+
+const DesktopDeploymentBadges = ({
+  deployment,
+  statusColorClass,
+}: {
+  deployment: IFirebirdDeployment
+  statusColorClass: string
+}) => {
+  const chain = deployment.config.chain
+  const machines = deployment.config.machines
+  const status = deployment.status
+
+  return (
+    <div className="hidden flex-row items-start justify-start gap-2 text-xs text-slate-500 lg:flex">
+      <DeploymentBadge>
+        <div
+          className={`h-2 w-2 rounded-full border border-slate-100 ${statusColorClass}`}
+        />
+        <span>{capitalize(status)}</span>
+      </DeploymentBadge>
+
+      <DeploymentBadge>
+        <Image
+          src="/images/kwil.png"
+          className="h-4 w-4"
+          alt={machines.instance_name}
+          width={16}
+          height={16}
+        />
+
+        <span>{chain.version}</span>
+      </DeploymentBadge>
+      <DeploymentBadge>
+        <ChainIcon className="h-4 w-4" />
+        <span>{chain.chain_id}</span>
+      </DeploymentBadge>
+    </div>
   )
 }

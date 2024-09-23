@@ -3,7 +3,7 @@ import { DeploymentStatus } from "@/utils/firebird/types"
 import {
   DeploymentEvents,
   DeploymentEventType,
-} from "@/hooks/firebird/use-deployment-status-stream"
+} from "@/hooks/firebird/use-deployment-event-stream"
 import Loading from "@/components/Loading"
 import {
   DeploymentStepFailedIcon,

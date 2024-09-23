@@ -14,7 +14,7 @@ export default function DeleteDeploymentButton() {
 
   return (
     <button
-      className="absolute right-3 top-3 flex cursor-pointer rounded-lg border border-slate-100 p-1 text-slate-600 hover:border-slate-300 hover:text-slate-900"
+      className="absolute right-3 top-3 flex cursor-pointer rounded-full border border-slate-100 p-1 text-slate-600 hover:border-slate-300 hover:text-slate-900"
       onClick={triggerDeleteDeploymentModal}
     >
       <DeleteIcon className="h-4 w-4" />

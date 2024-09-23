@@ -31,7 +31,7 @@ interface IGlobalState {
 }
 
 const initialState: IGlobalState = {
-  isMenuOpen: true,
+  isMenuOpen: false,
   modal: undefined,
   activeAccount: undefined,
   providerStatus: KwilProviderStatus.Unknown,

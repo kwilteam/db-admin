@@ -37,6 +37,7 @@ export const navigationItems: INavigationItem[] = [
     activePathPrefix: "/settings",
     icon: SettingsIcon,
     secondaryMobileMenu: true,
+    closeMobileMenu: true,
   },
   {
     name: "Firebird",

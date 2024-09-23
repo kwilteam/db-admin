@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { DeployIcon, FirebirdIcon } from "@/utils/icons"
 import { getDeployments } from "@/utils/firebird/api"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
@@ -17,6 +17,7 @@ import Loading from "@/components/Loading"
 export default function DeploymentsHomePage() {
   const dispatch = useAppDispatch()
   // const account = useAppSelector(selectAccount)
+  const [loading, setLoading] = useState(true)
   const deployments = useAppSelector(selectDeployments)
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function DeploymentsHomePage() {
 
       if (status === 200 && data) {
         dispatch(setDeployments(data.result))
+        setLoading(false)
       } else {
         dispatch(
           setAlert({
@@ -33,13 +35,14 @@ export default function DeploymentsHomePage() {
           }),
         )
         dispatch(setDeployments([]))
+        setLoading(false)
       }
     }
 
     loadAsync()
   }, [dispatch])
 
-  if (!deployments) {
+  if (!deployments || loading) {
     return (
       <div className="flex w-full justify-center pt-4">
         <Loading />
@@ -70,7 +73,7 @@ export default function DeploymentsHomePage() {
         )}
 
         {/* If deployments, show grid of deployments */}
-        <div className="m-2 grid grid-cols-1 gap-2 lg:grid-cols-3">
+        <div className="m-2 grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3">
           {deployments &&
             deployments.map((deployment: any) => (
               <DeploymentCard key={deployment.id} deployment={deployment} />
