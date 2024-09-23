@@ -30,12 +30,17 @@ export default function FirebirdSignOut() {
   const emailDisplay = `${email.slice(0, 10)}...${email.slice(-10)}`
 
   return (
-    <div className="hidden flex-row items-center gap-2 lg:flex">
+    <div className="flex items-center gap-2">
       <button
         className="inline-flex w-auto items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         onClick={triggerSignOut}
       >
-        <UserIcon className="h-4 w-4" /> {emailDisplay} | Sign out
+        <span className="hidden flex-row items-center gap-2 md:flex">
+          <UserIcon className="h-4 w-4" /> {emailDisplay} | Sign out
+        </span>
+        <span className="flex flex-row items-center gap-2 md:hidden">
+          <UserIcon className="h-4 w-4" /> Sign out
+        </span>
       </button>
     </div>
   )
