@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { NetworkStep } from "@/components/Firebird/Deployments/NewDeployment/Step/Network"
-import { Network } from "@/store/firebird"
+import { Network } from "@/utils/firebird/types"
 import { mockStore } from "@/__tests__/mocks/mock-store"
 
 // Mock the Montserrat font

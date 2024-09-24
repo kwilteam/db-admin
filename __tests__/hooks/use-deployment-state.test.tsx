@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest"
 import { renderHook } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import useDeploymentState from "@/hooks/firebird/use-deployment-state"
-import { IFirebirdNewDeployment, Network, MachineType } from "@/store/firebird"
+import {
+  IFirebirdNewDeployment,
+  Network,
+  MachineType,
+} from "@/utils/firebird/types"
 
 describe("useDeploymentState", () => {
   const mockDeployment: IFirebirdNewDeployment = {

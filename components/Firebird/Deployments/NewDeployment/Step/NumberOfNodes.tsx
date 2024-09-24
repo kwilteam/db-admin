@@ -38,6 +38,7 @@ export function NumberOfNodesStep() {
             <NumberOfNodesStepIcon className="h-4 w-4" />
           </span>
           <select
+            data-testid="node-count"
             id="nodeCount"
             name="nodeCount"
             required

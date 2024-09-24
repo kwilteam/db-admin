@@ -4,6 +4,7 @@ import {
   IFirebirdDeployment,
   IFirebirdFinalOptions,
   IFirebirdNetworkSettings,
+  IFirebirdNewDeployment,
   IFirebirdServices,
   KwilVersions,
   MachineType,
@@ -11,16 +12,6 @@ import {
 } from "@/utils/firebird/types"
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 export type KwilVersion = keyof typeof KwilVersions
-
-export interface IFirebirdNewDeployment {
-  network: Network
-  networkSettings: IFirebirdNetworkSettings
-  nodeCount: number
-  machines: MachineType
-  services: IFirebirdServices | undefined
-  finalOptions: IFirebirdFinalOptions
-  talkWithTeam: boolean
-}
 
 interface IFirebirdState {
   authEmail: string | undefined

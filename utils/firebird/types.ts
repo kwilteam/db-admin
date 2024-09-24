@@ -7,6 +7,7 @@ export interface IFirebirdAccount {
   origin?: string
 }
 
+// For existing deployments
 export interface IFirebirdDeployment {
   config: IFirebirdDeploymentConfig
   created_at: number
@@ -16,6 +17,17 @@ export interface IFirebirdDeployment {
   service_endpoints: {
     kwil_rpc_provider?: string
   }
+}
+
+// For building a new deployment from the form
+export interface IFirebirdNewDeployment {
+  network: Network
+  networkSettings: IFirebirdNetworkSettings
+  nodeCount: number
+  machines: MachineType
+  services: IFirebirdServices | undefined
+  finalOptions: IFirebirdFinalOptions
+  talkWithTeam: boolean
 }
 
 export interface IFirebirdNetworkSettings {

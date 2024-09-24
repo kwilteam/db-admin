@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect } from "react"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { useAppDispatch } from "@/store/hooks"
 import { getDeployment } from "@/utils/firebird/api"
 import { setSelectedDeployment } from "@/store/firebird"
 import { DeploymentStatus } from "@/utils/firebird/types"
