@@ -4,7 +4,7 @@ interface ILoadingProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function Loading({ color = "kwil", ...props }: ILoadingProps) {
   return (
-    <div {...props}>
+    <div {...props} data-testid="loading-icon">
       <svg
         className={classNames("h-4 w-4 animate-spin", {
           "text-kwil": color === "kwil",

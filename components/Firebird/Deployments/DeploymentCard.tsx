@@ -40,7 +40,10 @@ export default function DeploymentCard({
 
   return (
     <Link href={`/firebird/deployments/${deployment.id}`}>
-      <div className="flex grow cursor-pointer select-none flex-row items-center gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-4 py-6">
+      <div
+        data-testid="deployment-card"
+        className="flex grow cursor-pointer select-none flex-row items-center gap-3 rounded-md border border-slate-100 bg-slate-50/70 px-4 py-6"
+      >
         <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-md border border-slate-100 bg-white p-2">
           <Image
             src="/images/kwil.png"

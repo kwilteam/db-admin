@@ -31,7 +31,7 @@ describe("DataTable Component", () => {
     })
 
     it("renders loading component", () => {
-      expect(screen.getByTestId("loading")).toBeInTheDocument()
+      expect(screen.getByTestId("loading-icon")).toBeInTheDocument()
     })
   })
 

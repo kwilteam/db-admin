@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { act, render, screen, RenderResult } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { ItemTypes, KwilTypes } from "@/utils/database-types"
