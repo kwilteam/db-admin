@@ -1,8 +1,11 @@
 import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/store/hooks"
-import { resetNewDeployment, IFirebirdNewDeployment } from "@/store/firebird"
+import { resetNewDeployment } from "@/store/firebird"
 import { deployNetwork } from "@/utils/firebird/api"
-import { IFirebirdApiNewDeployment } from "@/utils/firebird/types"
+import {
+  IFirebirdApiNewDeployment,
+  IFirebirdNewDeployment,
+} from "@/utils/firebird/types"
 import { setAlert } from "@/store/global"
 
 const FORWARD_DELAY = 1500

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
-import { IFirebirdNewDeployment } from "@/store/firebird"
-
+import { IFirebirdNewDeployment } from "@/utils/firebird/types"
 export default function useDeploymentState(
   newDeployment: IFirebirdNewDeployment | undefined,
 ) {
