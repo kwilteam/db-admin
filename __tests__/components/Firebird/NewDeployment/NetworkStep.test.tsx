@@ -39,7 +39,7 @@ describe("NetworkStep", () => {
         <NetworkStep />
       </Provider>,
     )
-    const mainnetOption = screen.getByText("Mainnet")
+    const mainnetOption = screen.getByTestId("mainnet-option")
     fireEvent.click(mainnetOption)
 
     expect(store.getState().firebird.newDeployment?.network).toBe(

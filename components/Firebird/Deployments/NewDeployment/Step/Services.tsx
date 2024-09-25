@@ -19,7 +19,7 @@ export function ServicesStep() {
     >
       <div className="grid grid-cols-1 gap-2 lg:grid-cols-4">
         {services.map((service) => (
-          <ServiceCard key={service.title} service={service} />
+          <ServiceCard key={service.testId} service={service} />
         ))}
       </div>
     </Step>
@@ -59,6 +59,7 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
         const checked = e.currentTarget.querySelector("input")?.checked
         setService(service.optionKey, !checked)
       }}
+      data-testid={service.testId}
     >
       {service.enterprise && (
         <div className="absolute right-1 top-1 rounded-md bg-sky-500 px-2 py-1 text-xs text-white">
@@ -85,12 +86,14 @@ function ServiceCard({ service }: { service: (typeof services)[number] }) {
 }
 
 const services: Array<{
+  testId: string
   title: string
   description: string
   optionKey: keyof IFirebirdServices
   enterprise: boolean
 }> = [
   {
+    testId: "kwild-postgres-option",
     title: "KwilD + Postgres",
     description:
       "The Kwil Daemon, responsible for validating blocks and executing transactions, and its underlying Postgres instance.",
@@ -98,19 +101,21 @@ const services: Array<{
     enterprise: false,
   },
   {
+    testId: "kwil-gateway-option",
     title: "Kwil Gateway",
-
     description: "Authn and load balancing service for Kwil networks.",
     optionKey: "gateway",
     enterprise: true,
   },
   {
+    testId: "kwil-indexer-option",
     title: "Kwil Indexer",
     description: "A blockchain indexer for Kwil networks.",
     optionKey: "indexer",
     enterprise: true,
   },
   {
+    testId: "custom-binary-option",
     title: "Custom Binary",
     description: "Upload a compiled Kwild binary with extensions.",
     optionKey: "customBinary",

@@ -28,7 +28,7 @@ describe("NumberOfNodesStep", () => {
       </Provider>,
     )
 
-    expect(screen.getByText("Number of Nodes")).toBeInTheDocument()
+    expect(screen.getByTestId("step-3")).toBeInTheDocument()
     expect(screen.getByTestId("node-count")).toBeInTheDocument()
   })
 

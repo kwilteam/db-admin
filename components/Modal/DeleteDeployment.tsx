@@ -57,31 +57,39 @@ export default function DeleteDeploymentModal() {
     if (!deployment || !isDeleteEnabled) return
 
     setDeleting(true)
-    const { status } = await deleteDeployment(deployment.id)
-    setDeleting(false)
 
-    if (status === 200) {
-      dispatch(removeDeployment(deployment.id))
+    try {
+      const { status } = await deleteDeployment(deployment.id)
+      setDeleting(false)
 
-      dispatch(
-        setAlert({
-          text: "Deployment deleted successfully",
-          type: "success",
-        }),
-      )
-      router.push("/firebird/deployments")
+      if (status === 200) {
+        dispatch(removeDeployment(deployment.id))
 
-      dispatch(setModal(undefined))
-      setInstanceName("")
+        dispatch(
+          setAlert({
+            text: "Deployment deleted successfully",
+            type: "success",
+          }),
+        )
+        router.push("/firebird/deployments")
 
-      triggerProviderStatusCheck({ suppressOfflineWarning: true, delay: 2000 })
-    } else {
-      dispatch(
-        setAlert({
-          text: "Deployment deletion failed",
-          type: "error",
-        }),
-      )
+        dispatch(setModal(undefined))
+        setInstanceName("")
+
+        triggerProviderStatusCheck({
+          suppressOfflineWarning: true,
+          delay: 2000,
+        })
+      } else {
+        dispatch(
+          setAlert({
+            text: "Deployment deletion failed",
+            type: "error",
+          }),
+        )
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -92,7 +100,9 @@ export default function DeleteDeploymentModal() {
     <div className="flex flex-1 flex-col bg-white p-3">
       <div className="flex flex-col justify-center gap-4">
         <div className="flex flex-col gap-2 text-sm">
-          <p>Are you sure you want to delete this deployment?</p>
+          <p data-testid="delete-deployment-modal-confirmation">
+            Are you sure you want to delete this deployment?
+          </p>
           <p>
             Enter the instance name to confirm:
             <br />

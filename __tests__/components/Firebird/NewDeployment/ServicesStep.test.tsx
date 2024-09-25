@@ -33,10 +33,10 @@ describe("ServicesStep", () => {
       </Provider>,
     )
 
-    expect(screen.getByText("KwilD + Postgres")).toBeInTheDocument()
-    expect(screen.getByText("Kwil Gateway")).toBeInTheDocument()
-    expect(screen.getByText("Kwil Indexer")).toBeInTheDocument()
-    expect(screen.getByText("Custom Binary")).toBeInTheDocument()
+    expect(screen.getByTestId("kwild-postgres-option")).toBeInTheDocument()
+    expect(screen.getByTestId("kwil-gateway-option")).toBeInTheDocument()
+    expect(screen.getByTestId("kwil-indexer-option")).toBeInTheDocument()
+    expect(screen.getByTestId("custom-binary-option")).toBeInTheDocument()
   })
 
   it("allows selection of services", () => {
@@ -45,8 +45,11 @@ describe("ServicesStep", () => {
         <ServicesStep />
       </Provider>,
     )
-    const gatewayOption = screen.getByText("Kwil Gateway")
+    const gatewayOption = screen.getByTestId("kwil-gateway-option")
     fireEvent.click(gatewayOption)
-    // Add assertion to check if the store was updated
+
+    expect(store.getState().firebird.newDeployment?.services?.gateway).toBe(
+      true,
+    )
   })
 })

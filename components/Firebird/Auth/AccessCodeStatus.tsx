@@ -15,7 +15,7 @@ export default function AccessCodeStatus({
   handleResendCode: (e: React.MouseEvent<HTMLButtonElement>) => void
 }) {
   return (
-    <div className="mt-4 flex flex-col gap-2">
+    <div data-testid="access-code-status" className="mt-4 flex flex-col gap-2">
       {!checkingAccessCode &&
         !resendingCode &&
         codeSuccess === undefined &&

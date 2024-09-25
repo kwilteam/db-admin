@@ -89,9 +89,14 @@ export default function DeleteNodeModal() {
     <div className="flex flex-1 flex-col bg-white p-3">
       <div className="flex flex-col justify-center gap-4">
         <div className="flex flex-col gap-2 text-sm">
-          <p>Are you sure you want to delete this node?</p>
+          <p data-testid="delete-node-confirmation">
+            Are you sure you want to delete this node?
+          </p>
           {modalData?.onlyNode && (
-            <div className="flex flex-col gap-1 italic text-red-500">
+            <div
+              data-testid="only-node-warning"
+              className="flex flex-col gap-1 italic text-red-500"
+            >
               <div>This is the only node in the deployment.</div>
               <div>Terminating this node will terminate the deployment.</div>
             </div>

@@ -21,19 +21,22 @@ describe("AuthForm", () => {
   })
 
   it("renders AuthForm with title and icon", () => {
+    const title = "Log in to your account"
     render(
       <Provider store={store}>
         <AuthForm
-          title="Log in to your account"
+          title={title}
           icon={<LoginIcon className="h-5 w-5 text-gray-900 lg:h-6 lg:w-6" />}
         >
-          <div>Don&apos;t have an account?</div>
+          <div data-testid="auth-form-subtitle">
+            Don&apos;t have an account?
+          </div>
         </AuthForm>
       </Provider>,
     )
 
-    expect(screen.getByText("Log in to your account")).toBeInTheDocument()
-    expect(screen.getByText("Don't have an account?")).toBeInTheDocument()
+    expect(screen.getByText(title)).toBeInTheDocument()
+    expect(screen.getByTestId("auth-form-subtitle")).toBeInTheDocument()
   })
 
   it("allows email input and form submission", async () => {

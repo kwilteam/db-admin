@@ -23,7 +23,9 @@ export default function NodeServices({ nodeId }: { nodeId: string }) {
         </h3>
         {loading && <Loading className="mb-1" />}
         {!loading && services && !services.length && (
-          <div className="text-xs">No services found</div>
+          <div data-testid="no-services-found" className="text-xs">
+            No services found
+          </div>
         )}
         {!loading &&
           services &&

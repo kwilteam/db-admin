@@ -13,23 +13,28 @@ import Loading from "@/components/Loading"
 export default function DeploymentList() {
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const deployments = useAppSelector(selectDeployments)
 
   useEffect(() => {
     const loadAsync = async () => {
-      const { status, data } = await getDeployments()
+      try {
+        const { status, data } = await getDeployments()
 
-      if (status === 200 && data) {
-        dispatch(setDeployments(data.result))
-        setLoading(false)
-      } else {
-        dispatch(
-          setAlert({
-            text: "There was a problem loading your deployments",
-            type: "error",
-          }),
-        )
-        dispatch(setDeployments([]))
+        if (status === 200 && data) {
+          dispatch(setDeployments(data.result))
+        } else {
+          dispatch(
+            setAlert({
+              text: "There was a problem loading your deployments",
+              type: "error",
+            }),
+          )
+          dispatch(setDeployments([]))
+        }
+      } catch (err) {
+        setError("Failed to fetch deployments")
+      } finally {
         setLoading(false)
       }
     }
@@ -37,30 +42,36 @@ export default function DeploymentList() {
     loadAsync()
   }, [dispatch])
 
-  if (!deployments || loading) {
+  if (loading) {
     return (
-      <div className="flex w-full justify-center pt-4">
+      <div
+        className="flex w-full justify-center pt-4"
+        data-testid="loading-icon"
+      >
         <Loading />
       </div>
     )
   }
 
+  if (error) {
+    return <div data-testid="error-message">{error}</div>
+  }
+
   return (
     <>
       <div className="flex-1 overflow-auto bg-white">
-        {/* If no deployments, show a message */}
         {deployments && deployments.length === 0 && <CreateFirstDeployment />}
 
-        {/* If deployments, show grid of deployments */}
-        <div
-          data-testid="deployment-list"
-          className="m-2 grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3"
-        >
-          {deployments &&
-            deployments.map((deployment: any) => (
+        {deployments && deployments.length > 0 && (
+          <div
+            data-testid="deployment-list"
+            className="m-2 grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-3"
+          >
+            {deployments.map((deployment: any) => (
               <DeploymentCard key={deployment.id} deployment={deployment} />
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </>
   )
@@ -68,7 +79,10 @@ export default function DeploymentList() {
 
 function CreateFirstDeployment() {
   return (
-    <div className="mt-16 flex max-h-mobile flex-col items-center justify-center gap-4 lg:mt-0 lg:min-h-mobile">
+    <div
+      data-testid="deploy-first-kwil-network"
+      className="mt-16 flex max-h-mobile flex-col items-center justify-center gap-4 lg:mt-0 lg:min-h-mobile"
+    >
       <FirebirdIcon className="h-12 w-12 text-gray-600" />
       <h1 className="text-lg tracking-tight text-gray-900 lg:text-xl">
         Deploy your first Kwil network!

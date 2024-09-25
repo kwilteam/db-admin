@@ -71,7 +71,6 @@ export const WebKwilProvider = ({
     }
   }, [dispatch, activeProviderObject, isOnline])
 
-  // From Luke: The problem with using pathname in the initKwilProvider dependency array is that it will re-trigger database calls on every route change (including switching tables, actions, etc.). This is not ideal because it creates a brief and unnecessary reload on the database page. Instead, we should move the ping check to a separate useEffect that only runs when the pathname changes, and then we can check the provider status there.
   useEffect(() => {
     initKwilProvider()
   }, [initKwilProvider])
@@ -102,7 +101,7 @@ export const WebKwilProvider = ({
   }, [activeProviderObject, dispatch, handleProviderOffline])
 
   // The provider status can be checked by setting the checkProviderStatusFlag to true
-  // This is so, we can check the provider status even when the provider has not changed
+  // This is so we can check the provider status even when the provider has not changed
   useEffect(() => {
     if (checkProviderStatusFlag) {
       checkProviderStatus()

@@ -58,7 +58,9 @@ export default function Nodes({ deploymentId }: { deploymentId: string }) {
   return (
     <div className="flex w-full flex-col gap-2">
       {!loading && nodes && nodes.length === 0 && (
-        <div className="text-sm text-slate-500">No nodes found</div>
+        <div data-testid="no-nodes-found" className="text-sm text-slate-500">
+          No nodes found
+        </div>
       )}
 
       {nodes &&

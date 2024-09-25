@@ -66,7 +66,7 @@ describe("NodeServices", () => {
       </Provider>,
     )
 
-    expect(screen.getByText("No services found")).toBeInTheDocument()
+    expect(screen.getByTestId("no-services-found")).toBeInTheDocument()
   })
 
   it("displays loader when loading", () => {

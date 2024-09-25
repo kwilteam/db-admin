@@ -32,10 +32,10 @@ describe("NewDeploymentForm", () => {
         <NewDeploymentForm />
       </Provider>,
     )
-    expect(screen.getByText("Select a Network")).toBeInTheDocument()
-    expect(screen.getByText("Network Settings")).toBeInTheDocument()
-    expect(screen.getByText("Number of Nodes")).toBeInTheDocument()
-    expect(screen.getByText("Select a Machine")).toBeInTheDocument()
-    expect(screen.getByText("Select Services")).toBeInTheDocument()
+    expect(screen.getByTestId("step-1")).toBeInTheDocument()
+    expect(screen.getByTestId("step-2")).toBeInTheDocument()
+    expect(screen.getByTestId("step-3")).toBeInTheDocument()
+    expect(screen.getByTestId("step-4")).toBeInTheDocument()
+    expect(screen.getByTestId("step-5")).toBeInTheDocument()
   })
 })

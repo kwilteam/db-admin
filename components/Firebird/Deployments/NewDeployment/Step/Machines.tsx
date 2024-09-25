@@ -11,13 +11,17 @@ export function MachinesStep() {
       title="Select a Machine"
       description="Choose the machine you want to deploy to."
     >
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+      <div
+        className="grid grid-cols-1 gap-2 lg:grid-cols-2"
+        data-testid="machine-options"
+      >
         {machinesOptions.map((option) => (
           <DeploymentOptionCard
             key={option.title}
             optionKey="machines"
             optionValue={option.optionValue}
             enterprise={option.enterprise}
+            testId={`machine-option-${option.optionValue}`}
           >
             <span className="flex flex-row items-center gap-2 text-xl tracking-tighter">
               <VmStepIcon /> {option.title}

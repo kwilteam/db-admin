@@ -1,11 +1,9 @@
 import classNames from "classnames"
-import {
-  IFirebirdNewDeployment,
-  selectNewDeployment,
-  setNewDeployment,
-} from "@/store/firebird"
+import { selectNewDeployment, setNewDeployment } from "@/store/firebird"
+
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setModal } from "@/store/global"
+import { IFirebirdNewDeployment } from "@/utils/firebird/types"
 
 interface IDeploymentOptionCardProps<K extends keyof IFirebirdNewDeployment> {
   children: React.ReactNode
