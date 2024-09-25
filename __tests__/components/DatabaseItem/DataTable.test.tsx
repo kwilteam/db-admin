@@ -6,7 +6,11 @@ import { mockStore } from "../../mocks/mock-store"
 import DataTable from "@/components/DatabaseItem/DataTable"
 import { ItemType } from "@/utils/database-types"
 
-const mockColumns = ["id", "name", "age"]
+const mockColumns = [
+  { name: "id", type: "string" },
+  { name: "name", type: "string" },
+  { name: "age", type: "number" },
+]
 const mockData = [
   { id: 1, name: "John", age: 25 },
   { id: 2, name: "Jane", age: 30 },

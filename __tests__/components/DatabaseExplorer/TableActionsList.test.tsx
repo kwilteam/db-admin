@@ -60,21 +60,19 @@ describe("TablesActionsList Actions Component Tests", () => {
   const actions = [
     {
       name: "Action 1",
-      inputs: [],
-      statements: [],
-      mutability: "view",
       annotations: [],
-      auxiliaries: [],
+      parameters: [],
       public: true,
+      modifiers: ["VIEW"],
+      body: "",
     },
     {
       name: "Action 2",
-      inputs: [],
-      statements: [],
-      mutability: "view",
       annotations: [],
-      auxiliaries: [],
+      parameters: [],
       public: true,
+      modifiers: ["VIEW"],
+      body: "",
     },
   ] as readonly KwilTypes.ActionSchema[]
 
