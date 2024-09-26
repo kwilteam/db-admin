@@ -10,9 +10,6 @@ export default defineConfig({
     globals: true,
     environment: "happy-dom",
     mockReset: true,
-    setupFiles: [
-      "./__tests__/setup/indexed-db.ts",
-      "./__tests__/setup/router.ts",
-    ],
+    setupFiles: ["./__tests__/setup.ts"],
   },
 })

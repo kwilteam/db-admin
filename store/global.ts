@@ -10,12 +10,9 @@ interface IAlert {
 }
 
 export enum ModalEnum {
-  TALK_WITH_TEAM = "TALK_WITH_TEAM",
-  PROVIDER_OFFLINE = "PROVIDER_OFFLINE",
-  CONNECT = "CONNECT",
-  SAVE_QUERY = "SAVE_QUERY",
-  DELETE_DEPLOYMENT = "DELETE_DEPLOYMENT",
-  DELETE_NODE = "DELETE_NODE",
+  PROVIDER_OFFLINE = "provider_offline",
+  CONNECT = "connect",
+  SAVE_QUERY = "save_query",
 }
 
 interface IGlobalState {
@@ -26,20 +23,16 @@ interface IGlobalState {
   providerOfflineAcknowledged: boolean
   settingsLoaded: boolean
   alert: IAlert | undefined
-  modalData: any
-  checkProviderStatus: boolean
 }
 
 const initialState: IGlobalState = {
-  isMenuOpen: false,
+  isMenuOpen: true,
   modal: undefined,
   activeAccount: undefined,
   providerStatus: KwilProviderStatus.Unknown,
   providerOfflineAcknowledged: false,
   settingsLoaded: false,
   alert: undefined,
-  modalData: undefined,
-  checkProviderStatus: false,
 }
 
 export const globalSlice = createSlice({
@@ -51,9 +44,6 @@ export const globalSlice = createSlice({
     },
     setModal: (state, action: PayloadAction<ModalEnum | undefined>) => {
       state.modal = action.payload
-    },
-    setModalData: (state, action: PayloadAction<any>) => {
-      state.modalData = action.payload
     },
     setProviderStatus: (state, action: PayloadAction<KwilProviderStatus>) => {
       state.providerStatus = action.payload
@@ -77,21 +67,16 @@ export const globalSlice = createSlice({
     setAlertEnd: (state) => {
       state.alert = undefined
     },
-    setCheckProviderStatus: (state, action: PayloadAction<boolean>) => {
-      state.checkProviderStatus = action.payload
-    },
   },
 })
 
 export const {
   setIsMenuOpen,
   setModal,
-  setModalData,
   setProviderStatus,
   setProviderOfflineAcknowledged,
   setActiveAccount,
   setSettingsLoaded,
-  setCheckProviderStatus,
 } = globalSlice.actions
 
 export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
@@ -99,9 +84,6 @@ export const selectIsMenuOpen = (state: { global: IGlobalState }) =>
 
 export const selectModal = (state: { global: IGlobalState }) =>
   state.global.modal
-
-export const selectModalData = (state: { global: IGlobalState }) =>
-  state.global.modalData
 
 export const selectActiveAccount = (state: { global: IGlobalState }) =>
   state.global.activeAccount
@@ -115,23 +97,21 @@ export const selectSettingsLoaded = (state: { global: IGlobalState }) =>
 export const selectAlert = (state: { global: IGlobalState }) =>
   state.global.alert
 
-export const selectProviderOfflineAcknowledged = (state: {
-  global: IGlobalState
-}) => state.global.providerOfflineAcknowledged
-
-export const selectCheckProviderStatus = (state: { global: IGlobalState }) =>
-  state.global.checkProviderStatus
+export const selectProviderOfflineAcknowledged = (state: { global: IGlobalState }) =>
+  state.global.providerOfflineAcknowledged
 
 export default globalSlice.reducer
 
 export const setAlert =
-  (alert: IAlert, hideDelay: number = 5000) =>
+  (alert: IAlert, autoHide: boolean = true) =>
   (dispatch: AppDispatch) => {
     dispatch(setAlertStart(alert))
 
-    setTimeout(() => {
-      dispatch(setAlertEnd())
-    }, hideDelay)
+    if (autoHide) {
+      setTimeout(() => {
+        dispatch(setAlertEnd())
+      }, 5000)
+    }
   }
 
 const setAlertStart = (alert: IAlert): PayloadAction<IAlert> => ({

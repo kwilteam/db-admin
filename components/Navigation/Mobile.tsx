@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useEffect } from "react"
+import { Fragment } from "react"
 import { usePathname } from "next/navigation"
 import classNames from "classnames"
 import { Dialog, Transition } from "@headlessui/react"
@@ -30,15 +30,7 @@ export default function MobileNavigation() {
   const activePage = useActivePage()
   const pathname = usePathname()
 
-  const hasSecondaryMobileMenu = activePage?.hasSecondaryMobileMenu ?? false
-  const closeMobileNavOnSelect = activePage?.closeMobileNavOnSelect ?? false
-
-  // On the initial render, this will show the secondary mobile menu if the page has one and the closeMobileNavOnSelect is not true
-  useEffect(() => {
-    if (hasSecondaryMobileMenu && !closeMobileNavOnSelect) {
-      dispatch(setIsMenuOpen(true))
-    }
-  }, [dispatch, hasSecondaryMobileMenu, closeMobileNavOnSelect])
+  const secondaryMobileMenu = activePage?.secondaryMobileMenu ?? false
 
   return (
     <>
@@ -73,15 +65,15 @@ export default function MobileNavigation() {
                 className={classNames({
                   "flex min-h-screen w-80 overflow-scroll border-r border-slate-100 bg-white pl-16 lg:hidden":
                     true,
-                  hidden: !hasSecondaryMobileMenu,
+                  hidden: !secondaryMobileMenu,
                 })}
               >
-                {pathname?.startsWith("/databases") && (
+                {pathname.startsWith("/databases") && (
                   <DatabaseExplorer isMobile={true} />
                 )}
-                {pathname?.startsWith("/ide") && <SchemaExplorer />}
-                {pathname?.startsWith("/settings") && <SettingsNavigation />}
-                {pathname?.startsWith("/extensions") && <ExtensionFilters />}
+                {pathname.startsWith("/ide") && <SchemaExplorer />}
+                {pathname.startsWith("/settings") && <SettingsNavigation />}
+                {pathname.startsWith("/extensions") && <ExtensionFilters />}
               </div>
               <div
                 className="h-10 lg:hidden"
@@ -90,7 +82,7 @@ export default function MobileNavigation() {
                 <HiOutlineXMark
                   className={classNames({
                     "m-2 h-8 w-8 p-1 text-slate-50": true,
-                    "ml-16": !hasSecondaryMobileMenu,
+                    "ml-16": !secondaryMobileMenu,
                   })}
                 />
               </div>

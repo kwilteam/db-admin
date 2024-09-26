@@ -25,15 +25,11 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <Method
-              dbid={mockDbid}
-              methodName={mockActionName}
-              type={ItemType.ACTION}
-            />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION}/>
           </Provider>,
         )
       })
-      expect(screen.getByTestId("loading-icon")).toBeInTheDocument()
+      expect(screen.getByTestId("loading")).toBeInTheDocument()
     })
 
     it("renders action statements and form when action is defined", async () => {
@@ -50,11 +46,7 @@ describe("Action Components", () => {
               },
             })}
           >
-            <Method
-              dbid={mockDbid}
-              methodName={mockActionName}
-              type={ItemType.ACTION}
-            />
+            <Method dbid={mockDbid} methodName={mockActionName} type={ItemType.ACTION} />
           </Provider>,
         )
       })
@@ -68,11 +60,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <MethodForm
-              method={mockAction}
-              executeAction={vi.fn()}
-              type={ItemType.ACTION}
-            />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -84,11 +72,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <Provider store={mockStore({})}>
-            <MethodForm
-              method={mockAction}
-              executeAction={vi.fn()}
-              type={ItemType.ACTION}
-            />
+            <MethodForm method={mockAction} executeAction={vi.fn()} />
           </Provider>,
         )
       })
@@ -99,12 +83,7 @@ describe("Action Components", () => {
   describe("ActionStatements", () => {
     it("renders action statements", async () => {
       await act(async () => {
-        render(
-          <MethodStatements
-            statements={[mockAction.body]}
-            methodType={ItemType.ACTION}
-          />,
-        )
+        render(<MethodStatements statements={[mockAction.body]} />)
       })
       expect(screen.getByText("statement1")).toBeInTheDocument()
     })

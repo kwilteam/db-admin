@@ -6,6 +6,22 @@ import { mockStore } from "../../mocks/mock-store"
 import DatabaseList from "@/components/DatabaseExplorer/DatabaseList"
 import { myDatabases, otherDatabases, storeData } from "./data"
 
+const { useRouter } = vi.hoisted(() => {
+  const mockedRouterPush = vi.fn()
+  return {
+    useRouter: () => ({ push: mockedRouterPush }),
+    mockedRouterPush,
+  }
+})
+
+vi.mock("next/navigation", async () => {
+  const actual = await vi.importActual("next/navigation")
+  return {
+    ...actual,
+    useRouter,
+  }
+})
+
 describe("DatabaseList Component Tests", () => {
   let rerender: RenderResult["rerender"]
 
