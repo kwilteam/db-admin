@@ -1,4 +1,10 @@
-import { ModalEnum, selectModal, selectProviderOfflineAcknowledged, setModal, setProviderOfflineAcknowledged } from "@/store/global"
+import {
+  ModalEnum,
+  selectModal,
+  selectProviderOfflineAcknowledged,
+  setModal,
+  setProviderOfflineAcknowledged,
+} from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Base from "./Base"
@@ -6,7 +12,9 @@ import Base from "./Base"
 export default function ProfileOfflineModal() {
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
-  const providerOfflineAcknowledged = useAppSelector(selectProviderOfflineAcknowledged)
+  const providerOfflineAcknowledged = useAppSelector(
+    selectProviderOfflineAcknowledged,
+  )
 
   const close = () => {
     dispatch(setModal(undefined))
@@ -34,7 +42,9 @@ export default function ProfileOfflineModal() {
 
   return (
     <Base
-      show={modal === ModalEnum.PROVIDER_OFFLINE && !providerOfflineAcknowledged}
+      show={
+        modal === ModalEnum.PROVIDER_OFFLINE && !providerOfflineAcknowledged
+      }
       closeModal={close}
       footer={modalFooter}
     >

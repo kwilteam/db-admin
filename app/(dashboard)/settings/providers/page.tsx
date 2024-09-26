@@ -9,10 +9,14 @@ import Table from "@/components/Settings/Providers/Table"
 import Header from "@/components/Settings/Providers/Header"
 import ActionPanel from "@/components/Settings/Providers/ActionPanel"
 import Button from "@/components/Button"
+import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
 
 export default function ProvidersPage() {
   const providers = useAppSelector(selectProviders)
   const confirmDeleteProvider = useDeleteProvider()
+
+  // Ping Provider Status
+  useTriggerProviderStatus({ delay: 500 })
 
   return (
     <>
