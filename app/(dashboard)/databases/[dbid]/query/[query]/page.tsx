@@ -48,10 +48,10 @@ export default function DatabaseQueryPage({ params }: IProps) {
     dispatch(setDatabaseActiveContext({ dbid, type, name: queryName }))
   }, [dbid, queryName, type, dispatch, databaseObject])
 
-  if (!databaseObject) return null
-
   // Ping Provider Status
   useTriggerProviderStatus({ delay: 500 })
+
+  if (!databaseObject) return null
 
   return (
     <>

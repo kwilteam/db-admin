@@ -41,10 +41,10 @@ export default function DatabaseTablePage({ params }: IProps) {
     dispatch(setDatabaseActiveContext({ dbid, type, name: table }))
   }, [dbid, table, type, dispatch, databaseObject])
 
-  if (!databaseObject) return null
-
   // Ping Provider Status
   useTriggerProviderStatus({ delay: 500 })
+  
+  if (!databaseObject) return null
 
   return (
     <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
@@ -52,8 +52,16 @@ export default function DatabaseTablePage({ params }: IProps) {
 
       {columns && (
         <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
-          <Filters dbid={databaseObject.dbid} table={table} columns={columns.map(c => c.name)} />
-          <Sorting dbid={databaseObject.dbid} table={table} columns={columns.map(c => c.name)} />
+          <Filters
+            dbid={databaseObject.dbid}
+            table={table}
+            columns={columns.map((c) => c.name)}
+          />
+          <Sorting
+            dbid={databaseObject.dbid}
+            table={table}
+            columns={columns.map((c) => c.name)}
+          />
         </div>
       )}
 

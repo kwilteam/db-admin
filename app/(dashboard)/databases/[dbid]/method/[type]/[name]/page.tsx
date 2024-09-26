@@ -32,10 +32,10 @@ export default function DatabaseActionPage({ params }: IProps) {
     dispatch(setDatabaseActiveContext({ dbid, type, name }))
   }, [dbid, name, type, dispatch, databaseObject])
 
-  if (!databaseObject) return null
-
   // Ping Provider Status
-  useTriggerProviderStatus({ delay: 500 });
+  useTriggerProviderStatus({ delay: 500 })
+
+  if (!databaseObject) return null
 
   return (
     <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
