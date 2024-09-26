@@ -11,7 +11,7 @@ const networkOptions = [
     subtitle: "Kwil Testnet",
     enterprise: false,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "A testnet Kwil Network is a network that is used for testing purposes. A testnet is separate from the mainnet and is used to test new features and updates before they are deployed to the mainnet. Inactive testnet networks are deleted after 30 days.",
   },
   {
     testId: "mainnet-option",
@@ -20,7 +20,7 @@ const networkOptions = [
     subtitle: "Kwil Mainnet",
     enterprise: true,
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+      "A mainnet Kwil Network is a production-ready network that is used for deploying and managing decentralized databases. Mainnet Kwil chains can integrate custom gas tokens, utilize Kwil extensions, and implement custom consensus and governance mechanisms.",
   },
 ]
 
@@ -29,8 +29,8 @@ export function NetworkStep() {
     <Step
       step={1}
       icon={<StepIcon />}
-      title="Select a Network"
-      description="Select a network to deploy to."
+      title="Network Type" 
+      description="Select a type of network to deploy."
     >
       <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
         {networkOptions.map((option) => (

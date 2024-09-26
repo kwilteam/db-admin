@@ -27,7 +27,7 @@ export default function FirebirdSignOut() {
 
   // First 4 and last 4 of email
   const email = firebirdAccount.email
-  const emailDisplay = `${email.slice(0, 10)}...${email.slice(-10)}`
+  const emailDisplay = `${email.slice(0, 10)}...`
 
   return (
     <div className="flex items-center gap-2">

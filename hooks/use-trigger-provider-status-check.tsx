@@ -3,6 +3,7 @@ import {
   setCheckProviderStatus,
   setProviderOfflineAcknowledged,
 } from "@/store/global"
+import { useEffect } from "react"
 
 export default function useTriggerProviderStatusCheck() {
   const dispatch = useAppDispatch()
@@ -27,3 +28,17 @@ export default function useTriggerProviderStatusCheck() {
 
   return triggerProviderStatusCheck
 }
+
+export function useTriggerProviderStatus({
+  suppressOfflineWarning = false,
+  delay = 0,
+}: {
+  suppressOfflineWarning?: boolean
+  delay?: number
+}) {
+  const triggerProviderStatusCheck = useTriggerProviderStatusCheck()
+
+  useEffect(() => {
+    triggerProviderStatusCheck({ suppressOfflineWarning, delay })
+  }, [])
+};

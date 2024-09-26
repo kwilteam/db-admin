@@ -13,6 +13,7 @@ import Pagination from "@/components/DatabaseItem/Table/Pagination"
 import Header from "@/components/DatabaseItem/Header"
 import Filters from "@/components/DatabaseItem/Table/Filters"
 import Sorting from "@/components/DatabaseItem/Table/Sorting"
+import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
 
 interface IProps {
   params: {
@@ -41,6 +42,9 @@ export default function DatabaseTablePage({ params }: IProps) {
   }, [dbid, table, type, dispatch, databaseObject])
 
   if (!databaseObject) return null
+
+  // Ping Provider Status
+  useTriggerProviderStatus({ delay: 500 })
 
   return (
     <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">

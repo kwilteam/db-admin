@@ -73,10 +73,10 @@ const ChainIdInput = ({ value, onChange }: InputProps) => (
       htmlFor="chainId"
       className="block text-sm font-medium leading-6 text-gray-700"
     >
-      Chain Id
+      Chain ID
     </label>
     <p className="text-sm text-gray-500">
-      The chain Id of the network you want to deploy on.
+      The unique identifier for your Kwil chain.
     </p>
     <div className="mt-2 flex rounded-md shadow-sm">
       <span className="inline-flex items-center rounded-l-md border border-r-0 border-slate-100 bg-slate-50 px-3 text-gray-500 sm:text-sm">

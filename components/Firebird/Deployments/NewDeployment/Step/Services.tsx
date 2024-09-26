@@ -94,9 +94,9 @@ const services: Array<{
 }> = [
   {
     testId: "kwild-postgres-option",
-    title: "KwilD + Postgres",
+    title: "Kwild + PostgreSQL",
     description:
-      "The Kwil Daemon, responsible for validating blocks and executing transactions, and its underlying Postgres instance.",
+      "The Kwil Daemon, responsible for validating blocks and executing transactions, and its underlying PostgreSQL instance.",
     optionKey: "daemon",
     enterprise: false,
   },

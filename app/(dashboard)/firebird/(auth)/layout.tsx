@@ -61,7 +61,7 @@ export default function DeploymentsAuthLayout({
                     Firebird is Kwil&apos;s deployment as a service platform.
                   </li>
                   <li>It is a platform that allows you to deploy</li>
-                  <li>Kwil services to the cloud with ease.</li>
+                  <li>Kwil services with ease.</li>
                 </ul>
 
                 <ul className="mx-0 my-3 flex flex-col gap-2 tracking-wide">
