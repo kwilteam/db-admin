@@ -9,7 +9,6 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ItemType } from "@/utils/database-types"
 import { useEffect } from "react"
-import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
 interface IProps {
   params: {
     type: ItemType
@@ -31,9 +30,6 @@ export default function DatabaseActionPage({ params }: IProps) {
 
     dispatch(setDatabaseActiveContext({ dbid, type, name }))
   }, [dbid, name, type, dispatch, databaseObject])
-
-  // Ping Provider Status
-  useTriggerProviderStatus({ delay: 500 })
 
   if (!databaseObject) return null
 

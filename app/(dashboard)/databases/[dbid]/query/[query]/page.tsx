@@ -13,7 +13,6 @@ import Header from "@/components/DatabaseItem/Header"
 import SaveQueryModal from "@/components/Modal/SaveQuery"
 import QueryEditor from "@/components/DatabaseItem/Query/QueryEditor"
 import Pagination from "@/components/DatabaseItem/Query/Pagination"
-import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
 
 interface IProps {
   params: {
@@ -48,14 +47,11 @@ export default function DatabaseQueryPage({ params }: IProps) {
     dispatch(setDatabaseActiveContext({ dbid, type, name: queryName }))
   }, [dbid, queryName, type, dispatch, databaseObject])
 
-  // Ping Provider Status
-  useTriggerProviderStatus({ delay: 500 })
-
   if (!databaseObject) return null
 
   return (
     <>
-      <div className="flex max-h-mobile min-h-mobile flex-col bg-white lg:min-h-screen">
+      <div className="flex flex-col max-h-mobile min-h-mobile bg-white lg:min-h-screen">
         <Header database={databaseObject.name} type={type} name={queryName} />
 
         <QueryEditor

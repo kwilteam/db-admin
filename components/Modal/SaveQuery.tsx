@@ -1,5 +1,6 @@
-import { ModalEnum, selectModal } from "@/store/global"
-import { useAppSelector } from "@/store/hooks"
+import { useState } from "react"
+import { ModalEnum, selectModal, setModal } from "@/store/global"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Input from "../Input"
 import Base from "./Base"

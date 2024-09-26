@@ -1,5 +1,22 @@
+import { vi } from "vitest"
 import { mockStore } from "../../mocks/mock-store"
 import { KwilProviderStatus } from "@/store/providers"
+
+const { useRouter } = vi.hoisted(() => {
+  const mockedRouterPush = vi.fn()
+  return {
+    useRouter: () => ({ push: mockedRouterPush }),
+    mockedRouterPush,
+  }
+})
+
+vi.mock("next/navigation", async () => {
+  const actual = await vi.importActual("next/navigation")
+  return {
+    ...actual,
+    useRouter,
+  }
+})
 
 export const activeAccount = "0x123"
 

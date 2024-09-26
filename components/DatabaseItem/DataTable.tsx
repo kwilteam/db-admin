@@ -22,7 +22,12 @@ export default function DataTable({
   isLoading,
 }: IProps) {
   if (isLoading) {
-    return <Loading className="flex justify-center bg-slate-50 pt-10" />
+    return (
+      <Loading
+        data-testid="loading"
+        className="flex justify-center bg-slate-50 pt-10"
+      />
+    )
   }
 
   if (
@@ -44,7 +49,7 @@ export default function DataTable({
     >
       <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
-          <tr className="divide-x divide-slate-200">
+          <tr className=" divide-x divide-slate-200">
             {columns.map((column: IColumn) => (
               <th
                 key={column.name}
@@ -52,14 +57,14 @@ export default function DataTable({
                 className="p-2 text-left text-sm font-semibold text-slate-900"
               >
                 {column.name}
-                {column.type && (
+                {column.type &&
                   <a
-                    className="ml-1 text-[11px] text-slate-500"
+                    className="text-[11px] text-slate-500 ml-1"
                     title={column.type}
                   >
                     ({column.type})
                   </a>
-                )}
+                }
               </th>
             ))}
           </tr>

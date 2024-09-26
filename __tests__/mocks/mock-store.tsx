@@ -3,7 +3,6 @@ import databaseReducer from "@/store/database"
 import globalReducer from "@/store/global"
 import ideReducer from "@/store/ide"
 import providersReducer from "@/store/providers"
-import firebirdReducer from "@/store/firebird"
 
 export const mockStore = (preloadedState: Record<string, any>) => {
   return configureStore({
@@ -12,7 +11,6 @@ export const mockStore = (preloadedState: Record<string, any>) => {
       global: globalReducer,
       ide: ideReducer,
       providers: providersReducer,
-      firebird: firebirdReducer,
       // Add other reducers here
     },
     preloadedState,

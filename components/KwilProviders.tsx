@@ -18,7 +18,7 @@ import {
 } from "@/store/providers"
 import { IProvider } from "@/utils/idb/providers"
 import { setDatabaseActiveContext, setDatabases } from "@/store/database"
-import { selectProviderStatus, setProviderStatus } from "@/store/global"
+import { selectProviderStatus } from "@/store/global"
 
 interface IKwilProvidersProps extends React.HTMLAttributes<HTMLDivElement> {
   activeProvider: string | undefined
@@ -63,7 +63,7 @@ export default function KwilProviders({ activeProvider }: IKwilProvidersProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+        <Menu.Items className="absolute right-0 mt-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none z-10">
           <div className="px-1 pb-1">
             {providers &&
               providers.map((provider) => (
@@ -123,7 +123,6 @@ const ProviderItem = ({
           if (isCurrent) return
 
           dispatch(saveActiveProvider(name))
-          dispatch(setProviderStatus(KwilProviderStatus.Unknown))
           dispatch(setDatabases(undefined))
           dispatch(setDatabaseActiveContext(undefined))
         }}

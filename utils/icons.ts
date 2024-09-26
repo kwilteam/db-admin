@@ -31,28 +31,12 @@ import {
   HiArrowDownTray,
   HiOutlineStar,
   HiStar,
-  HiOutlineServerStack,
-  HiOutlineServer,
-  HiOutlineWrenchScrewdriver,
-  HiOutlineHashtag,
-  HiOutlineGlobeAlt,
-  HiOutlineClipboardDocument,
-  HiOutlineClipboardDocumentCheck,
-  HiOutlineTrash,
-  HiOutlineCalendarDays,
-  HiOutlineDocumentArrowDown,
-  HiOutlineMinus,
-  HiOutlineBriefcase,
 } from "react-icons/hi2"
-import { HiOutlineBeaker } from "react-icons/hi"
+import { HiOutlineBeaker } from "react-icons/hi";
 import { CiLogout } from "react-icons/ci"
 import { FaDocker, FaGithub } from "react-icons/fa6"
 import { TbSql } from "react-icons/tb"
-import { PiAsteriskLight, PiPushPinLight, PiNetworkLight } from "react-icons/pi"
-import { TbNetwork, TbMailShare } from "react-icons/tb"
-import { VscVm } from "react-icons/vsc"
-import { GrServices } from "react-icons/gr"
-import { BsAsterisk } from "react-icons/bs"
+import { PiAsteriskLight, PiPushPinLight } from "react-icons/pi"
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -94,31 +78,5 @@ export {
   HiOutlineStar as EmptyStarIcon,
   HiStar as FilledStarIcon,
   PiPushPinLight as PinIcon,
-  HiOutlineBeaker as ProcedureIcon,
-  TbNetwork as FirebirdIcon,
-  HiOutlineUserCircle as RegisterIcon,
-  HiOutlineUserCircle as LoginIcon,
-  TbMailShare as AccessCodeIcon,
-  PiNetworkLight as NetworkStepIcon,
-  HiOutlineWrenchScrewdriver as NetworkSettingsStepIcon,
-  HiOutlineServerStack as NumberOfNodesStepIcon,
-  VscVm as VmStepIcon,
-  GrServices as ServicesStepIcon,
-  HiOutlineHashtag as HashtagIcon,
-  HiOutlineGlobeAlt as ChainIcon,
-  HiOutlineClipboardDocument as ClipboardIcon,
-  HiOutlineClipboardDocumentCheck as ClipboardCheckIcon,
-  HiOutlineTrash as DeleteIcon,
-  HiOutlineCalendarDays as ScheduleIcon,
-  HiOutlineDocumentArrowDown as DownloadLogsIcon,
-  HiOutlineMinus as DeploymentStepPendingIcon,
-  HiOutlineCheckCircle as DeploymentStepFinishedIcon,
-  HiOutlineXMark as DeploymentStepFailedIcon,
-  HiOutlineServerStack as NodesIcon,
-  HiOutlineCog8Tooth as ConfigIcon,
-  GrServices as ServicesIcon,
-  HiOutlineBriefcase as CompanyIcon,
-  HiOutlineArrowTopRightOnSquare as LinkIcon,
-  BsAsterisk as StepIcon,
-  HiOutlineServer as NodeIcon,
+  HiOutlineBeaker as ProcedureIcon
 }

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest"
-import { act, render, screen } from "@testing-library/react"
+import { act, render, screen, RenderResult } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { ItemTypes, KwilTypes } from "@/utils/database-types"
@@ -60,19 +60,21 @@ describe("TablesActionsList Actions Component Tests", () => {
   const actions = [
     {
       name: "Action 1",
+      inputs: [],
+      statements: [],
+      mutability: "view",
       annotations: [],
-      parameters: [],
+      auxiliaries: [],
       public: true,
-      modifiers: ["VIEW"],
-      body: "",
     },
     {
       name: "Action 2",
+      inputs: [],
+      statements: [],
+      mutability: "view",
       annotations: [],
-      parameters: [],
+      auxiliaries: [],
       public: true,
-      modifiers: ["VIEW"],
-      body: "",
     },
   ] as readonly KwilTypes.ActionSchema[]
 
