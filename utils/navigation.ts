@@ -32,19 +32,19 @@ export const navigationItems: INavigationItem[] = [
   //   closeMobileMenu: true,
   // },
   {
-    name: "Settings",
-    href: "/settings/providers",
-    activePathPrefix: "/settings",
-    icon: SettingsIcon,
-    hasSecondaryMobileMenu: true,
-    closeMobileNavOnSelect: true,
-  },
-  {
     name: "Firebird",
     href: "/firebird/deployments",
     activePathPrefix: "/firebird",
     icon: FirebirdIcon,
     hasSecondaryMobileMenu: false,
+    closeMobileNavOnSelect: true,
+  },
+  {
+    name: "Settings",
+    href: "/settings/providers",
+    activePathPrefix: "/settings",
+    icon: SettingsIcon,
+    hasSecondaryMobileMenu: true,
     closeMobileNavOnSelect: true,
   },
 ]
