@@ -13,7 +13,7 @@ describe("useDeploymentState", () => {
     network: Network.testnet,
     networkSettings: {
       chainId: "test-chain",
-      kwilVersion: "0.8.4",
+      kwilVersion: "0.9.1",
       companyName: "Test Company",
     },
     nodeCount: 1,
