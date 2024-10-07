@@ -14,11 +14,10 @@ export default function useDownloadLogs() {
     try {
       const { status, data, message } = await downloadServiceLogs(serviceId)
       if (status === 200 && data) {
-        const blob = new Blob([data], { type: "text/plain;charset=utf-8" })
-        const url = window.URL.createObjectURL(blob)
+        const url = window.URL.createObjectURL(data)
         const link = document.createElement("a")
         link.href = url
-        link.setAttribute("download", `${serviceName}_logs.txt`)
+        link.setAttribute("download", `${serviceName}_logs.tar.gz`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
