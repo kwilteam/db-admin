@@ -146,7 +146,7 @@ export const downloadServiceLogs = async (serviceId: string) => {
     })
 
     if (response.ok) {
-      const text = await response.text()
+      const text = await response.blob()
       return { status: 200, message: "Request successful", data: text }
     } else {
       const errorData = await response.json().catch(() => ({}))
