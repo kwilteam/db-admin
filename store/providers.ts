@@ -134,4 +134,28 @@ export const selectProviders = (state: { providers: IProviderState }) =>
 export const selectActiveProvider = (state: { providers: IProviderState }) =>
   state.providers.activeProvider
 
+export const selectActiveProviderObject = (state: {
+  providers: IProviderState
+}) => {
+  const activeProvider = state.providers.activeProvider
+  if (!activeProvider) return undefined
+
+  return state.providers.providers?.find(
+    (provider) => provider.name === activeProvider,
+  )
+}
+
+export const selectActiveProviderUrl = (state: {
+  providers: IProviderState
+}) => {
+  const activeProvider = state.providers.activeProvider
+  if (!activeProvider) return undefined
+
+  const provider = state.providers.providers?.find(
+    (provider) => provider.name === activeProvider,
+  )
+
+  return provider?.url
+}
+
 export default providersSlice.reducer

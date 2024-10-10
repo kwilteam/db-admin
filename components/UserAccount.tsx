@@ -3,7 +3,7 @@
 import { useEffect, useState, Fragment } from "react"
 import { Menu, Transition } from "@headlessui/react"
 import { useAppDispatch } from "@/store/hooks"
-import { ModalEnum, setActiveAccount, setModal } from "@/store/global"
+import { setActiveAccount, setModal } from "@/store/global"
 import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
@@ -52,7 +52,7 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
 
   useEffect(() => {
     if (!window.ethereum) return
-    
+
     window.ethereum.on("accountsChanged", function (accounts: string[]) {
       dispatch(setActiveAccount(accounts[0]))
     })
@@ -97,8 +97,8 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-1 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5  focus:outline-none">
-          <div className="px-1 py-1 ">
+        <Menu.Items className="absolute right-0 mt-1 w-36 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
+          <div className="px-1 py-1">
             <Menu.Item>
               <div
                 className="group flex w-full cursor-pointer items-center gap-2 rounded-md p-1 text-xs hover:bg-slate-50"

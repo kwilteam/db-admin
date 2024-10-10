@@ -39,7 +39,7 @@ export default function SettingsNavigation() {
             className={classNames({
               "flex h-10 cursor-pointer select-none flex-row items-center p-2 pl-3 pr-2 hover:text-kwil-dark":
                 true,
-              "bg-slate-50 text-kwil-dark": pathname.startsWith(item.href),
+              "bg-slate-50 text-kwil-dark": pathname?.startsWith(item.href),
             })}
           >
             <item.icon className="mr-2 h-5 w-5" /> {item.name}

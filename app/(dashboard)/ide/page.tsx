@@ -17,6 +17,7 @@ import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
 import useEditorHandlers from "@/hooks/ide/use-editor-handlers"
 import { useWindowSize } from "@/hooks/use-window-size"
+import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
 
 const language = "kuneiformLang"
 const theme = "kuneiformTheme"
@@ -40,6 +41,9 @@ export default function IdePage() {
       }, 500)
     }
   }, [activeSchema, editorRef, schemaContentDict])
+
+  // Ping Provider Status
+  useTriggerProviderStatus({ delay: 500 })
 
   return (
     <div className="flex max-h-screen min-h-screen w-full flex-col">

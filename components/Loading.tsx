@@ -1,10 +1,15 @@
+import classNames from "classnames"
+
 interface ILoadingProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export default function Loading({ ...props }: ILoadingProps) {
+export default function Loading({ color = "kwil", ...props }: ILoadingProps) {
   return (
-    <div {...props}>
+    <div {...props} data-testid="loading-icon">
       <svg
-        className="-ml-1 mr-3 h-4 w-4 animate-spin text-kwil"
+        className={classNames("h-4 w-4 animate-spin", {
+          "text-kwil": color === "kwil",
+          "text-white": color === "white",
+        })}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
