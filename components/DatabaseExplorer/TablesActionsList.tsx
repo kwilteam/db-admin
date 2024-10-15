@@ -7,10 +7,14 @@ import { setIsMenuOpen } from "@/store/global"
 import useDatabaseParams from "@/hooks/database/use-database-params"
 import { IItemTypes } from "./DatabaseItem"
 import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
+import { useState } from "react"
 
 interface ITablesActionsList {
   dbid: string
-  items: readonly KwilTypes.Table[] | readonly KwilTypes.ActionSchema[] | readonly Procedure[]
+  items:
+    | readonly KwilTypes.Table[]
+    | readonly KwilTypes.ActionSchema[]
+    | readonly Procedure[]
   itemType: IItemTypes[string]
   visible: boolean
 }
@@ -28,45 +32,55 @@ export const TablesActionsList = ({
     action: activeAction,
   } = useDatabaseParams()
 
+  const [activeProcedure, setActiveProcedure] = useState<string | null>(null)
+
   return (
     <>
-      {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
-        <div
-          data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
-          key={`${dbid}-${itemType}-${objectItem.name}`}
-          className="ml-6 overflow-hidden text-sm"
-        >
-          <Link
-            href={`/databases/${dbid}/${itemType === ItemTypes.PROCEDURES || itemType === ItemTypes.ACTIONS ? `method/` : ``}${itemType.slice(0, -1)}/${objectItem.name}`}
-            className={classNames({
-              "flex select-none flex-row items-center gap-1 hover:text-slate-900":
-                true,
-              "text-slate-500 ": !isTableOrActionActive(
-                dbidParam,
-                dbid,
-                itemType,
-                activeTable,
-                activeAction,
-                objectItem.name,
-              ),
-              "font-semibold text-slate-900": isTableOrActionActive(
-                dbidParam,
-                dbid,
-                itemType,
-                activeTable,
-                activeAction,
-                objectItem.name,
-              ),
-            })}
-            onClick={() => {
-              dispatch(setIsMenuOpen(false))
-            }}
+      {items.map(
+        (objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
+          <div
+            data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
+            key={`${dbid}-${itemType}-${objectItem.name}`}
+            className="ml-6 overflow-hidden text-sm"
           >
-            <ChevronRightIcon className="h-3 w-3" />
-            <span className="max-w-[80%]">{objectItem.name}</span>
-          </Link>
-        </div>
-      ))}
+            <Link
+              href={`/databases/${dbid}/${itemType === ItemTypes.PROCEDURES || itemType === ItemTypes.ACTIONS ? `method/` : ``}${itemType.slice(0, -1)}/${objectItem.name}`}
+              className={classNames({
+                "flex select-none flex-row items-center gap-1 hover:text-slate-900":
+                  true,
+                "text-slate-500": !isTableOrActionActive(
+                  dbidParam,
+                  dbid,
+                  itemType,
+                  activeTable,
+                  activeAction,
+                  objectItem.name,
+                ),
+                "font-semi-bold text-slate-900": isTableOrActionActive(
+                  dbidParam,
+                  dbid,
+                  itemType,
+                  activeTable,
+                  activeAction,
+                  objectItem.name,
+                ),
+                "font-bold text-slate-900": itemType === ItemTypes.PROCEDURES && activeProcedure === objectItem.name
+              })}
+
+              onClick={() => {
+                dispatch(setIsMenuOpen(false))
+                if (itemType === ItemTypes.PROCEDURES) {
+                  setActiveProcedure(objectItem.name) 
+                }
+              }}
+            >
+              <ChevronRightIcon className="h-3 w-3" />
+              <span className="max-w-[80%]">{objectItem.name}</span>
+            </Link>
+          </div>
+        ),
+        
+      )}
 
       {visible && items && items.length == 0 && (
         <div className="ml-10 text-xs">No {itemType} found</div>

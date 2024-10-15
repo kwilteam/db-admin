@@ -18,13 +18,13 @@ interface IDatabaseMethodProps {
 export const useDatabaseMethod = ({
   dbid,
   methodName,
-  type
+  type,
 }: IDatabaseMethodProps) => {
   const dispatch = useAppDispatch()
   const [data, setData] = useState<Object[] | undefined>(undefined)
   const [columns, setColumns] = useState<IColumn[] | undefined>(undefined)
-  const method = useAppSelector((state) => 
-    selectMethod(state, dbid, methodName, type)
+  const method = useAppSelector((state) =>
+    selectMethod(state, dbid, methodName, type),
   )
   const kwilProvider = useKwilProvider()
   const kwilSigner = useKwilSigner()
@@ -45,17 +45,19 @@ export const useDatabaseMethod = ({
         setData(undefined)
         setColumns(undefined)
 
-        const mutability = method?.modifiers?.includes('VIEW')
+        const mutability = method?.modifiers?.includes("VIEW")
         const actionInputs = new Utils.ActionInput()
 
         for (const [key, value] of Object.entries(formValues)) {
           actionInputs.put(key, value as string)
         }
- 
+
         const actionBody: KwilTypes.ActionBody = {
           dbid: databaseObject.dbid,
           name: methodName,
-          ...(actionInputs.toArray().length > 0 ? { inputs: [actionInputs] } : {}),
+          ...(actionInputs.toArray().length > 0
+            ? { inputs: [actionInputs] }
+            : {}),
         }
 
         let response:
@@ -63,7 +65,11 @@ export const useDatabaseMethod = ({
           | KwilTypes.GenericResponse<KwilTypes.TxReceipt>
           | undefined
 
-        if (mutability) {
+        if (mutability && kwilSigner) {
+          // KGW and Private Mode require a signer
+          response = await kwilProvider.call(actionBody, kwilSigner)
+        } else if (mutability) {
+          // Public Mode
           response = await kwilProvider.call(actionBody)
         } else if (!mutability && kwilSigner) {
           response = await kwilProvider.execute(actionBody, kwilSigner, true)
@@ -96,10 +102,11 @@ export const useDatabaseMethod = ({
             setData(result as unknown as Object[])
             setColumns(
               getColumnsFromProcedure(
-                Object.keys(result[0]), 
-                method && 'return_types' in method ? 
-                  method.return_types : undefined
-              )
+                Object.keys(result[0]),
+                method && "return_types" in method
+                  ? method.return_types
+                  : undefined,
+              ),
             )
           }
         }
