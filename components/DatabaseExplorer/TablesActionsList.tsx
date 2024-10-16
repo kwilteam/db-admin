@@ -7,14 +7,10 @@ import { setIsMenuOpen } from "@/store/global"
 import useDatabaseParams from "@/hooks/database/use-database-params"
 import { IItemTypes } from "./DatabaseItem"
 import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
-import { useState } from "react"
 
 interface ITablesActionsList {
   dbid: string
-  items:
-    | readonly KwilTypes.Table[]
-    | readonly KwilTypes.ActionSchema[]
-    | readonly Procedure[]
+  items: readonly KwilTypes.Table[] | readonly KwilTypes.ActionSchema[] | readonly Procedure[]
   itemType: IItemTypes[string]
   visible: boolean
 }
@@ -29,15 +25,12 @@ export const TablesActionsList = ({
   const {
     dbid: dbidParam,
     table: activeTable,
-    action: activeAction,
+    name: activeMethod,
   } = useDatabaseParams()
-
-  const [activeProcedure, setActiveProcedure] = useState<string | null>(null)
 
   return (
     <>
-      {items.map(
-        (objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
+      {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
           <div
             data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
             key={`${dbid}-${itemType}-${objectItem.name}`}
@@ -53,34 +46,27 @@ export const TablesActionsList = ({
                   dbid,
                   itemType,
                   activeTable,
-                  activeAction,
+                  activeMethod,
                   objectItem.name,
                 ),
-                "font-semi-bold text-slate-900": isTableOrActionActive(
+                "font-semibold text-slate-900": isTableOrActionActive(
                   dbidParam,
                   dbid,
                   itemType,
                   activeTable,
-                  activeAction,
+                  activeMethod,
                   objectItem.name,
                 ),
-                "font-bold text-slate-900": itemType === ItemTypes.PROCEDURES && activeProcedure === objectItem.name
               })}
-
               onClick={() => {
                 dispatch(setIsMenuOpen(false))
-                if (itemType === ItemTypes.PROCEDURES) {
-                  setActiveProcedure(objectItem.name) 
-                }
               }}
             >
               <ChevronRightIcon className="h-3 w-3" />
               <span className="max-w-[80%]">{objectItem.name}</span>
             </Link>
           </div>
-        ),
-        
-      )}
+        ))}
 
       {visible && items && items.length == 0 && (
         <div className="ml-10 text-xs">No {itemType} found</div>
@@ -94,9 +80,10 @@ const isTableOrActionActive = (
   dbid: string,
   itemType: IItemTypes[string],
   activeTable: string | undefined,
-  activeAction: string | undefined,
+  activeMethod: string | undefined,
   objectItemName: string,
-) =>
-  dbidParam === dbid &&
-  ((itemType === ItemTypes.TABLES && activeTable === objectItemName) ||
-    (itemType === ItemTypes.ACTIONS && activeAction === objectItemName))
+) => 
+    dbidParam === dbid &&
+    ((itemType === ItemTypes.TABLES && activeTable === objectItemName) ||
+      (itemType === ItemTypes.ACTIONS && activeMethod === objectItemName) ||
+      (itemType === ItemTypes.PROCEDURES && activeMethod === objectItemName))

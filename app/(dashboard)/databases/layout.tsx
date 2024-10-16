@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import { useAppSelector } from "@/store/hooks"
 import { selectDatabaseObject } from "@/store/database"
-import { ItemTypes } from "@/utils/database-types"
+import { ItemTypes, MethodTypes } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/use-database-schema"
 import useDatabaseParams from "@/hooks/database/use-database-params"
 import DatabaseExplorer from "@/components/DatabaseExplorer"
@@ -12,7 +12,7 @@ export default function DatabasesLayout({
   children,
 }: React.PropsWithChildren<{}>) {
   const { getSchema } = useDatabaseSchema()
-  const { dbid, table, action, query } = useDatabaseParams()
+  const { dbid, table, name, type, query } = useDatabaseParams()
   const databaseObject = useAppSelector((state) =>
     selectDatabaseObject(state, dbid || ""),
   )
@@ -24,7 +24,9 @@ export default function DatabasesLayout({
 
       if (table) {
         show = ItemTypes.TABLES
-      } else if (action) {
+      } else if (name && type === MethodTypes.PROCEDURE) {
+        show = ItemTypes.PROCEDURES
+      } else if (name && type === MethodTypes.ACTION) {
         show = ItemTypes.ACTIONS
       } else if (query) {
         show = ItemTypes.QUERIES
