@@ -5,6 +5,7 @@ import {
   IFirebirdApiAccountResponse,
   IFirebirdApiResponse,
 } from "@/utils/firebird/types"
+import { isLessThan24HoursAgo } from "@/utils/helpers"
 import { useEffect, useState } from "react"
 
 export const AccessCodeReminder = () => {
@@ -22,17 +23,15 @@ export const AccessCodeReminder = () => {
   })
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const isNewUser = true as boolean
-
-  // TODO => create a helper function that takes in accountData.data?.created_at, compares it to the current time 
-    // and if the difference is greater than 24 hours, set isNewUser to false
+  const isNewUser = isLessThan24HoursAgo(
+    accountData.data?.created_at,
+  ) as boolean
 
   useEffect(() => {
     const fetchAccount = async () => {
       try {
         const data = await getAccount()
         setAccountData(data)
-        console.log(data)
       } catch (err) {
         setError((err as Error).message || "An unknown error occurred")
       } finally {
@@ -59,7 +58,7 @@ export const AccessCodeReminder = () => {
       >
         <span className="text-white-400 block whitespace-nowrap text-xs sm:inline">
           Check your email for an access code from the Kwil team to deploy a
-          Kwil Network. {accountData.data?.created_at}
+          Kwil Network.
         </span>
       </div>
     )
