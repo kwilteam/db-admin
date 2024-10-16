@@ -51,11 +51,13 @@ export default function SelectedDeployment({
           />
         </div>
 
-        <DeploymentBadges
-          status={deploymentEventStream.status || status}
-          chainVersion={chain.version}
-          chainId={chain.chain_id}
-        />
+        <div className="mt-1">
+          <DeploymentBadges
+            status={deploymentEventStream.status || status}
+            chainVersion={chain.version}
+            chainId={chain.chain_id}
+          />
+        </div>
 
         <div className="flex flex-row items-center justify-start gap-4 lg:w-1/2 lg:gap-8">
           {isDeploymentPending && (
