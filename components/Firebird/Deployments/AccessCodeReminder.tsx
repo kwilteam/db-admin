@@ -7,6 +7,7 @@ import {
 } from "@/utils/firebird/types"
 import { isLessThan24HoursAgo } from "@/utils/helpers"
 import { useEffect, useState } from "react"
+import { FaSpinner } from "react-icons/fa6"
 
 export const AccessCodeReminder = () => {
   const [accountData, setAccountData] = useState<
@@ -43,7 +44,11 @@ export const AccessCodeReminder = () => {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div>
+        <FaSpinner />
+      </div>
+    )
   }
 
   if (error) {
@@ -53,7 +58,7 @@ export const AccessCodeReminder = () => {
   if (isNewUser) {
     return (
       <div
-        className="py-.75 relative border border-kwil-light bg-kwil-light px-3 text-white"
+        className="py-.75 relative border border-kwil bg-kwil px-3 text-white"
         role="alert"
       >
         <span className="text-white-400 block whitespace-nowrap text-xs sm:inline">

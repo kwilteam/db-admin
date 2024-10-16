@@ -4,7 +4,6 @@ import DeploymentList from "@/components/Firebird/Deployments/DeploymentList"
 export default async function DeploymentsHomePage() {
   return (
     <>
-      <AccessCodeReminder />
       <DeploymentList />
     </>
   )
