@@ -27,6 +27,11 @@ export enum ItemTypes {
   QUERIES = "queries",
 }
 
+export enum MethodTypes {
+  ACTION = "action",
+  PROCEDURE = "procedure",
+}
+
 // Whether a database is visible, and whether its tables and actions are visible
 interface IDatabaseVisibility {
   open: boolean
