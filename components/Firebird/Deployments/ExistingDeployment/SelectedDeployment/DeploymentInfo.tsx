@@ -1,5 +1,5 @@
 import { IFirebirdDeployment } from "@/utils/firebird/types"
-import { formatTimestamp } from "@/utils/helpers"
+import { add15DaysToTimestamp, formatTimestamp } from "@/utils/helpers"
 import ConnectToProvider from "./ConnectToProvider"
 
 export const DeploymentInfo = ({
@@ -23,6 +23,7 @@ export const DeploymentInfo = ({
         <h1 className="text-lg font-medium">{instanceName}</h1>
       </div>
       <div className="text-xs text-slate-500">{formatTimestamp(createdAt)}</div>
+      <div className="text-xs text-slate-400 whitespace-nowrap">Expires on: {add15DaysToTimestamp(createdAt)}</div>
       {isDeploymentActive && (
         <ConnectToProvider
           deployment={deployment}

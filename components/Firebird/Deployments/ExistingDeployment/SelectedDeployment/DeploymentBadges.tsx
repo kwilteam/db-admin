@@ -88,7 +88,7 @@ const DesktopDeploymentBadges = ({
   chainId: string
 }) => {
   return (
-    <div className="hidden flex-row items-center justify-start gap-4 text-xs text-slate-500 lg:flex lg:w-auto">
+    <div className="hidden flex-row items-center justify-start gap-4 text-xs text-slate-500 lg:flex lg:w-auto mt-1">
       <LargeDeploymentBadge info="Status" className="w-auto">
         <div
           className={`h-2 w-2 rounded-full border border-slate-100 ${statusColor[status]} ${status === DeploymentStatus.DEPLOYING ? "animate-pulse" : ""}`}

@@ -3,7 +3,7 @@ import Image from "next/image"
 import { useAppDispatch } from "@/store/hooks"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import { ChainIcon, DeleteIcon } from "@/utils/icons"
-import { capitalize, formatTimestamp } from "@/utils/helpers"
+import { add15DaysToTimestamp, capitalize, formatTimestamp } from "@/utils/helpers"
 import { DeploymentBadge } from "./DeploymentBadge"
 import { ModalEnum, setModal, setModalData } from "@/store/global"
 
@@ -68,6 +68,10 @@ export default function DeploymentCard({
           </div>
           <div className="hidden text-xs text-slate-500 lg:block">
             {formatTimestamp(deployment.created_at)}
+          </div>
+
+          <div className="hidden text-xs text-slate-400 lg:block">
+            Expires on: {add15DaysToTimestamp(deployment.created_at)}
           </div>
 
           <MobileDeploymentBadges
