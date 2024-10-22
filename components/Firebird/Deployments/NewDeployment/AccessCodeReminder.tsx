@@ -1,5 +1,7 @@
 "use client"
 
+import { setAlert } from "@/store/global"
+import { useAppDispatch } from "@/store/hooks"
 import { getAccount } from "@/utils/firebird/api"
 import {
   IFirebirdApiAccountResponse,
@@ -7,12 +9,10 @@ import {
 } from "@/utils/firebird/types"
 import { isLessThan24HoursAgo } from "@/utils/helpers"
 import { useEffect, useState } from "react"
-import { FaSpinner } from "react-icons/fa6"
 
 export const AccessCodeReminder = () => {
-  const [accountData, setAccountData] = useState<
-    IFirebirdApiResponse<IFirebirdApiAccountResponse>
-  >({
+  const dispatch = useAppDispatch();
+  const [accountData, setAccountData] = useState<IFirebirdApiResponse<IFirebirdApiAccountResponse>>({
     status: 0,
     message: "",
     data: {
@@ -22,11 +22,9 @@ export const AccessCodeReminder = () => {
       origin: "",
     },
   })
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
   const isNewUser = isLessThan24HoursAgo(
     accountData.data?.created_at,
-  ) as boolean
+  )
 
   useEffect(() => {
     const fetchAccount = async () => {
@@ -34,26 +32,17 @@ export const AccessCodeReminder = () => {
         const data = await getAccount()
         setAccountData(data)
       } catch (err) {
-        setError((err as Error).message || "An unknown error occurred")
-      } finally {
-        setLoading(false)
+        dispatch(
+          setAlert({
+            text: (err as Error).message ? `Error: ${(err as Error).message}` : "Error fetching account data",
+            type: "error",
+          })
+        )
       }
     }
 
     fetchAccount()
   }, [])
-
-  if (loading) {
-    return (
-      <div>
-        <FaSpinner />
-      </div>
-    )
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>
-  }
 
   if (isNewUser) {
     return (
@@ -62,12 +51,9 @@ export const AccessCodeReminder = () => {
         role="alert"
       >
         <span className="text-white-400 block whitespace-nowrap text-xs sm:inline">
-          Check your email for an access code from the Kwil team to deploy a
-          Kwil Network.
+          Check your email for an access code to deploy your network.
         </span>
       </div>
     )
   }
-
-  return null
 }
