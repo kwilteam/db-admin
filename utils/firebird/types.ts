@@ -1,5 +1,7 @@
 // Interfaces for Firebird store
 
+import { Stream } from "nodemailer/lib/xoauth2"
+
 export interface IFirebirdAccount {
   created_at?: number
   email: string
@@ -86,6 +88,13 @@ export enum DeploymentStatus {
   FAILED = "FAILED",
   STOPPED = "STOPPED",
   TERMINATED = "TERMINATED",
+  STARTING = "STARTING",
+  STOPPING = "STOPPING",
+}
+
+export enum EventStreamEvents {
+  START_INSTANCE = "START_INSTANCE",
+  STOP_INSTANCE = "STOP_INSTANCE",
 }
 
 // Interfaces for API responses
@@ -161,4 +170,11 @@ export interface IFirebirdApiService {
   id: string
   name: string
   running: boolean
+}
+
+export enum DeploymentEventType {
+  NOT_STARTED = "NOT_STARTED",
+  START = "START",
+  FINISH = "FINISH",
+  FAIL = "FAIL",
 }
