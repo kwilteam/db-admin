@@ -7,13 +7,20 @@ import SelectedDeployment from "./SelectedDeployment"
 import QuickConnect from "./QuickConnect"
 import SelectedDeploymentTabs from "./SelectedDeploymentTabs"
 import useGetDeployment from "@/hooks/firebird/use-get-deployment"
+import useEventStream from "@/hooks/firebird/use-event-stream"
 
 export default function ExistingDeployment({ id }: { id: string }) {
+  // Deploy
   const deploymentEventStream = useDeploymentEventStream(id)
   useGetDeployment(id, deploymentEventStream.status)
+
   const selectedDeployment = useAppSelector(selectSelectedDeployment)
   const isDeploymentActive =
     selectedDeployment?.status === DeploymentStatus.ACTIVE
+
+  // Start or Stop
+  const eventStream = useEventStream(id, selectedDeployment?.status)
+  useGetDeployment(id, eventStream.status)
 
   const chain = selectedDeployment?.config.chain
   const providerEndpoint =
@@ -33,6 +40,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
         <SelectedDeployment
           deployment={selectedDeployment}
           deploymentEventStream={deploymentEventStream}
+          eventStream={eventStream}
         />
       </div>
       <div className="flex flex-col gap-2 lg:flex-row">
