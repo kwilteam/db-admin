@@ -11,9 +11,11 @@ import { ModalEnum, setModal, setModalData } from "@/store/global"
 export const statusColor = {
   [DeploymentStatus.PENDING]: "bg-blue-500/80",
   [DeploymentStatus.DEPLOYING]: "bg-yellow-500/80",
+  [DeploymentStatus.STARTING]: "bg-orange-500/80",
   [DeploymentStatus.ACTIVE]: "bg-emerald-500/80",
   [DeploymentStatus.FAILED]: "bg-red-500/80",
   [DeploymentStatus.STOPPED]: "bg-red-600/80",
+  [DeploymentStatus.STOPPING]: "bg-orange-500/80",
   [DeploymentStatus.TERMINATED]: "bg-red-600/80",
 }
 
@@ -28,7 +30,8 @@ export default function DeploymentCard({
   const machines = deployment.config.machines
   const status = deployment.status
 
-  const statusColorClass = statusColor[status] || "bg-slate-100"
+  const statusColorClass =
+    statusColor[status as keyof typeof statusColor] || "bg-slate-100"
 
   const triggerDeleteDeploymentModal = (
     e: React.MouseEvent<HTMLButtonElement>,
