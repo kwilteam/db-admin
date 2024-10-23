@@ -1,9 +1,7 @@
 import classNames from "classnames"
 import { DeploymentStatus } from "@/utils/firebird/types"
-import {
-  DeploymentEvents,
-  DeploymentEventType,
-} from "@/hooks/firebird/use-deployment-event-stream"
+import { DeploymentEventType } from "@/utils/firebird/types"
+import { DeploymentEvents } from "@/hooks/firebird/use-deployment-event-stream"
 import Loading from "@/components/Loading"
 import {
   DeploymentStepFailedIcon,

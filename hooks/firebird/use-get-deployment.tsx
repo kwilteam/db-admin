@@ -40,7 +40,10 @@ export default function useGetDeployment(
 
   // For when the deployment status changes to active, get all the deployment data and set to the selected deployment
   useEffect(() => {
-    if (deploymentStreamStatus === DeploymentStatus.ACTIVE) {
+    if (
+      deploymentStreamStatus === DeploymentStatus.ACTIVE ||
+      deploymentStreamStatus === DeploymentStatus.STOPPED
+    ) {
       loadAsync()
     }
   }, [deploymentStreamStatus, loadAsync])

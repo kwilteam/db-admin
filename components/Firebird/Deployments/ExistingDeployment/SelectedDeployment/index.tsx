@@ -2,32 +2,42 @@ import Image from "next/image"
 import { useAppSelector } from "@/store/hooks"
 import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
 import { selectActiveProvider } from "@/store/providers"
-import {
-  DeploymentEvents,
-  DeploymentEventType,
-} from "@/hooks/firebird/use-deployment-event-stream"
+import { DeploymentEventType, EventStreamEvents } from "@/utils/firebird/types"
+import { DeploymentEvents } from "@/hooks/firebird/use-deployment-event-stream"
 import { DeploymentInfo } from "./DeploymentInfo"
 import DeploymentBadges from "./DeploymentBadges"
 import DeploymentStatusStream from "./DeploymentStatusStream"
 import DeleteDeploymentButton from "./DeleteDeploymentButton"
 import { ChevronLeftIcon } from "@/utils/icons"
 import { useRouter } from "next/navigation"
+import StatusStream from "./StatusStream"
 
 export default function SelectedDeployment({
   deployment,
   deploymentEventStream,
+  eventStream,
 }: {
   deployment: IFirebirdDeployment
   deploymentEventStream: {
     status: DeploymentStatus | undefined
     progress: Map<DeploymentEvents, DeploymentEventType>
   }
+  eventStream: {
+    status: DeploymentStatus | undefined
+    progress: Map<EventStreamEvents, DeploymentEventType>
+  }
 }) {
   const activeProvider = useAppSelector(selectActiveProvider)
+
   const isDeploymentActive = deployment.status === DeploymentStatus.ACTIVE
+
   const isDeploymentPending =
     deployment.status === DeploymentStatus.PENDING ||
     deployment.status === DeploymentStatus.DEPLOYING
+
+  const isDeploymentStartingOrStopping =
+    deployment.status === DeploymentStatus.STARTING ||
+    deployment.status === DeploymentStatus.STOPPING
 
   const chain = deployment.config.chain
   const machines = deployment.config.machines
@@ -62,6 +72,13 @@ export default function SelectedDeployment({
             <DeploymentStatusStream
               status={deploymentEventStream.status || status}
               progress={deploymentEventStream.progress}
+            />
+          )}
+
+          {isDeploymentStartingOrStopping && (
+            <StatusStream
+              status={eventStream.status || status}
+              progress={eventStream.progress}
             />
           )}
         </div>

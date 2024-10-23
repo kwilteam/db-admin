@@ -1,21 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { DeploymentStatus } from "@/utils/firebird/types"
+import { DeploymentStatus, DeploymentEventType} from "@/utils/firebird/types"
 
-const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
-
-interface DeploymentStreamMessage {
+export interface DeploymentStreamMessage {
   status: DeploymentStatus
   payload: {
     event: DeploymentEvents
     type: DeploymentEventType
   }
-}
-
-export enum DeploymentEventType {
-  NOT_STARTED = "NOT_STARTED",
-  START = "START",
-  FINISH = "FINISH",
-  FAIL = "FAIL",
 }
 
 export enum DeploymentEvents {
@@ -26,6 +17,8 @@ export enum DeploymentEvents {
   REGISTER_DOMAIN = "REGISTER_DOMAIN",
   FINALIZE_DEPLOYMENT = "FINALIZE_DEPLOYMENT",
 }
+
+const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
 
 const useDeploymentEventStream = (deploymentId: string) => {
   const [status, setStatus] = useState<DeploymentStatus | undefined>(undefined)
@@ -50,28 +43,29 @@ const useDeploymentEventStream = (deploymentId: string) => {
       if (data.payload?.event && data.payload?.type) {
         const { event, type } = data.payload
         if (Object.values(DeploymentEvents).includes(event)) {
-          setProgress((prev) => {
-            const newMap = new Map(prev)
-            const eventIndex = Object.values(DeploymentEvents).indexOf(event)
-
-            // If the event is a start or finish, mark all previous events as finished
-            if (
-              type === DeploymentEventType.START ||
-              type === DeploymentEventType.FINISH
-            ) {
-              for (let i = 0; i < eventIndex; i++) {
-                newMap.set(
-                  Object.values(DeploymentEvents)[i],
-                  DeploymentEventType.FINISH,
-                )
+          if (data.status === DeploymentStatus.DEPLOYING) {
+            setProgress((prev) => {
+              const newMap = new Map(prev)
+              const eventIndex = Object.values(DeploymentEvents).indexOf(event)
+              // If the event is a start or finish, mark all previous events as finished
+              if (
+                type === DeploymentEventType.START ||
+                type === DeploymentEventType.FINISH
+              ) {
+                for (let i = 0; i < eventIndex; i++) {
+                  newMap.set(
+                    Object.values(DeploymentEvents)[i],
+                    DeploymentEventType.FINISH,
+                  )
+                }
               }
-            }
 
-            // Set the current event
-            newMap.set(event, type)
+              // Set the current event
+              newMap.set(event, type)
 
-            return newMap
-          })
+              return newMap
+            })
+          }
         }
       }
     },
@@ -105,7 +99,6 @@ const useDeploymentEventStream = (deploymentId: string) => {
       if (event instanceof MessageEvent) {
         const data: DeploymentStreamMessage = JSON.parse(event.data)
         console.log("SSE: Client received a message", data)
-
         updateDeploymentProgress(data)
         updateDeploymentStatus(data)
       }
