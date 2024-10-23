@@ -1,7 +1,5 @@
 // Interfaces for Firebird store
 
-import { Stream } from "nodemailer/lib/xoauth2"
-
 export interface IFirebirdAccount {
   created_at?: number
   email: string
