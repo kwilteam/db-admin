@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store/hooks"
-import useDeploymentEventStream from "@/hooks/firebird/use-deployment-event-stream"
+import useEventStream from "@/hooks/firebird/use-event-stream"
 import { selectSelectedDeployment } from "@/store/firebird"
 import { DeploymentStatus } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
@@ -7,18 +7,12 @@ import SelectedDeployment from "./SelectedDeployment"
 import QuickConnect from "./QuickConnect"
 import SelectedDeploymentTabs from "./SelectedDeploymentTabs"
 import useGetDeployment from "@/hooks/firebird/use-get-deployment"
-import useEventStream from "@/hooks/firebird/use-event-stream"
 
 export default function ExistingDeployment({ id }: { id: string }) {
-  // Deploy
-  const deploymentEventStream = useDeploymentEventStream(id)
-  useGetDeployment(id, deploymentEventStream.status)
-
   const selectedDeployment = useAppSelector(selectSelectedDeployment)
   const isDeploymentActive =
     selectedDeployment?.status === DeploymentStatus.ACTIVE
 
-  // Start or Stop
   const eventStream = useEventStream(id, selectedDeployment?.status)
   useGetDeployment(id, eventStream.status)
 
@@ -39,7 +33,6 @@ export default function ExistingDeployment({ id }: { id: string }) {
       <div className="flex flex-col items-start gap-2">
         <SelectedDeployment
           deployment={selectedDeployment}
-          deploymentEventStream={deploymentEventStream}
           eventStream={eventStream}
         />
       </div>

@@ -1,41 +1,36 @@
 import Image from "next/image"
 import { useAppSelector } from "@/store/hooks"
-import { DeploymentStatus, IFirebirdDeployment } from "@/utils/firebird/types"
+import {
+  DeploymentEvents,
+  DeploymentStatus,
+  IFirebirdDeployment,
+} from "@/utils/firebird/types"
 import { selectActiveProvider } from "@/store/providers"
-import { DeploymentEventType, EventStreamEvents } from "@/utils/firebird/types"
-import { DeploymentEvents } from "@/hooks/firebird/use-deployment-event-stream"
+import { DeploymentEventType } from "@/utils/firebird/types"
 import { DeploymentInfo } from "./DeploymentInfo"
 import DeploymentBadges from "./DeploymentBadges"
-import DeploymentStatusStream from "./DeploymentStatusStream"
+import StatusStream from "./StatusStream"
 import DeleteDeploymentButton from "./DeleteDeploymentButton"
 import { ChevronLeftIcon } from "@/utils/icons"
 import { useRouter } from "next/navigation"
-import StatusStream from "./StatusStream"
 
 export default function SelectedDeployment({
   deployment,
-  deploymentEventStream,
   eventStream,
 }: {
   deployment: IFirebirdDeployment
-  deploymentEventStream: {
-    status: DeploymentStatus | undefined
-    progress: Map<DeploymentEvents, DeploymentEventType>
-  }
   eventStream: {
     status: DeploymentStatus | undefined
-    progress: Map<EventStreamEvents, DeploymentEventType>
+    progress: Map<DeploymentEvents, DeploymentEventType>
   }
 }) {
   const activeProvider = useAppSelector(selectActiveProvider)
 
   const isDeploymentActive = deployment.status === DeploymentStatus.ACTIVE
 
-  const isDeploymentPending =
+  const isEventStream =
     deployment.status === DeploymentStatus.PENDING ||
-    deployment.status === DeploymentStatus.DEPLOYING
-
-  const isDeploymentStartingOrStopping =
+    deployment.status === DeploymentStatus.DEPLOYING ||
     deployment.status === DeploymentStatus.STARTING ||
     deployment.status === DeploymentStatus.STOPPING
 
@@ -62,20 +57,13 @@ export default function SelectedDeployment({
         </div>
 
         <DeploymentBadges
-          status={deploymentEventStream.status || status}
+          status={eventStream.status || status}
           chainVersion={chain.version}
           chainId={chain.chain_id}
         />
 
         <div className="flex flex-row items-center justify-start gap-4 lg:w-1/2 lg:gap-8">
-          {isDeploymentPending && (
-            <DeploymentStatusStream
-              status={deploymentEventStream.status || status}
-              progress={deploymentEventStream.progress}
-            />
-          )}
-
-          {isDeploymentStartingOrStopping && (
+          {isEventStream && (
             <StatusStream
               status={eventStream.status || status}
               progress={eventStream.progress}
