@@ -31,7 +31,7 @@ export default function StatusStream({
       }
       break
 
-    default:
+    case DeploymentStatus.DEPLOYING:
       eventDisplayNames = {
         [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
         [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
@@ -40,6 +40,9 @@ export default function StatusStream({
         [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
         [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
       }
+      break
+    default:
+      eventDisplayNames = {}
       break
   }
 
