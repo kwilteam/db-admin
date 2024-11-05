@@ -1,8 +1,5 @@
 import classNames from "classnames"
-import {
-  DeploymentEvents,
-  DeploymentStatus,
-} from "@/utils/firebird/types"
+import { DeploymentEvents, DeploymentStatus } from "@/utils/firebird/types"
 import { DeploymentEventType } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
 import {
@@ -20,24 +17,31 @@ export default function StatusStream({
 }) {
   if (status === DeploymentStatus.ACTIVE) return
 
-  // Display appropriate events based on event stream events
-  const eventDisplayNames =
-    status === DeploymentStatus.STARTING
-      ? {
-          [DeploymentEvents.START_INSTANCE]: "Starting Instance",
-        }
-      : status === DeploymentStatus.STOPPING
-        ? {
-            [DeploymentEvents.STOP_INSTANCE]: "Stopping Instance",
-          }
-        : {
-            [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
-            [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
-            [DeploymentEvents.WAIT_INSTANCE_READY]: "Starting Instance",
-            [DeploymentEvents.INSTALL_KWILD]: "Installing Kwil Daemon",
-            [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
-            [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
-          }
+  let eventDisplayNames
+  switch (status) {
+    case DeploymentStatus.STARTING:
+      eventDisplayNames = {
+        [DeploymentEvents.START_INSTANCE]: "Starting Instance",
+      }
+      break
+
+    case DeploymentStatus.STOPPING:
+      eventDisplayNames = {
+        [DeploymentEvents.STOP_INSTANCE]: "Stopping Instance",
+      }
+      break
+
+    default:
+      eventDisplayNames = {
+        [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
+        [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
+        [DeploymentEvents.WAIT_INSTANCE_READY]: "Starting Instance",
+        [DeploymentEvents.INSTALL_KWILD]: "Installing Kwil Daemon",
+        [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
+        [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
+      }
+      break
+  }
 
   const orderedEvents = Object.keys(eventDisplayNames) as DeploymentEvents[]
 

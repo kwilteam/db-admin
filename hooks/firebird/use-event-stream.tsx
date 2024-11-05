@@ -15,10 +15,7 @@ interface DeploymentStreamMessage {
 
 const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
 
-const useEventStream = (
-  deploymentId: string,
-  deploymentStatus?: string,
-) => {
+const useEventStream = (deploymentId: string, deploymentStatus?: string) => {
   const deploymentEventMap = new Map([
     [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.START],
     [DeploymentEvents.CREATE_INSTANCE, DeploymentEventType.NOT_STARTED],
@@ -117,36 +114,26 @@ const useEventStream = (
     [updateDeploymentProgress, updateDeploymentStatus],
   )
 
-  // To keep method consistent with the event stream and avoid unnecessary call errors
-  useEffect(() => {
-    if (deploymentStatus === DeploymentStatus.STARTING) {
-      setLastDeploymentStatus(DeploymentStatus.STARTING)
-    } else if (
-      deploymentStatus === DeploymentStatus.STOPPING ||
-      deploymentStatus === DeploymentStatus.STOPPED
-    ) {
-      setLastDeploymentStatus(DeploymentStatus.STOPPING)
-    } else if (deploymentStatus === DeploymentStatus.DEPLOYING) {
-      setLastDeploymentStatus(DeploymentStatus.DEPLOYING)
-    }
-  }, [deploymentStatus])
-
+  /**
+   * need to follow the appropriate event stream based on the instance action taking place (Start, Deploy, Stop)
+   * @returns method string for the event stream api call
+   */
   const getMethod = (): string => {
-    if (deploymentStatus === DeploymentStatus.STARTING) {
-      return "follow_deployment_start"
-    } else if (
-      deploymentStatus === DeploymentStatus.STOPPING ||
-      deploymentStatus === DeploymentStatus.STOPPED
-    ) {
-      return "follow_deployment_stop"
-    } else if (deploymentStatus === DeploymentStatus.DEPLOYING) {
-      return "follow_deployment"
-    } else if (deploymentStatus === DeploymentStatus.ACTIVE) {
-      return lastDeploymentStatus === DeploymentStatus.STARTING
-        ? "follow_deployment_start"
-        : "follow_deployment"
+    switch (deploymentStatus) {
+      case DeploymentStatus.STARTING:
+        return "follow_deployment_start"
+      case DeploymentStatus.STOPPING:
+      case DeploymentStatus.STOPPED:
+        return "follow_deployment_stop"
+      case DeploymentStatus.DEPLOYING:
+        return "follow_deployment"
+      case DeploymentStatus.ACTIVE:
+        return lastDeploymentStatus === DeploymentStatus.STARTING
+          ? "follow_deployment_start"
+          : "follow_deployment"
+      default:
+        return "follow_deployment"
     }
-    return "follow_deployment"
   }
 
   const method = getMethod()
@@ -157,7 +144,26 @@ const useEventStream = (
       return
     }
 
+    console.log("some ref current", sseRef.current)
+  
+    // Open EventSource only if there is an active action, and close it otherwise
     if (!sseRef.current) {
+      // To keep method consistent with the event stream and avoid unnecessary call errors
+      switch (deploymentStatus) {
+        case DeploymentStatus.STARTING:
+          setLastDeploymentStatus(deploymentStatus)
+          break
+
+        case DeploymentStatus.STOPPING:
+          // case DeploymentStatus.STOPPED:
+          setLastDeploymentStatus(DeploymentStatus.STOPPING)
+          break
+
+        case DeploymentStatus.DEPLOYING:
+          setLastDeploymentStatus(deploymentStatus)
+          break
+      }
+
       console.log("SSE: useEffect - creating new EventSource")
       sseRef.current = new EventSource(
         `${sseUrl}?method=${method}&target=${deploymentId}`,
@@ -206,7 +212,7 @@ const useEventStream = (
     }
   }, [deploymentId, method, handleMessage])
 
-  return { status, progress }
+  return { status, progress, deploymentStatus, lastDeploymentStatus }
 }
 
 export default useEventStream
