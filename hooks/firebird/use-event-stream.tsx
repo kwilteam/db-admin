@@ -47,9 +47,9 @@ const useEventStream = (
 
   const sseRef = useRef<EventSource | null>(null)
 
-  const updateDeploymentProgress = useCallback(
+  const updateEventProgress = useCallback(
     (data: DeploymentStreamMessage) => {
-      console.log("data", data)
+      console.log("Updating event progress:", data)
       if (data.payload?.event && data.payload?.type) {
         const { event, type } = data.payload
         // Check if the event is in DeploymentEvents and is not one of the excluded events
@@ -61,7 +61,6 @@ const useEventStream = (
           )
         ) {
           setProgress((prev) => {
-            console.log(prev) // changed from progress to prev
             const newMap = new Map(prev)
             const eventIndex = Object.values(DeploymentEvents).indexOf(event)
 
@@ -118,11 +117,11 @@ const useEventStream = (
       if (event instanceof MessageEvent) {
         const data: DeploymentStreamMessage = JSON.parse(event.data)
         console.log("SSE: Client received a message", data)
-        updateDeploymentProgress(data)
+        updateEventProgress(data)
         updateDeploymentStatus(data)
       }
     },
-    [updateDeploymentProgress, updateDeploymentStatus],
+    [updateEventProgress, updateDeploymentStatus],
   )
 
   /**
