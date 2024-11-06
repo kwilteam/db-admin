@@ -12,6 +12,8 @@ export const statusColor = {
   [DeploymentStatus.FAILED]: "bg-red-500/80",
   [DeploymentStatus.STOPPED]: "bg-red-600/80",
   [DeploymentStatus.TERMINATED]: "bg-red-600/80",
+  [DeploymentStatus.STOPPING]: "bg-red-600/80",
+  [DeploymentStatus.STARTING]: "bg-emerald-500/80",
 }
 
 export default function DeploymentBadges({

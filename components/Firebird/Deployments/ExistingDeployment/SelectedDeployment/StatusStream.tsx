@@ -1,9 +1,6 @@
 import classNames from "classnames"
-import { DeploymentStatus } from "@/utils/firebird/types"
-import {
-  DeploymentEvents,
-  DeploymentEventType,
-} from "@/hooks/firebird/use-deployment-event-stream"
+import { DeploymentEvents, DeploymentStatus } from "@/utils/firebird/types"
+import { DeploymentEventType } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
 import {
   DeploymentStepFailedIcon,
@@ -11,7 +8,7 @@ import {
   DeploymentStepPendingIcon,
 } from "@/utils/icons"
 
-export default function DeploymentStatusStream({
+export default function StatusStream({
   status,
   progress,
 }: {
@@ -20,13 +17,33 @@ export default function DeploymentStatusStream({
 }) {
   if (status === DeploymentStatus.ACTIVE) return
 
-  const eventDisplayNames = {
-    [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
-    [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
-    [DeploymentEvents.WAIT_INSTANCE_READY]: "Starting Instance",
-    [DeploymentEvents.INSTALL_KWILD]: "Installing Kwil Daemon",
-    [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
-    [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
+  let eventDisplayNames
+  switch (status) {
+    case DeploymentStatus.STARTING:
+      eventDisplayNames = {
+        [DeploymentEvents.START_INSTANCE]: "Starting Instance",
+      }
+      break
+
+    case DeploymentStatus.STOPPING:
+      eventDisplayNames = {
+        [DeploymentEvents.STOP_INSTANCE]: "Stopping Instance",
+      }
+      break
+
+    case DeploymentStatus.DEPLOYING:
+      eventDisplayNames = {
+        [DeploymentEvents.INIT_KEY_PAIR]: "Initializing Key Pair",
+        [DeploymentEvents.CREATE_INSTANCE]: "Creating Instance",
+        [DeploymentEvents.WAIT_INSTANCE_READY]: "Starting Instance",
+        [DeploymentEvents.INSTALL_KWILD]: "Installing Kwil Daemon",
+        [DeploymentEvents.REGISTER_DOMAIN]: "Registering Domain",
+        [DeploymentEvents.FINALIZE_DEPLOYMENT]: "Finalizing Deployment",
+      }
+      break
+    default:
+      eventDisplayNames = {}
+      break
   }
 
   const orderedEvents = Object.keys(eventDisplayNames) as DeploymentEvents[]

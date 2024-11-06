@@ -1,5 +1,4 @@
 // Interfaces for Firebird store
-
 export interface IFirebirdAccount {
   created_at?: number
   email: string
@@ -79,6 +78,8 @@ export interface IFirebirdDeploymentConfig {
   access_token: string
 }
 
+// Interfaces for Event Stream API responses
+
 export enum DeploymentStatus {
   PENDING = "PENDING",
   DEPLOYING = "DEPLOYING",
@@ -86,6 +87,19 @@ export enum DeploymentStatus {
   FAILED = "FAILED",
   STOPPED = "STOPPED",
   TERMINATED = "TERMINATED",
+  STARTING = "STARTING",
+  STOPPING = "STOPPING",
+}
+
+export enum DeploymentEvents {
+  INIT_KEY_PAIR = "INIT_KEY_PAIR",
+  CREATE_INSTANCE = "CREATE_INSTANCE",
+  WAIT_INSTANCE_READY = "WAIT_INSTANCE_READY",
+  INSTALL_KWILD = "INSTALL_KWILD",
+  REGISTER_DOMAIN = "REGISTER_DOMAIN",
+  FINALIZE_DEPLOYMENT = "FINALIZE_DEPLOYMENT",
+  START_INSTANCE = "START_INSTANCE",
+  STOP_INSTANCE = "STOP_INSTANCE",
 }
 
 // Interfaces for API responses
@@ -161,4 +175,11 @@ export interface IFirebirdApiService {
   id: string
   name: string
   running: boolean
+}
+
+export enum DeploymentEventType {
+  NOT_STARTED = "NOT_STARTED",
+  START = "START",
+  FINISH = "FINISH",
+  FAIL = "FAIL",
 }

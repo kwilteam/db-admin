@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react"
-import { DeploymentStatus } from "@/utils/firebird/types"
-
-const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
+import {
+  DeploymentStatus,
+  DeploymentEventType,
+  DeploymentEvents,
+} from "@/utils/firebird/types"
 
 interface DeploymentStreamMessage {
   status: DeploymentStatus
@@ -11,45 +13,53 @@ interface DeploymentStreamMessage {
   }
 }
 
-export enum DeploymentEventType {
-  NOT_STARTED = "NOT_STARTED",
-  START = "START",
-  FINISH = "FINISH",
-  FAIL = "FAIL",
-}
+const sseUrl = process.env.NEXT_PUBLIC_FIREBIRD_SSE_URL
 
-export enum DeploymentEvents {
-  INIT_KEY_PAIR = "INIT_KEY_PAIR",
-  CREATE_INSTANCE = "CREATE_INSTANCE",
-  WAIT_INSTANCE_READY = "WAIT_INSTANCE_READY",
-  INSTALL_KWILD = "INSTALL_KWILD",
-  REGISTER_DOMAIN = "REGISTER_DOMAIN",
-  FINALIZE_DEPLOYMENT = "FINALIZE_DEPLOYMENT",
-}
+/**
+// the statuses to open the event stream
+// Excluded => ACTIVE, STOPPED (don't open event stream)
+ */
+const eventStreamStatuses = [
+  DeploymentStatus.DEPLOYING,
+  DeploymentStatus.STARTING,
+  DeploymentStatus.STOPPING,
+  DeploymentStatus.PENDING,
+]
 
-const useDeploymentEventStream = (deploymentId: string) => {
+const useEventStream = (
+  deploymentId: string,
+  deploymentStatus?: DeploymentStatus,
+) => {
+  const deploymentEventMap = new Map([
+    [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.START],
+    [DeploymentEvents.CREATE_INSTANCE, DeploymentEventType.NOT_STARTED],
+    [DeploymentEvents.WAIT_INSTANCE_READY, DeploymentEventType.NOT_STARTED],
+    [DeploymentEvents.INSTALL_KWILD, DeploymentEventType.NOT_STARTED],
+    [DeploymentEvents.REGISTER_DOMAIN, DeploymentEventType.NOT_STARTED],
+    [DeploymentEvents.FINALIZE_DEPLOYMENT, DeploymentEventType.NOT_STARTED],
+    [DeploymentEvents.START_INSTANCE, DeploymentEventType.START],
+    [DeploymentEvents.STOP_INSTANCE, DeploymentEventType.START],
+  ])
+
   const [status, setStatus] = useState<DeploymentStatus | undefined>(undefined)
-  const [progress, setProgress] = useState<
-    Map<DeploymentEvents, DeploymentEventType>
-  >(
-    new Map([
-      [DeploymentEvents.INIT_KEY_PAIR, DeploymentEventType.START],
-      [DeploymentEvents.CREATE_INSTANCE, DeploymentEventType.NOT_STARTED],
-      [DeploymentEvents.WAIT_INSTANCE_READY, DeploymentEventType.NOT_STARTED],
-      [DeploymentEvents.INSTALL_KWILD, DeploymentEventType.NOT_STARTED],
-      [DeploymentEvents.REGISTER_DOMAIN, DeploymentEventType.NOT_STARTED],
-      [DeploymentEvents.FINALIZE_DEPLOYMENT, DeploymentEventType.NOT_STARTED],
-    ]),
-  )
+  const [progress, setProgress] =
+    useState<Map<DeploymentEvents, DeploymentEventType>>(deploymentEventMap)
 
   const sseRef = useRef<EventSource | null>(null)
 
-  const updateDeploymentProgress = useCallback(
+  const updateEventProgress = useCallback(
     (data: DeploymentStreamMessage) => {
-      console.log("Updating deployment progress", data)
+      console.log("Updating event progress:", data)
       if (data.payload?.event && data.payload?.type) {
         const { event, type } = data.payload
-        if (Object.values(DeploymentEvents).includes(event)) {
+        // Check if the event is in DeploymentEvents and is not one of the excluded events
+        if (
+          Object.values(DeploymentEvents).includes(event) &&
+          !(
+            event === DeploymentEvents.START_INSTANCE ||
+            event === DeploymentEvents.STOP_INSTANCE
+          )
+        ) {
           setProgress((prev) => {
             const newMap = new Map(prev)
             const eventIndex = Object.values(DeploymentEvents).indexOf(event)
@@ -82,7 +92,6 @@ const useDeploymentEventStream = (deploymentId: string) => {
     (data: DeploymentStreamMessage) => {
       console.log("Updating deployment status", data)
       if (data.status) {
-        setStatus(data.status)
         console.log("Deployment status:", data.status)
         console.log("Payload:", data.payload)
 
@@ -90,7 +99,10 @@ const useDeploymentEventStream = (deploymentId: string) => {
           DeploymentStatus.ACTIVE,
           DeploymentStatus.FAILED,
           DeploymentStatus.TERMINATED,
+          DeploymentStatus.STOPPED,
         ]
+
+        setStatus(data.status)
 
         if (finalStatuses.includes(data.status)) {
           sseRef.current?.close()
@@ -105,24 +117,54 @@ const useDeploymentEventStream = (deploymentId: string) => {
       if (event instanceof MessageEvent) {
         const data: DeploymentStreamMessage = JSON.parse(event.data)
         console.log("SSE: Client received a message", data)
-
-        updateDeploymentProgress(data)
+        updateEventProgress(data)
         updateDeploymentStatus(data)
       }
     },
-    [updateDeploymentProgress, updateDeploymentStatus],
+    [updateEventProgress, updateDeploymentStatus],
+  )
+
+  /**
+   * need to follow the appropriate event stream based on the instance action taking place (Start, Deploy, Stop)
+   * @returns method string for the event stream api call
+   */
+  const getMethod = useCallback(
+    (deploymentStatus: DeploymentStatus): string => {
+      switch (deploymentStatus) {
+        case DeploymentStatus.STARTING:
+          return "follow_deployment_start"
+        case DeploymentStatus.STOPPING:
+          return "follow_deployment_stop"
+        case DeploymentStatus.DEPLOYING:
+          return "follow_deployment"
+        case DeploymentStatus.PENDING:
+          return "follow_deployment"
+        default:
+          return "follow_deployment"
+      }
+    },
+    [],
   )
 
   useEffect(() => {
+    // only open event stream if we are deploying, starting, or stopping
+    if (
+      deploymentStatus === undefined ||
+      !eventStreamStatuses.includes(deploymentStatus)
+    ) {
+      return
+    }
+
     if (!sseUrl) {
       console.error("NEXT_PUBLIC_FIREBIRD_SSE_URL is not set")
       return
     }
 
+    // Open EventSource only if there is an active action, and close it otherwise
     if (!sseRef.current) {
       console.log("SSE: useEffect - creating new EventSource")
       sseRef.current = new EventSource(
-        `${sseUrl}?method=follow_deployment&target=${deploymentId}`,
+        `${sseUrl}?method=${getMethod(deploymentStatus)}&target=${deploymentId}`,
         {
           withCredentials: true,
         },
@@ -166,9 +208,9 @@ const useDeploymentEventStream = (deploymentId: string) => {
         sseRef.current = null
       }
     }
-  }, [deploymentId, handleMessage])
+  }, [deploymentId, deploymentStatus, handleMessage])
 
   return { status, progress }
 }
 
-export default useDeploymentEventStream
+export default useEventStream

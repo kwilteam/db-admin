@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store/hooks"
-import useDeploymentEventStream from "@/hooks/firebird/use-deployment-event-stream"
+import useEventStream from "@/hooks/firebird/use-event-stream"
 import { selectSelectedDeployment } from "@/store/firebird"
 import { DeploymentStatus } from "@/utils/firebird/types"
 import Loading from "@/components/Loading"
@@ -9,11 +9,12 @@ import SelectedDeploymentTabs from "./SelectedDeploymentTabs"
 import useGetDeployment from "@/hooks/firebird/use-get-deployment"
 
 export default function ExistingDeployment({ id }: { id: string }) {
-  const deploymentEventStream = useDeploymentEventStream(id)
-  useGetDeployment(id, deploymentEventStream.status)
   const selectedDeployment = useAppSelector(selectSelectedDeployment)
   const isDeploymentActive =
     selectedDeployment?.status === DeploymentStatus.ACTIVE
+
+  const eventStream = useEventStream(id, selectedDeployment?.status)
+  useGetDeployment(id, eventStream.status)
 
   const chain = selectedDeployment?.config.chain
   const providerEndpoint =
@@ -32,7 +33,7 @@ export default function ExistingDeployment({ id }: { id: string }) {
       <div className="flex flex-col items-start gap-2">
         <SelectedDeployment
           deployment={selectedDeployment}
-          deploymentEventStream={deploymentEventStream}
+          eventStream={eventStream}
         />
       </div>
       <div className="flex flex-col gap-2 lg:flex-row">
