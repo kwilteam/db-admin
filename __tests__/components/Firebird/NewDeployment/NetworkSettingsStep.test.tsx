@@ -12,7 +12,7 @@ vi.mock("next/font/google", () => ({
   }),
 }))
 
-const kwilVersion = "0.9.1"
+const kwilVersion = "0.9.3"
 
 describe("NetworkSettingsStep", () => {
   const store = mockStore({
@@ -34,7 +34,7 @@ describe("NetworkSettingsStep", () => {
       </Provider>,
     )
 
-    expect(screen.getByLabelText("Chain Id")).toBeInTheDocument()
+    expect(screen.getByLabelText("Chain ID")).toBeInTheDocument()
     expect(screen.getByLabelText("Kwil Version")).toBeInTheDocument()
     expect(screen.getByLabelText("Company Name")).toBeInTheDocument()
   })
@@ -46,9 +46,10 @@ describe("NetworkSettingsStep", () => {
       </Provider>,
     )
 
-    const chainIdInput: HTMLInputElement = screen.getByLabelText("Chain Id")
-    fireEvent.change(chainIdInput, { target: { value: "new-chain-id" } })
-    expect(chainIdInput.value).toBe("new-chain-id")
+    const chainIdInput: HTMLInputElement = screen.getByLabelText("Chain ID")
+    console.log(chainIdInput)
+    fireEvent.change(chainIdInput, { target: { value: "test-chain-id" } })
+    expect(chainIdInput.value).toBe("test-chain-id")
 
     const kwilVersionSelect: HTMLSelectElement =
       screen.getByLabelText("Kwil Version")
