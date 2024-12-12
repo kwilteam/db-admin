@@ -14,7 +14,7 @@ const mockDeployment = {
     config: {
       chain: {
         chain_id: "test-chain",
-        version: "0.9.1",
+        version: "0.9.3",
       },
       node_count: 1,
       machines: {
@@ -107,7 +107,7 @@ describe("ExistingDeployment", () => {
     config: {
       chain: {
         chain_id: "test-chain",
-        version: "0.9.1",
+        version: "0.9.3",
       },
       node_count: 1,
       machines: {
