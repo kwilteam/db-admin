@@ -14,6 +14,7 @@ import ProviderOfflineModal from "@/components/Modal/ProviderOffline"
 import Loading from "@/components/Loading"
 import { KwilFaucet } from "@/components/KwilFaucet"
 import { useWindowSize } from "@/hooks/use-window-size"
+import { usePathname } from "next/navigation"
 
 interface IProps {
   children: React.ReactNode
@@ -24,6 +25,8 @@ export default function DashboardLayout({ children }: IProps) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const activeProvider = useAppSelector(selectActiveProvider)
   const windowSize = useWindowSize()
+  const pathname = usePathname()
+  console.log(pathname)
 
   useEffect(() => {
     dispatch(loadProviders())
@@ -63,7 +66,9 @@ export default function DashboardLayout({ children }: IProps) {
 
       <ReadOnlyModal activeAccount={activeAccount} />
 
-      <ProviderOfflineModal />
+      {!pathname.startsWith("/firebird") &&
+        <ProviderOfflineModal />
+      }
     </>
   )
 }

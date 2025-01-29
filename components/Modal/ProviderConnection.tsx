@@ -11,7 +11,6 @@ import {
 import { selectProviderStatus } from "@/store/global"
 import {
   KwilProviderStatus,
-  selectActiveProvider,
   selectActiveProviderUrl,
 } from "@/store/providers"
 import Loading from "../Loading"

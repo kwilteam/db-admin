@@ -11,6 +11,14 @@ export interface INavigationItem {
 
 export const navigationItems: INavigationItem[] = [
   {
+    name: "Firebird",
+    href: "/firebird/deployments",
+    activePathPrefix: "/firebird",
+    icon: FirebirdIcon,
+    hasSecondaryMobileMenu: false,
+    closeMobileNavOnSelect: true,
+  },
+  {
     name: "Databases",
     href: "/databases",
     activePathPrefix: "/databases",
@@ -31,14 +39,6 @@ export const navigationItems: INavigationItem[] = [
   //   hasSecondaryMobileMenu: true,
   //   closeMobileMenu: true,
   // },
-  {
-    name: "Firebird",
-    href: "/firebird/deployments",
-    activePathPrefix: "/firebird",
-    icon: FirebirdIcon,
-    hasSecondaryMobileMenu: false,
-    closeMobileNavOnSelect: true,
-  },
   {
     name: "Settings",
     href: "/settings/providers",
