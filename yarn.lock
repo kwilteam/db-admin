@@ -1636,10 +1636,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@kwilteam/kwil-js@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@kwilteam/kwil-js/-/kwil-js-0.8.6.tgz#f3a549483a1fe5d9b450e097854e00bdae58c2f1"
-  integrity sha512-SmVT0vRimT6VnwIhsii6tVgMFSjG5n1ZSvKm2iLlNKT9rY0mCLIrKzfvDbmktUVNoMCuHNHhtdGOT1Xs5++Yxw==
+"@kwilteam/kwil-js@^0.9.0-beta.1":
+  version "0.9.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@kwilteam/kwil-js/-/kwil-js-0.9.0-beta.1.tgz#47e8ee42511b48aae6fbd24d1315ba3dcf1fbdb2"
+  integrity sha512-+wGZ+zZFsetmgULgrMkQpEjt4kK1bRx2LWGG7SXJktA7Ew+Gu6fTBgY39tCvvOJJXajthfiYhQBwHuL9ReHbng==
   dependencies:
     axios "^0.27.2"
     ethers "^6.9.1"
@@ -3922,9 +3922,9 @@ ethers@^6.10.0:
     ws "8.5.0"
 
 ethers@^6.9.1:
-  version "6.13.4"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.13.4.tgz#bd3e1c3dc1e7dc8ce10f9ffb4ee40967a651b53c"
-  integrity sha512-21YtnZVg4/zKkCQPjrDj38B1r4nQvTZLopUGMLQ1ePU2zV/joCfDC3t3iKQjWRzjjjbzR+mdAIoikeBRNkdllA==
+  version "6.13.5"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.13.5.tgz#8c1d6ac988ac08abc3c1d8fabbd4b8b602851ac4"
+  integrity sha512-+knKNieu5EKRThQJWwqaJ10a6HE9sSehGeqWN65//wE7j47ZpFhKAnHB/JJFibwwg61I/koxaPsXbXpD/skNOQ==
   dependencies:
     "@adraffy/ens-normalize" "1.10.1"
     "@noble/curves" "1.2.0"
@@ -4996,9 +4996,9 @@ lodash@^4.17.15:
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 long@^5.2.1:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/long/-/long-5.2.3.tgz#a3ba97f3877cf1d778eccbcb048525ebb77499e1"
-  integrity sha512-lcHwpNoggQTObv5apGNCTdJrO69eHOZMi4BNC+rTLER8iHAqGrUVeLh/irVIM7zTw2bOXA8T6uNPeujwOLg/2Q==
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.3.0.tgz#3bab70330c40c2c1b5cb73c4254723c81f00e15c"
+  integrity sha512-5vvY5yF1zF/kXk+L94FRiTDa1Znom46UjPCH6/XbSvS8zBKMFBHTJk8KDMqJ+2J6QezQFi7k1k8v21ClJYHPaw==
 
 loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"

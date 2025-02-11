@@ -5,9 +5,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "predev": "node scripts/wasm-gen.js",
     "dev": "next dev --experimental-https",
-    "prebuild": "node scripts/wasm-gen.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -15,7 +13,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.0.0-alpha.4",
-    "@kwilteam/kwil-js": "^0.8.6",
+    "@kwilteam/kwil-js": "^0.9.0-beta.1",
     "@monaco-editor/react": "^4.5.2",
     "@reduxjs/toolkit": "^1.9.5",
     "@tailwindcss/forms": "^0.5.7",

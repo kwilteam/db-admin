@@ -28,15 +28,15 @@ describe("OpenedSchemas Component", () => {
   })
 
   it("renders without crashing", () => {
-    expect(screen.getByText(/Schema 1.kf/)).toBeInTheDocument()
-    expect(screen.getByText(/Schema 2.kf/)).toBeInTheDocument()
+    expect(screen.getByText(/Schema 1.sql/)).toBeInTheDocument()
+    expect(screen.getByText(/Schema 2.sql/)).toBeInTheDocument()
   })
 
   it("displays all open schemas", () => {
     const schema1Tab = screen.getByTestId("Schema 1-schema-tab")
     const schema2Tab = screen.getByTestId("Schema 2-schema-tab")
-    expect(schema1Tab).toHaveTextContent("Schema 1.kf")
-    expect(schema2Tab).toHaveTextContent("Schema 2.kf")
+    expect(schema1Tab).toHaveTextContent("Schema 1.sql")
+    expect(schema2Tab).toHaveTextContent("Schema 2.sql")
   })
 
   it("closes a schema when close icon is clicked", async () => {

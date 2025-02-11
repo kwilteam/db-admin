@@ -4,7 +4,6 @@ import { useEffect } from "react"
 import classNames from "classnames"
 import { Editor } from "@monaco-editor/react"
 import useCompileDatabase from "@/hooks/ide/use-compile-database"
-import useEditorMount from "@/hooks/ide/use-editor-mount"
 import useSaveSchema from "@/hooks/ide/use-save-schema"
 import { useAppSelector } from "@/store/hooks"
 import {
@@ -15,21 +14,21 @@ import {
 import ActionPanel from "@/components/Ide/ActionPanel"
 import Loading from "@/components/Loading"
 import OpenedSchemas from "@/components/Ide/OpenedSchemas"
-import useEditorHandlers from "@/hooks/ide/use-editor-handlers"
 import { useWindowSize } from "@/hooks/use-window-size"
 import { useTriggerProviderStatus } from "@/hooks/use-trigger-provider-status-check"
+import useEditorMount from "@/hooks/ide/use-editor-mount"
 
-const language = "kuneiformLang"
-const theme = "kuneiformTheme"
+const language = "sql"
+const theme = "sql"
 
 export default function IdePage() {
   const openedSchemas = useAppSelector(selectOpenSchemas)
   const activeSchema = useAppSelector(selectActiveSchema)
   const schemaContentDict = useAppSelector(selectSchemaContentDict)
-  const { handleEditorDidMount, editorRef, monacoInstance, autoCompleteRef } = useEditorMount()
-  const { deploy, exportJson, isCompiling, parseKuneiform } = useCompileDatabase(editorRef)
+  const { handleEditorDidMount, editorRef } = useEditorMount()
+  const { deploy, exportSql, isCompiling } = useCompileDatabase(editorRef)
   const { save, isSaving } = useSaveSchema()
-  const { handleEditorFeatures } = useEditorHandlers(parseKuneiform);
+  // const { handleEditorFeatures } = useEditorHandlers(parseKuneiform);
   const windowSize = useWindowSize();
 
   // When the active schema changes, focus the editor
@@ -70,7 +69,6 @@ export default function IdePage() {
               onMount={handleEditorDidMount}
               onChange={async (value) => {
                 save(activeSchema, value)
-                await handleEditorFeatures(value, editorRef, monacoInstance, autoCompleteRef)
               }}
               options={{
                 autoClosingBrackets: "always",
@@ -89,7 +87,7 @@ export default function IdePage() {
             "py-7": windowSize === "lg"
           })}
         >
-          <ActionPanel deploy={deploy} exportJson={exportJson} isLoading={isCompiling || isSaving} />
+          <ActionPanel deploy={deploy} exportSql={exportSql} isLoading={isCompiling || isSaving} />
         </div>
       )}
     </div>

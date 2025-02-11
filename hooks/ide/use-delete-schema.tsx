@@ -18,7 +18,7 @@ export default function useDeleteSchema() {
         e.stopPropagation() // To prevent triggering openSchema
         if (!idb) return
 
-        const c = confirm(`Are you sure you want to delete ${schema}.kf?`)
+        const c = confirm(`Are you sure you want to delete ${schema}.sql?`)
 
         if (c) {
           await deleteSchema(idb, schema)

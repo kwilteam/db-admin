@@ -28,7 +28,7 @@ export default function SchemaItem({ schema }: ISchemaItemProps) {
       }}
     >
       <FileIcon className="h-4 w-4" />
-      <span className="w-full">{schema}.kf</span>
+      <span className="w-full">{schema}.sql</span>
       <span
         className="invisible ml-auto p-2 text-slate-400 hover:text-slate-700 group-hover:visible"
         onClick={(e) => triggerDeleteSchema(e, schema)}
