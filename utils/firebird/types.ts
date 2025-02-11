@@ -60,7 +60,8 @@ export enum MachineType {
 }
 
 export const KwilVersions = {
-  "0.10.0": "0.10.0"
+  "0.10.0": "0.10.0",
+  "0.9.3": "0.9.3",
 } as const
 
 export interface IFirebirdDeploymentConfig {

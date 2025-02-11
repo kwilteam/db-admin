@@ -8,13 +8,12 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import Button from "../Button"
 import Base from "./Base"
-import { useRouter } from "next/navigation"
 import { selectActiveProvider } from "@/store/providers"
+import Link from "next/link"
 
 export default function ProfileOfflineModal() {
   const dispatch = useAppDispatch()
   const activeProvider = useAppSelector(selectActiveProvider)
-  const router = useRouter();
   const modal = useAppSelector(selectModal)
   const providerOfflineAcknowledged = useAppSelector(
     selectProviderOfflineAcknowledged,
@@ -23,10 +22,6 @@ export default function ProfileOfflineModal() {
   const close = () => {
     dispatch(setModal(undefined))
     dispatch(setProviderOfflineAcknowledged(true))
-  }
-
-  const openFirebird = () => {
-    router.push("/firebird")
   }
 
   const modalBody = (
@@ -42,8 +37,10 @@ export default function ProfileOfflineModal() {
 
   const modalFooter = (
     <div className="flex justify-center gap-2">
-      <Button context="secondary" size="md" onClick={openFirebird}>
-        Deploy Node
+      <Button context="secondary" size="md">
+        <Link href={"/firebird"} className="flex">
+          Deploy Node
+        </Link>
       </Button>
       <Button context="secondary" size="md" onClick={close}>
         Close

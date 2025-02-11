@@ -7,6 +7,8 @@ import { KwilProviderStatus } from "@/store/providers"
 import DatabaseFilterSearch from "./DatabaseFilterSearch"
 import Loading from "../Loading"
 import DatabaseList from "./DatabaseList"
+import Button from "../Button"
+import Link from "next/link"
 
 export default function DatabasesExplorer({ isMobile = false }) {
   const activeAccount = useAppSelector(selectActiveAccount)
@@ -29,7 +31,16 @@ export default function DatabasesExplorer({ isMobile = false }) {
       <ul className="flex flex-col">
         {providerStatus === KwilProviderStatus.Offline && (
           <div className="mt-2 flex h-full flex-col items-center justify-center text-center">
-            <p className="text-sm text-red-500">Kwil Provider is offline</p>
+            <p className="text-sm text-red-500">Kwil Node is offline</p>
+            <Button 
+              context="primary"
+              size="md"
+              className="mt-2"
+            >
+              <Link href="/firebird" className="flex">
+                Deploy Node
+                </Link>
+            </Button>
           </div>
         )}
 
