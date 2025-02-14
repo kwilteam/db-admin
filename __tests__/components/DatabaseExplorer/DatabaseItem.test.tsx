@@ -12,7 +12,7 @@ describe("DatabaseItem Component Tests", () => {
       render(
         <Provider store={storeData}>
           <DatabaseItem
-            database={{ dbid: "1", name: "Test Database 1", owner: "0x123" }}
+            database={{ name: "1"}}
             itemType={ItemTypes.TABLES}
           />
         </Provider>,

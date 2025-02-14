@@ -40,7 +40,7 @@ describe("DatabaseList Component Tests", () => {
         ...storeData.getState().database,
         filters: {
           ...storeData.getState().database.filters,
-          search: "Test Database 2",
+          search: "2",
         },
       },
     })

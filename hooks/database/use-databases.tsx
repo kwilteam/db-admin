@@ -59,6 +59,6 @@ export default function useDatabases() {
     fetchNamespacesLoading,
     count: namespaces?.length,
     pinnedNamespaces,
-    isDbOwner: dbOwner.toLowerCase() === activeAccount?.toLowerCase()
+    isDbOwner: dbOwner?.toLowerCase() === activeAccount?.toLowerCase()
   }
 }

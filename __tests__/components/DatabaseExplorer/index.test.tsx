@@ -21,6 +21,6 @@ describe("DatabaseExplorer Component Suite", () => {
   })
 
   it("displays offline message", async () => {
-    expect(screen.getByText("Kwil Provider is offline")).toBeInTheDocument()
+    expect(screen.getByText("Kwil Node is offline")).toBeInTheDocument()
   })
 })

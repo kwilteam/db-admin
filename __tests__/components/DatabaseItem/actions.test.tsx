@@ -6,17 +6,20 @@ import { mockStore } from "../../mocks/mock-store"
 import Method from "@/components/DatabaseItem/Method"
 import MethodForm from "@/components/DatabaseItem/Method/Form"
 import MethodStatements from "@/components/DatabaseItem/Method/Statements"
-import { ItemType, KwilTypes } from "@/utils/database-types"
+import { IActionInfo, ItemType, KwilTypes } from "@/utils/database-types"
 
 const mockDbid = "mock-dbid"
 const mockActionName = "mock-action"
-const mockAction: KwilTypes.ActionSchema = {
+const mockAction: IActionInfo = {
   name: mockActionName,
-  parameters: ["input1", "input2"],
-  body: "statement1",
-  modifiers: ["view"],
-  annotations: [],
-  public: true,
+  raw_statement: "statement1",
+  access_modifiers: ["VIEW"],
+  parameter_names: ["input1", "input2"],
+  parameter_types: ["TEXT", "TEXT"],
+  return_names: [],
+  return_types: [],
+  returns_table: false,
+  built_in: false,
 }
 
 describe("Action Components", () => {
@@ -101,7 +104,7 @@ describe("Action Components", () => {
       await act(async () => {
         render(
           <MethodStatements
-            statements={[mockAction.body]}
+            statements={[mockAction.raw_statement]}
             methodType={ItemType.ACTION}
           />,
         )
