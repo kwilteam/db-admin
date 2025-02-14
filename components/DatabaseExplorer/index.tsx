@@ -7,18 +7,19 @@ import { KwilProviderStatus } from "@/store/providers"
 import DatabaseFilterSearch from "./DatabaseFilterSearch"
 import Loading from "../Loading"
 import DatabaseList from "./DatabaseList"
+import Button from "../Button"
+import Link from "next/link"
 
 export default function DatabasesExplorer({ isMobile = false }) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const providerStatus = useAppSelector(selectProviderStatus)
   const {
-    fetchDatabasesLoading,
-    myDbs,
-    otherDbs,
-    myDbsLoading,
-    otherDbsLoading,
+    fetchNamespacesLoading,
+    namespacesLoading,
+    loadedNamespaces,
+    pinnedNamespaces,
     count,
-    pinnedDbs,
+    isDbOwner
   } = useDatabases()
 
   return (
@@ -29,7 +30,16 @@ export default function DatabasesExplorer({ isMobile = false }) {
       <ul className="flex flex-col">
         {providerStatus === KwilProviderStatus.Offline && (
           <div className="mt-2 flex h-full flex-col items-center justify-center text-center">
-            <p className="text-sm text-red-500">Kwil Provider is offline</p>
+            <p className="text-sm text-red-500">Kwil Node is offline</p>
+            <Button 
+              context="primary"
+              size="md"
+              className="mt-2"
+            >
+              <Link href="/firebird" className="flex">
+                Deploy Node
+                </Link>
+            </Button>
           </div>
         )}
 
@@ -38,7 +48,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
         )}
 
         {providerStatus === KwilProviderStatus.Online &&
-          fetchDatabasesLoading && (
+          fetchNamespacesLoading && (
             <Loading className="absolute right-2 top-12 mt-1 flex justify-center" />
           )}
 
@@ -46,25 +56,17 @@ export default function DatabasesExplorer({ isMobile = false }) {
           count !== undefined && (
             <>
               <DatabaseList
-                databases={pinnedDbs}
+                databases={pinnedNamespaces}
                 loading={false}
                 isMobile={isMobile}
-                isMyDatabase={false}
+                isDbOwner={isDbOwner}
                 isPinned
               />
-              {activeAccount && (
-                <DatabaseList
-                  databases={myDbs}
-                  loading={myDbsLoading}
-                  isMobile={isMobile}
-                  isMyDatabase
-                />
-              )}
               <DatabaseList
-                databases={otherDbs}
-                loading={otherDbsLoading}
+                databases={loadedNamespaces}
+                loading={namespacesLoading}
                 isMobile={isMobile}
-                isMyDatabase={false}
+                isDbOwner={isDbOwner}
                 activeAccount={activeAccount}
               />
             </>

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import classNames from "classnames"
-import { ItemTypes, KwilTypes } from "@/utils/database-types"
+import { IActionInfo, ITableInfo, ItemTypes, KwilTypes } from "@/utils/database-types"
 import { ChevronRightIcon } from "@/utils/icons"
 import { useAppDispatch } from "@/store/hooks"
 import { setIsMenuOpen } from "@/store/global"
@@ -10,7 +10,7 @@ import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
 
 interface ITablesActionsList {
   dbid: string
-  items: readonly KwilTypes.Table[] | readonly KwilTypes.ActionSchema[] | readonly Procedure[]
+  items: ITableInfo[] | IActionInfo []
   itemType: IItemTypes[string]
   visible: boolean
 }
@@ -30,14 +30,14 @@ export const TablesActionsList = ({
 
   return (
     <>
-      {items.map((objectItem: KwilTypes.Table | KwilTypes.ActionSchema | Procedure) => (
+      {items.map((objectItem: ITableInfo | IActionInfo) => (
           <div
             data-testid={`database-item-${dbid}-${itemType}-${objectItem.name}`}
             key={`${dbid}-${itemType}-${objectItem.name}`}
             className="ml-6 overflow-hidden text-sm"
           >
             <Link
-              href={`/databases/${dbid}/${itemType === ItemTypes.PROCEDURES || itemType === ItemTypes.ACTIONS ? `method/` : ``}${itemType.slice(0, -1)}/${objectItem.name}`}
+              href={`/databases/${dbid}/${itemType === ItemTypes.ACTIONS ? `method/` : ``}${itemType.slice(0, -1)}/${objectItem.name}`}
               className={classNames({
                 "flex select-none flex-row items-center gap-1 hover:text-slate-900":
                   true,
@@ -84,6 +84,5 @@ const isTableOrActionActive = (
   objectItemName: string,
 ) => 
     dbidParam === dbid &&
-    ((itemType === ItemTypes.TABLES && activeTable === objectItemName) ||
-      (itemType === ItemTypes.ACTIONS && activeMethod === objectItemName) ||
-      (itemType === ItemTypes.PROCEDURES && activeMethod === objectItemName))
+    (itemType === ItemTypes.TABLES && activeTable === objectItemName) ||
+      (itemType === ItemTypes.ACTIONS && activeMethod === objectItemName)

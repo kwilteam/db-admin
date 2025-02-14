@@ -5,13 +5,13 @@ import { useWindowSize } from "@/hooks/use-window-size"
 
 interface IDeployProps {
   deploy: () => void
-  exportJson: () => void
+  exportSql: () => void
   isLoading: boolean
 }
 
 export default function ActionPanel({
   deploy,
-  exportJson,
+  exportSql,
   isLoading,
 }: IDeployProps) {
   const windowSize = useWindowSize()
@@ -31,9 +31,9 @@ export default function ActionPanel({
         context="secondary"
         size={buttonSize}
         disabled={isLoading}
-        onClick={() => exportJson()}
+        onClick={() => exportSql()}
       >
-        <DownloadIcon className="mr-1" /> Export JSON
+        <DownloadIcon className="mr-1" /> Export SQL
       </Button>
       {isLoading && <Loading />}
     </div>

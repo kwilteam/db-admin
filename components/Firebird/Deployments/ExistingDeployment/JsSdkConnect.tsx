@@ -2,6 +2,7 @@ import { useState } from "react"
 import CodeBlock from "../../CodeBlock"
 import useCodeSnippets from "@/hooks/firebird/use-code-snippets"
 import { LinkIcon } from "@/utils/icons"
+import useJsSetupInfo from "@/hooks/firebird/use-js-setup-info"
 
 const codeBlockCustomStyle = {
   background: "#f8fafc", // Tailwind's bg-slate-50
@@ -20,7 +21,8 @@ export default function JsSdkConnect({
   chain: { chain_id: string; version: string }
 }) {
   const [environment, setEnvironment] = useState<"web" | "node">("web")
-  const { node, web } = useCodeSnippets(providerEndpoint, chain?.chain_id)
+  const { nodeSetup, webSetup, ping, createTable, insert } = useCodeSnippets(providerEndpoint, chain?.chain_id)
+  const { nodeInfo, webInfo } = useJsSetupInfo();
   const installCode = "npm install @kwilteam/kwil-js"
 
   if (!docsUrl) {
@@ -51,7 +53,7 @@ export default function JsSdkConnect({
       />
 
       <p className="text-md flex flex-row gap-1 font-medium">
-        2. Connect to the provider
+        2. Setup Kwil Class
       </p>
 
       <div className="flex items-center justify-start">
@@ -80,9 +82,34 @@ export default function JsSdkConnect({
           </label>
         </div>
       </div>
+      <p className="text-sm">
+        {environment === "web" ? webInfo : nodeInfo}
+      </p>
       <CodeBlock
         language="js"
-        code={environment === "web" ? web : node}
+        code={environment === "web" ? webSetup : nodeSetup}
+        customStyle={codeBlockCustomStyle}
+      />
+      <p className="text-sm">
+        Confirm node is online:
+      </p>
+      <CodeBlock
+        language="js"
+        code={ping}
+        customStyle={codeBlockCustomStyle}
+      />
+      
+      <p className="text-md flex flex-row gap-1 font-medium">
+        3. Create table and insert data
+      </p>
+      <CodeBlock
+        language="js"
+        code={createTable}
+        customStyle={codeBlockCustomStyle}
+        />
+      <CodeBlock
+        language="js"
+        code={insert}
         customStyle={codeBlockCustomStyle}
       />
     </div>

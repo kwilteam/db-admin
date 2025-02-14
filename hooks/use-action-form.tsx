@@ -1,15 +1,16 @@
+import { IActionInfo } from "@/utils/database-types"
 import { ActionSchema, NamedType, Procedure } from "@kwilteam/kwil-js/dist/core/database"
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 interface IUseActionFormProps {
-  method: ActionSchema | Procedure | undefined
+  method: IActionInfo
 }
 
 export default function useActionForm({ method }: IUseActionFormProps) {
   const [isDirty, setIsDirty] = useState(false)
   const [errors, setErrors] = useState<Record<string, boolean>>({})
   const [cleanInputs, setCleanInputs] = useState<string[]>([])
-  const inputs = useMemo(() => method?.parameters === null ? [] : method?.parameters, [method?.parameters]);
+  const inputs = useMemo(() => method?.parameter_names === null ? [] : method?.parameter_names, [method?.parameter_names]);
 
   useEffect(() => {
     if (!inputs) return

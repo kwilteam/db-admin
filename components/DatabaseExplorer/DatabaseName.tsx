@@ -7,33 +7,33 @@ import {
   setDatabaseActiveContext,
   setDatabaseVisibility,
 } from "@/store/database"
-import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import { INamespaceInfo } from "@/utils/database-types"
 import useDatabaseSchema from "@/hooks/database/use-database-schema"
 import useDeleteDb from "@/hooks/database/use-delete-db"
 import Loading from "../Loading"
 import useDatabasePins from "@/hooks/database/use-database-pins"
 
 const DatabaseName = ({
-  database,
-  isMyDatabase,
+  database: namespace,
+  isDbOwner,
 }: {
-  database: IDatasetInfoStringOwner
-  isMyDatabase?: boolean
+  database: INamespaceInfo
+  isDbOwner?: boolean
 }) => {
   const { getSchema } = useDatabaseSchema()
   const dispatch = useAppDispatch()
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
   const activeContext = useAppSelector(selectDatabaseActiveContext)
   const { togglePin, pinned }= useDatabasePins()
-  const isPinned = pinned?.includes(database.dbid)
+  const isPinned = pinned?.includes(namespace.name)
 
-  const isOpen = databaseVisibility[database.dbid]?.open
+  const isOpen = databaseVisibility[namespace.name]?.open
 
-  const getSchemaOrHide = (database: IDatasetInfoStringOwner) => {
+  const getNamespaceOrHide = (namespace: INamespaceInfo) => {
     if (isOpen) {
       dispatch(
         setDatabaseVisibility({
-          dbid: database.dbid,
+          dbid: namespace.name,
           key: "open",
           value: false,
         }),
@@ -41,18 +41,18 @@ const DatabaseName = ({
 
       // If we are closing the DB and the active context is within that DB, we need to clear the active context
       // So that the DB doesn't auto load when we navigate back to the Databases page
-      if (activeContext?.dbid === database.dbid) {
+      if (activeContext?.namespace === namespace.name) {
         dispatch(setDatabaseActiveContext(undefined))
       }
     } else {
-      getSchema(database)
+      getSchema(namespace)
     }
   }
 
   return (
     <li
-      data-testid={`database-item-${database.dbid}`}
-      key={database.dbid}
+      data-testid={`database-item-${namespace.name}`}
+      key={namespace.name}
       className={classNames(
         "group relative ml-5 flex cursor-pointer select-none flex-row items-center gap-1 p-1 text-sm",
         {
@@ -60,7 +60,7 @@ const DatabaseName = ({
           "text-slate-900": isOpen,
         },
       )}
-      onClick={() => getSchemaOrHide(database)}
+      onClick={() => getNamespaceOrHide(namespace)}
     >
       <ChevronDownIcon className={classNames("h-4 w-4", { hidden: !isOpen })} />
       <ChevronRightIcon className={classNames("h-4 w-4", { hidden: isOpen })} />
@@ -72,29 +72,29 @@ const DatabaseName = ({
         className="overflow-hidden text-ellipsis whitespace-nowrap"
         style={{ maxWidth: "calc(100% - 55px)" }}
       >
-        {database.name}
+        {namespace.name}
       </span>
       
       {isPinned && 
         <FilledStarIcon 
           className={classNames("h-4 w-4 mr-3 ml-auto z-10")}
-          onClick={(e) => togglePin(database.dbid, e)}
+          onClick={(e) => togglePin(namespace.name, e)}
         />
       }
 
       {!isPinned &&
         <EmptyStarIcon 
           className={classNames("h-4 w-4 mr-3 ml-auto z-10")}
-          onClick={(e) => togglePin(database.dbid, e)}
+          onClick={(e) => togglePin(namespace.name, e)}
         />
       }
 
-      {databaseVisibility[database.dbid]?.loading && (
+      {databaseVisibility[namespace.name]?.loading && (
         <Loading className="absolute right-0 ml-2" />
       )}
 
-      {!databaseVisibility[database.dbid]?.loading && (
-        <DeleteDatabase isMyDatabase={isMyDatabase} database={database} />
+      {!databaseVisibility[namespace.name]?.loading && (
+        <DeleteDatabase isMyDatabase={isDbOwner} database={namespace} />
       )}
     </li>
   )
@@ -107,7 +107,7 @@ function DeleteDatabase({
   database,
 }: {
   isMyDatabase?: boolean
-  database: IDatasetInfoStringOwner
+  database: INamespaceInfo
 }) {
   const triggerDeleteDb = useDeleteDb(database)
 
@@ -122,7 +122,7 @@ function DeleteDatabase({
         },
       )}
       onClick={(e) => triggerDeleteDb(e)}
-      data-testid={`database-item-${database.dbid}-delete`}
+      data-testid={`database-item-${database.name}-delete`}
     >
       x
     </span>

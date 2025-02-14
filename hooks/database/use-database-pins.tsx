@@ -5,19 +5,19 @@ export default function useDatabasePins() {
     const dispatch = useAppDispatch();
     const pinned = (useAppSelector((state) => state.database.pinnedDatabases));
 
-    const togglePin = (dbid: string, e:
+    const togglePin = (name: string, e:
         React.MouseEvent<SVGElement, MouseEvent>
     ) => {
         e.stopPropagation();
         e.preventDefault();
 
-        if(!pinned?.includes(dbid)) {
-            dispatch(savePinnedToStore(dbid));
+        if(!pinned?.includes(name)) {
+            dispatch(savePinnedToStore(name));
             return;
         }
 
-        if (pinned?.includes(dbid)) {
-            dispatch(deletePinnedFromStore(dbid));
+        if (pinned?.includes(name)) {
+            dispatch(deletePinnedFromStore(name));
         }
     }
 

@@ -13,7 +13,7 @@ export default function DatabasesPage() {
 
   if (activePage?.name === "Databases" && databaseContext) {
     redirect(
-      `/databases/${databaseContext.dbid}/${databaseContext.type === ItemType.PROCEDURE || databaseContext.type === ItemType.ACTION ? `method/` : ``}${databaseContext.type}/${databaseContext.name}`,
+      `/databases/${databaseContext.namespace}/${databaseContext.type === ItemType.ACTION ? `method/` : ``}${databaseContext.type}/${databaseContext.name}`,
     )
   }
 

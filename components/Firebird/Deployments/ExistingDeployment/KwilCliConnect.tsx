@@ -1,5 +1,7 @@
 import { LinkIcon } from "@/utils/icons"
 import CodeBlock from "../../CodeBlock"
+import InlineCode from "../../InlineCode"
+import { v4 } from "uuid"
 
 const customStyle = {
   background: "#f8fafc", // Tailwind's bg-slate-50
@@ -19,8 +21,19 @@ export default function KwilCliConnect({
   chain: { chain_id: string; version: string }
 }) {
   const verifyInstallCode = `kwil-cli version`
-  const cliPingCode = `kwil-cli utils ping --provider=${providerEndpoint}`
-  const cliConnectCode = `kwil-cli --provider=${providerEndpoint} --private-key=your_private_key --chain-id=${chain?.chain_id}`
+  const cliPingCode = `kwil-cli --provider=${providerEndpoint} \\
+  utils ping `
+  const cliTableCode = `kwil-cli \\
+  --private-key=your_private_key \\
+  --provider=${providerEndpoint} \\
+  --chain-id=${chain?.chain_id} \\
+  exec-sql 'CREATE TABLE users (id UUID PRIMARY KEY, name TEXT NOT NULL);' --sync
+  `
+  const cliInsertCode = `kwil-cli \\
+  --private-key=your_private_key \\
+  --provider=${providerEndpoint} \\
+  --chain-id=${chain?.chain_id} \\
+  exec-sql "INSERT INTO users (id, name) VALUES ('${v4()}'::UUID, 'Alice');" --sync`
 
   if (!docsUrl) {
     console.error("NEXT_PUBLIC_KWIL_CLI_DOCS_URL is not set")
@@ -62,16 +75,26 @@ export default function KwilCliConnect({
       />
 
       <p className="text-md mt-2 flex flex-row gap-1 font-medium">
-        2. Connect to the provider
+        2. Connect to the node
       </p>
 
-      <p className="text-sm">Ping the provider and confirm it&apos;s online.</p>
+      <p className="text-sm">Ping the node and confirm it&apos;s online.</p>
       <CodeBlock language="bash" code={cliPingCode} customStyle={customStyle} />
 
-      <p className="text-sm">Connect to the provider with your private key.</p>
+      <p className="text-md mt-2 flex flex-row gap-1 font-medium">
+        3. Create table and insert data
+      </p>
+      <p className="text-sm">Create a table. Replace <InlineCode>your_private_key</InlineCode> with the db owner private key.</p>
       <CodeBlock
         language="bash"
-        code={cliConnectCode}
+        code={cliTableCode}
+        customStyle={customStyle}
+      />
+      
+      <p className="text-sm">Insert data into the table. Replace <InlineCode>your_private_key</InlineCode> with the db owner private key.</p>
+      <CodeBlock
+        language="bash"
+        code={cliInsertCode}
         customStyle={customStyle}
       />
     </div>

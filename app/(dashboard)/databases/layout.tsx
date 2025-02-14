@@ -24,8 +24,6 @@ export default function DatabasesLayout({
 
       if (table) {
         show = ItemTypes.TABLES
-      } else if (name && type === MethodTypes.PROCEDURE) {
-        show = ItemTypes.PROCEDURES
       } else if (name && type === MethodTypes.ACTION) {
         show = ItemTypes.ACTIONS
       } else if (query) {

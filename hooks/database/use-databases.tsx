@@ -1,20 +1,22 @@
 import { useEffect, useMemo, useState } from "react"
-import { selectActiveAccount } from "@/store/global"
+import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { loadPinned, selectDatabases } from "@/store/database"
-import useFetchDatabases from "@/hooks/database/use-fetch-databases"
+import { loadPinned, selectDbOwner, selectNamespaces } from "@/store/database"
+import useFetchNamespaces from "@/hooks/database/use-fetch-databases"
 import useDatabasePins from "./use-database-pins"
+import useFetchOwner from "./use-fetch-owner"
 
 // Delay update of loading state to avoid flickering
 const loadingDelay = 1000
 
 export default function useDatabases() {
-  const { fetchDatabases, loading: fetchDatabasesLoading } = useFetchDatabases()
-  const activeAccount = useAppSelector(selectActiveAccount)
-  const databases = useAppSelector(selectDatabases)
-  const [myDbsLoading, setMyDbsLoading] = useState(true)
-  const [otherDbsLoading, setOtherDbsLoading] = useState(true)
+  const { fetchNamespaces, loading: fetchNamespacesLoading } = useFetchNamespaces()
+  const { fetchOwner } = useFetchOwner()
+  const namespaces = useAppSelector(selectNamespaces)
+  const [namespacesLoading, setNamespacesLoading] = useState(true)
   const { pinned } = useDatabasePins();
+  const activeAccount = useAppSelector(selectActiveAccount)
+  const dbOwner = useAppSelector(selectDbOwner)
 
   const dispatch = useAppDispatch()
 
@@ -22,77 +24,41 @@ export default function useDatabases() {
     dispatch(loadPinned())
   }, [dispatch])
 
-  const pinnedDbs = useMemo(() => {
-    return databases?.filter((db) => {
-      return pinned?.includes(db.dbid)
+  const pinnedNamespaces = useMemo(() => {
+    return namespaces?.filter((n) => {
+      return pinned?.includes(n.name)
     })
-  }, [pinned, databases])
+  }, [pinned, namespaces])
 
 
-  const myDbs = useMemo(() => {
-    setMyDbsLoading(true)
-
-    if (activeAccount === undefined || databases === undefined) {
-      setMyDbsLoading(false)
-
-      return undefined
+  const loadedNamespaces = useMemo(() => {
+    if (namespaces) {
+      setNamespacesLoading(false)
     }
 
-    const _myDbs = databases
-      ?.filter((db) => {
-        return `0x${db.owner.toLowerCase()}` === activeAccount?.toLowerCase()
-      })
-      .sort((a, b) => {
-        if (a.name < b.name) return -1
-        if (a.name > b.name) return 1
-
-        // If names are equal, sort by database ID
-        return a.dbid < b.dbid ? -1 : a.dbid > b.dbid ? 1 : 0
-      })
-
-    setMyDbsLoading(false)
-    return _myDbs
-  }, [databases, activeAccount])
-
-  const otherDbs = useMemo(() => {
-    setOtherDbsLoading(true)
-
-    if (databases === undefined) {
-      setOtherDbsLoading(false)
-
-      return undefined
-    }
-
-    const _otherDbs = databases
-      .filter((db) => {
-        return `0x${db.owner.toLowerCase()}` !== activeAccount?.toLowerCase()
-      })
-      .sort((a, b) => {
-        if (a.name < b.name) return -1
-        if (a.name > b.name) return 1
-
-        // If names are equal, sort by database ID
-        return a.dbid < b.dbid ? -1 : a.dbid > b.dbid ? 1 : 0
-      })
-
-    setTimeout(() => {
-      setOtherDbsLoading(false)
-    }, loadingDelay)
-
-    return _otherDbs
-  }, [databases, activeAccount])
+    return namespaces
+  }, [namespaces])
 
   useEffect(() => {
-    fetchDatabases()
-  }, [fetchDatabases])
+    try {
+      setNamespacesLoading(true)
+      fetchNamespaces()
+      fetchOwner()
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setTimeout(() => {
+        setNamespacesLoading(false)
+      }, loadingDelay)
+    }
+  }, [fetchNamespaces])
 
   return {
-    myDbs,
-    otherDbs,
-    myDbsLoading,
-    otherDbsLoading,
-    fetchDatabasesLoading,
-    count: databases?.length,
-    pinnedDbs,
+    loadedNamespaces,
+    namespacesLoading,
+    fetchNamespacesLoading,
+    count: namespaces?.length,
+    pinnedNamespaces,
+    isDbOwner: dbOwner?.toLowerCase() === activeAccount?.toLowerCase()
   }
 }

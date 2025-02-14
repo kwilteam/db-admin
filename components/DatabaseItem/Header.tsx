@@ -26,7 +26,6 @@ export default function Header({ database, type, name }: IProps) {
       <ChevronRightIcon className="h-4 w-4" />
       {type === "table" && <TableIcon className="h-4 w-4" />}
       {type === "action" && <ActionIcon className="h-4 w-4" />}
-      {type === "procedure" && <ProcedureIcon className="h-4 w4" />}
       {type === "query" && <QueryIcon className="h-4 w-4" />}
 
       {type !== "query" && <span>{name}</span>}

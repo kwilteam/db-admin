@@ -40,12 +40,13 @@ export default function DatabaseQueryPage({ params }: IProps) {
     totalCount,
     runQuery,
     triggerSaveQueryModal,
+    executeTx
   } = useQueryEditor(dbid, queryName)
 
   useEffect(() => {
     if (!databaseObject) return
 
-    dispatch(setDatabaseActiveContext({ dbid, type, name: queryName }))
+    dispatch(setDatabaseActiveContext({ namespace: dbid, type, name: queryName }))
   }, [dbid, queryName, type, dispatch, databaseObject])
 
   // Ping Provider Status
@@ -62,6 +63,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
           sql={sql}
           setSql={setSql}
           runQuery={runQuery}
+          executeTx={executeTx}
           triggerSaveQueryModal={triggerSaveQueryModal}
         />
 

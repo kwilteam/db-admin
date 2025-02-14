@@ -161,7 +161,7 @@ function DesktopOpenedSchemas({
             className="p-2 pr-0"
             onClick={() => triggerSetActiveSchema(schema)}
           >
-            {schema}.kf
+            {schema}.sql
           </span>
           <span
             className="ml-2 pr-1 pt-1 text-xs text-slate-400"

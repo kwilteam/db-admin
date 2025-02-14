@@ -5,7 +5,8 @@ import { setAlert } from "@/store/global"
 import { buildQuery } from "@/utils/build-query"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { getErrorMessage } from "@/utils/error-message"
-import { IColumn, getColumnsFromSchema } from "@/utils/data-table"
+import { IColumn } from "@/utils/data-table"
+import { IColumnInfo } from "@/utils/database-types"
 
 interface IDataTableProps {
   dbid: string
@@ -22,7 +23,7 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
   const tableQueryParams = useAppSelector((state) =>
     selectTableQueryParams(state, dbid, table),
   )
-  const databaseObject = useAppSelector((state) =>
+  const namespaceObject = useAppSelector((state) =>
     selectDatabaseObject(state, dbid),
   )
 
@@ -30,31 +31,49 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
   const tables = schemaDict[dbid]?.tables
 
   useEffect(() => {
-    if (!dbid || !table || !kwilProvider || !databaseObject || !tables) return
+    if (!dbid || !table || !kwilProvider || !namespaceObject || !tables) return
     const fetchTableData = async () => {
       try {
         setIsLoading(true)
 
         const tableDataQuery = buildQuery(table, tableQueryParams)
-        const dbid = databaseObject?.dbid
+        const namespace = namespaceObject?.name
+        const queryString = `{${namespace}}${tableDataQuery}`
 
         const queryResponse = await kwilProvider.selectQuery(
-          dbid,
-          tableDataQuery,
+          queryString
         )
         setTableData(queryResponse?.data)
 
-        if (queryResponse.data && queryResponse.data?.length > 0) {
-          const columnNames = Object.keys(queryResponse.data[0])
-          setColumns(getColumnsFromSchema(
-            columnNames,
-            table,
-            tables
-          ))
+        const columnInfo = await kwilProvider.selectQuery<IColumnInfo>(
+          'SELECT name, data_type FROM info.columns WHERE namespace = $n AND table_name = $t',
+          {
+            $n: namespace,
+            $t: table
+          }
+        )
+
+        if (columnInfo.data === undefined) {
+          throw new Error(
+            `Could not get columns for table ${table}. Response: ${JSON.stringify(
+              columnInfo,
+            )}`,
+          )
         }
 
-        const tableCountQuery = `SELECT count(*) as count FROM ${table}`
-        const response = await kwilProvider.selectQuery(dbid, tableCountQuery)
+        if (columnInfo.data && columnInfo.data?.length > 0) {
+          const columns: IColumn[] = columnInfo.data.map((c) => {
+            return {
+              name: c.name,
+              dataType: c.data_type,
+            }
+          });
+
+          setColumns(columns)
+        };
+
+        const tableCountQuery = `{${namespace}}SELECT count(*) as count FROM ${table}`
+        const response = await kwilProvider.selectQuery(tableCountQuery)
 
         const countData = response.data?.[0] as { count: number }
 
@@ -76,7 +95,7 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
     }
 
     fetchTableData()
-  }, [dbid, table, tableQueryParams, kwilProvider, databaseObject, dispatch, tables])
+  }, [dbid, table, tableQueryParams, kwilProvider, namespaceObject, dispatch, tables])
 
   return { tableData, totalCount, columns, isLoading }
 }

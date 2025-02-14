@@ -5,13 +5,13 @@ export async function getSavedSchemas() {
   const dir = path.join(process.cwd(), `schemas`)
   const files = await fs.promises.readdir(dir)
   const templates = files
-    .filter((file) => path.extname(file) === ".kf")
-    .map((file) => path.basename(file, ".kf"))
+    .filter((file) => path.extname(file) === ".sql")
+    .map((file) => path.basename(file, ".sql"))
   return templates
 }
 
 export async function getSchema(name: string) {
-  const filePath = path.join(process.cwd(), `schemas`, `${name}.kf`)
+  const filePath = path.join(process.cwd(), `schemas`, `${name}.sql`)
 
   if (!fs.existsSync(filePath)) {
     throw new Error(`Schema ${name} not found`)
@@ -23,7 +23,7 @@ export async function getSchema(name: string) {
 
 export async function saveSchema(name: string, content: string) {
   const dir = path.join(process.cwd(), `schemas`)
-  const filePath = path.join(dir, `${name}.kf`)
+  const filePath = path.join(dir, `${name}.sql`)
 
   if (!fs.existsSync(dir)) {
     await fs.promises.mkdir(dir)
@@ -33,7 +33,7 @@ export async function saveSchema(name: string, content: string) {
 }
 
 export async function deleteSchema(name: string) {
-  const filePath = path.join(process.cwd(), `schemas`, `${name}.kf`)
+  const filePath = path.join(process.cwd(), `schemas`, `${name}.sql`)
 
   if (!fs.existsSync(filePath)) {
     throw new Error(`Schema ${name} not found`)

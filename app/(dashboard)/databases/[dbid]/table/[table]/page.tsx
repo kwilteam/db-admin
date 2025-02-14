@@ -38,7 +38,7 @@ export default function DatabaseTablePage({ params }: IProps) {
   useEffect(() => {
     if (!databaseObject) return
 
-    dispatch(setDatabaseActiveContext({ dbid, type, name: table }))
+    dispatch(setDatabaseActiveContext({ namespace: dbid, type, name: table }))
   }, [dbid, table, type, dispatch, databaseObject])
 
   // Ping Provider Status
@@ -53,12 +53,12 @@ export default function DatabaseTablePage({ params }: IProps) {
       {columns && (
         <div className="justify-left flex w-full gap-1 border-b border-slate-200 bg-slate-50/50 p-1 text-center text-sm">
           <Filters
-            dbid={databaseObject.dbid}
+            dbid={databaseObject.name}
             table={table}
             columns={columns.map((c) => c.name)}
           />
           <Sorting
-            dbid={databaseObject.dbid}
+            dbid={databaseObject.name}
             table={table}
             columns={columns.map((c) => c.name)}
           />

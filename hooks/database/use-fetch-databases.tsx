@@ -1,47 +1,37 @@
 import { useCallback, useState } from "react"
-import { selectDatabaseFilters, setDatabases } from "@/store/database"
+import { setDatabases } from "@/store/database"
 import { selectActiveAccount, setAlert } from "@/store/global"
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { bytesToHex } from "@kwilteam/kwil-js/dist/utils/serial"
-import { IDatasetInfoStringOwner } from "@/utils/database-types"
+import { INamespaceInfo } from "@/utils/database-types"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useFetchDatabases() {
+export default function useFetchNamespaces() {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
-  const filters = useAppSelector(selectDatabaseFilters)
   const activeAccount = useAppSelector(selectActiveAccount)
   const [loading, setLoading] = useState<boolean>(false)
 
-  const fetchDatabases = useCallback(async () => {
+  const fetchNamespaces = useCallback(async () => {
     try {
       setLoading(true)
-      let databasesResponse
-      if (filters.includeAll) {
-        databasesResponse = await kwilProvider?.listDatabases()
-      } else if (activeAccount) {
-        databasesResponse = await kwilProvider?.listDatabases(activeAccount)
-      } else {
-        databasesResponse = await kwilProvider?.listDatabases()
-      }
+      const namespacesRes = await kwilProvider?.selectQuery<INamespaceInfo>("SELECT name FROM info.namespaces")
+      const _namespaces = namespacesRes?.data
 
-      const _databases = databasesResponse?.data
-
-      if (databasesResponse === undefined || _databases === undefined) {
+      if (namespacesRes === undefined || _namespaces === undefined) {
         dispatch(setDatabases(undefined))
         setLoading(false)
         return
       }
 
-      if (_databases && _databases.length === 0) {
+      if (_namespaces && _namespaces.length === 0) {
         dispatch(setDatabases([]))
         setLoading(false)
         return
       }
 
-      const databases: IDatasetInfoStringOwner[] = _databases.map(
+      const databases: INamespaceInfo[] = _namespaces.map(
         (database) => {
-          return { ...database, owner: bytesToHex(database.owner) }
+          return { ...database, name: database.name }
         },
       )
 
@@ -60,8 +50,7 @@ export default function useFetchDatabases() {
 
       console.error(error)
     }
-    // There is a bug here where KwilProvider is changing
-  }, [dispatch, kwilProvider, filters.includeAll, activeAccount])
+  }, [dispatch, kwilProvider, activeAccount])
 
-  return { fetchDatabases, loading }
+  return { fetchNamespaces, loading }
 }

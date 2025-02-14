@@ -68,7 +68,7 @@ export default function SchemaExplorer() {
                 onKeyDown={newSchemaNameSubmit}
                 onBlur={newSchemaNameBlur}
               />
-              .kf
+              .sql
             </li>
           )}
         </ul>

@@ -4,6 +4,7 @@ import { useAppSelector } from "@/store/hooks"
 import { selectActiveProvider } from "@/store/providers"
 import Input from "@/components/Input"
 import { HelpIcon } from "@/utils/icons"
+import Tooltip from "@/components/Tooltip"
 
 interface IFormProps {
   originalProviderName: string | undefined
@@ -88,7 +89,14 @@ export default function Form({
             Chain Id
             <div className="group ml-1 hidden h-6 items-center md:inline-flex">
               <HelpIcon className="h-5 w-5 cursor-help" />
-              <Tooltip className="ml-6" />
+              <Tooltip className="ml-6">
+                The chain Id is a unique identifier for the Kwil network. <br />
+                For example, the chain id for the Kwil Longhorn testnet is
+                &quot;
+                <em>longhorn&quot;.</em>
+                <br />
+                If you do not know the chain Id, you can leave this field blank.
+              </Tooltip>
             </div>
           </label>
           <div className="m-1">
@@ -133,25 +141,5 @@ export default function Form({
         )}
       </div>
     </form>
-  )
-}
-
-function Tooltip({ ...props }: React.HTMLAttributes<HTMLSpanElement>) {
-  return (
-    <span
-      {...props}
-      className={classNames(
-        "absolute hidden w-auto rounded-lg bg-black/75 p-2 text-xs text-white group-hover:block",
-        {
-          [props.className as string]: props.className !== undefined,
-        },
-      )}
-    >
-      The chain Id is a unique identifier for the Kwil network. <br />
-      For example, the chain id for the Kwil Longhorn testnet is &quot;
-      <em>longhorn&quot;.</em>
-      <br />
-      If you do not know the chain Id, you can leave this field blank.
-    </span>
   )
 }

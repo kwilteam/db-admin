@@ -11,7 +11,6 @@ import {
 import { selectProviderStatus } from "@/store/global"
 import {
   KwilProviderStatus,
-  selectActiveProvider,
   selectActiveProviderUrl,
 } from "@/store/providers"
 import Loading from "../Loading"
@@ -81,7 +80,7 @@ export default function ProviderConnectionModal() {
                       }
                     >
                       <IdeIcon className="mr-2 h-4 w-4" />
-                      Deploy a Schema
+                      Execute SQL
                     </Button>
                   </Link>
 
@@ -98,7 +97,7 @@ export default function ProviderConnectionModal() {
                       }
                     >
                       <DatabaseIcon className="mr-2 h-4 w-4" />
-                      Explore Databases
+                      View Data
                     </Button>
                   </Link>
                 </div>

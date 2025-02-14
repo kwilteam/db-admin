@@ -55,12 +55,12 @@ export const deleteProvider = async (
 }
 
 export const setupProviders = async (idb: IDBPDatabase<unknown>) => {
-  const testnetProvider: IProvider = {
-    name: "Testnet",
-    url: "https://longhorn.kwil.com",
-    chainId: "longhorn-2",
-  }
-  await setProvider(idb, testnetProvider)
+  // const testnetProvider: IProvider = {
+  //   name: "Testnet",
+  //   url: "https://longhorn.kwil.com",
+  //   chainId: "longhorn-2",
+  // }
+  // await setProvider(idb, testnetProvider)
 
   const localhostProvider: IProvider = {
     name: "Localhost",

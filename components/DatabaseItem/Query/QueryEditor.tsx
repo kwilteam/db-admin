@@ -1,10 +1,13 @@
 import { useEffect } from "react"
 import Button from "@/components/Button"
+import { HelpIcon } from "@/utils/icons"
+import Tooltip from "@/components/Tooltip"
 
 interface QueryEditorProps {
   sql: string
   setSql: (sql: string) => void
   runQuery: (sql: string) => void
+  executeTx: (sql: string) => void
   triggerSaveQueryModal: () => void
 }
 
@@ -12,6 +15,7 @@ export default function QueryEditor({
   sql,
   setSql,
   runQuery,
+  executeTx,
   triggerSaveQueryModal,
 }: QueryEditorProps) {
   useEffect(() => {
@@ -42,8 +46,24 @@ export default function QueryEditor({
         </Button>
 
         <Button onClick={() => runQuery(sql)} context="primary">
-          Execute
+          Query
         </Button>
+
+        <Button onClick={() => executeTx(sql)} context="primary">
+          Execute Tx
+        </Button>
+        <div className="group ml-1 hidden h-6 items-center md:inline-flex">
+          <HelpIcon className="h-5 w-5 cursor-help" />
+          <Tooltip className="ml-6">
+            <b>Query</b> is for read-only queries.
+            <br />
+            <br/>
+            <b>Execute Tx</b> is for write operations.
+            <br />
+            <br/>
+            The connected wallet must have permissions to execute transactions.
+          </Tooltip>
+        </div>
       </div>
     </div>
   )
