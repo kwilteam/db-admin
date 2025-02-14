@@ -32,19 +32,19 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
     if (c) {
       dispatch(
         setDatabaseLoading({
-          dbid: databaseObject.dbid,
+          dbid: databaseObject.name,
           loading: true,
         }),
       )
 
       try {
         const dropBody: KwilTypes.DropBody = {
-          dbid: databaseObject.dbid,
+          dbid: databaseObject.name,
         }
         const deleted = await kwilProvider.drop(dropBody, kwilSigner, true)
 
         if (deleted) {
-          dispatch(removeDatabase(databaseObject.dbid))
+          dispatch(removeDatabase(databaseObject.name))
           dispatch(
             setAlert({
               type: "success",
@@ -56,7 +56,7 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
           // If we delete the active database, we need navigate away from this database view
           if (
             activeDatabaseContext &&
-            databaseObject.dbid === activeDatabaseContext.namespace
+            databaseObject.name === activeDatabaseContext.namespace
           ) {
             dispatch(setDatabaseActiveContext(undefined))
             router.push("/databases")
@@ -74,7 +74,7 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
 
       dispatch(
         setDatabaseLoading({
-          dbid: databaseObject.dbid,
+          dbid: databaseObject.name,
           loading: false,
         }),
       )

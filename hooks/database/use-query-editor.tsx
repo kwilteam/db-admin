@@ -10,7 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./use-execute-query"
-import { IColumn, getColumnsFromSchema } from "@/utils/data-table"
+import { IColumn } from "@/utils/data-table"
 
 export default function useQueryEditor(dbid: string, queryName: string) {
   const dispatch = useAppDispatch()
