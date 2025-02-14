@@ -1,16 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { ItemType, KwilTypes } from "@/utils/database-types"
+import { IActionInfo, ItemType } from "@/utils/database-types"
 import useActionForm from "@/hooks/use-action-form"
 import Alert from "@/components/Alert"
 import Button from "@/components/Button"
 import Loading from "@/components/Loading"
 import Input from "@/components/Input"
-import { Procedure } from "@kwilteam/kwil-js/dist/core/database"
 
 interface IActionFormProps {
-  method: KwilTypes.ActionSchema | Procedure | undefined
+  method: IActionInfo
   executeAction: (
     formValues: Record<string, string>,
   ) => Promise<boolean | undefined>,

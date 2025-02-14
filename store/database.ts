@@ -6,12 +6,11 @@ import {
   IPagination,
   ITableFilter,
   ITableSort,
-  KwilTypes,
-  IDatasetInfoStringOwner,
+  INamespaceInfo,
   IDatabaseQueryDict,
   ItemType,
   IDatabaseQueryPaginationDict,
-  ItemTypes,
+  INamespaceItems,
 } from "@/utils/database-types"
 import { initIdb } from "@/utils/idb/init"
 import { deletePinned, getPinned, setPinned } from "@/utils/idb/pinned"
@@ -19,21 +18,25 @@ import { deleteQuery, getQueries, setQuery } from "@/utils/idb/queries"
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 export interface IDatabaseActiveContext {
-  dbid: string
+  namespace: string
   type: ItemType
   name: string
 }
 
 export interface IDatabaseFilters {
-  includeAll: boolean
+  // includeAll: boolean
   search: string
+}
+
+export interface IDbOwner {
+  user_identifier: string
 }
 
 // Define a type that maps keys to their respective value types
 type FilterValueType<K extends keyof IDatabaseFilters> = IDatabaseFilters[K]
 
 interface IDatabaseState {
-  databases: IDatasetInfoStringOwner[] | undefined
+  namespaces: INamespaceInfo[] | undefined
   filters: IDatabaseFilters
   schemaDict: IDatabaseSchemaDict
   visibilityDict: IDatabaseVisibilityDict
@@ -42,12 +45,12 @@ interface IDatabaseState {
   queryPaginationDict: IDatabaseQueryPaginationDict
   activeContext: IDatabaseActiveContext | undefined
   pinnedDatabases: string[] | undefined
+  dbOwner: string
 }
 
 const initialState: IDatabaseState = {
-  databases: undefined,
+  namespaces: undefined,
   filters: {
-    includeAll: true,
     search: "",
   },
   schemaDict: {},
@@ -57,6 +60,7 @@ const initialState: IDatabaseState = {
   queryPaginationDict: {},
   activeContext: undefined,
   pinnedDatabases: undefined,
+  dbOwner: "",
 }
 
 export const loadPinned = createAsyncThunk(
@@ -181,9 +185,9 @@ export const databaseSlice = createSlice({
   reducers: {
     setDatabases: (
       state: IDatabaseState,
-      action: PayloadAction<IDatasetInfoStringOwner[] | undefined>,
+      action: PayloadAction<INamespaceInfo[] | undefined>,
     ) => {
-      state.databases = action.payload
+      state.namespaces = action.payload
     },
 
     setFilter: <K extends keyof IDatabaseFilters>(
@@ -201,7 +205,7 @@ export const databaseSlice = createSlice({
       state: IDatabaseState,
       action: PayloadAction<{
         dbid: string
-        schema: KwilTypes.Database
+        schema: INamespaceItems
       }>,
     ) => {
       const { dbid, schema } = action.payload
@@ -266,13 +270,13 @@ export const databaseSlice = createSlice({
     },
 
     removeDatabase: (state: IDatabaseState, action: PayloadAction<string>) => {
-      const dbid = action.payload
+      const namespace = action.payload
 
-      state.databases = state.databases?.filter((db) => db.dbid !== dbid)
+      state.namespaces = state.namespaces?.filter((n) => n.name !== namespace)
 
-      delete state.schemaDict[dbid]
-      delete state.visibilityDict[dbid]
-      delete state.tableQueryParamsDict[dbid]
+      delete state.schemaDict[namespace]
+      delete state.visibilityDict[namespace]
+      delete state.tableQueryParamsDict[namespace]
     },
 
     setTablePagination: (
@@ -348,6 +352,12 @@ export const databaseSlice = createSlice({
         [queryName]: pagination,
       }
     },
+    setDbOwner: (
+      state: IDatabaseState,
+      action: PayloadAction<string>
+    ) => {
+      state.dbOwner = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(loadQueries.fulfilled, (state, action) => {
@@ -395,10 +405,11 @@ export const {
   setTableFilters,
   setTableSort,
   setQueryPagination,
+  setDbOwner
 } = databaseSlice.actions
 
-export const selectDatabases = (state: { database: IDatabaseState }) =>
-  state.database.databases
+export const selectNamespaces = (state: { database: IDatabaseState }) =>
+  state.database.namespaces
 
 export const selectDatabaseFilters = (state: { database: IDatabaseState }) =>
   state.database.filters
@@ -421,11 +432,10 @@ export const selectDatabaseActiveContext = (state: {
 
 export const selectMethod = (
   state: { database: IDatabaseState },
-  dbid: string,
+  namespace: string,
   actionName: string,
-  type: ItemType
 ) => {
-  const methods = state.database.schemaDict?.[dbid]?.[type === ItemType.ACTION ? "actions" : "procedures"];
+  const methods = state.database.schemaDict?.[namespace]?.actions
 
   if (!methods) return undefined
 
@@ -445,8 +455,8 @@ export const selectTableQueryParams = (
 export const selectDatabaseObject = (
   state: { database: IDatabaseState },
   dbid: string,
-): IDatasetInfoStringOwner | undefined => {
-  return state.database.databases?.find((db) => db.dbid === dbid)
+): INamespaceInfo | undefined => {
+  return state.database.namespaces?.find((n) => n.name === dbid)
 }
 
 export const selectQueries = (
@@ -470,6 +480,10 @@ export const selectQueryPagination = (
   queryName: string,
 ) => {
   return state.database.queryPaginationDict[dbid]?.[queryName]
+}
+
+export const selectDbOwner = (state: { database: IDatabaseState }) => {
+  return state.database.dbOwner
 }
 
 export default databaseSlice.reducer

@@ -7,11 +7,11 @@ import {
   setDatabaseLoading,
 } from "@/store/database"
 import { setAlert } from "@/store/global"
-import { IDatasetInfoStringOwner, KwilTypes } from "@/utils/database-types"
+import { INamespaceInfo, KwilTypes } from "@/utils/database-types"
 import { useKwilSigner } from "../use-kwil-signer"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
+export default function useDeleteDb(databaseObject: INamespaceInfo) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const kwilProvider = useKwilProvider()
@@ -56,7 +56,7 @@ export default function useDeleteDb(databaseObject: IDatasetInfoStringOwner) {
           // If we delete the active database, we need navigate away from this database view
           if (
             activeDatabaseContext &&
-            databaseObject.dbid === activeDatabaseContext.dbid
+            databaseObject.dbid === activeDatabaseContext.namespace
           ) {
             dispatch(setDatabaseActiveContext(undefined))
             router.push("/databases")

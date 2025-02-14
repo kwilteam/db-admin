@@ -9,6 +9,7 @@ import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
 import { formatEther } from "ethers"
 import { getAddress } from "@/utils/wallet"
+import { hexToBytes } from "@kwilteam/kwil-js/dist/utils/serial"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
@@ -127,7 +128,8 @@ const AccountBalance = ({ activeAccount }: { activeAccount: string }) => {
     if (!activeAccount || !kwilProvider) return
 
     const getAccount = async () => {
-      const kwilAccount = await kwilProvider.getAccount(activeAccount)
+      console.log(activeAccount)
+      const kwilAccount = await kwilProvider.getAccount(hexToBytes(activeAccount))
 
       if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {
         // Use formatEther to convert the balance from Wei to Ether

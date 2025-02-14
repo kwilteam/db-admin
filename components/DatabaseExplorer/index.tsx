@@ -14,13 +14,12 @@ export default function DatabasesExplorer({ isMobile = false }) {
   const activeAccount = useAppSelector(selectActiveAccount)
   const providerStatus = useAppSelector(selectProviderStatus)
   const {
-    fetchDatabasesLoading,
-    myDbs,
-    otherDbs,
-    myDbsLoading,
-    otherDbsLoading,
+    fetchNamespacesLoading,
+    namespacesLoading,
+    loadedNamespaces,
+    pinnedNamespaces,
     count,
-    pinnedDbs,
+    isDbOwner
   } = useDatabases()
 
   return (
@@ -49,7 +48,7 @@ export default function DatabasesExplorer({ isMobile = false }) {
         )}
 
         {providerStatus === KwilProviderStatus.Online &&
-          fetchDatabasesLoading && (
+          fetchNamespacesLoading && (
             <Loading className="absolute right-2 top-12 mt-1 flex justify-center" />
           )}
 
@@ -57,25 +56,17 @@ export default function DatabasesExplorer({ isMobile = false }) {
           count !== undefined && (
             <>
               <DatabaseList
-                databases={pinnedDbs}
+                databases={pinnedNamespaces}
                 loading={false}
                 isMobile={isMobile}
-                isMyDatabase={false}
+                isDbOwner={isDbOwner}
                 isPinned
               />
-              {activeAccount && (
-                <DatabaseList
-                  databases={myDbs}
-                  loading={myDbsLoading}
-                  isMobile={isMobile}
-                  isMyDatabase
-                />
-              )}
               <DatabaseList
-                databases={otherDbs}
-                loading={otherDbsLoading}
+                databases={loadedNamespaces}
+                loading={namespacesLoading}
                 isMobile={isMobile}
-                isMyDatabase={false}
+                isDbOwner={isDbOwner}
                 activeAccount={activeAccount}
               />
             </>

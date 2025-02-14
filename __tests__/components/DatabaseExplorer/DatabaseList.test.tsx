@@ -16,7 +16,7 @@ describe("DatabaseList Component Tests", () => {
           databases={myDatabases}
           loading={false}
           isMobile={false}
-          isMyDatabase={true}
+          isDbOwner={true}
         />
       </Provider>,
     )
@@ -53,7 +53,7 @@ describe("DatabaseList Component Tests", () => {
             databases={myDatabases}
             loading={false}
             isMobile={false}
-            isMyDatabase={true}
+            isDbOwner={true}
           />
         </Provider>,
       )
@@ -72,7 +72,7 @@ describe("DatabaseList Component Tests", () => {
             databases={otherDatabases}
             loading={false}
             isMobile={false}
-            isMyDatabase={false}
+            isDbOwner={false}
           />
         </Provider>,
       )

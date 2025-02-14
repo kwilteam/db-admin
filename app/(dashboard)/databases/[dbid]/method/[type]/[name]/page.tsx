@@ -29,7 +29,7 @@ export default function DatabaseActionPage({ params }: IProps) {
   useEffect(() => {
     if (!databaseObject) return
 
-    dispatch(setDatabaseActiveContext({ dbid, type, name }))
+    dispatch(setDatabaseActiveContext({ namespace: dbid, type, name }))
   }, [dbid, name, type, dispatch, databaseObject])
 
   // Ping Provider Status
@@ -42,7 +42,7 @@ export default function DatabaseActionPage({ params }: IProps) {
       <Title database={databaseObject.name} type={type} name={name} />
 
       <div className="flex-1 overflow-scroll bg-slate-50 p-2 lg:min-h-full">
-        <Method dbid={databaseObject.dbid} methodName={name} type={type} />
+        <Method dbid={databaseObject.name} methodName={name} type={type} />
       </div>
     </div>
   )

@@ -7,7 +7,7 @@ import {
   setDatabaseVisibility,
 } from "@/store/database"
 import { useAppDispatch } from "@/store/hooks"
-import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
+import { IActionInfo, INamespaceInfo, INamespaceItems, ITableInfo, ItemTypes } from "@/utils/database-types"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
 export default function useDatabaseSchema() {
@@ -16,47 +16,74 @@ export default function useDatabaseSchema() {
   const kwilProvider = useKwilProvider()
 
   const getSchema = useCallback(
-    async (database: IDatasetInfoStringOwner, showItem?: ItemTypes) => {
+    async (namespace: INamespaceInfo, showItem?: ItemTypes) => {
       if (!kwilProvider || !dispatch || !router) return
 
       try {
         dispatch(
           setDatabaseLoading({
-            dbid: database.dbid,
+            dbid: namespace.name,
             loading: true,
           }),
         )
 
-        const schemaRes = await kwilProvider.getSchema(database.dbid)
+        const tableRes = await kwilProvider.selectQuery<ITableInfo>(
+          'SELECT name FROM info.tables WHERE namespace = $n',
+          {
+            $n: namespace.name
+          }
+        )
 
-        if (!schemaRes.data) {
+        if(tableRes.data === undefined) {
           throw new Error(
-            `Could not get schema for database ${database}. Response: ${JSON.stringify(
-              schemaRes,
+            `Could not get tables for database ${namespace}. Response: ${JSON.stringify(
+              tableRes,
             )}`,
           )
         }
 
-        // Remove owner from schema as Uint8Array cannot be serialized in redux
-        delete (schemaRes.data as { [key: string]: any })["owner"]
+        const _tables = tableRes.data
+
+        const actionRes = await kwilProvider.selectQuery<IActionInfo>(
+          'SELECT name, raw_statement, access_modifiers, parameter_names, return_names, return_types, returns_table, built_in FROM info.actions WHERE namespace = $n',
+          {
+            $n: namespace.name
+          }
+        )
+
+        if(actionRes.data === undefined) {
+          throw new Error(
+            `Could not get actions for database ${namespace}. Response: ${JSON.stringify(
+              actionRes,
+            )}`,
+          )
+        }
+
+        const _actions = actionRes.data
+
+        const namespaceItems: INamespaceItems = {
+          tables: _tables,
+          actions: _actions,
+        }
+
 
         dispatch(
           setDatabaseSchema({
-            dbid: database.dbid,
-            schema: schemaRes.data,
+            dbid: namespace.name,
+            schema: namespaceItems,
           }),
         )
 
         dispatch(
           setDatabaseLoading({
-            dbid: database.dbid,
+            dbid: namespace.name,
             loading: false,
           }),
         )
 
         dispatch(
           setDatabaseVisibility({
-            dbid: database.dbid,
+            dbid: namespace.name,
             key: "open",
             value: true,
           }),
@@ -65,7 +92,7 @@ export default function useDatabaseSchema() {
         if (showItem) {
           dispatch(
             setDatabaseVisibility({
-              dbid: database.dbid,
+              dbid: namespace.name,
               key: showItem,
               value: true,
             }),

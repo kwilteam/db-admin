@@ -1,4 +1,4 @@
-import { IDatasetInfoStringOwner, ItemTypes } from "@/utils/database-types"
+import { INamespaceInfo, ItemTypes } from "@/utils/database-types"
 import classNames from "classnames"
 import {
   ActionIcon,
@@ -26,22 +26,22 @@ const DatabaseItem = ({
   database,
   itemType,
 }: {
-  database: IDatasetInfoStringOwner
+  database: INamespaceInfo
   itemType: IItemTypes[string]
 }) => {
   const dispatch = useAppDispatch()
   const databaseSchemas = useAppSelector(selectDatabaseSchemas)
   const databaseVisibility = useAppSelector(selectDatabaseVisibility)
-  const visible = databaseVisibility[database.dbid]?.[itemType]
+  const visible = databaseVisibility[database.name]?.[itemType]
   const databaseSchemaItems =
     databaseSchemas &&
     itemType !== ItemTypes.QUERIES &&
-    databaseSchemas[database.dbid]?.[itemType]
+    databaseSchemas[database.name]?.[itemType]
 
   const setVisibility = () => {
     dispatch(
       setDatabaseVisibility({
-        dbid: database.dbid,
+        dbid: database.name,
         key: itemType,
       }),
     )
@@ -50,7 +50,7 @@ const DatabaseItem = ({
   return (
     <>
       <div
-        data-testid={`database-item-${database.dbid}-${itemType}`}
+        data-testid={`database-item-${database.name}-${itemType}`}
         className={classNames(
           "flex cursor-pointer select-none flex-row items-center gap-1 text-sm",
           {
@@ -66,10 +66,10 @@ const DatabaseItem = ({
       </div>
       <div className="mb-1">
         {visible &&
-          (itemType === ItemTypes.ACTIONS || itemType === ItemTypes.TABLES || itemType === ItemTypes.PROCEDURES) &&
+          (itemType === ItemTypes.ACTIONS || itemType === ItemTypes.TABLES) &&
           databaseSchemaItems && (
             <TablesActionsList
-              dbid={database.dbid}
+              dbid={database.name}
               items={databaseSchemaItems}
               itemType={itemType}
               visible={visible}
@@ -77,7 +77,7 @@ const DatabaseItem = ({
           )}
 
         {visible && itemType === ItemTypes.QUERIES && (
-          <QueriesList dbid={database.dbid} />
+          <QueriesList dbid={database.name} />
         )}
       </div>
     </>
@@ -123,14 +123,6 @@ const ItemIcons = ({
       )}
       {itemType === ItemTypes.QUERIES && (
         <QueryIcon
-          className={classNames({
-            "h-4 w-4": true,
-            "text-kwil-light": visible,
-          })}
-        />
-      )}
-      {itemType === ItemTypes.PROCEDURES && (
-        <ProcedureIcon 
           className={classNames({
             "h-4 w-4": true,
             "text-kwil-light": visible,

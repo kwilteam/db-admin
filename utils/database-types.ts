@@ -4,9 +4,14 @@ import { IQuery } from "./idb/queries"
 // Types from the Kwil library
 export type { KwilTypes }
 
+export interface INamespaceItems {
+  tables: ITableInfo[]
+  actions: IActionInfo[]
+}
+
 // Dictionary of database names to their schema
 export interface IDatabaseSchemaDict {
-  [key: string]: KwilTypes.Database | null
+  [key: string]: INamespaceItems | null
 }
 
 export interface IDatabaseQueryDict {
@@ -17,13 +22,11 @@ export enum ItemType {
   TABLE = "table",
   ACTION = "action",
   QUERY = "query",
-  PROCEDURE = "procedure"
 }
 
 export enum ItemTypes {
   TABLES = "tables",
   ACTIONS = "actions",
-  PROCEDURES = "procedures",
   QUERIES = "queries",
 }
 
@@ -75,10 +78,33 @@ export interface ITableSort {
   direction: "asc" | "desc"
 }
 
-export interface IDatasetInfoStringOwner {
+export interface INamespaceInfo {
   name: string
-  owner: string
-  dbid: string
+}
+
+export interface ITableInfo {
+  name: string
+}
+
+export interface IActionInfo {
+  name: string
+  raw_statement: string
+  access_modifiers: string[]
+  parameter_names: string[]
+  parameter_types: string[]
+  return_names: string[]
+  return_types: string[]
+  returns_table: boolean
+  built_in: boolean
+}
+
+export interface IColumnInfo {
+  name: string;
+  data_type: string;
+  is_nullable: boolean;
+  default_value: string;
+  is_primary_key: boolean;
+  ordinal_position: number;
 }
 
 export interface IDatabaseQueryPaginationDict {

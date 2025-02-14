@@ -45,7 +45,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
   useEffect(() => {
     if (!databaseObject) return
 
-    dispatch(setDatabaseActiveContext({ dbid, type, name: queryName }))
+    dispatch(setDatabaseActiveContext({ namespace: dbid, type, name: queryName }))
   }, [dbid, queryName, type, dispatch, databaseObject])
 
   // Ping Provider Status

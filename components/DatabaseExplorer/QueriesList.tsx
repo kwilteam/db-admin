@@ -78,7 +78,7 @@ const QueryItem = ({
       // If we delete the active query, we need navigate away from this query view
       if (
         activeDatabaseContext &&
-        dbid === activeDatabaseContext.dbid &&
+        dbid === activeDatabaseContext.namespace &&
         activeDatabaseContext.type === ItemType.QUERY &&
         name === activeDatabaseContext.name
       ) {
