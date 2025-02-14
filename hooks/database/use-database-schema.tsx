@@ -45,7 +45,7 @@ export default function useDatabaseSchema() {
         const _tables = tableRes.data
 
         const actionRes = await kwilProvider.selectQuery<IActionInfo>(
-          'SELECT name, raw_statement, access_modifiers, parameter_names, return_names, return_types, returns_table, built_in FROM info.actions WHERE namespace = $n',
+          'SELECT * FROM info.actions WHERE namespace = $n',
           {
             $n: namespace.name
           }

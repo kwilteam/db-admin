@@ -4,16 +4,16 @@ import { useAppDispatch } from "@/store/hooks"
 import { setAlert } from "@/store/global"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useExecuteQuery(dbid: string) {
+export default function useExecuteQuery(namespace: string) {
   const dispatch = useAppDispatch()
   const kwilProvider = useKwilProvider()
 
   const executeQuery = useCallback(
     async (sql: string) => {
-      if (!dbid || !sql || !kwilProvider) return
+      if (!namespace || !sql || !kwilProvider) return
 
       try {
-        const queryResponse = await kwilProvider.selectQuery(dbid, sql)
+        const queryResponse = await kwilProvider.selectQuery(`{${namespace}}${sql}`)
         const queryData = queryResponse?.data
 
         const columns =
@@ -33,7 +33,7 @@ export default function useExecuteQuery(dbid: string) {
         )
       }
     },
-    [kwilProvider, dbid, dispatch],
+    [kwilProvider, namespace, dispatch],
   )
 
   return executeQuery

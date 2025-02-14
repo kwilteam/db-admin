@@ -22,7 +22,6 @@ export default function Method({ dbid, methodName, type }: IMethodProps) {
     type,
   })
   const statements = [method?.raw_statement || ""]
-  console.log(method)
 
   if (!method) return <Loading className="flex justify-center pt-4" />
 

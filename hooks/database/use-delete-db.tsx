@@ -11,7 +11,7 @@ import { INamespaceInfo, KwilTypes } from "@/utils/database-types"
 import { useKwilSigner } from "../use-kwil-signer"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 
-export default function useDeleteDb(databaseObject: INamespaceInfo) {
+export default function useDeleteDb(namespaceObj: INamespaceInfo) {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const kwilProvider = useKwilProvider()
@@ -23,32 +23,34 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
   ) => {
     e.stopPropagation() // To prevent triggering openSchema
 
-    if (!kwilProvider || !kwilSigner || !databaseObject) return
+    if (!kwilProvider || !kwilSigner || !namespaceObj) return
 
     const c = confirm(
-      `Are you sure you want to delete '${databaseObject.name}'?`,
+      `Are you sure you want to delete '${namespaceObj.name}'?`,
     )
 
     if (c) {
       dispatch(
         setDatabaseLoading({
-          dbid: databaseObject.name,
+          dbid: namespaceObj.name,
           loading: true,
         }),
       )
 
       try {
-        const dropBody: KwilTypes.DropBody = {
-          dbid: databaseObject.name,
-        }
-        const deleted = await kwilProvider.drop(dropBody, kwilSigner, true)
+        const deleted = await kwilProvider.execSql(
+          `DROP NAMESPACE ${namespaceObj.name}`,
+          {},
+          kwilSigner,
+          true
+        )
 
         if (deleted) {
-          dispatch(removeDatabase(databaseObject.name))
+          dispatch(removeDatabase(namespaceObj.name))
           dispatch(
             setAlert({
               type: "success",
-              text: `Database "${databaseObject.name}" has now been deleted.`,
+              text: `Namespace "${namespaceObj.name}" has now been deleted.`,
               position: "top",
             }),
           )
@@ -56,7 +58,7 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
           // If we delete the active database, we need navigate away from this database view
           if (
             activeDatabaseContext &&
-            databaseObject.name === activeDatabaseContext.namespace
+            namespaceObj.name === activeDatabaseContext.namespace
           ) {
             dispatch(setDatabaseActiveContext(undefined))
             router.push("/databases")
@@ -74,7 +76,7 @@ export default function useDeleteDb(databaseObject: INamespaceInfo) {
 
       dispatch(
         setDatabaseLoading({
-          dbid: databaseObject.name,
+          dbid: namespaceObj.name,
           loading: false,
         }),
       )

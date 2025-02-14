@@ -40,6 +40,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
     totalCount,
     runQuery,
     triggerSaveQueryModal,
+    executeTx
   } = useQueryEditor(dbid, queryName)
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function DatabaseQueryPage({ params }: IProps) {
           sql={sql}
           setSql={setSql}
           runQuery={runQuery}
+          executeTx={executeTx}
           triggerSaveQueryModal={triggerSaveQueryModal}
         />
 

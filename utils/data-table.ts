@@ -16,10 +16,11 @@ export function getColumnsFromProcedure(columnNames: string[]): IColumn[] {
     }));
 }
 
-export function cleanInputs(i: string): ValueType {
-    i = i.trim()
-    console.log(!Number.isNaN(i))
-    
+export function cleanInputs(i: string): ValueType {    
+    if (typeof i === "string") {
+        i = i.trim()
+    }
+
     if (i === "true") {
         return true
     }
@@ -36,33 +37,14 @@ export function cleanInputs(i: string): ValueType {
         return undefined
     }
 
-    if (!Number.isNaN(i)) {
+    if (!Number.isNaN(Number(i))) {
         return Number(i)
     }
 
     // handle array
     if (i.startsWith("[") && i.endsWith("]")) {
-        return cleanInputs(JSON.parse(i))
+        return JSON.parse(i).map(cleanInputs)
     }
 
     return i
 } 
-
-// export function getColumnsFromSchema(columnNames: string[] | undefined, currentTable: string, tables?: ITableInfo[]): IColumn[] | undefined {
-//     const map = new Map<string, Column>()
-
-//     if(tables) {
-//         for (const table of tables) {
-//             if(table.name === currentTable) {
-//                 for (const column of table.columns) {
-//                     map.set(column.name, column)
-//                 }
-//             }
-//         }
-//     }
-    
-//     return columnNames?.map((column) => ({
-//         name: column,
-//         type: map.get(column)?.type.name || undefined
-//     }));
-// }

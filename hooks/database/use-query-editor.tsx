@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import { IPagination } from "@/utils/database-types"
 import {
   saveQueryToStores,
-  selectDatabaseObject,
-  selectDatabaseSchemas,
   selectQuery,
   selectQueryPagination,
 } from "@/store/database"
@@ -11,19 +9,21 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { ModalEnum, setAlert, setModal } from "@/store/global"
 import useExecuteQuery from "./use-execute-query"
 import { IColumn } from "@/utils/data-table"
+import useExecuteTx from "./use-execute-tx"
 
-export default function useQueryEditor(dbid: string, queryName: string) {
+export default function useQueryEditor(namespace: string, queryName: string) {
   const dispatch = useAppDispatch()
   const queryObject = useAppSelector((state) =>
-    selectQuery(state, dbid, queryName),
+    selectQuery(state, namespace, queryName),
   )
   const pagination = useAppSelector((state) =>
-    selectQueryPagination(state, dbid, queryName),
+    selectQueryPagination(state, namespace, queryName),
   )
 
   const paginationRef = useRef(pagination)
   const [paginationDisabled, setPaginationDisabled] = useState<boolean>(false)
-  const executeQuery = useExecuteQuery(dbid)
+  const executeQuery = useExecuteQuery(namespace)
+  const executeTx = useExecuteTx(namespace)
   const [sql, setSql] = useState<string>("")
   const [queryData, setQueryData] = useState<Object[] | undefined>(undefined)
   const [columns, setColumns] = useState<IColumn[] | undefined>(undefined)
@@ -66,7 +66,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
       setLoading(true)
 
       // Remove ; from SQL
-      const cleanSql = sqlString.replace(/;/g, "")
+      let cleanSql = sqlString.replace(/;/g, "")
       let response
 
       // Check if the query already has a limit, if not add pagination
@@ -86,7 +86,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
         setColumns(response.columns?.map(c => ({ name: c })));
 
         // Get the total count of the query
-        const countSql = `SELECT count(*) as count FROM (${cleanSql}) as subQuery`
+        const countSql = `{${namespace}}SELECT count(*) as count FROM (${cleanSql}) as subQuery`
         const countResponse = await executeQuery(countSql)
         const countData = countResponse?.queryData?.[0] as { count: number }
 
@@ -122,7 +122,7 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     if (isNewQuery) {
       dispatch(setModal(ModalEnum.SAVE_QUERY))
     } else {
-      dispatch(saveQueryToStores({ dbid, name: queryName, sql }))
+      dispatch(saveQueryToStores({ dbid: namespace, name: queryName, sql }))
       dispatch(setAlert({ type: "success", text: "Query saved" }))
     }
   }
@@ -138,5 +138,6 @@ export default function useQueryEditor(dbid: string, queryName: string) {
     totalCount,
     runQuery,
     triggerSaveQueryModal,
+    executeTx
   }
 }

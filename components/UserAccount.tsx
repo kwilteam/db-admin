@@ -128,7 +128,6 @@ const AccountBalance = ({ activeAccount }: { activeAccount: string }) => {
     if (!activeAccount || !kwilProvider) return
 
     const getAccount = async () => {
-      console.log(activeAccount)
       const kwilAccount = await kwilProvider.getAccount(hexToBytes(activeAccount))
 
       if (kwilAccount && kwilAccount.data && kwilAccount.data.balance) {

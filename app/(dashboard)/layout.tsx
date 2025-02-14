@@ -26,7 +26,6 @@ export default function DashboardLayout({ children }: IProps) {
   const activeProvider = useAppSelector(selectActiveProvider)
   const windowSize = useWindowSize()
   const pathname = usePathname()
-  console.log(pathname)
 
   useEffect(() => {
     dispatch(loadProviders())

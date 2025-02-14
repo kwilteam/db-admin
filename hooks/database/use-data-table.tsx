@@ -72,8 +72,8 @@ export default function useDataTable({ dbid, table }: IDataTableProps) {
           setColumns(columns)
         };
 
-        const tableCountQuery = `SELECT count(*) as count FROM ${table}`
-        const response = await kwilProvider.selectQuery(`{${namespace}}${tableCountQuery}`)
+        const tableCountQuery = `{${namespace}}SELECT count(*) as count FROM ${table}`
+        const response = await kwilProvider.selectQuery(tableCountQuery)
 
         const countData = response.data?.[0] as { count: number }
 
