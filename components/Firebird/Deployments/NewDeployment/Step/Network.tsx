@@ -28,7 +28,7 @@ export function NetworkStep() {
   return (
     <Step
       step={1}
-      icon={<StepIcon />}
+      icon={<StepIcon color="red" />}
       title="Network Type" 
       description="Select a type of network to deploy."
     >

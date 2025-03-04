@@ -13,7 +13,7 @@ export function ServicesStep() {
   return (
     <Step
       step={5}
-      icon={<StepIcon />}
+      icon={<StepIcon color='red' />}
       title="Select Services"
       description="Select the services you want to deploy."
     >

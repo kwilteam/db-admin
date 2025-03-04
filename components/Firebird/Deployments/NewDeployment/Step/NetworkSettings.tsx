@@ -5,7 +5,7 @@ import {
   selectNewDeployment,
   setNewDeploymentNetworkSettings,
 } from "@/store/firebird"
-import { ChainIcon, CompanyIcon, StepIcon } from "@/utils/icons"
+import { ChainIcon, CompanyIcon, OwnerIcon, StepIcon } from "@/utils/icons"
 import { generateRandomString } from "@/utils/random-name-generator"
 import { Step } from "../Step"
 import { IFirebirdNetworkSettings, KwilVersions } from "@/utils/firebird/types"
@@ -40,11 +40,15 @@ export function NetworkSettingsStep() {
   return (
     <Step
       step={2}
-      icon={<StepIcon />}
+      icon={<StepIcon color="red" />}
       title="Network Settings"
       description="Decide on the settings you require for your deployment."
     >
       <div className="flex flex-col gap-3">
+        <DbOwnerInput
+          value={newDeployment?.networkSettings?.dbOwner ?? ""}
+          onChange={handleChange}
+        />
         <ChainIdInput
           value={newDeployment?.networkSettings?.chainId ?? ""}
           onChange={handleChange}
@@ -66,6 +70,36 @@ type InputProps = {
   value: string | undefined
   onChange: (key: keyof IFirebirdNetworkSettings, value: string) => void
 }
+
+const DbOwnerInput = ({ value, onChange }: InputProps) => (
+  <div>
+    <label
+      htmlFor="dbOwner"
+      className="block text-sm font-medium leading-6 text-gray-700"
+    >
+      DB Owner
+    </label>
+    <p className="text-sm text-gray-500">
+      The wallet address that will have admin privileges on the database.
+    </p>
+    <div className="mt-2 flex rounded-md shadow-sm">
+      <span className="inline-flex items-center rounded-l-md border border-r-0 border-slate-100 bg-slate-50 px-3 text-gray-500 sm:text-sm">
+        <OwnerIcon className="h-4 w-4" />
+      </span>
+      <input
+        autoComplete="off"
+        id="dbOwner"
+        name="dbOwner"
+        type="text"
+        required
+        className="block w-full rounded-none rounded-r-md border-0 border-l-0 py-1.5 text-sm leading-6 ring-1 ring-inset ring-slate-100 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-slate-100"
+        value={value}
+        onChange={(e) => onChange("dbOwner", e.target.value)}
+        placeholder="0xAfFDC06cF34aFD7D5801A13d48C92AD39609901D"
+      />
+    </div>
+  </div>
+)
 
 const ChainIdInput = ({ value, onChange }: InputProps) => (
   <div>
