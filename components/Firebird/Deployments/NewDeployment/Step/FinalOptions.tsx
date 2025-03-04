@@ -68,7 +68,7 @@ type InputProps = {
 
 const AccessCodeInput = ({ value, onChange }: InputProps) => (
   <div className="ml-3 flex flex-grow flex-row items-center gap-3">
-    <StepIcon className="hidden h-4 w-4 lg:block" />
+    <StepIcon className="hidden h-4 w-4 lg:block" color="red" />
     <h2
       className={classNames({
         [heading.className]: true,

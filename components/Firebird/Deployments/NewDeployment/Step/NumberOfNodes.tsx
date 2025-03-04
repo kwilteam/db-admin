@@ -28,7 +28,7 @@ export function NumberOfNodesStep() {
   return (
     <Step
       step={3}
-      icon={<StepIcon />}
+      icon={<StepIcon color='red' />}
       title="Number of Nodes"
       description="The number of nodes you want to deploy."
     >

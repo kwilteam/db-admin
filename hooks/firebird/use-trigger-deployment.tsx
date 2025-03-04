@@ -4,7 +4,10 @@ import { resetNewDeployment } from "@/store/firebird"
 import { deployNetwork } from "@/utils/firebird/api"
 import {
   IFirebirdApiNewDeployment,
+  IFirebirdFinalOptions,
+  IFirebirdNetworkSettings,
   IFirebirdNewDeployment,
+  RequiredNetworkSettings,
 } from "@/utils/firebird/types"
 import { setAlert } from "@/store/global"
 
@@ -19,6 +22,7 @@ export default function useTriggerDeployment(
   const formatNewDeploymentData = (): IFirebirdApiNewDeployment | undefined => {
     if (
       !newDeployment?.networkSettings.chainId ||
+      !newDeployment?.networkSettings.dbOwner ||
       !newDeployment?.networkSettings.kwilVersion ||
       !newDeployment?.nodeCount ||
       !newDeployment?.networkSettings.companyName ||
@@ -31,6 +35,7 @@ export default function useTriggerDeployment(
     return {
       chain: {
         chain_id: newDeployment.networkSettings.chainId,
+        db_owner: newDeployment.networkSettings.dbOwner,
         version: newDeployment.networkSettings.kwilVersion,
       },
       node_count: newDeployment.nodeCount,
@@ -42,6 +47,33 @@ export default function useTriggerDeployment(
       },
       access_token: newDeployment.finalOptions.accessCode,
     }
+  }
+
+  const findMissingField = (): string => {
+    // return the first missing field in the order of the form
+    for (const key in newDeployment?.networkSettings) {
+      console.log(newDeployment.networkSettings[key as keyof IFirebirdNetworkSettings])
+      if (newDeployment.networkSettings[key as keyof IFirebirdNetworkSettings] === '' || newDeployment.networkSettings[key as keyof IFirebirdNetworkSettings] === undefined) {
+        return key
+      }
+    }
+
+
+    if (!newDeployment?.nodeCount) {
+      return "nodeCount"
+    }
+
+    if (!newDeployment?.machines) {
+      return "machines"
+    }
+
+    for (const key in newDeployment?.finalOptions) {
+      if (newDeployment.finalOptions[key as keyof IFirebirdFinalOptions] === undefined) {
+        return key
+      }
+    }
+
+    return ""
   }
 
   const deploymentSuccess = (id: string) => {
@@ -74,10 +106,24 @@ export default function useTriggerDeployment(
     const apiData = formatNewDeploymentData()
     if (!apiData) {
       setDeploying(false)
+      const missingField = findMissingField();
+      const fieldName = RequiredNetworkSettings[missingField]
+
+      if(fieldName) {
+        dispatch(
+          setAlert({
+            type: "error",
+            text: `Cannot deploy network. Please configure the ${fieldName} field.`,
+          }),
+        )
+        return
+        
+      }
+
       dispatch(
         setAlert({
           type: "error",
-          text: "There was an error deploying your network. Please check your access code and contact the team if the problem persists.",
+          text: `Cannot deploy network. Please ensure all fields are filled out.`,
         }),
       )
       return

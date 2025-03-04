@@ -8,6 +8,7 @@ import { ModalEnum, setAlert, setModal } from "@/store/global"
 import { getDetailsErrorMessage } from "@/utils/error-message"
 import { IColumn, cleanInputs, getColumnsFromProcedure } from "@/utils/data-table"
 import { NamedParams } from "@kwilteam/kwil-js/dist/core/action"
+import { MsgReceipt } from "@kwilteam/kwil-js/dist/core/message"
 
 interface IDatabaseMethodProps {
   dbid: string
@@ -71,7 +72,7 @@ export const useDatabaseMethod = ({
         }
 
         let response:
-          | KwilTypes.GenericResponse<object[]>
+          | KwilTypes.GenericResponse<MsgReceipt<object>>
           | KwilTypes.GenericResponse<KwilTypes.TxReceipt>
           | undefined
 
@@ -118,7 +119,7 @@ export const useDatabaseMethod = ({
 
         // If the action returned data, show it in a table
         if (response.data && !("tx_hash" in response.data)) {
-          const result = response.data
+          const result = response.data.result
           if (result && result.length > 0) {
             // TODO: The result is being returned as Nillable<String> but is actually Object[]
             setData(result as unknown as Object[])

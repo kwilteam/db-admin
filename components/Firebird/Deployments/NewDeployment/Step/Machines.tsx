@@ -7,7 +7,7 @@ export function MachinesStep() {
   return (
     <Step
       step={4}
-      icon={<StepIcon />}
+      icon={<StepIcon color="red" />}
       title="Select a Machine"
       description="Choose the machine you want to deploy to."
     >

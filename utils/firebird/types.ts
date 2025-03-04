@@ -31,6 +31,7 @@ export interface IFirebirdNewDeployment {
 
 export interface IFirebirdNetworkSettings {
   chainId?: string
+  dbOwner?: string
   kwilVersion?: string
   companyName?: string
 }
@@ -60,8 +61,7 @@ export enum MachineType {
 }
 
 export const KwilVersions = {
-  "0.10.0": "0.10.0",
-  "0.9.3": "0.9.3",
+  "0.10.0-rc.1": "0.10.0-rc.1",
 } as const
 
 export interface IFirebirdDeploymentConfig {
@@ -114,6 +114,7 @@ export interface IFirebirdApiResponse<T> {
 export interface IFirebirdApiNewDeployment {
   chain: {
     chain_id: string
+    db_owner: string
     version: string
   }
   node_count: number
@@ -183,4 +184,19 @@ export enum DeploymentEventType {
   START = "START",
   FINISH = "FINISH",
   FAIL = "FAIL",
+}
+
+export const RequiredNetworkSettings: Record<string, string> = {
+  chainId: "Chain ID",
+  dbOwner: "Database Owner",
+  kwilVersion: "Kwil Version",
+  companyName: "Company Name",
+  nodeCount: "Node Count",
+  accessCode: "Access Code",
+  machines: "Machine Type",
+  network: "Network",
+  customBinary: "Custom Binary",
+  daemon: "Daemon",
+  gateway: "Gateway",
+  indexer: "Indexer",
 }

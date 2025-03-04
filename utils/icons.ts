@@ -53,6 +53,8 @@ import { TbNetwork, TbMailShare } from "react-icons/tb"
 import { VscVm } from "react-icons/vsc"
 import { GrServices } from "react-icons/gr"
 import { BsAsterisk } from "react-icons/bs"
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
+
 
 export {
   HiOutlineCircleStack as DatabaseIcon,
@@ -121,4 +123,5 @@ export {
   HiOutlineArrowTopRightOnSquare as LinkIcon,
   BsAsterisk as StepIcon,
   HiOutlineServer as NodeIcon,
+  MdOutlineAdminPanelSettings as OwnerIcon,
 }
