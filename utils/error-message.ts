@@ -38,6 +38,11 @@ export const getDetailsErrorMessage = (error: Error) => {
             }
           }
         }
+
+        // sometimes (e.g., when sync is set to true) the error message is in the result object
+        if (errorObj && !errorObj.message && errorObj.result.log) {
+          errorMessage += ` ${errorObj.result.log}`
+        }
       }
     } catch (parseError) {
       // If parsing fails, use the original error message
