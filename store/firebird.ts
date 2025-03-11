@@ -31,7 +31,7 @@ const initialNewDeployment: IFirebirdNewDeployment = {
   networkSettings: {
     chainId: undefined,
     dbOwner: undefined,
-    kwilVersion: KwilVersions["0.10.0-rc.1"],
+    kwilVersion: KwilVersions["0.10.0"],
     companyName: undefined,
   },
   nodeCount: 1,
