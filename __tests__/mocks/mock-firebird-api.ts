@@ -6,7 +6,7 @@ export const mockDeployment = {
   config: {
     chain: {
       chain_id: "test-chain",
-      version: "0.10.0",
+      version: "0.10.1",
     },
     node_count: 1,
     machines: {

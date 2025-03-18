@@ -12,7 +12,7 @@ vi.mock("next/font/google", () => ({
   }),
 }))
 
-const kwilVersion = "0.10.0"
+const kwilVersion = "0.10.1"
 
 describe("NetworkSettingsStep", () => {
   const store = mockStore({
