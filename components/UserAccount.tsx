@@ -8,14 +8,16 @@ import { ChevronDownIcon, ProfileIcon, SignOutIcon } from "@/utils/icons"
 import { useKwilProvider } from "@/providers/WebKwilProvider"
 import { usePathname } from "next/navigation"
 import { formatEther } from "ethers"
-import { getAddress } from "@/utils/wallet"
 import { hexToBytes } from "@kwilteam/kwil-js/dist/utils/serial"
+import { usePrivyAccounts } from "@/hooks/use-privy-accounts"
 
 interface IUserInfoProps extends React.HTMLAttributes<HTMLDivElement> {
   activeAccount: string | undefined
 }
 
 export default function UserAccount({ activeAccount }: IUserInfoProps) {
+  const { ready, connectOrCreateWallet, disconnectWallet } = usePrivyAccounts()
+
   const dispatch = useAppDispatch()
   const [abbreviatedAccount, setAbbreviatedAccount] = useState<
     string | undefined
@@ -23,20 +25,6 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
   const [abbreviatedMobileAccount, setAbbreviatedMobileAccount] = useState<
     string | undefined
   >()
-
-  const disconnectWallet = () => {
-    dispatch(setActiveAccount(undefined))
-  }
-
-  const connectWallet = async () => {
-    try {
-      const address = await getAddress()
-      dispatch(setActiveAccount(address))
-      dispatch(setModal(undefined))
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
   useEffect(() => {
     if (activeAccount) {
@@ -63,12 +51,22 @@ export default function UserAccount({ activeAccount }: IUserInfoProps) {
     }
   }, [dispatch])
 
+  if (!ready) {
+    return <>
+    <button
+      className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+    >
+      <ProfileIcon className="h-4 w-4" />Loading...
+    </button>
+  </>
+  }
+  
   if (!activeAccount)
     return (
       <>
         <button
           className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-slate-200 bg-white p-1 px-2 text-sm font-thin text-slate-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
-          onClick={connectWallet}
+          onClick={connectOrCreateWallet}
         >
           <ProfileIcon className="h-4 w-4" /> Connect
         </button>

@@ -1,9 +1,16 @@
-import { beforeEach, describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { act, render, screen } from "@testing-library/react"
 import "@testing-library/jest-dom"
 import { Provider } from "react-redux"
 import { mockStore } from "../mocks/mock-store"
 import UserAccount from "@/components/UserAccount"
+
+vi.mock("@/hooks/use-privy-accounts", () => ({
+  usePrivyAccounts: () => ({
+    ready: true,
+  }),
+}))
+
 
 const mockActiveAccount = "0x1234567890abcdef1234567890abcdef12345678"
 

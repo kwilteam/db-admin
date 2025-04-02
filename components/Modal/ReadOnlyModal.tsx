@@ -1,13 +1,8 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import {
-  ModalEnum,
-  selectModal,
-  setActiveAccount,
-  setModal,
-} from "@/store/global"
-import { getAddress } from "@/utils/wallet"
+import { ModalEnum, selectModal, setModal } from "@/store/global"
 import Button from "../Button"
 import Base from "./Base"
+import { usePrivyAccounts } from "@/hooks/use-privy-accounts"
 
 export default function ReadOnlyModal({
   activeAccount,
@@ -16,6 +11,7 @@ export default function ReadOnlyModal({
 }) {
   const dispatch = useAppDispatch()
   const modal = useAppSelector(selectModal)
+  const { ready, connectOrCreateWallet } = usePrivyAccounts()
 
   const continueReadOnly = () => {
     dispatch(setModal(undefined))
@@ -23,9 +19,7 @@ export default function ReadOnlyModal({
 
   const connectWallet = async () => {
     try {
-      const address = await getAddress()
-      dispatch(setActiveAccount(address))
-      dispatch(setModal(undefined))
+      await connectOrCreateWallet()
     } catch (e) {
       console.log(e)
     }
@@ -50,9 +44,15 @@ export default function ReadOnlyModal({
       <Button context="secondary" size="md" onClick={continueReadOnly}>
         Continue
       </Button>
-      <Button context="primary" size="md" onClick={connectWallet}>
-        Connect Wallet
-      </Button>
+      {ready ? (
+        <Button context="primary" size="md" onClick={connectWallet}>
+          Connect Wallet
+        </Button>
+      ) : (
+        <Button context="primary" size="md" disabled>
+          Loading...
+        </Button>
+      )}
     </div>
   )
 

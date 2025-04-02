@@ -1,24 +1,15 @@
-import { BrowserProvider, JsonRpcProvider } from "ethers"
+import { BrowserProvider, Eip1193Provider } from "ethers"
 
-declare global {
-  interface Window {
-    ethereum: any
-  }
+export const getProvider = async (p: Eip1193Provider) => {
+  return new BrowserProvider(p)
 }
 
-export const getProvider = async () => {
-  if (window.ethereum) {
-    return new BrowserProvider(window.ethereum)
-  }
-  return new JsonRpcProvider()
-}
-
-export const getSigner = async () => {
-  const provider = await getProvider()
+export const getSigner = async (p: Eip1193Provider) => {
+  const provider = await getProvider(p)
   return provider.getSigner()
 }
 
-export const getAddress = async () => {
-  const signer = await getSigner()
+export const getAddress = async (p: Eip1193Provider) => {
+  const signer = await getSigner(p)
   return await signer.getAddress()
 }

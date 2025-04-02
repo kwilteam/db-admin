@@ -5,6 +5,7 @@ import { ReduxProvider } from "@/providers/StoreProvider"
 import "./globals.css"
 import { IdbProvider } from "@/providers/IdbProvider"
 import { WebKwilProvider } from "@/providers/WebKwilProvider"
+import PrivyAuth from "@/providers/PrivyProvider"
 
 const manrope = Manrope({ subsets: ["latin"] })
 
@@ -31,7 +32,9 @@ export default function RootLayout({
       >
         <ReduxProvider>
           <WebKwilProvider>
-            <IdbProvider>{children}</IdbProvider>
+            <PrivyAuth>
+              <IdbProvider>{children}</IdbProvider>
+            </PrivyAuth>
           </WebKwilProvider>
         </ReduxProvider>
       </body>
