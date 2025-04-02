@@ -28,8 +28,8 @@ export const usePrivyAccounts = () => {
         }
     }, [authenticated, wallets, dispatch])
 
-    const disconnectWallet = () => {
-        logout()
+    const disconnectWallet = async () => {
+        await logout()
         dispatch(setActiveAccount(undefined))
     }
 
