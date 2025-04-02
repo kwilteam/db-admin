@@ -10,7 +10,7 @@ export default function PrivyAuth({children}: {children: React.ReactNode}) {
         appearance: {
           theme: 'light',
           accentColor: '#418E9D',
-          logo: './images/kwil.png',
+          logo: '/images/kwil.png',
           walletChainType: "ethereum-only",
           walletList: ['metamask', 'coinbase_wallet', 'detected_ethereum_wallets']
         },
